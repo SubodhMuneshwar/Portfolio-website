@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCertifications();
   initProjectFilters();
   initContactInteractions();
-  initConfettiTriggers();
   initMobileMenu();
   initLucideIcons();
   initKeyboardShortcuts();
@@ -368,6 +367,109 @@ function initConfettiTriggers() {
   confettiBtns.forEach(btn => {
     btn.addEventListener('click', triggerConfetti);
   });
+}
+
+/* --- Contact Form & Gmail Delivery Engine --- */
+function initContactInteractions() {
+  const contactForm = document.getElementById('contactForm');
+  const copyEmailBtn = document.getElementById('copyEmailBtn');
+  const copyPhoneBtn = document.getElementById('copyPhoneBtn');
+
+  // 1. Copy Email to Clipboard
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText('subodhum1603@gmail.com').then(() => {
+        showToast('📋 Copied email: subodhum1603@gmail.com');
+      }).catch(() => {
+        showToast('📧 subodhum1603@gmail.com');
+      });
+    });
+  }
+
+  // 2. Copy Phone to Clipboard
+  if (copyPhoneBtn) {
+    copyPhoneBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText('+91 9029920228').then(() => {
+        showToast('📋 Copied phone: +91 9029920228');
+      }).catch(() => {
+        showToast('📱 +91 9029920228');
+      });
+    });
+  }
+
+  // 3. Live Form Submission directly to subodhum1603@gmail.com
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('senderName');
+      const emailInput = document.getElementById('senderEmail');
+      const messageInput = document.getElementById('senderMessage');
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+      if (!nameInput || !emailInput || !messageInput || !submitBtn) return;
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !email || !message) {
+        showToast('⚠️ Please fill in all fields before sending.');
+        return;
+      }
+
+      // UI Loading indicator
+      const originalBtnHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Sending Message... ⏳</span>';
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/subodhum1603@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            message: message,
+            _subject: `⚡ New Portfolio Inquiry from ${name}`,
+            _template: 'table',
+            _captcha: 'false'
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok || data.success === 'true' || data.success === true) {
+          contactForm.reset();
+          submitBtn.innerHTML = '<span>Message Sent Successfully! ✅</span>';
+          submitBtn.style.backgroundColor = '#10B981';
+          submitBtn.style.color = '#FFFFFF';
+          showToast('🚀 Message sent directly to Subodh at subodhum1603@gmail.com!');
+
+          setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+            submitBtn.style.backgroundColor = '';
+            submitBtn.style.color = '';
+          }, 3500);
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch (err) {
+        console.warn('FormSubmit AJAX fallback to mailto:', err);
+        // Direct mailto fallback so the communication is never lost
+        const mailtoUrl = `mailto:subodhum1603@gmail.com?subject=${encodeURIComponent('Portfolio Inquiry from ' + name)}&body=${encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message)}`;
+        window.location.href = mailtoUrl;
+
+        showToast('✉️ Opening email client to deliver your message to subodhum1603@gmail.com!');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+    });
+  }
 }
 
 /* --- Mobile Menu Toggle --- */
