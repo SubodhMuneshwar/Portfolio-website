@@ -379,18 +379,25 @@
 
             <!-- Interactive Quick Message Form -->
             <div>
-              <form class="contact-form" id="contactForm">
+              <form class="contact-form" id="contactForm" action="https://formsubmit.co/subodhum1603@gmail.com" method="POST">
+                <!-- FormSubmit Configuration -->
+                <input type="hidden" name="_subject" value="⚡ New Portfolio Inquiry" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_next" value="https://subodhm.github.io/Portfolio-website/index.html#contact" />
+                <input type="text" name="_honey" style="display:none" />
+
                 <div class="form-group">
                   <label for="senderName" class="form-label">Your Name</label>
-                  <input type="text" id="senderName" class="form-input" placeholder="e.g. Tony Stark" required />
+                  <input type="text" id="senderName" name="name" class="form-input" placeholder="e.g. Tony Stark" required />
                 </div>
                 <div class="form-group">
                   <label for="senderEmail" class="form-label">Your Email</label>
-                  <input type="email" id="senderEmail" class="form-input" placeholder="e.g. tony@starkindustries.com" required />
+                  <input type="email" id="senderEmail" name="email" class="form-input" placeholder="e.g. tony@starkindustries.com" required />
                 </div>
                 <div class="form-group">
                   <label for="senderMessage" class="form-label">Message / Opportunity</label>
-                  <textarea id="senderMessage" class="form-textarea" placeholder="Hello Subodh, we'd love to interview you for a Backend/ML role..." required></textarea>
+                  <textarea id="senderMessage" name="message" class="form-textarea" placeholder="Hello Subodh, we'd love to interview you for a Backend/ML role..." required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                   <span>Send Message 🚀</span>

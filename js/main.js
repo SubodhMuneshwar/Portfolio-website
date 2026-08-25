@@ -398,10 +398,9 @@ function initContactInteractions() {
   }
 
   // 3. Live Form Submission directly to subodhum1603@gmail.com
+  // Strategy: Try AJAX first for smooth UX. On failure, fall back to native form POST.
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
       const nameInput = document.getElementById('senderName');
       const emailInput = document.getElementById('senderEmail');
       const messageInput = document.getElementById('senderMessage');
@@ -414,11 +413,14 @@ function initContactInteractions() {
       const message = messageInput.value.trim();
 
       if (!name || !email || !message) {
+        e.preventDefault();
         showToast('⚠️ Please fill in all fields before sending.');
         return;
       }
 
-      // UI Loading indicator
+      // Try AJAX submission first for a smoother experience
+      e.preventDefault();
+
       const originalBtnHtml = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Sending Message... ⏳</span>';
@@ -442,7 +444,7 @@ function initContactInteractions() {
 
         const data = await response.json();
 
-        if (response.ok || data.success === 'true' || data.success === true) {
+        if (data.success === 'true' || data.success === true) {
           contactForm.reset();
           submitBtn.innerHTML = '<span>Message Sent Successfully! ✅</span>';
           submitBtn.style.backgroundColor = '#10B981';
@@ -456,17 +458,16 @@ function initContactInteractions() {
             submitBtn.style.color = '';
           }, 3500);
         } else {
-          throw new Error('Form submission failed');
+          // AJAX returned but FormSubmit says not activated yet — fall through to native POST
+          throw new Error('FormSubmit endpoint not yet activated');
         }
       } catch (err) {
-        console.warn('FormSubmit AJAX fallback to mailto:', err);
-        // Direct mailto fallback so the communication is never lost
-        const mailtoUrl = `mailto:subodhum1603@gmail.com?subject=${encodeURIComponent('Portfolio Inquiry from ' + name)}&body=${encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message)}`;
-        window.location.href = mailtoUrl;
-
-        showToast('✉️ Opening email client to deliver your message to subodhum1603@gmail.com!');
+        console.warn('AJAX submission failed, falling back to native form POST:', err.message);
+        // Re-enable button and submit the form natively (standard POST to FormSubmit)
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnHtml;
+        showToast('📨 Redirecting to send your message...');
+        contactForm.submit(); // Native HTML form POST — triggers FormSubmit activation email
       }
     });
   }
