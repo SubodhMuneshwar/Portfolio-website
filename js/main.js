@@ -473,22 +473,30 @@ function initContactInteractions() {
   }
 }
 
-/* --- Mobile Menu Toggle --- */
+/* --- Mobile Menu Toggle & Auto-Close Engine --- */
 function initMobileMenu() {
   const toggleBtn = document.getElementById('mobileMenuToggle');
   const navMenu = document.getElementById('navMenu');
+  
   if (toggleBtn && navMenu) {
-    toggleBtn.addEventListener('click', () => {
-      const isVisible = navMenu.style.display === 'flex';
-      navMenu.style.display = isVisible ? 'none' : 'flex';
-      navMenu.style.flexDirection = 'column';
-      navMenu.style.position = 'absolute';
-      navMenu.style.top = '80px';
-      navMenu.style.left = '0';
-      navMenu.style.width = '100%';
-      navMenu.style.backgroundColor = '#FFFDF5';
-      navMenu.style.padding = '1.5rem';
-      navMenu.style.borderBottom = '2.5px solid #1E293B';
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('open');
+    });
+
+    // Auto-close menu when any nav link is clicked
+    const navLinks = navMenu.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
+        navMenu.classList.remove('open');
+      }
     });
   }
 }
