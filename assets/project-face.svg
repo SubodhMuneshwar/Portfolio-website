@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <pattern id="grid-pattern-2" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#E2E8F0" />
+    </pattern>
+  </defs>
+  <rect width="600" height="360" fill="#FFFDF5" />
+  <rect width="600" height="360" fill="url(#grid-pattern-2)" />
+
+  <!-- Background decorative geometric shapes -->
+  <polygon points="490,40 550,150 430,150" fill="#8B5CF6" stroke="#1E293B" stroke-width="2.5" />
+  <circle cx="90" cy="90" r="50" fill="#34D399" stroke="#1E293B" stroke-width="2.5" />
+  
+  <!-- Face Recognition Scanner Screen -->
+  <g transform="translate(110, 40)">
+    <rect x="8" y="8" width="380" height="260" rx="20" fill="#1E293B" />
+    <rect x="0" y="0" width="380" height="260" rx="20" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+    
+    <!-- Window Bar -->
+    <rect x="0" y="0" width="380" height="42" rx="20" fill="#F472B6" stroke="#1E293B" stroke-width="3" />
+    <circle cx="25" cy="21" r="6" fill="#8B5CF6" stroke="#1E293B" stroke-width="1.5" />
+    <circle cx="45" cy="21" r="6" fill="#FBBF24" stroke="#1E293B" stroke-width="1.5" />
+    <circle cx="65" cy="21" r="6" fill="#34D399" stroke="#1E293B" stroke-width="1.5" />
+    <text x="190" y="26" font-family="'Outfit', sans-serif" font-weight="700" font-size="13" fill="#1E293B" text-anchor="middle">Biometric Attendance • 98% Match</text>
+
+    <!-- Face target box -->
+    <g transform="translate(190, 140)">
+      <!-- Face contour circle -->
+      <circle cx="0" cy="0" r="60" fill="#FDF4FF" stroke="#1E293B" stroke-width="2.5" />
+      <circle cx="-20" cy="-8" r="6" fill="#1E293B" />
+      <circle cx="20" cy="-8" r="6" fill="#1E293B" />
+      <!-- Smile -->
+      <path d="M -15 18 Q 0 30 15 18" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+
+      <!-- Corner brackets -->
+      <path d="M -50 -35 L -50 -55 L -30 -55" fill="none" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round" />
+      <path d="M 50 -35 L 50 -55 L 30 -55" fill="none" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round" />
+      <path d="M -50 35 L -50 55 L -30 55" fill="none" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round" />
+      <path d="M 50 35 L 50 55 L 30 55" fill="none" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round" />
+
+      <!-- Scan laser line -->
+      <line x1="-55" y1="0" x2="55" y2="0" stroke="#F472B6" stroke-width="3" stroke-linecap="round" />
+    </g>
+
+    <!-- Verified Badge -->
+    <g transform="translate(240, 200)">
+      <rect x="3" y="3" width="125" height="34" rx="17" fill="#1E293B" />
+      <rect x="0" y="0" width="125" height="34" rx="17" fill="#34D399" stroke="#1E293B" stroke-width="2" />
+      <text x="62" y="22" font-family="'Outfit', sans-serif" font-weight="800" font-size="11" fill="#1E293B" text-anchor="middle">✓ ATTENDANCE LOGGED</text>
+    </g>
+  </g>
+</svg>

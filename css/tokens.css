@@ -1,0 +1,475 @@
+/* ==========================================================================
+   Playful Geometric Design System - Design Tokens
+   Philosophy: "Stable Grid, Wild Decoration"
+   ========================================================================== */
+
+:root {
+  /* Color Palette (Light Mode - Warm Paper & Pop Accents) */
+  --bg: #FFFDF5;                /* Warm Cream/Off-White Paper */
+  --fg: #1E293B;                /* Slate 800 (Deep, high contrast) */
+  --muted: #F1F5F9;             /* Slate 100 */
+  --muted-fg: #64748B;          /* Slate 500 */
+  --card: #FFFFFF;              /* Pure White for sticker cards */
+  --card-alt: #FFF9E6;          /* Soft yellow tinted card */
+  --input: #FFFFFF;             /* White */
+  --border: #1E293B;            /* Chunky 2.5px dark border */
+  --border-light: #E2E8F0;      /* Light border for inner dividers */
+
+  /* Playful Vibrant Accents */
+  --accent: #8B5CF6;            /* Vivid Violet (Primary Brand) */
+  --accent-fg: #FFFFFF;
+  --accent-hover: #7C3AED;
+  
+  --secondary: #F472B6;         /* Hot Pink (Playful pop) */
+  --secondary-fg: #FFFFFF;
+  --secondary-hover: #EC4899;
+
+  --tertiary: #FBBF24;          /* Amber / Sunshine Yellow */
+  --tertiary-fg: #1E293B;
+  --tertiary-hover: #F59E0B;
+
+  --quaternary: #34D399;        /* Emerald / Mint Freshness */
+  --quaternary-fg: #1E293B;
+  --quaternary-hover: #10B981;
+
+  --cyan-pop: #38BDF8;          /* Cyan / Sky Blue pop */
+
+  /* Typography */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+  /* Type Scale (Major Third - 1.25) */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.563rem;  /* 25px */
+  --text-3xl: 1.953rem;  /* 31.25px */
+  --text-4xl: 2.441rem;  /* 39px */
+  --text-5xl: 3.052rem;  /* 48.8px */
+  --text-6xl: 3.815rem;  /* 61px */
+
+  /* Border & Radii */
+  --border-width: 2.5px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Hard "Pop" Shadows (No blur, solid offset) */
+  --shadow-sm: 2px 2px 0px 0px var(--border);
+  --shadow-md: 4px 4px 0px 0px var(--border);
+  --shadow-lg: 6px 6px 0px 0px var(--border);
+  --shadow-xl: 8px 8px 0px 0px var(--border);
+  --shadow-accent: 4px 4px 0px 0px var(--accent);
+  --shadow-secondary: 4px 4px 0px 0px var(--secondary);
+  --shadow-tertiary: 4px 4px 0px 0px var(--tertiary);
+  --shadow-quaternary: 4px 4px 0px 0px var(--quaternary);
+
+  /* Animation & Motion */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-bounce: all 0.3s var(--ease-bounce);
+  --transition-fast: all 0.15s ease;
+  --transition-normal: all 0.25s ease;
+
+  /* Layout */
+  --container-max: 1200px;
+  --header-height: 80px;
+}
+
+/* ==========================================================================
+   Dragon Ball / Super Saiyan Theme Mode - Planet Namek (Destruction / Frieza Saga)
+   Dark stormy green-black sky, crackling electric lightning, and Super Saiyan Golden Ki
+   ========================================================================== */
+body.saiyan-mode {
+  --bg: #0A1410;                /* Dark Cataclysmic Namek Sky */
+  --fg: #F8FAFC;                /* High contrast bright text */
+  --muted: #13241D;             /* Dark Namek rock */
+  --muted-fg: #94A3B8;          /* Slate 400 */
+  --card: #0F1E17;              /* Deep Namek Obsidian Card */
+  --card-alt: #162C22;          /* Fissure stone */
+  --input: #13261E;             /* Dark input */
+  --border: #F59E0B;            /* Glowing Golden Ki border */
+  --border-light: #1E3A2D;      /* Muted Namek divider */
+
+  /* Saiyan Ki & Namek Lightning Colors */
+  --accent: #FBBF24;            /* Super Saiyan Golden Ki */
+  --accent-fg: #0A1410;         /* Dark text on golden buttons */
+  --accent-hover: #F59E0B;
+  
+  --secondary: #EF4444;         /* Goku Gi Crimson / Magma core */
+  --secondary-fg: #FFFFFF;
+  --secondary-hover: #DC2626;
+
+  --tertiary: #FDE047;          /* Pure SSJ Golden Light */
+  --tertiary-fg: #0A1410;
+  --tertiary-hover: #FBBF24;
+
+  --quaternary: #38BDF8;        /* Super Saiyan Electric Blue / Cyan Lightning */
+  --quaternary-fg: #0A1410;
+  --quaternary-hover: #0EA5E9;
+
+  --shadow-color: #000000;
+  --shadow-sm: 2px 2px 0px 0px #000000;
+  --shadow-md: 4px 4px 0px 0px #000000;
+  --shadow-lg: 6px 6px 0px 0px #F59E0B;
+  --shadow-xl: 8px 8px 0px 0px #F59E0B;
+
+  background-color: #0A1410;
+  background-image: radial-gradient(#163024 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  color: #F8FAFC;
+  transition: background-color 0.8s ease, color 0.5s ease;
+}
+
+/* Screen Earthquake Rumble on Power-Up */
+.namek-earthquake {
+  animation: earthquake-shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite both;
+}
+
+@keyframes earthquake-shake {
+  10%, 90% { transform: translate3d(-2px, 1px, 0); }
+  20%, 80% { transform: translate3d(3px, -2px, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 2px, 0); }
+  40%, 60% { transform: translate3d(3px, -1px, 0); }
+}
+
+/* Staggered Element Power-Up Flash & Glow */
+.saiyan-charging {
+  position: relative;
+  transition: all 0.6s var(--ease-bounce) !important;
+  animation: element-power-surge 0.6s ease-out forwards;
+}
+
+@keyframes element-power-surge {
+  0% {
+    transform: scale(0.97);
+    filter: brightness(2) drop-shadow(0 0 25px #FBBF24);
+    box-shadow: 0 0 30px #38BDF8, 0 0 60px #F59E0B;
+  }
+  50% {
+    transform: scale(1.03);
+    filter: brightness(1.5) drop-shadow(0 0 35px #38BDF8);
+    box-shadow: 0 0 45px #FBBF24, 0 0 70px #38BDF8;
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Super Saiyan Golden Ki Photo Aura & Cyan Lightning Arcs */
+body.saiyan-mode .hero-photo-frame {
+  border-color: #FBBF24 !important;
+  box-shadow: 0 0 35px rgba(251, 191, 36, 0.8), 0 0 60px rgba(56, 189, 248, 0.4), 8px 8px 0px 0px #000000 !important;
+  animation: ssj-ki-aura-pulse 2s ease-in-out infinite !important;
+}
+
+@keyframes ssj-ki-aura-pulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 45px rgba(56, 189, 248, 0.3), 8px 8px 0px 0px #000000;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(251, 191, 36, 0.95), 0 0 75px rgba(56, 189, 248, 0.6), 0 0 15px #EF4444, 8px 8px 0px 0px #000000;
+    transform: translateY(-5px) scale(1.02);
+  }
+}
+
+/* Fullscreen Lightning Overlay Canvas */
+#lightningOverlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#lightningOverlay.active {
+  opacity: 1;
+}
+
+/* Cards in Saiyan Mode */
+body.saiyan-mode .sticker-card,
+body.saiyan-mode .stat-card,
+body.saiyan-mode .skill-category-card,
+body.saiyan-mode .experience-card,
+body.saiyan-mode .project-card,
+body.saiyan-mode .achievement-card,
+body.saiyan-mode .edu-card,
+body.saiyan-mode .cert-card,
+body.saiyan-mode .contact-wrapper {
+  background-color: #0F1E17 !important;
+  border-color: #F59E0B !important;
+  box-shadow: 5px 5px 0px 0px #000000, 0 0 15px rgba(245, 158, 11, 0.15) !important;
+}
+
+body.saiyan-mode .sticker-card:hover,
+body.saiyan-mode .project-card:hover,
+body.saiyan-mode .experience-card:hover {
+  box-shadow: 6px 6px 0px 0px #38BDF8, 0 0 25px rgba(56, 189, 248, 0.35) !important;
+  border-color: #38BDF8 !important;
+}
+
+body.saiyan-mode .site-header {
+  background-color: rgba(10, 20, 16, 0.92) !important;
+  border-bottom-color: #F59E0B !important;
+}
+
+body.saiyan-mode .nav-link {
+  color: #F8FAFC !important;
+}
+
+body.saiyan-mode .nav-link:hover {
+  color: #FBBF24 !important;
+  background-color: #162C22 !important;
+}
+
+body.saiyan-mode p,
+body.saiyan-mode .exp-description,
+body.saiyan-mode .exp-bullet-item,
+body.saiyan-mode .ach-desc,
+body.saiyan-mode .project-tagline {
+  color: #CBD5E1 !important;
+}
+
+body.saiyan-mode .tech-pill,
+body.saiyan-mode .skill-chip,
+body.saiyan-mode .exp-tag,
+body.saiyan-mode .project-chip,
+body.saiyan-mode .contact-card-btn {
+  background-color: #13261E !important;
+  color: #F8FAFC !important;
+  border-color: #F59E0B !important;
+}
+
+body.saiyan-mode .ticker-container {
+  background-color: #050B08 !important;
+  border-color: #F59E0B !important;
+}
+
+body.saiyan-mode .form-input,
+body.saiyan-mode .form-textarea {
+  background-color: #13261E !important;
+  border-color: #1E3A2D !important;
+  color: #F8FAFC !important;
+}
+
+body.saiyan-mode .form-input:focus,
+body.saiyan-mode .form-textarea:focus {
+  border-color: #FBBF24 !important;
+  box-shadow: 4px 4px 0px #F59E0B, 0 0 15px rgba(251, 191, 36, 0.4) !important;
+}
+
+/* Dragon Radar Widget */
+.dragon-radar-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background-color: var(--card);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 0.45rem 1rem;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--fg);
+}
+
+.dragon-radar-widget:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.radar-screen-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #86EFAC, #15803D);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 6px #22C55E;
+}
+
+.radar-blip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #EF4444;
+  box-shadow: 0 0 6px #EF4444;
+  animation: blip-pulse 1.2s infinite;
+}
+
+@keyframes blip-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+}
+
+body.saiyan-mode .dragon-radar-widget {
+  background-color: #0F1E17 !important;
+  border-color: #F59E0B !important;
+  color: #F8FAFC !important;
+  box-shadow: 4px 4px 0px #000000, 0 0 15px rgba(245, 158, 11, 0.3) !important;
+}
+
+body.saiyan-mode .radar-screen-icon {
+  border-color: #F59E0B;
+  box-shadow: 0 0 10px #22C55E;
+}
+
+/* Realistic Flying Nimbus (Kinto'un) */
+.flying-nimbus {
+  position: fixed;
+  bottom: 40px;
+  left: -160px;
+  width: 140px;
+  height: 80px;
+  z-index: 99;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  animation: fly-nimbus 26s linear infinite;
+  filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
+}
+
+.flying-nimbus:hover {
+  transform: scale(1.15) rotate(6deg);
+  filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.9)) drop-shadow(4px 4px 0px #1E293B);
+}
+
+.flying-nimbus.nimbus-turbo {
+  animation: fly-nimbus-turbo 5s cubic-bezier(0.25, 1, 0.5, 1) infinite !important;
+  filter: drop-shadow(0 0 25px #FBBF24) drop-shadow(0 0 40px #38BDF8) drop-shadow(4px 4px 0px #000000) !important;
+}
+
+.nimbus-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes fly-nimbus {
+  0% { transform: translate(-150px, 0) scale(0.95); }
+  25% { transform: translate(25vw, -35px) scale(1); }
+  50% { transform: translate(50vw, 15px) scale(1.05); }
+  75% { transform: translate(75vw, -25px) scale(0.98); }
+  100% { transform: translate(calc(100vw + 160px), 0) scale(0.95); }
+}
+
+@keyframes fly-nimbus-turbo {
+  0% { transform: translate(-150px, 0) scale(1.1) rotate(12deg); }
+  100% { transform: translate(calc(100vw + 200px), -60px) scale(1.25) rotate(18deg); }
+}
+
+/* Global Click Particle Animations */
+.global-click-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  border-radius: 50%;
+  animation: particle-pop-fade 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.click-shockwave-ring {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  border: 2.5px solid var(--accent);
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: ring-expand-fade 0.45s ease-out forwards;
+}
+
+@keyframes particle-pop-fade {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx, 20px)), calc(-50% + var(--dy, -20px))) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes ring-expand-fade {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.9;
+    border-width: 3px;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+/* Collectible Dragon Balls */
+.dragon-ball, .shenron-star-ball {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 0px #1E293B;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  user-select: none;
+  position: relative;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.dragon-ball:hover, .shenron-star-ball:hover {
+  transform: scale(1.2) rotate(10deg);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 3px 3px 0px #1E293B;
+}
+
+.dragon-ball.collected, .shenron-star-ball.collected {
+  animation: dragon-ball-glow 1.5s infinite alternate;
+}
+
+@keyframes dragon-ball-glow {
+  from { box-shadow: 0 0 6px #F59E0B, 2px 2px 0px #1E293B; }
+  to { box-shadow: 0 0 16px #FBBF24, 0 0 24px #EF4444, 2px 2px 0px #1E293B; }
+}
+
+/* Ki Charge Blast Particle Effect */
+.ki-spark {
+  position: absolute;
+  pointer-events: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #38BDF8;
+  box-shadow: 0 0 10px #FBBF24, 0 0 20px #38BDF8;
+  animation: spark-fade 0.6s ease-out forwards;
+}
+
+@keyframes spark-fade {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3.5) translate(var(--tx, 20px), var(--ty, -20px)); opacity: 0; }
+}
+
+

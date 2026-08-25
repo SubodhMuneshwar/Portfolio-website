@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Clip path for playful asymmetrical blob -->
+    <clipPath id="avatar-blob">
+      <path d="M 250 30 C 380 30, 470 120, 470 250 C 470 380, 370 470, 250 470 C 120 470, 30 380, 30 250 C 30 130, 130 30, 250 30 Z" />
+    </clipPath>
+  </defs>
+
+  <!-- Hard Pop Offset Shadow of the Avatar Frame -->
+  <path d="M 260 40 C 390 40, 480 130, 480 260 C 480 390, 380 480, 260 480 C 130 480, 40 390, 40 260 C 40 140, 140 40, 260 40 Z" fill="#1E293B" />
+
+  <!-- Main Background Blob -->
+  <path d="M 250 30 C 380 30, 470 120, 470 250 C 470 380, 370 470, 250 470 C 120 470, 30 380, 30 250 C 30 130, 130 30, 250 30 Z" fill="#8B5CF6" stroke="#1E293B" stroke-width="4" />
+
+  <!-- Inner Dotted Pattern & Geometry -->
+  <g clip-path="url(#avatar-blob)">
+    <!-- Polka dot grid inside blob -->
+    <circle cx="100" cy="100" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="140" cy="100" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="180" cy="100" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="100" cy="140" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="140" cy="140" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="180" cy="140" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="340" cy="100" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="380" cy="100" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="340" cy="140" r="4" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="380" cy="140" r="4" fill="#FFFFFF" opacity="0.3" />
+
+    <!-- Big sun circle in avatar background -->
+    <circle cx="250" cy="210" r="140" fill="#FBBF24" stroke="#1E293B" stroke-width="3" />
+
+    <!-- Developer Character Vector -->
+    <g id="developer-character" transform="translate(130, 120)">
+      <!-- Shoulders & Hoodie -->
+      <path d="M 20 280 C 20 200, 70 190, 120 190 C 170 190, 220 200, 220 280 Z" fill="#1E293B" stroke="#1E293B" stroke-width="3" />
+      <path d="M 80 190 L 120 250 L 160 190 Z" fill="#F472B6" stroke="#1E293B" stroke-width="2" />
+      <circle cx="120" cy="250" r="6" fill="#FFFDF5" />
+
+      <!-- Neck -->
+      <rect x="105" y="150" width="30" height="45" rx="6" fill="#FBBF24" stroke="#1E293B" stroke-width="3" />
+
+      <!-- Head / Face -->
+      <rect x="75" y="60" width="90" height="100" rx="40" fill="#FFE4D6" stroke="#1E293B" stroke-width="3" />
+
+      <!-- Hair -->
+      <path d="M 70 85 C 70 35, 170 35, 170 85 C 160 65, 80 65, 70 85 Z" fill="#1E293B" stroke="#1E293B" stroke-width="2" />
+
+      <!-- Modern Glasses (Chunky Black Frame) -->
+      <rect x="82" y="85" width="32" height="24" rx="8" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+      <rect x="126" y="85" width="32" height="24" rx="8" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+      <line x1="114" y1="96" x2="126" y2="96" stroke="#1E293B" stroke-width="3" />
+      <!-- Eyes behind glasses -->
+      <circle cx="98" cy="97" r="4" fill="#1E293B" />
+      <circle cx="142" cy="97" r="4" fill="#1E293B" />
+
+      <!-- Smile -->
+      <path d="M 105 130 Q 120 142 135 130" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+    </g>
+  </g>
+
+  <!-- Floating Badge: Python & ML -->
+  <g transform="translate(10, 340)">
+    <rect x="4" y="4" width="160" height="48" rx="24" fill="#1E293B" />
+    <rect x="0" y="0" width="160" height="48" rx="24" fill="#FFFDF5" stroke="#1E293B" stroke-width="2.5" />
+    <circle cx="28" cy="24" r="14" fill="#34D399" stroke="#1E293B" stroke-width="1.5" />
+    <text x="28" y="28" font-size="14" text-anchor="middle">⚡</text>
+    <text x="50" y="22" font-family="'Outfit', sans-serif" font-weight="800" font-size="12" fill="#1E293B">Python • C#</text>
+    <text x="50" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="10" fill="#64748B">Backend & ML</text>
+  </g>
+
+  <!-- Floating Badge: CGPI 9.14 -->
+  <g transform="translate(320, 90)">
+    <rect x="4" y="4" width="150" height="46" rx="23" fill="#1E293B" />
+    <rect x="0" y="0" width="150" height="46" rx="23" fill="#F472B6" stroke="#1E293B" stroke-width="2.5" />
+    <circle cx="26" cy="23" r="14" fill="#FFFDF5" stroke="#1E293B" stroke-width="1.5" />
+    <text x="26" y="28" font-size="14" text-anchor="middle">⭐</text>
+    <text x="48" y="21" font-family="'Outfit', sans-serif" font-weight="800" font-size="12" fill="#FFFFFF">9.14 CGPI</text>
+    <text x="48" y="35" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="9" fill="#1E293B">B.E. Comp Engg</text>
+  </g>
+
+  <!-- Floating Star -->
+  <g transform="translate(370, 390) rotate(15)">
+    <polygon points="25,0 32,15 48,18 36,30 39,47 25,38 10,47 14,30 2,18 18,15" fill="#FBBF24" stroke="#1E293B" stroke-width="2.5" />
+  </g>
+</svg>

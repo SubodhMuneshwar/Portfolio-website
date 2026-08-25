@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <pattern id="grid-pattern-4" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#E2E8F0" />
+    </pattern>
+  </defs>
+  <rect width="600" height="360" fill="#FFFDF5" />
+  <rect width="600" height="360" fill="url(#grid-pattern-4)" />
+
+  <circle cx="90" cy="270" r="55" fill="#F472B6" stroke="#1E293B" stroke-width="2.5" />
+  <polygon points="510,40 570,140 450,140" fill="#34D399" stroke="#1E293B" stroke-width="2.5" />
+
+  <!-- NAAC Management Screen -->
+  <g transform="translate(110, 40)">
+    <rect x="8" y="8" width="380" height="260" rx="20" fill="#1E293B" />
+    <rect x="0" y="0" width="380" height="260" rx="20" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+    
+    <!-- Top Bar -->
+    <rect x="0" y="0" width="380" height="42" rx="20" fill="#34D399" stroke="#1E293B" stroke-width="3" />
+    <circle cx="25" cy="21" r="6" fill="#8B5CF6" stroke="#1E293B" stroke-width="1.5" />
+    <circle cx="45" cy="21" r="6" fill="#F472B6" stroke="#1E293B" stroke-width="1.5" />
+    <circle cx="65" cy="21" r="6" fill="#FBBF24" stroke="#1E293B" stroke-width="1.5" />
+    <text x="190" y="26" font-family="'Outfit', sans-serif" font-weight="700" font-size="13" fill="#1E293B" text-anchor="middle">NAAC Portal • Hackcelestial 1.0</text>
+
+    <!-- Accreditation Workflow & Stats -->
+    <g transform="translate(30, 60)">
+      <!-- Metric Bar 1 -->
+      <rect x="0" y="0" width="320" height="44" rx="10" fill="#FFFDF5" stroke="#1E293B" stroke-width="2" />
+      <circle cx="24" cy="22" r="14" fill="#8B5CF6" stroke="#1E293B" stroke-width="1.5" />
+      <text x="24" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="11" fill="#FFFFFF" text-anchor="middle">C1</text>
+      <text x="48" y="20" font-family="'Outfit', sans-serif" font-weight="700" font-size="11" fill="#1E293B">Curricular Aspects</text>
+      <rect x="48" y="26" width="180" height="8" rx="4" fill="#E2E8F0" />
+      <rect x="48" y="26" width="160" height="8" rx="4" fill="#34D399" />
+      <text x="280" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11" fill="#1E293B">100%</text>
+
+      <!-- Metric Bar 2 -->
+      <g transform="translate(0, 54)">
+        <rect x="0" y="0" width="320" height="44" rx="10" fill="#FFFDF5" stroke="#1E293B" stroke-width="2" />
+        <circle cx="24" cy="22" r="14" fill="#F472B6" stroke="#1E293B" stroke-width="1.5" />
+        <text x="24" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="11" fill="#FFFFFF" text-anchor="middle">C2</text>
+        <text x="48" y="20" font-family="'Outfit', sans-serif" font-weight="700" font-size="11" fill="#1E293B">Teaching & Learning</text>
+        <rect x="48" y="26" width="180" height="8" rx="4" fill="#E2E8F0" />
+        <rect x="48" y="26" width="140" height="8" rx="4" fill="#8B5CF6" />
+        <text x="280" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11" fill="#1E293B">92%</text>
+      </g>
+
+      <!-- Metric Bar 3 -->
+      <g transform="translate(0, 108)">
+        <rect x="0" y="0" width="320" height="44" rx="10" fill="#FFFDF5" stroke="#1E293B" stroke-width="2" />
+        <circle cx="24" cy="22" r="14" fill="#FBBF24" stroke="#1E293B" stroke-width="1.5" />
+        <text x="24" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="11" fill="#1E293B" text-anchor="middle">C3</text>
+        <text x="48" y="20" font-family="'Outfit', sans-serif" font-weight="700" font-size="11" fill="#1E293B">Research & Innovation</text>
+        <rect x="48" y="26" width="180" height="8" rx="4" fill="#E2E8F0" />
+        <rect x="48" y="26" width="170" height="8" rx="4" fill="#FBBF24" />
+        <text x="280" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="11" fill="#1E293B">96%</text>
+      </g>
+    </g>
+  </g>
+</svg>

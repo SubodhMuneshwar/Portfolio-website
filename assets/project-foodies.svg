@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <pattern id="grid-pattern-3" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#E2E8F0" />
+    </pattern>
+  </defs>
+  <rect width="600" height="360" fill="#FFFDF5" />
+  <rect width="600" height="360" fill="url(#grid-pattern-3)" />
+
+  <circle cx="490" cy="260" r="60" fill="#34D399" stroke="#1E293B" stroke-width="2.5" />
+  <rect x="70" y="50" width="80" height="80" rx="20" fill="#FBBF24" stroke="#1E293B" stroke-width="2.5" transform="rotate(-15 110 90)" />
+
+  <!-- Foodies Goodies Screen Mockup -->
+  <g transform="translate(110, 40)">
+    <rect x="8" y="8" width="380" height="260" rx="20" fill="#1E293B" />
+    <rect x="0" y="0" width="380" height="260" rx="20" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+    
+    <!-- Top Bar -->
+    <rect x="0" y="0" width="380" height="42" rx="20" fill="#FBBF24" stroke="#1E293B" stroke-width="3" />
+    <circle cx="25" cy="21" r="6" fill="#F472B6" stroke="#1E293B" stroke-width="1.5" />
+    <circle cx="45" cy="21" r="6" fill="#8B5CF6" stroke="#1E293B" stroke-width="1.5" />
+    <circle cx="65" cy="21" r="6" fill="#34D399" stroke="#1E293B" stroke-width="1.5" />
+    <text x="190" y="26" font-family="'Outfit', sans-serif" font-weight="700" font-size="13" fill="#1E293B" text-anchor="middle">Foodies Goodies • Diet & Recipe Hub</text>
+
+    <!-- Search Bar Mockup -->
+    <g transform="translate(30, 58)">
+      <rect x="0" y="0" width="220" height="28" rx="14" fill="#F1F5F9" stroke="#1E293B" stroke-width="1.5" />
+      <text x="15" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#64748B">🔍 High Protein Keto Bowls...</text>
+    </g>
+
+    <!-- Food / Nutrition Cards -->
+    <g transform="translate(30, 96)">
+      <!-- Card 1 (Avocado Salad) -->
+      <rect x="3" y="3" width="145" height="130" rx="12" fill="#1E293B" />
+      <rect x="0" y="0" width="145" height="130" rx="12" fill="#FFFDF5" stroke="#1E293B" stroke-width="2" />
+      <circle cx="72" cy="45" r="28" fill="#34D399" stroke="#1E293B" stroke-width="2" />
+      <text x="72" y="52" font-size="24" text-anchor="middle">🥑</text>
+      <text x="72" y="90" font-family="'Outfit', sans-serif" font-weight="700" font-size="11" fill="#1E293B" text-anchor="middle">Avocado Diet Bowl</text>
+      <text x="72" y="108" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#8B5CF6" text-anchor="middle">380 kcal • 24g Protein</text>
+
+      <!-- Card 2 (Berry Smoothie) -->
+      <g transform="translate(170, 0)">
+        <rect x="3" y="3" width="145" height="130" rx="12" fill="#1E293B" />
+        <rect x="0" y="0" width="145" height="130" rx="12" fill="#FFFDF5" stroke="#1E293B" stroke-width="2" />
+        <circle cx="72" cy="45" r="28" fill="#F472B6" stroke="#1E293B" stroke-width="2" />
+        <text x="72" y="52" font-size="24" text-anchor="middle">🍓</text>
+        <text x="72" y="90" font-family="'Outfit', sans-serif" font-weight="700" font-size="11" fill="#1E293B" text-anchor="middle">Antioxidant Shake</text>
+        <text x="72" y="108" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" fill="#F472B6" text-anchor="middle">210 kcal • Low Sugar</text>
+      </g>
+    </g>
+
+    <!-- Calorie Badge -->
+    <g transform="translate(260, 54)">
+      <rect x="2" y="2" width="90" height="32" rx="16" fill="#1E293B" />
+      <rect x="0" y="0" width="90" height="32" rx="16" fill="#8B5CF6" stroke="#1E293B" stroke-width="1.5" />
+      <text x="45" y="20" font-family="'Outfit', sans-serif" font-weight="800" font-size="10" fill="#FFFFFF" text-anchor="middle">Edamam API</text>
+    </g>
+  </g>
+</svg>
