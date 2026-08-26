@@ -48,6 +48,13 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* Preserve interactive click feedback animations even in reduced-motion mode */
+  .global-click-particle,
+  .click-shockwave-ring,
+  .ki-spark {
+    animation-duration: 0.55s !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* --- Typography Helpers --- */

@@ -840,12 +840,15 @@ function initGlobalClickAnimation() {
   const lightColors = ['#8B5CF6', '#F472B6', '#FBBF24', '#34D399', '#38BDF8'];
   const saiyanColors = ['#FBBF24', '#F59E0B', '#38BDF8', '#EF4444', '#FEF08A'];
 
-  document.addEventListener('pointerdown', (e) => {
-    // Avoid interfering when typing in inputs/textareas
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  // Debounce flag to prevent double-firing on devices that emit both touch & pointer events
+  let lastAnimTime = 0;
 
-    const x = e.clientX;
-    const y = e.clientY;
+  function spawnClickAnimation(x, y) {
+    // Throttle: ignore if triggered within 50ms of last animation (prevents double-fire)
+    const now = Date.now();
+    if (now - lastAnimTime < 50) return;
+    lastAnimTime = now;
+
     const isSaiyan = document.body.classList.contains('saiyan-mode');
     const colorPalette = isSaiyan ? saiyanColors : lightColors;
 
@@ -859,7 +862,7 @@ function initGlobalClickAnimation() {
     ring.style.height = isSaiyan ? '50px' : '40px';
     document.body.appendChild(ring);
 
-    // 2. Spawning 7 bouncy bursting particles
+    // 2. Spawning bouncy bursting particles
     const particleCount = isSaiyan ? 8 : 6;
     for (let i = 0; i < particleCount; i++) {
       const p = document.createElement('div');
@@ -890,6 +893,26 @@ function initGlobalClickAnimation() {
     }
 
     setTimeout(() => ring.remove(), 500);
+  }
+
+  // Pointer events (works on desktop and most modern mobile browsers)
+  document.addEventListener('pointerdown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    spawnClickAnimation(e.clientX, e.clientY);
+  });
+
+  // Touch events fallback (ensures mobile compatibility on all browsers)
+  document.addEventListener('touchstart', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.touches && e.touches.length > 0) {
+      spawnClickAnimation(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  // Click event as final fallback (fires on all mobile browsers after touch)
+  document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    spawnClickAnimation(e.clientX, e.clientY);
   });
 }
 
