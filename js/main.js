@@ -29,6 +29,7 @@ function initKeyboardShortcuts() {
     if (e.key === 'Escape') {
       closeProjectModal();
       closeShenronModal();
+      closeDragonRadarModal();
     }
   });
 }
@@ -668,8 +669,70 @@ function drawSingleBolt(ctx, w, h) {
   ctx.stroke();
 }
 
-/* --- 7 Dragon Balls Collector & SVG Star Renderer --- */
+/* --- 7 Dragon Balls Collector & Realistic Dragon Radar Engine --- */
 const collectedBalls = new Set();
+
+const dragonBallLocations = [
+  { num: 1, name: "1-Star Dragon Ball", sector: "Skills Matrix", hint: "Hidden in Skills Category", x: 30, y: 35, selector: "#skills" },
+  { num: 2, name: "2-Star Dragon Ball", sector: "Experience Timeline", hint: "Guarded in Experience Section", x: 68, y: 28, selector: "#experience" },
+  { num: 3, name: "3-Star Dragon Ball", sector: "Projects Grid", hint: "Found in Featured Projects", x: 74, y: 64, selector: "#projects" },
+  { num: 4, name: "4-Star Dragon Ball (Goku's Treasure)", sector: "AI/ML Project Header", hint: "Resting near Retinopathy AI", x: 40, y: 72, selector: "#projects" },
+  { num: 5, name: "5-Star Dragon Ball", sector: "Achievements Arena", hint: "Discovered in Hackathon Wins", x: 26, y: 64, selector: "#achievements" },
+  { num: 6, name: "6-Star Dragon Ball", sector: "Education & Degree", hint: "Located in Academics Section", x: 60, y: 46, selector: "#education" },
+  { num: 7, name: "7-Star Dragon Ball", sector: "Contact Radar Base", hint: "Secured near Contact Hub", x: 50, y: 22, selector: "#contact" }
+];
+
+/* Web Audio Synthesizers for authentic sound effects */
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playRadarPingSound() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1760, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(2640, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  } catch (e) {}
+}
+
+function playDragonBallCollectChime() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const notes = [587.33, 739.99, 880.00, 1174.66, 1479.98, 1760.00];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+      gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.08);
+      gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + idx * 0.08 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.45);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.08);
+      osc.stop(ctx.currentTime + idx * 0.08 + 0.45);
+    });
+  } catch (e) {}
+}
 
 function renderDragonBallSVGs() {
   function createStarPolygon(cx, cy, r = 2.8) {
@@ -683,69 +746,250 @@ function renderDragonBallSVGs() {
     return `<polygon points="${points.join(' ')}" fill="#DC2626" />`;
   }
 
-  function getBallSVG(starNum) {
+  window.getBallSVGString = function(starNum, size = 34) {
     let stars = '';
     const num = parseInt(starNum, 10);
+    const scale = size / 34;
+    const r = (radius) => radius * scale;
+    const c = (coord) => coord * scale;
+
     if (num === 1) {
-      stars = createStarPolygon(17, 17, 3.8);
+      stars = createStarPolygon(c(17), c(17), r(3.8));
     } else if (num === 2) {
-      stars = createStarPolygon(12, 17, 3.0) + createStarPolygon(22, 17, 3.0);
+      stars = createStarPolygon(c(12), c(17), r(3.0)) + createStarPolygon(c(22), c(17), r(3.0));
     } else if (num === 3) {
-      stars = createStarPolygon(17, 11, 2.9) + createStarPolygon(11.5, 21.5, 2.9) + createStarPolygon(22.5, 21.5, 2.9);
+      stars = createStarPolygon(c(17), c(11), r(2.9)) + createStarPolygon(c(11.5), c(21.5), r(2.9)) + createStarPolygon(c(22.5), c(21.5), r(2.9));
     } else if (num === 4) {
-      stars = createStarPolygon(12, 12, 2.8) + createStarPolygon(22, 12, 2.8) + createStarPolygon(12, 22, 2.8) + createStarPolygon(22, 22, 2.8);
+      stars = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(12), r(2.8)) + createStarPolygon(c(12), c(22), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8));
     } else if (num === 5) {
-      stars = createStarPolygon(17, 10, 2.6) + createStarPolygon(10.5, 15.5, 2.6) + createStarPolygon(23.5, 15.5, 2.6) + createStarPolygon(13, 23.5, 2.6) + createStarPolygon(21, 23.5, 2.6);
+      stars = createStarPolygon(c(17), c(10), r(2.6)) + createStarPolygon(c(10.5), c(15.5), r(2.6)) + createStarPolygon(c(23.5), c(15.5), r(2.6)) + createStarPolygon(c(13), c(23.5), r(2.6)) + createStarPolygon(c(21), c(23.5), r(2.6));
     } else if (num === 6) {
-      stars = createStarPolygon(12, 10.5, 2.5) + createStarPolygon(22, 10.5, 2.5) + createStarPolygon(9.5, 17, 2.5) + createStarPolygon(24.5, 17, 2.5) + createStarPolygon(12, 23.5, 2.5) + createStarPolygon(22, 23.5, 2.5);
+      stars = createStarPolygon(c(12), c(10.5), r(2.5)) + createStarPolygon(c(22), c(10.5), r(2.5)) + createStarPolygon(c(9.5), c(17), r(2.5)) + createStarPolygon(c(24.5), c(17), r(2.5)) + createStarPolygon(c(12), c(23.5), r(2.5)) + createStarPolygon(c(22), c(23.5), r(2.5));
     } else if (num === 7) {
-      stars = createStarPolygon(17, 17, 2.5) + createStarPolygon(17, 9.5, 2.3) + createStarPolygon(23.5, 13, 2.3) + createStarPolygon(23.5, 21, 2.3) + createStarPolygon(17, 24.5, 2.3) + createStarPolygon(10.5, 21, 2.3) + createStarPolygon(10.5, 13, 2.3);
+      stars = createStarPolygon(c(17), c(17), r(2.5)) + createStarPolygon(c(17), c(9.5), r(2.3)) + createStarPolygon(c(23.5), c(13), r(2.3)) + createStarPolygon(c(23.5), c(21), r(2.3)) + createStarPolygon(c(17), c(24.5), r(2.3)) + createStarPolygon(c(10.5), c(21), r(2.3)) + createStarPolygon(c(10.5), c(13), r(2.3));
     }
 
     return `
-      <svg viewBox="0 0 34 34" width="34" height="34" style="display: block; pointer-events: none;">
+      <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="display: block; pointer-events: none;">
         <defs>
-          <radialGradient id="db-orb-${num}" cx="35%" cy="35%" r="65%">
+          <radialGradient id="db-orb-${num}-${size}" cx="35%" cy="35%" r="65%">
             <stop offset="0%" stop-color="#FDE047" />
             <stop offset="65%" stop-color="#F59E0B" />
             <stop offset="100%" stop-color="#EA580C" />
           </radialGradient>
         </defs>
-        <circle cx="17" cy="17" r="15" fill="url(#db-orb-${num})" stroke="#1E293B" stroke-width="2" />
-        <ellipse cx="12" cy="10" rx="4" ry="2" fill="#FFFFFF" opacity="0.6" transform="rotate(-30 12 10)" />
+        <circle cx="${c(17)}" cy="${c(17)}" r="${r(15)}" fill="url(#db-orb-${num}-${size})" stroke="#1E293B" stroke-width="${Math.max(1.5, 2 * scale)}" />
+        <ellipse cx="${c(12)}" cy="${c(10)}" rx="${r(4)}" ry="${r(2)}" fill="#FFFFFF" opacity="0.6" transform="rotate(-30 ${c(12)} ${c(10)})" />
         ${stars}
       </svg>
     `;
-  }
+  };
 
   // Render SVG inside section dragon balls
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
-    ball.innerHTML = getBallSVG(ballNum);
+    ball.innerHTML = window.getBallSVGString(ballNum, 34);
   });
 
   // Render SVG inside Shenron modal celebration balls
   document.querySelectorAll('.shenron-star-ball[data-shenron-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-shenron-ball');
-    ball.innerHTML = getBallSVG(ballNum);
+    ball.innerHTML = window.getBallSVGString(ballNum, 34);
   });
+}
+
+function updateRadarMiniBlips() {
+  const miniContainer = document.getElementById('radarMiniBlips');
+  if (!miniContainer) return;
+
+  miniContainer.innerHTML = dragonBallLocations.map(ball => {
+    const isCollected = collectedBalls.has(ball.num);
+    const color = isCollected ? '#F59E0B' : '#EF4444';
+    return `<span style="position: absolute; left: ${ball.x}%; top: ${ball.y}%; width: 4px; height: 4px; border-radius: 50%; background: ${color}; box-shadow: 0 0 4px ${color}; transform: translate(-50%, -50%);"></span>`;
+  }).join('');
+}
+
+function renderRadarHUD() {
+  const blipsLayer = document.getElementById('radarBlipsLayer');
+  const signalsList = document.getElementById('radarSignalsList');
+  const statusText = document.getElementById('radarStatusText');
+
+  if (statusText) {
+    statusText.textContent = collectedBalls.size === 7 ? "ALL 7 SIGNALS LOCKED! SHENRON READY!" : `${collectedBalls.size}/7 SIGNALS ACQUIRED`;
+  }
+
+  if (blipsLayer) {
+    blipsLayer.innerHTML = dragonBallLocations.map(ball => {
+      const isCollected = collectedBalls.has(ball.num);
+      return `
+        <div class="radar-signal-dot ${isCollected ? 'signal-collected' : 'signal-uncollected'}"
+             style="left: ${ball.x}%; top: ${ball.y}%;"
+             title="${ball.name} (${isCollected ? 'Collected' : 'Detected'})"
+             onclick="focusSector('${ball.selector}')">
+          ${isCollected ? '' : ball.num}
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (signalsList) {
+    signalsList.innerHTML = dragonBallLocations.map(ball => {
+      const isCollected = collectedBalls.has(ball.num);
+      return `
+        <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusSector('${ball.selector}')" style="cursor: pointer;">
+          <div class="radar-signal-card-ball">
+            ${window.getBallSVGString(ball.num, 20)}
+          </div>
+          <div class="radar-signal-card-info">
+            <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '✅' : '📡'}</span>
+            <span class="radar-signal-card-sector">${isCollected ? 'Secured in Radar' : ball.sector}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+window.focusSector = function(selector) {
+  closeDragonRadarModal();
+  const target = document.querySelector(selector);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.add('saiyan-charging');
+    setTimeout(() => target.classList.remove('saiyan-charging'), 1200);
+  }
+};
+
+window.openDragonRadarModal = function() {
+  const modal = document.getElementById('dragonRadarModal');
+  if (modal) {
+    playRadarPingSound();
+    renderRadarHUD();
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+window.closeDragonRadarModal = function() {
+  const modal = document.getElementById('dragonRadarModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.pingRadarScan = function() {
+  playRadarPingSound();
+  renderRadarHUD();
+  const remaining = 7 - collectedBalls.size;
+  if (remaining === 0) {
+    showToast('🐉 All 7 Dragon Balls are in your Radar! Shenron awaits!');
+  } else {
+    showToast(`📡 Radar Ping: ${remaining} Dragon Ball signals active across sectors!`);
+  }
+};
+
+let isCollectingAnimationRunning = false;
+
+function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
+  if (isCollectingAnimationRunning) return;
+  isCollectingAnimationRunning = true;
+
+  const overlay = document.getElementById('dragonBallCollectOverlay');
+  const enlargedBall = document.getElementById('dbEnlargedBall');
+  const title = document.getElementById('dbCollectTitle');
+  const radarWidget = document.getElementById('dragonRadarWidget');
+  const radarCount = document.getElementById('ballsFoundCount');
+
+  // Mark collected
+  collectedBalls.add(ballNumber);
+  if (sourceBall) sourceBall.classList.add('collected');
+
+  // 1. Play magical chime and create sparkle burst at click point
+  playDragonBallCollectChime();
+  createKiSparks(clickX, clickY);
+
+  // 2. Render enlarged ball SVG (110px)
+  if (enlargedBall) {
+    enlargedBall.innerHTML = window.getBallSVGString(ballNumber, 110);
+  }
+  if (title) {
+    title.textContent = `${ballNumber}-Star Dragon Ball`;
+  }
+
+  // 3. Show full-screen shining collection modal
+  if (overlay) {
+    overlay.classList.add('active');
+  }
+
+  // 4. Stage 1: Enlarge and pulse in center (950ms)
+  setTimeout(() => {
+    // 5. Stage 2: Create a flying clone that shoots down into the radar widget
+    const radarRect = radarWidget ? radarWidget.getBoundingClientRect() : { left: window.innerWidth - 80, top: window.innerHeight - 80, width: 60, height: 60 };
+    const startX = window.innerWidth / 2;
+    const startY = window.innerHeight / 2;
+    const targetX = radarRect.left + radarRect.width / 2;
+    const targetY = radarRect.top + radarRect.height / 2;
+
+    const flyer = document.createElement('div');
+    flyer.className = 'db-flying-clone';
+    flyer.innerHTML = window.getBallSVGString(ballNumber, 90);
+    flyer.style.left = `${startX - 85}px`;
+    flyer.style.top = `${startY - 85}px`;
+    document.body.appendChild(flyer);
+
+    // Hide central overlay
+    if (overlay) overlay.classList.remove('active');
+
+    // Trigger flight animation
+    requestAnimationFrame(() => {
+      const deltaX = targetX - startX;
+      const deltaY = targetY - startY;
+      flyer.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.2) rotate(360deg)`;
+      flyer.style.opacity = '0.9';
+    });
+
+    // 6. Stage 3: Impact at Dragon Radar (after 600ms flight)
+    setTimeout(() => {
+      flyer.remove();
+      playRadarPingSound();
+
+      if (radarWidget) {
+        radarWidget.classList.remove('radar-ping-blast');
+        void radarWidget.offsetWidth; // Force reflow
+        radarWidget.classList.add('radar-ping-blast');
+      }
+
+      const currentCount = Math.min(7, collectedBalls.size);
+      if (radarCount) radarCount.textContent = currentCount;
+      updateRadarMiniBlips();
+
+      createKiSparks(targetX, targetY);
+      showToast(`⭐ Added the ${ballNumber}-Star Dragon Ball to Radar! (${currentCount}/7)`);
+
+      isCollectingAnimationRunning = false;
+
+      // If all 7 collected -> summon Shenron!
+      if (currentCount === 7) {
+        setTimeout(() => {
+          openShenronModal();
+        }, 700);
+      }
+    }, 600);
+  }, 950);
 }
 
 function initDragonBallsCollector() {
   renderDragonBallSVGs();
+  updateRadarMiniBlips();
 
   const interactiveBalls = document.querySelectorAll('.dragon-ball[data-ball]');
-  const radarCount = document.getElementById('ballsFoundCount');
   const radarWidget = document.getElementById('dragonRadarWidget');
 
   if (radarWidget) {
-    radarWidget.addEventListener('click', () => {
-      const remaining = 7 - collectedBalls.size;
-      if (remaining > 0) {
-        showToast(`📟 Dragon Radar: ${collectedBalls.size}/7 found! Explore sections to find the rest!`);
-      } else {
-        openShenronModal();
-      }
+    radarWidget.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openDragonRadarModal();
     });
   }
 
@@ -754,26 +998,12 @@ function initDragonBallsCollector() {
       e.stopPropagation();
       const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
       
-      // Ensure only valid 1-7 stars are counted
       if (ballNumber >= 1 && ballNumber <= 7) {
         if (!collectedBalls.has(ballNumber)) {
-          collectedBalls.add(ballNumber);
-          ball.classList.add('collected');
-          
-          const currentCount = Math.min(7, collectedBalls.size);
-          if (radarCount) radarCount.textContent = currentCount;
-          
-          createKiSparks(e.clientX, e.clientY);
-          showToast(`⭐ Found the ${ballNumber}-Star Dragon Ball! (${currentCount}/7)`);
-
-          if (currentCount === 7) {
-            setTimeout(() => {
-              openShenronModal();
-            }, 600);
-          }
+          triggerDragonBallCollection(ballNumber, ball, e.clientX, e.clientY);
         } else {
           createKiSparks(e.clientX, e.clientY);
-          showToast(`✨ Already collected the ${ballNumber}-Star Dragon Ball! (${Math.min(7, collectedBalls.size)}/7)`);
+          showToast(`✨ ${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
         }
       }
     });

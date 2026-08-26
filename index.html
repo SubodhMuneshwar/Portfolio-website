@@ -533,15 +533,85 @@
   </div>
 
   <!-- =========================================================================
-       Dragon Radar Tracker Floating Widget
+       Dragon Radar Tracker Floating Widget (Realistic Capsule Corp Device)
        ========================================================================= -->
   <div class="dragon-radar-widget" id="dragonRadarWidget"
-    title="Dragon Radar: Click to scan for remaining Dragon Balls!">
-    <div class="radar-screen-icon">
-      <div class="radar-blip"></div>
+    title="Capsule Corp Dragon Radar: Click to Scan & Track Dragon Balls!" role="button" tabindex="0">
+    <div class="radar-device-thumb">
+      <img src="assets/dragon_radar.png" alt="Dragon Radar" class="radar-device-img" />
+      <div class="radar-live-glow"></div>
+      <div class="radar-mini-blips" id="radarMiniBlips">
+        <!-- Dynamic radar blips -->
+      </div>
     </div>
-    <span id="dragonRadarText">Dragon Balls: <strong id="ballsFoundCount"
-        style="color: var(--secondary);">0</strong>/7</span>
+    <div class="radar-info-box">
+      <span class="radar-label">DRAGON RADAR</span>
+      <span class="radar-count-badge"><strong id="ballsFoundCount">0</strong>/7 <span class="radar-star-glyph">★</span></span>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Realistic Dragon Radar Scanner HUD Modal
+       ========================================================================= -->
+  <div class="modal-backdrop" id="dragonRadarModal" onclick="if(event.target===this) closeDragonRadarModal()">
+    <div class="modal-window radar-modal-window">
+      <button type="button" class="modal-close-btn" onclick="closeDragonRadarModal()" aria-label="Close Dragon Radar">✕</button>
+      
+      <div class="radar-hud-header">
+        <span class="radar-corp-badge">CAPSULE CORP.</span>
+        <h2 class="radar-hud-title">DRAGON RADAR v7.0</h2>
+        <p class="radar-hud-subtitle">Signal Tracker: <span id="radarStatusText">Scanning Sectors...</span></p>
+      </div>
+
+      <div class="radar-device-display">
+        <div class="radar-device-frame">
+          <img src="assets/dragon_radar.png" alt="Dragon Radar Device" class="radar-full-device-img" />
+          
+          <!-- Interactive Radar Grid & Signals -->
+          <div class="radar-screen-viewport">
+            <div class="radar-sweep-beam"></div>
+            <div class="radar-center-arrow"></div>
+            <div class="radar-blips-layer" id="radarBlipsLayer">
+              <!-- 7 Dynamic Dragon Ball Blips injected by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signals Status Checklist -->
+      <div class="radar-signals-list" id="radarSignalsList">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="radar-hud-actions">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="pingRadarScan()">
+          <i data-lucide="radio" style="width: 16px; height: 16px;"></i>
+          <span>Ping Radar Scan</span>
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeDragonRadarModal()">
+          <span>Resume Search</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Full-Screen Dragon Ball Collection Animation Overlay
+       ========================================================================= -->
+  <div id="dragonBallCollectOverlay" class="db-collect-overlay" aria-hidden="true">
+    <div class="db-collect-backdrop"></div>
+    <div class="db-collect-stage" id="dbCollectStage">
+      <div class="db-aura-flares"></div>
+      <div class="db-star-burst"></div>
+      <div class="db-enlarged-ball" id="dbEnlargedBall">
+        <!-- Rendered with 3D amber glow & star SVG -->
+      </div>
+      <div class="db-collect-banner" id="dbCollectBanner">
+        <span class="db-collect-badge">DRAGON BALL DISCOVERED!</span>
+        <h3 class="db-collect-title" id="dbCollectTitle">4-Star Dragon Ball</h3>
+        <p class="db-collect-sub">Added to Dragon Radar!</p>
+      </div>
+    </div>
   </div>
 
   <!-- =========================================================================
@@ -578,7 +648,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
-  <script src="js/main.js?v=20260826_intro"></script>
+  <script src="js/main.js?v=20260826_radar"></script>
 </body>
 
 </html>

@@ -268,70 +268,132 @@ body.saiyan-mode .form-textarea:focus {
   box-shadow: 4px 4px 0px #F59E0B, 0 0 15px rgba(251, 191, 36, 0.4) !important;
 }
 
-/* Dragon Radar Widget */
+/* Realistic Dragon Radar Floating Widget */
 .dragon-radar-widget {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1200;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.75rem;
   background-color: var(--card);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-full);
-  padding: 0.45rem 1rem;
-  box-shadow: var(--shadow-md);
+  padding: 0.45rem 1.1rem 0.45rem 0.65rem;
+  box-shadow: 4px 4px 0px var(--border), 0 0 20px rgba(34, 197, 94, 0.2);
   cursor: pointer;
   transition: var(--transition-bounce);
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 13px;
   color: var(--fg);
+  user-select: none;
 }
 
 .dragon-radar-widget:hover {
-  transform: scale(1.06) translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: translate(-3px, -3px) scale(1.04);
+  box-shadow: 6px 6px 0px var(--border), 0 0 25px rgba(34, 197, 94, 0.45);
 }
 
-.radar-screen-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, #86EFAC, #15803D);
-  border: 1.5px solid var(--border);
+.dragon-radar-widget:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--border);
+}
+
+.dragon-radar-widget.radar-ping-blast {
+  animation: radar-widget-ping 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes radar-widget-ping {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.22) translate(-2px, -4px); box-shadow: 0 0 35px #F59E0B, 0 0 50px #22C55E; }
+  100% { transform: scale(1); }
+}
+
+.radar-device-thumb {
+  width: 38px;
+  height: 38px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  box-shadow: 0 0 6px #22C55E;
+  flex-shrink: 0;
 }
 
-.radar-blip {
-  width: 5px;
-  height: 5px;
+.radar-device-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+  transition: transform 0.3s ease;
+}
+
+.dragon-radar-widget:hover .radar-device-img {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.radar-live-glow {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background-color: #EF4444;
-  box-shadow: 0 0 6px #EF4444;
-  animation: blip-pulse 1.2s infinite;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.6) 0%, transparent 75%);
+  pointer-events: none;
+  animation: radar-ambient-glow 2s infinite alternate ease-in-out;
 }
 
-@keyframes blip-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.6); opacity: 0.4; }
+@keyframes radar-ambient-glow {
+  0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85); }
+  100% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.25); }
+}
+
+.radar-info-box {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.radar-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  font-weight: 900;
+  color: #15803D;
+  text-transform: uppercase;
+}
+
+body.saiyan-mode .radar-label {
+  color: #4ADE80;
+}
+
+.radar-count-badge {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.radar-count-badge strong {
+  color: #EF4444;
+  font-size: 1.05rem;
+}
+
+.radar-star-glyph {
+  color: #F59E0B;
+  font-size: 0.85rem;
+  animation: pulse-bounce 1.5s infinite;
 }
 
 body.saiyan-mode .dragon-radar-widget {
   background-color: #0F1E17 !important;
   border-color: #F59E0B !important;
   color: #F8FAFC !important;
-  box-shadow: 4px 4px 0px #000000, 0 0 15px rgba(245, 158, 11, 0.3) !important;
-}
-
-body.saiyan-mode .radar-screen-icon {
-  border-color: #F59E0B;
-  box-shadow: 0 0 10px #22C55E;
+  box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(245, 158, 11, 0.4) !important;
 }
 
 /* Realistic Flying Nimbus (Kinto'un) */
