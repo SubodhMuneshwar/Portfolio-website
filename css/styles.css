@@ -1752,3 +1752,296 @@ a {
   }
 }
 
+/* ==========================================================================
+   Super Saiyan Rosé Anime Start Animation & Transition Styles
+   ========================================================================== */
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: #030305;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.intro-overlay.hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.intro-video-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.intro-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1);
+  filter: brightness(1) blur(0px);
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease;
+}
+
+/* Flash backdrop triggered on completion / smooth transition */
+.intro-flash {
+  position: absolute;
+  inset: -20%;
+  width: 140%;
+  height: 140%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(244, 114, 182, 0.95) 0%, rgba(217, 70, 239, 0.75) 35%, rgba(147, 51, 234, 0.5) 60%, rgba(3, 3, 5, 0.95) 100%);
+  mix-blend-mode: screen;
+  transform: scale(0.9);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+/* Transition active state */
+.intro-overlay.transitioning {
+  pointer-events: none;
+}
+
+.intro-overlay.transitioning .intro-video {
+  transform: scale(1.15);
+  filter: brightness(2.4) contrast(1.2) blur(6px);
+}
+
+.intro-overlay.transitioning .intro-flash {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.intro-overlay.transitioning .intro-controls,
+.intro-overlay.transitioning .intro-sound-prompt,
+.intro-overlay.transitioning .intro-progress-container {
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Intro Header Controls */
+.intro-controls {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 25;
+  pointer-events: auto;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.intro-branding {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(10, 10, 15, 0.6);
+  padding: 0.35rem 0.85rem 0.35rem 0.4rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.intro-badge {
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.7);
+  text-transform: uppercase;
+}
+
+.intro-title {
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: 0.3px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.intro-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.intro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 0.86rem;
+  font-weight: 800;
+  border: 2.5px solid #1E293B;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.intro-audio-btn {
+  background: rgba(15, 23, 42, 0.75);
+  color: #F8FAFC;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.intro-audio-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #EC4899;
+  color: #F472B6;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5), 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.intro-audio-btn.audio-active {
+  background: rgba(236, 72, 153, 0.25);
+  border-color: #EC4899;
+  color: #FDF2F8;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+}
+
+.intro-skip-btn {
+  background: #EC4899;
+  color: #FFFFFF;
+  border-color: #1E293B;
+  box-shadow: 3.5px 3.5px 0px #1E293B, 0 0 20px rgba(236, 72, 153, 0.4);
+}
+
+.intro-skip-btn:hover {
+  background: #DB2777;
+  transform: translate(-2px, -2px);
+  box-shadow: 5.5px 5.5px 0px #1E293B, 0 0 25px rgba(236, 72, 153, 0.7);
+}
+
+.intro-skip-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1.5px 1.5px 0px #1E293B;
+}
+
+/* Bottom Progress Bar */
+.intro-progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 25;
+  overflow: hidden;
+}
+
+.intro-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #EC4899, #D946EF, #A855F7, #EC4899);
+  background-size: 200% 100%;
+  animation: aura-shimmer 2s linear infinite;
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.9);
+  transition: width 0.1s linear;
+}
+
+/* Sound Prompt */
+.intro-sound-prompt {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 15, 0.8);
+  border: 1.5px solid rgba(236, 72, 153, 0.6);
+  color: #F8FAFC;
+  padding: 0.55rem 1.35rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  pointer-events: none;
+  z-index: 25;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 0 0 18px rgba(236, 72, 153, 0.4);
+  backdrop-filter: blur(10px);
+  animation: pulse-bounce 2.2s infinite ease-in-out;
+  transition: opacity 0.4s ease;
+}
+
+.intro-sound-prompt.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Webpage Entrance Transition */
+body.page-intro-running .site-header,
+body.page-intro-running main {
+  opacity: 0.7;
+  transform: scale(0.975);
+  filter: blur(2px);
+}
+
+body.page-intro-revealed .site-header,
+body.page-intro-revealed main {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease;
+}
+
+/* Responsive adjustments for Intro Overlay */
+@media (max-width: 768px) {
+  .intro-controls {
+    top: 14px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .intro-branding {
+    display: none;
+  }
+
+  .intro-btn-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .intro-btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.78rem;
+  }
+
+  .intro-sound-prompt {
+    bottom: 22px;
+    font-size: 0.74rem;
+    padding: 0.45rem 1rem;
+    width: 90%;
+    text-align: center;
+    justify-content: center;
+  }
+}

@@ -4,6 +4,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initPageIntroAnimation();
   initHeroStats();
   renderSkills();
   renderExperience();
@@ -939,4 +940,221 @@ window.superSaiyanGodBlast = function() {
   triggerLightningStorm(6);
   showToast("🐉 'YOUR WISH HAS BEEN GRANTED!'");
 };
+
+/* ==========================================================================
+   Super Saiyan Rosé Goku Black Start Animation & Smooth Transition Controller
+   ========================================================================== */
+let isIntroFinishing = false;
+
+function initPageIntroAnimation() {
+  const overlay = document.getElementById('introOverlay');
+  const video = document.getElementById('introVideo');
+  const audioBtn = document.getElementById('introAudioBtn');
+  const audioIcon = document.getElementById('introAudioIcon');
+  const audioText = document.getElementById('introAudioText');
+  const skipBtn = document.getElementById('introSkipBtn');
+  const progressBar = document.getElementById('introProgressBar');
+  const soundPrompt = document.getElementById('introSoundPrompt');
+  const replayBtn = document.getElementById('replayIntroBtn');
+
+  if (!overlay || !video) return;
+
+  // Add intro-running class to body for initial staged styling
+  document.body.classList.add('page-intro-running');
+
+  // 1. Video Progress updates
+  video.addEventListener('timeupdate', () => {
+    if (video.duration && progressBar) {
+      const progressPercent = (video.currentTime / video.duration) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Trigger seamless divine transition right as the final Ultra card blast reaches peak (~0.35s before end)
+      if (video.currentTime >= video.duration - 0.4 && !isIntroFinishing) {
+        finishIntroTransition();
+      }
+    }
+  });
+
+  // 2. Video Ended handler
+  video.addEventListener('ended', () => {
+    if (!isIntroFinishing) {
+      finishIntroTransition();
+    }
+  });
+
+  // 3. Fallback on load/play error
+  video.addEventListener('error', (e) => {
+    console.warn('Intro video playback notice:', e);
+    finishIntroTransition();
+  });
+
+  // 4. Sound Toggle logic
+  function toggleAudio(forceState = null) {
+    const shouldMute = forceState !== null ? !forceState : !video.muted;
+    video.muted = shouldMute;
+
+    if (!video.muted) {
+      video.volume = 1.0;
+      if (audioBtn) audioBtn.classList.add('audio-active');
+      if (audioText) audioText.textContent = 'Mute Audio';
+      if (audioIcon) {
+        audioIcon.setAttribute('data-lucide', 'volume-2');
+        initLucideIcons();
+      }
+      if (soundPrompt) soundPrompt.classList.add('hidden');
+    } else {
+      if (audioBtn) audioBtn.classList.remove('audio-active');
+      if (audioText) audioText.textContent = 'Enable Audio';
+      if (audioIcon) {
+        audioIcon.setAttribute('data-lucide', 'volume-x');
+        initLucideIcons();
+      }
+    }
+  }
+
+  if (audioBtn) {
+    audioBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleAudio();
+    });
+  }
+
+  // Clicking on overlay anywhere can also toggle audio if muted, or skip if already unmuted
+  overlay.addEventListener('click', (e) => {
+    if (e.target.closest('.intro-btn') || isIntroFinishing) return;
+    if (video.muted) {
+      toggleAudio(true);
+    }
+  });
+
+  // 5. Skip Button handler
+  if (skipBtn) {
+    skipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      finishIntroTransition();
+    });
+  }
+
+  // 6. Keyboard shortcut: Esc or Space to skip intro
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('hidden') && !isIntroFinishing) {
+      if (e.key === 'Escape' || e.code === 'Space') {
+        e.preventDefault();
+        finishIntroTransition();
+      }
+    }
+  });
+
+  // 7. Start Video Playback
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.catch((err) => {
+      console.log('Autoplay started in muted mode or waiting for interaction:', err);
+      video.muted = true;
+      video.play().catch(() => {
+        // If still blocked, user can tap overlay or skip
+      });
+    });
+  }
+
+  // 8. Replay Intro Button in Navbar
+  if (replayBtn) {
+    replayBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      replayIntroAnimation();
+    });
+  }
+}
+
+/**
+ * Executes the cinematic smooth transition from the anime intro into the portfolio
+ */
+function finishIntroTransition() {
+  if (isIntroFinishing) return;
+  isIntroFinishing = true;
+
+  const overlay = document.getElementById('introOverlay');
+  const video = document.getElementById('introVideo');
+  const progressBar = document.getElementById('introProgressBar');
+
+  if (progressBar) progressBar.style.width = '100%';
+
+  // Smooth audio fade-down
+  if (video && !video.muted) {
+    let currentVol = video.volume;
+    const fadeInterval = setInterval(() => {
+      if (currentVol > 0.15) {
+        currentVol -= 0.15;
+        video.volume = Math.max(0, currentVol);
+      } else {
+        clearInterval(fadeInterval);
+        video.muted = true;
+      }
+    }, 50);
+  }
+
+  if (overlay) {
+    // Step 1: Trigger divine Ki aura blast flash & video expansion
+    overlay.classList.add('transitioning');
+
+    // Step 2: Unveil the webpage with smooth glide and spring
+    document.body.classList.remove('page-intro-running');
+    document.body.classList.add('page-intro-revealed');
+
+    // Step 3: Trigger celebratory arrival sparks & lightning pulse
+    setTimeout(() => {
+      try {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 45,
+            spread: 70,
+            origin: { y: 0.25 },
+            colors: ['#EC4899', '#D946EF', '#8B5CF6', '#F59E0B']
+          });
+        }
+      } catch (err) {}
+    }, 250);
+
+    // Step 4: Fully hide intro overlay after smooth transition completes
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      if (video) video.pause();
+      isIntroFinishing = false;
+    }, 750);
+  }
+}
+
+/**
+ * Replays the intro animation anytime the user clicks "Intro" in the header
+ */
+function replayIntroAnimation() {
+  const overlay = document.getElementById('introOverlay');
+  const video = document.getElementById('introVideo');
+  const progressBar = document.getElementById('introProgressBar');
+  const soundPrompt = document.getElementById('introSoundPrompt');
+
+  if (!overlay || !video) return;
+
+  isIntroFinishing = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  overlay.classList.remove('hidden');
+  overlay.classList.remove('transitioning');
+  document.body.classList.add('page-intro-running');
+  document.body.classList.remove('page-intro-revealed');
+
+  if (progressBar) progressBar.style.width = '0%';
+  if (soundPrompt) soundPrompt.classList.remove('hidden');
+
+  video.currentTime = 0;
+  video.volume = 1.0;
+
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.catch((err) => {
+      console.warn('Replay play notice:', err);
+    });
+  }
+}
+
 

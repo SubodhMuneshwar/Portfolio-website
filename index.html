@@ -18,7 +18,7 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/tokens.css?v=20260826">
-  <link rel="stylesheet" href="css/styles.css?v=20260826">
+  <link rel="stylesheet" href="css/styles.css?v=20260826_intro">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,6 +27,52 @@
 <body>
   <!-- Fullscreen Planet Namek Super Saiyan Lightning Storm Canvas -->
   <canvas id="lightningOverlay"></canvas>
+
+  <!-- =========================================================================
+       Cinematic Super Saiyan Rosé Goku Black Start Animation Overlay
+       ========================================================================= -->
+  <div id="introOverlay" class="intro-overlay" aria-label="Intro Animation" role="dialog" aria-modal="true">
+    <div class="intro-video-wrapper">
+      <video id="introVideo" class="intro-video" playsinline preload="auto" muted>
+        <source src="assets/intro_animation.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+    </div>
+
+    <!-- Divine Ki Energy Burst Flash Backdrop for Seamless Transition -->
+    <div class="intro-flash" id="introFlash"></div>
+
+    <!-- Intro Header Bar Controls -->
+    <div class="intro-controls">
+      <div class="intro-branding">
+        <span class="intro-badge">⚡ ULTRA INTRO</span>
+        <span class="intro-title">Subodh Uttam Muneshwar</span>
+      </div>
+
+      <div class="intro-btn-group">
+        <button type="button" class="intro-btn intro-audio-btn" id="introAudioBtn" title="Toggle Sound">
+          <i data-lucide="volume-x" id="introAudioIcon" style="width: 18px; height: 18px;"></i>
+          <span id="introAudioText">Enable Audio</span>
+        </button>
+
+        <button type="button" class="intro-btn intro-skip-btn" id="introSkipBtn" title="Skip to Portfolio (Press Esc or Space)">
+          <span>Enter Portfolio</span>
+          <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Intro Progress Bar at Bottom -->
+    <div class="intro-progress-container">
+      <div class="intro-progress-bar" id="introProgressBar"></div>
+    </div>
+
+    <!-- Sound Tap Prompt -->
+    <div class="intro-sound-prompt" id="introSoundPrompt">
+      <i data-lucide="volume-2" style="width: 18px; height: 18px;"></i>
+      <span>Tap anywhere or click <strong>Enable Audio</strong> for sound</span>
+    </div>
+  </div>
 
   <!-- =========================================================================
        Site Header / Navigation
@@ -50,6 +96,10 @@
         </ul>
 
         <div class="nav-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="replayIntroBtn" title="Replay Anime Intro Animation!">
+            <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+            <span class="btn-text-desktop">Intro</span>
+          </button>
           <button type="button" class="btn btn-tertiary btn-sm" id="saiyanModeBtn" title="Toggle Dragon Ball / Super Saiyan Mode!">
             <span style="display: inline-block; font-size: 14px;">🟠</span>
             <span id="saiyanBtnText">Go Super Saiyan!</span>
@@ -493,6 +543,6 @@
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
-  <script src="js/main.js?v=20260826"></script>
+  <script src="js/main.js?v=20260826_intro"></script>
 </body>
 </html>
