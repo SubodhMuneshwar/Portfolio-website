@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Subodh Uttam Muneshwar — Software Engineer & Backend / AI/ML Developer</title>
-  <meta name="description" content="Portfolio of Subodh Uttam Muneshwar: Software Engineer specializing in Python, C#/.NET, Flask, REST APIs, and Machine Learning / Computer Vision pipelines.">
-  <meta name="keywords" content="Subodh Muneshwar, Software Engineer, Backend Developer, Python, C#, ASP.NET, Flask, AI/ML, OpenCV, Smart India Hackathon, Portfolio">
+  <meta name="description"
+    content="Portfolio of Subodh Uttam Muneshwar: Software Engineer specializing in Python, C#/.NET, Flask, REST APIs, and Machine Learning / Computer Vision pipelines.">
+  <meta name="keywords"
+    content="Subodh Muneshwar, Software Engineer, Backend Developer, Python, C#, ASP.NET, Flask, AI/ML, OpenCV, Smart India Hackathon, Portfolio">
   <meta name="author" content="Subodh Uttam Muneshwar">
-  
+
   <!-- OpenGraph / Social Meta -->
   <meta property="og:title" content="Subodh Uttam Muneshwar — Portfolio">
-  <meta property="og:description" content="Software Engineer specializing in Python, C#/.NET, Flask, REST APIs, and AI/ML Computer Vision pipelines.">
+  <meta property="og:description"
+    content="Software Engineer specializing in Python, C#/.NET, Flask, REST APIs, and AI/ML Computer Vision pipelines.">
   <meta property="og:type" content="website">
 
   <!-- Favicon / SVG Brand Icon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%238B5CF6' stroke='%231E293B' stroke-width='8'/%3E%3Ctext x='50' y='62' font-family='sans-serif' font-weight='900' font-size='42' fill='%23FFFDF5' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%238B5CF6' stroke='%231E293B' stroke-width='8'/%3E%3Ctext x='50' y='62' font-family='sans-serif' font-weight='900' font-size='42' fill='%23FFFDF5' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/tokens.css?v=20260826">
@@ -24,6 +29,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
   <!-- Fullscreen Planet Namek Super Saiyan Lightning Storm Canvas -->
   <canvas id="lightningOverlay"></canvas>
@@ -33,7 +39,7 @@
        ========================================================================= -->
   <div id="introOverlay" class="intro-overlay" aria-label="Intro Animation" role="dialog" aria-modal="true">
     <div class="intro-video-wrapper">
-      <video id="introVideo" class="intro-video" playsinline preload="auto" muted>
+      <video id="introVideo" class="intro-video" playsinline webkit-playsinline x5-playsinline preload="auto" muted>
         <source src="assets/intro_animation.mp4" type="video/mp4">
         Your browser does not support HTML5 video.
       </video>
@@ -55,7 +61,8 @@
           <span id="introAudioText">Enable Audio</span>
         </button>
 
-        <button type="button" class="intro-btn intro-skip-btn" id="introSkipBtn" title="Skip to Portfolio (Press Esc or Space)">
+        <button type="button" class="intro-btn intro-skip-btn" id="introSkipBtn"
+          title="Skip to Portfolio (Press Esc or Space)">
           <span>Enter Portfolio</span>
           <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
         </button>
@@ -69,8 +76,8 @@
 
     <!-- Sound Tap Prompt -->
     <div class="intro-sound-prompt" id="introSoundPrompt">
-      <i data-lucide="volume-2" style="width: 18px; height: 18px;"></i>
-      <span>Tap anywhere or click <strong>Enable Audio</strong> for sound</span>
+      <i data-lucide="volume-2" style="width: 16px; height: 16px;"></i>
+      <span>Tap anywhere or click <strong>Enable Audio</strong> 🔊</span>
     </div>
   </div>
 
@@ -93,14 +100,17 @@
           <li><a href="#achievements" class="nav-link">Achievements</a></li>
           <li><a href="#education" class="nav-link">Education</a></li>
           <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li class="mobile-only-nav-item"><a href="#" class="nav-link nav-link-highlight" id="mobileDrawerIntroBtn">🎬 Replay Intro</a></li>
         </ul>
 
         <div class="nav-actions">
-          <button type="button" class="btn btn-secondary btn-sm" id="replayIntroBtn" title="Replay Anime Intro Animation!">
+          <button type="button" class="btn btn-secondary btn-sm" id="replayIntroBtn"
+            title="Replay Anime Intro Animation!">
             <i data-lucide="play" style="width: 14px; height: 14px;"></i>
             <span class="btn-text-desktop">Intro</span>
           </button>
-          <button type="button" class="btn btn-tertiary btn-sm" id="saiyanModeBtn" title="Toggle Dragon Ball / Super Saiyan Mode!">
+          <button type="button" class="btn btn-tertiary btn-sm" id="saiyanModeBtn"
+            title="Toggle Dragon Ball / Super Saiyan Mode!">
             <span style="display: inline-block; font-size: 14px;">🟠</span>
             <span id="saiyanBtnText">Go Super Saiyan!</span>
           </button>
@@ -128,11 +138,14 @@
             </div>
 
             <h1 class="hero-title">
-              Hi, I'm <span class="highlight-squiggle">Subodh Muneshwar</span> — Software Engineer & <span class="highlight-squiggle highlight-pink">Backend Builder</span>.
+              Hi, I'm <span class="highlight-squiggle">Subodh Muneshwar</span> — Software Engineer & <span
+                class="highlight-squiggle highlight-pink">Backend Builder</span>.
             </h1>
 
             <p class="hero-description">
-              Hands-on engineer building robust <strong class="marker-highlight">Python / C# backend systems</strong>, enterprise REST APIs, and <strong class="marker-highlight">AI/ML computer vision pipelines</strong> with high architectural precision.
+              Hands-on engineer building robust <strong class="marker-highlight">Python / C# backend systems</strong>,
+              enterprise REST APIs, and <strong class="marker-highlight">AI/ML computer vision pipelines</strong> with
+              high architectural precision.
             </p>
 
             <div class="hero-ctas">
@@ -234,7 +247,10 @@
           <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding-top: 0.5rem;">
             <h2 style="font-size: 2rem;">Engineering scalable backends and intelligent ML architectures.</h2>
             <p style="font-size: 1.15rem; color: #334155; line-height: 1.7;">
-              I am a Software Engineer with a deep foundation in <strong class="marker-highlight">Python, backend architecture, REST APIs, and AI/ML applications</strong>. With enterprise experience developing SAP-integrated RBAC platforms at Rashtriya Chemicals & Fertilizers and building 98% accuracy computer-vision workflows, I combine clean system design with cutting-edge machine learning.
+              I am a Software Engineer with a deep foundation in <strong class="marker-highlight">Python, backend
+                architecture, REST APIs, and AI/ML applications</strong>. With enterprise experience developing
+              SAP-integrated RBAC platforms at Rashtriya Chemicals & Fertilizers and building 98% accuracy
+              computer-vision workflows, I combine clean system design with cutting-edge machine learning.
             </p>
             <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
               <span class="tech-pill">📍 Mumbai, Maharashtra, India</span>
@@ -258,7 +274,8 @@
             <span class="dragon-ball" data-ball="1" title="Collect the 1-Star Dragon Ball!">★</span>
           </div>
           <h2 class="section-title">My Tech Stack & Tools</h2>
-          <p class="section-subtitle">A curated matrix of languages, backend frameworks, machine learning toolkits, and infrastructure skills.</p>
+          <p class="section-subtitle">A curated matrix of languages, backend frameworks, machine learning toolkits, and
+            infrastructure skills.</p>
         </div>
 
         <div class="skills-grid" id="skillsGrid">
@@ -297,10 +314,12 @@
           <div class="section-tag" style="background-color: var(--tertiary);">
             <i data-lucide="folder-git-2" style="width: 14px; height: 14px;"></i>
             Featured Projects
-            <span class="dragon-ball" data-ball="4" title="The Iconic 4-Star Dragon Ball (Goku's Grandpa's Ball)!">★★★★</span>
+            <span class="dragon-ball" data-ball="4"
+              title="The Iconic 4-Star Dragon Ball (Goku's Grandpa's Ball)!">★★★★</span>
           </div>
           <h2 class="section-title">Things I've Designed & Built</h2>
-          <p class="section-subtitle">Explore machine learning pipelines, biometric systems, and full-stack web platforms.</p>
+          <p class="section-subtitle">Explore machine learning pipelines, biometric systems, and full-stack web
+            platforms.</p>
         </div>
 
         <!-- Filter Buttons -->
@@ -329,7 +348,8 @@
             <span class="dragon-ball" data-ball="3" title="Collect the 3-Star Dragon Ball!">★★★</span>
           </div>
           <h2 class="section-title">Achievements & Leadership</h2>
-          <p class="section-subtitle">National hackathon victories, student leadership, technical workshops, and creative competitions.</p>
+          <p class="section-subtitle">National hackathon victories, student leadership, technical workshops, and
+            creative competitions.</p>
         </div>
 
         <div class="achievements-grid" id="achievementsGrid">
@@ -387,21 +407,24 @@
           <div class="card-floating-badge" style="background-color: var(--tertiary);">
             <i data-lucide="send" style="width: 14px; height: 14px;"></i>
             Let's Collaborate
-            <span class="dragon-ball" data-ball="7" title="Collect the final 7-Star Dragon Ball to summon Shenron!">★★★★★★★</span>
+            <span class="dragon-ball" data-ball="7"
+              title="Collect the final 7-Star Dragon Ball to summon Shenron!">★★★★★★★</span>
           </div>
 
           <div class="contact-grid">
             <div>
               <h2 style="font-size: 2.25rem; margin-bottom: 1rem;">Let's build something extraordinary together!</h2>
               <p style="font-size: 1.05rem; color: #475569; margin-bottom: 1.5rem;">
-                Whether you have an engineering opening, a backend/ML project in mind, or just want to connect, my inbox is always open!
+                Whether you have an engineering opening, a backend/ML project in mind, or just want to connect, my inbox
+                is always open!
               </p>
 
               <div class="contact-info-list">
                 <button type="button" class="contact-card-btn" id="copyEmailBtn">
                   <div class="contact-btn-icon">📧</div>
                   <div>
-                    <div style="font-size: 0.75rem; color: var(--muted-fg); text-transform: uppercase;">Direct Email (Click to copy)</div>
+                    <div style="font-size: 0.75rem; color: var(--muted-fg); text-transform: uppercase;">Direct Email
+                      (Click to copy)</div>
                     <div style="font-size: 1rem; color: var(--fg);">subodhum1603@gmail.com</div>
                   </div>
                 </button>
@@ -409,17 +432,20 @@
                 <button type="button" class="contact-card-btn" id="copyPhoneBtn">
                   <div class="contact-btn-icon">📱</div>
                   <div>
-                    <div style="font-size: 0.75rem; color: var(--muted-fg); text-transform: uppercase;">Phone / WhatsApp (Click to copy)</div>
+                    <div style="font-size: 0.75rem; color: var(--muted-fg); text-transform: uppercase;">Phone / WhatsApp
+                      (Click to copy)</div>
                     <div style="font-size: 1rem; color: var(--fg);">+91 9029920228</div>
                   </div>
                 </button>
 
                 <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
-                  <a href="https://github.com/SubodhMuneshwar" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                  <a href="https://github.com/SubodhMuneshwar" target="_blank" rel="noopener noreferrer"
+                    class="btn btn-outline btn-sm">
                     <i data-lucide="github" style="width: 16px; height: 16px;"></i>
                     <span>GitHub Profile</span>
                   </a>
-                  <a href="https://www.linkedin.com/in/subodh-muneshwar-47209324b/" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                  <a href="https://www.linkedin.com/in/subodh-muneshwar-47209324b/" target="_blank"
+                    rel="noopener noreferrer" class="btn btn-outline btn-sm">
                     <i data-lucide="linkedin" style="width: 16px; height: 16px;"></i>
                     <span>LinkedIn Profile</span>
                   </a>
@@ -429,25 +455,30 @@
 
             <!-- Interactive Quick Message Form -->
             <div>
-              <form class="contact-form" id="contactForm" action="https://formsubmit.co/subodhum1603@gmail.com" method="POST">
+              <form class="contact-form" id="contactForm" action="https://formsubmit.co/subodhum1603@gmail.com"
+                method="POST">
                 <!-- FormSubmit Configuration -->
                 <input type="hidden" name="_subject" value="⚡ New Portfolio Inquiry" />
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="_captcha" value="false" />
-                <input type="hidden" name="_next" value="https://subodhm.github.io/Portfolio-website/index.html#contact" />
+                <input type="hidden" name="_next"
+                  value="https://subodhm.github.io/Portfolio-website/index.html#contact" />
                 <input type="text" name="_honey" style="display:none" />
 
                 <div class="form-group">
                   <label for="senderName" class="form-label">Your Name</label>
-                  <input type="text" id="senderName" name="name" class="form-input" placeholder="e.g. Tony Stark" required />
+                  <input type="text" id="senderName" name="name" class="form-input" placeholder="e.g. Tony Stark"
+                    required />
                 </div>
                 <div class="form-group">
                   <label for="senderEmail" class="form-label">Your Email</label>
-                  <input type="email" id="senderEmail" name="email" class="form-input" placeholder="e.g. tony@starkindustries.com" required />
+                  <input type="email" id="senderEmail" name="email" class="form-input"
+                    placeholder="e.g. tony@starkindustries.com" required />
                 </div>
                 <div class="form-group">
                   <label for="senderMessage" class="form-label">Message / Opportunity</label>
-                  <textarea id="senderMessage" name="message" class="form-textarea" placeholder="Hello Subodh, we'd love to interview you for a Backend/ML role..." required></textarea>
+                  <textarea id="senderMessage" name="message" class="form-textarea"
+                    placeholder="Hello Subodh, we'd love to interview you for a Backend/ML role..." required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                   <span>Send Message 🚀</span>
@@ -468,7 +499,8 @@
       <div class="footer-content">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
           <span class="brand-badge">⚡</span>
-          <span style="font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem;">Subodh Uttam Muneshwar</span>
+          <span style="font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem;">Subodh Uttam
+            Muneshwar</span>
         </div>
         <div style="font-size: 0.9rem; color: var(--muted-fg); font-weight: 600;">
           Crafted with <strong>Playful Geometric Design System</strong> • © 2026 Subodh Muneshwar
@@ -503,11 +535,13 @@
   <!-- =========================================================================
        Dragon Radar Tracker Floating Widget
        ========================================================================= -->
-  <div class="dragon-radar-widget" id="dragonRadarWidget" title="Dragon Radar: Click to scan for remaining Dragon Balls!">
+  <div class="dragon-radar-widget" id="dragonRadarWidget"
+    title="Dragon Radar: Click to scan for remaining Dragon Balls!">
     <div class="radar-screen-icon">
       <div class="radar-blip"></div>
     </div>
-    <span id="dragonRadarText">Dragon Balls: <strong id="ballsFoundCount" style="color: var(--secondary);">0</strong>/7</span>
+    <span id="dragonRadarText">Dragon Balls: <strong id="ballsFoundCount"
+        style="color: var(--secondary);">0</strong>/7</span>
   </div>
 
   <!-- =========================================================================
@@ -517,7 +551,8 @@
     <div class="modal-window" style="text-align: center; border-color: #10B981; box-shadow: 10px 10px 0px #065F46;">
       <button type="button" class="modal-close-btn" onclick="closeShenronModal()" aria-label="Close modal">✕</button>
       <div style="font-size: 3.5rem; margin-bottom: 0.5rem; animation: pulse-bounce 2s infinite;">🐉 ✨</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #059669; margin-bottom: 0.5rem;">SHENRON HAS BEEN SUMMONED!</h2>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #059669; margin-bottom: 0.5rem;">SHENRON HAS BEEN SUMMONED!
+      </h2>
       <p style="font-size: 1.15rem; color: #334155; margin-bottom: 1.5rem; font-weight: 700;">
         "State your wish! You have collected all 7 Dragon Balls across Subodh's portfolio!"
       </p>
@@ -545,4 +580,5 @@
   <script src="js/data.js"></script>
   <script src="js/main.js?v=20260826_intro"></script>
 </body>
+
 </html>

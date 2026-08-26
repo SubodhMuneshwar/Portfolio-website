@@ -1057,10 +1057,24 @@ function initPageIntroAnimation() {
     });
   }
 
-  // 8. Replay Intro Button in Navbar
+  // 8. Replay Intro Button in Navbar & Mobile Drawer
   if (replayBtn) {
     replayBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      replayIntroAnimation();
+    });
+  }
+
+  const mobileDrawerIntroBtn = document.getElementById('mobileDrawerIntroBtn');
+  if (mobileDrawerIntroBtn) {
+    mobileDrawerIntroBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const navMenu = document.getElementById('navMenu');
+      const mobileToggle = document.getElementById('mobileMenuToggle');
+      if (navMenu && navMenu.classList.contains('active')) {
+        navMenu.classList.remove('active');
+        if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+      }
       replayIntroAnimation();
     });
   }
