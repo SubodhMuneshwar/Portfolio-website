@@ -396,30 +396,48 @@ body.saiyan-mode .dragon-radar-widget {
   box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(245, 158, 11, 0.4) !important;
 }
 
-/* Realistic Flying Nimbus (Kinto'un) */
+/* Realistic Flying Nimbus (Kinto'un) - Randomized Trajectory Engine */
 .flying-nimbus {
   position: fixed;
-  bottom: clamp(70px, 12vh, 120px);
+  top: var(--nimbus-top, 72%);
   left: 0;
   width: 140px;
   height: 80px;
   z-index: 9990;
   pointer-events: auto;
   cursor: pointer;
-  transition: filter 0.3s ease;
-  animation: fly-nimbus 24s linear infinite;
+  transition: filter 0.3s ease, opacity 0.4s ease;
   filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  will-change: transform;
+  will-change: transform, top;
 }
 
 .flying-nimbus:hover {
   filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.95)) drop-shadow(4px 4px 0px #1E293B);
 }
 
-.flying-nimbus.nimbus-turbo {
-  animation: fly-nimbus-turbo 4.5s cubic-bezier(0.25, 1, 0.5, 1) infinite !important;
+/* Left-to-Right Cruising & Turbo */
+.flying-nimbus.nimbus-flying-ltr {
+  animation: fly-nimbus-ltr var(--nimbus-duration, 22s) linear infinite;
+}
+
+.flying-nimbus.nimbus-flying-ltr.nimbus-turbo {
+  animation: fly-nimbus-turbo-ltr 4.2s cubic-bezier(0.25, 1, 0.5, 1) infinite !important;
+  filter: drop-shadow(0 0 25px #FBBF24) drop-shadow(0 0 40px #38BDF8) drop-shadow(4px 4px 0px #000000) !important;
+}
+
+/* Right-to-Left Cruising & Turbo */
+.flying-nimbus.nimbus-flying-rtl {
+  animation: fly-nimbus-rtl var(--nimbus-duration, 22s) linear infinite;
+}
+
+.flying-nimbus.nimbus-flying-rtl .nimbus-img {
+  transform: scaleX(-1);
+}
+
+.flying-nimbus.nimbus-flying-rtl.nimbus-turbo {
+  animation: fly-nimbus-turbo-rtl 4.2s cubic-bezier(0.25, 1, 0.5, 1) infinite !important;
   filter: drop-shadow(0 0 25px #FBBF24) drop-shadow(0 0 40px #38BDF8) drop-shadow(4px 4px 0px #000000) !important;
 }
 
@@ -430,20 +448,37 @@ body.saiyan-mode .dragon-radar-widget {
   display: block;
   pointer-events: none;
   user-select: none;
+  transition: transform 0.3s ease;
 }
 
-@keyframes fly-nimbus {
+/* Left-to-Right Flight Wave */
+@keyframes fly-nimbus-ltr {
   0%   { transform: translate3d(-180px, 0, 0) scale(0.95); }
-  15%  { transform: translate3d(12vw, -20px, 0) scale(1); }
-  40%  { transform: translate3d(38vw, 12px, 0) scale(1.05); }
-  65%  { transform: translate3d(62vw, -18px, 0) scale(1); }
-  85%  { transform: translate3d(82vw, 8px, 0) scale(0.98); }
+  18%  { transform: translate3d(18vw, -24px, 0) scale(1); }
+  45%  { transform: translate3d(45vw, 16px, 0) scale(1.04); }
+  72%  { transform: translate3d(72vw, -20px, 0) scale(1); }
+  88%  { transform: translate3d(88vw, 10px, 0) scale(0.98); }
   100% { transform: translate3d(calc(100vw + 180px), 0, 0) scale(0.95); }
 }
 
-@keyframes fly-nimbus-turbo {
+@keyframes fly-nimbus-turbo-ltr {
   0%   { transform: translate3d(-200px, 0, 0) scale(1.1) rotate(12deg); }
   100% { transform: translate3d(calc(100vw + 200px), -60px, 0) scale(1.25) rotate(18deg); }
+}
+
+/* Right-to-Left Flight Wave */
+@keyframes fly-nimbus-rtl {
+  0%   { transform: translate3d(calc(100vw + 180px), 0, 0) scale(0.95); }
+  18%  { transform: translate3d(82vw, -24px, 0) scale(1); }
+  45%  { transform: translate3d(55vw, 16px, 0) scale(1.04); }
+  72%  { transform: translate3d(28vw, -20px, 0) scale(1); }
+  88%  { transform: translate3d(12vw, 10px, 0) scale(0.98); }
+  100% { transform: translate3d(-180px, 0, 0) scale(0.95); }
+}
+
+@keyframes fly-nimbus-turbo-rtl {
+  0%   { transform: translate3d(calc(100vw + 200px), 0, 0) scale(1.1) rotate(-12deg); }
+  100% { transform: translate3d(-200px, -60px, 0) scale(1.25) rotate(-18deg); }
 }
 
 /* Project Card Filter Animation */

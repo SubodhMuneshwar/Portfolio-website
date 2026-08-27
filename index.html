@@ -141,6 +141,7 @@
           <div class="hero-content">
             <div class="hero-badge">
               <span>⚡ Open for Software & AI/ML Roles</span>
+              <span class="dragon-ball fake-dragon-ball" data-fake-ball="8" title="Wait... an 8-Star Dragon Ball?!"></span>
             </div>
 
             <h1 class="hero-title">
@@ -236,7 +237,10 @@
         <div class="ticker-item"><span>Computer Vision & CNN (98% Acc)</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>Smart India Hackathon Top 5</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>SAP NCo & LDAP Authentication</span><span class="ticker-bullet">★</span></div>
-        <div class="ticker-item"><span>Distributed Systems & Algorithms</span><span class="ticker-bullet">★</span></div>
+        <div class="ticker-item">
+          <span>Distributed Systems & Algorithms</span>
+          <span class="dragon-ball fake-dragon-ball" data-fake-ball="cracked" title="This Dragon Ball has a band-aid on it?!"></span>
+        </div>
       </div>
     </div>
 
@@ -249,6 +253,7 @@
           <div class="card-floating-badge" style="background-color: var(--tertiary);">
             <i data-lucide="user-check" style="width: 14px; height: 14px;"></i>
             Professional Summary
+            <span class="dragon-ball fake-dragon-ball" data-fake-ball="0" title="A mysterious blank Dragon Ball?"></span>
           </div>
           <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding-top: 0.5rem;">
             <h2 style="font-size: 2rem;">Engineering scalable backends and intelligent ML architectures.</h2>
@@ -395,6 +400,7 @@
             <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
               <i data-lucide="award" style="color: var(--secondary);"></i>
               Industry Certifications
+              <span class="dragon-ball fake-dragon-ball" data-fake-ball="question" title="A mystery question-mark Dragon Ball?"></span>
             </h3>
             <div class="cert-column" id="certificationsColumn">
               <!-- Dynamic render -->
@@ -507,6 +513,7 @@
           <span class="brand-badge">⚡</span>
           <span style="font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem;">Subodh Uttam
             Muneshwar</span>
+          <span class="dragon-ball fake-dragon-ball" data-fake-ball="rock" title="A suspicious painted orange rock..."></span>
         </div>
         <div style="font-size: 0.9rem; color: var(--muted-fg); font-weight: 600;">
           Crafted with <strong>Playful Geometric Design System</strong> • © 2026 Subodh Muneshwar
@@ -652,9 +659,51 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       Kid Goku Prank Modal Dialog (Triggered on Clicking Fake Dragon Balls)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="kidGokuPrankModal" onclick="if(event.target===this) closeKidGokuPrankModal()">
+    <div class="modal-window prank-modal-window">
+      <div class="prank-timer-bar-wrap">
+        <div class="prank-timer-bar" id="prankTimerBar"></div>
+      </div>
+      <button type="button" class="modal-close-btn" onclick="closeKidGokuPrankModal()" aria-label="Close Prank">✕</button>
+      
+      <div class="prank-badge-wrap">
+        <span class="prank-badge">🤪 FOOLED YA! • FAKE DRAGON BALL!</span>
+      </div>
+
+      <div class="prank-image-frame">
+        <img src="assets/goku_prank.jpg" alt="Kid Goku Sticking Tongue Out - You Got Pranked!" class="prank-goku-img" />
+        <div class="prank-comic-sparkles">✨ 👅 💥</div>
+      </div>
+
+      <div class="prank-dialogue-bubble">
+        <div class="prank-speaker-label">KID GOKU SAYS:</div>
+        <p class="prank-quote" id="prankQuoteText">
+          "Bleh! 😝 That's not a real Dragon Ball! That's just an ordinary orange rock I found in the woods!"
+        </p>
+      </div>
+
+      <p class="prank-hint-sub">
+        Hint: Use the <strong>Capsule Corp Dragon Radar</strong> (bottom right) to scan for the authentic 7 Dragon Balls!
+      </p>
+
+      <div class="prank-actions">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="openDragonRadarFromPrank()">
+          <i data-lucide="radio" style="width: 14px; height: 14px;"></i>
+          <span>Open Dragon Radar 📡</span>
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeKidGokuPrankModal()">
+          <span>Got Me! 😂</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="js/data.js?v=20260828_ultra"></script>
-  <script src="js/main.js?v=20260828_ultra"></script>
+  <script src="js/data.js?v=20260828_goku_prank2"></script>
+  <script src="js/main.js?v=20260828_goku_prank2"></script>
 </body>
 
 </html>

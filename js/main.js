@@ -32,6 +32,7 @@ function initKeyboardShortcuts() {
       closeProjectModal();
       closeShenronModal();
       closeDragonRadarModal();
+      closeKidGokuPrankModal();
     }
   });
 }
@@ -750,26 +751,48 @@ function renderDragonBallSVGs() {
   }
 
   window.getBallSVGString = function(starNum, size = 34) {
-    let stars = '';
-    const num = parseInt(starNum, 10);
+    let innerContent = '';
     const scale = size / 34;
     const r = (radius) => radius * scale;
     const c = (coord) => coord * scale;
 
-    if (num === 1) {
-      stars = createStarPolygon(c(17), c(17), r(3.8));
-    } else if (num === 2) {
-      stars = createStarPolygon(c(12), c(17), r(3.0)) + createStarPolygon(c(22), c(17), r(3.0));
-    } else if (num === 3) {
-      stars = createStarPolygon(c(17), c(11), r(2.9)) + createStarPolygon(c(11.5), c(21.5), r(2.9)) + createStarPolygon(c(22.5), c(21.5), r(2.9));
-    } else if (num === 4) {
-      stars = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(12), r(2.8)) + createStarPolygon(c(12), c(22), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8));
-    } else if (num === 5) {
-      stars = createStarPolygon(c(17), c(10), r(2.6)) + createStarPolygon(c(10.5), c(15.5), r(2.6)) + createStarPolygon(c(23.5), c(15.5), r(2.6)) + createStarPolygon(c(13), c(23.5), r(2.6)) + createStarPolygon(c(21), c(23.5), r(2.6));
-    } else if (num === 6) {
-      stars = createStarPolygon(c(12), c(10.5), r(2.5)) + createStarPolygon(c(22), c(10.5), r(2.5)) + createStarPolygon(c(9.5), c(17), r(2.5)) + createStarPolygon(c(24.5), c(17), r(2.5)) + createStarPolygon(c(12), c(23.5), r(2.5)) + createStarPolygon(c(22), c(23.5), r(2.5));
-    } else if (num === 7) {
-      stars = createStarPolygon(c(17), c(17), r(2.5)) + createStarPolygon(c(17), c(9.5), r(2.3)) + createStarPolygon(c(23.5), c(13), r(2.3)) + createStarPolygon(c(23.5), c(21), r(2.3)) + createStarPolygon(c(17), c(24.5), r(2.3)) + createStarPolygon(c(10.5), c(21), r(2.3)) + createStarPolygon(c(10.5), c(13), r(2.3));
+    const num = starNum.toString();
+
+    if (num === '1') {
+      innerContent = createStarPolygon(c(17), c(17), r(3.8));
+    } else if (num === '2') {
+      innerContent = createStarPolygon(c(12), c(17), r(3.0)) + createStarPolygon(c(22), c(17), r(3.0));
+    } else if (num === '3') {
+      innerContent = createStarPolygon(c(17), c(11), r(2.9)) + createStarPolygon(c(11.5), c(21.5), r(2.9)) + createStarPolygon(c(22.5), c(21.5), r(2.9));
+    } else if (num === '4') {
+      innerContent = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(12), r(2.8)) + createStarPolygon(c(12), c(22), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8));
+    } else if (num === '5') {
+      innerContent = createStarPolygon(c(17), c(10), r(2.6)) + createStarPolygon(c(10.5), c(15.5), r(2.6)) + createStarPolygon(c(23.5), c(15.5), r(2.6)) + createStarPolygon(c(13), c(23.5), r(2.6)) + createStarPolygon(c(21), c(23.5), r(2.6));
+    } else if (num === '6') {
+      innerContent = createStarPolygon(c(12), c(10.5), r(2.5)) + createStarPolygon(c(22), c(10.5), r(2.5)) + createStarPolygon(c(9.5), c(17), r(2.5)) + createStarPolygon(c(24.5), c(17), r(2.5)) + createStarPolygon(c(12), c(23.5), r(2.5)) + createStarPolygon(c(22), c(23.5), r(2.5));
+    } else if (num === '7') {
+      innerContent = createStarPolygon(c(17), c(17), r(2.5)) + createStarPolygon(c(17), c(9.5), r(2.3)) + createStarPolygon(c(23.5), c(13), r(2.3)) + createStarPolygon(c(23.5), c(21), r(2.3)) + createStarPolygon(c(17), c(24.5), r(2.3)) + createStarPolygon(c(10.5), c(21), r(2.3)) + createStarPolygon(c(10.5), c(13), r(2.3));
+    } 
+    // --- Fake Dragon Balls Trick Variations ---
+    else if (num === '8') {
+      // Impossible 8-Star Dragon Ball!
+      innerContent = createStarPolygon(c(12), c(9), r(2.2)) + createStarPolygon(c(22), c(9), r(2.2)) +
+                     createStarPolygon(c(8), c(17), r(2.2)) + createStarPolygon(c(17), c(17), r(2.2)) + createStarPolygon(c(26), c(17), r(2.2)) +
+                     createStarPolygon(c(12), c(25), r(2.2)) + createStarPolygon(c(22), c(25), r(2.2)) + createStarPolygon(c(17), c(9), r(2.0));
+    } else if (num === '0') {
+      // Blank smooth decoy orb with faint shine
+      innerContent = '';
+    } else if (num === 'cracked') {
+      // Cracked 4-Star Ball with cartoon crack path
+      innerContent = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8)) +
+        `<path d="M ${c(6)} ${c(14)} L ${c(14)} ${c(19)} L ${c(18)} ${c(16)} L ${c(28)} ${c(22)}" stroke="#1E293B" stroke-width="${Math.max(1.5, 2 * scale)}" stroke-linecap="round" fill="none" />` +
+        `<rect x="${c(12)}" y="${c(15)}" width="${c(10)}" height="${c(4)}" rx="${c(1)}" fill="#FDE68A" stroke="#1E293B" stroke-width="1" transform="rotate(-20 ${c(17)} ${c(17)})" />`;
+    } else if (num === 'question') {
+      // Mystery question mark
+      innerContent = `<text x="${c(17)}" y="${c(23)}" font-family="sans-serif" font-weight="900" font-size="${c(18)}" fill="#DC2626" text-anchor="middle">?</text>`;
+    } else if (num === 'rock') {
+      // Painted orange pebble
+      innerContent = `<circle cx="${c(14)}" cy="${c(14)}" r="${c(1.5)}" fill="#78350F" /><circle cx="${c(21)}" cy="${c(20)}" r="${c(2)}" fill="#78350F" /><circle cx="${c(12)}" cy="${c(22)}" r="${c(1.5)}" fill="#78350F" />`;
     }
 
     return `
@@ -783,15 +806,21 @@ function renderDragonBallSVGs() {
         </defs>
         <circle cx="${c(17)}" cy="${c(17)}" r="${r(15)}" fill="url(#db-orb-${num}-${size})" stroke="#1E293B" stroke-width="${Math.max(1.5, 2 * scale)}" />
         <ellipse cx="${c(12)}" cy="${c(10)}" rx="${r(4)}" ry="${r(2)}" fill="#FFFFFF" opacity="0.6" transform="rotate(-30 ${c(12)} ${c(10)})" />
-        ${stars}
+        ${innerContent}
       </svg>
     `;
   };
 
-  // Render SVG inside section dragon balls
+  // Render SVG inside real section dragon balls
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
     ball.innerHTML = window.getBallSVGString(ballNum, 34);
+  });
+
+  // Render SVG inside fake decoy dragon balls
+  document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
+    const fakeType = ball.getAttribute('data-fake-ball');
+    ball.innerHTML = window.getBallSVGString(fakeType, 34);
   });
 
   // Render SVG inside Shenron modal celebration balls
@@ -982,11 +1011,98 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
   }, 950);
 }
 
+function playPrankBoingSound() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(160, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(720, ctx.currentTime + 0.16);
+    osc.frequency.exponentialRampToValueAtTime(240, ctx.currentTime + 0.36);
+    gain.gain.setValueAtTime(0.32, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.42);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.42);
+  } catch (e) {}
+}
+
+const kidGokuPrankQuotes = [
+  "Bleh! 😝 That's not a real Dragon Ball! That's just an ordinary orange rock I found in the woods!",
+  "Hehehe! 😜 You got tricked! That ball has 8 stars! Shenron only has 7!",
+  "Bleeehh! 👅 Fooled ya! Master Roshi said fake Dragon Balls don't grant wishes!",
+  "Aha! 🤪 That's my decoy ball! Check your Capsule Corp Dragon Radar to find the real ones!",
+  "Bwahaha! 😋 Grandpa Gohan taught me that trick! Keep searching, silly!",
+  "Nya-ha-ha! 😛 You found a fake! Bulma's Dragon Radar only tracks authentic energy signatures!"
+];
+
+let kidGokuPrankTimer = null;
+
+window.triggerKidGokuPrank = function(fakeType, clickX, clickY) {
+  if (kidGokuPrankTimer) clearTimeout(kidGokuPrankTimer);
+
+  playPrankBoingSound();
+  createKiSparks(clickX, clickY);
+
+  const quoteEl = document.getElementById('prankQuoteText');
+  if (quoteEl) {
+    const randomQuote = kidGokuPrankQuotes[Math.floor(Math.random() * kidGokuPrankQuotes.length)];
+    quoteEl.textContent = randomQuote;
+  }
+
+  const modal = document.getElementById('kidGokuPrankModal');
+  const timerBar = document.getElementById('prankTimerBar');
+
+  if (timerBar) {
+    // Reset timer progress bar animation
+    timerBar.style.animation = 'none';
+    void timerBar.offsetWidth;
+    timerBar.style.animation = '';
+  }
+
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    initLucideIcons();
+  }
+
+  showToast("🤪 BLEH! Fooled ya! That's a FAKE Dragon Ball!");
+
+  // Auto-dismiss after 7 seconds
+  kidGokuPrankTimer = setTimeout(() => {
+    closeKidGokuPrankModal();
+  }, 7000);
+};
+
+window.closeKidGokuPrankModal = function() {
+  if (kidGokuPrankTimer) {
+    clearTimeout(kidGokuPrankTimer);
+    kidGokuPrankTimer = null;
+  }
+
+  const modal = document.getElementById('kidGokuPrankModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.openDragonRadarFromPrank = function() {
+  closeKidGokuPrankModal();
+  setTimeout(() => {
+    openDragonRadarModal();
+  }, 220);
+};
+
 function initDragonBallsCollector() {
   renderDragonBallSVGs();
   updateRadarMiniBlips();
 
   const interactiveBalls = document.querySelectorAll('.dragon-ball[data-ball]');
+  const fakeBalls = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
   const radarWidget = document.getElementById('dragonRadarWidget');
 
   if (radarWidget) {
@@ -996,6 +1112,7 @@ function initDragonBallsCollector() {
     });
   }
 
+  // Real 7 Dragon Balls Click / Touch Handler
   interactiveBalls.forEach(ball => {
     const handleBallCollect = (e) => {
       e.stopPropagation();
@@ -1019,6 +1136,23 @@ function initDragonBallsCollector() {
       handleBallCollect(e);
     });
   });
+
+  // Fake Decoy Dragon Balls Click / Touch Handler (Kid Goku Prank)
+  fakeBalls.forEach(fakeBall => {
+    const handleFakeClick = (e) => {
+      e.stopPropagation();
+      const fakeType = fakeBall.getAttribute('data-fake-ball');
+      const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : (e.clientX || window.innerWidth / 2);
+      const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : (e.clientY || window.innerHeight / 2);
+      triggerKidGokuPrank(fakeType, clientX, clientY);
+    };
+
+    fakeBall.addEventListener('click', handleFakeClick);
+    fakeBall.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      handleFakeClick(e);
+    });
+  });
 }
 
 /* --- Ki Spark Click Effect --- */
@@ -1037,20 +1171,59 @@ function createKiSparks(x, y) {
   }
 }
 
-/* --- Flying Nimbus Interaction & Turbo Acceleration --- */
+/* --- Dynamic Random Flying Nimbus Flight Engine --- */
 let nimbusTurboTimer = null;
+let currentNimbusDirection = 'ltr';
+
+function launchRandomNimbusFlight() {
+  const nimbus = document.getElementById('flyingNimbus');
+  if (!nimbus) return;
+
+  // Random vertical altitude between 10% and 82% of screen height
+  const randomTop = Math.floor(10 + Math.random() * 72);
+  nimbus.style.setProperty('--nimbus-top', `${randomTop}%`);
+
+  // Random flight direction: 60% Left-to-Right, 40% Right-to-Left
+  const isLTR = Math.random() > 0.40;
+  currentNimbusDirection = isLTR ? 'ltr' : 'rtl';
+
+  // Random duration between 18s and 26s (on mobile: 14s - 20s)
+  const isMobile = window.innerWidth < 768;
+  const duration = isMobile 
+    ? Math.floor(14 + Math.random() * 6) 
+    : Math.floor(18 + Math.random() * 8);
+  nimbus.style.setProperty('--nimbus-duration', `${duration}s`);
+
+  // Reset classes and trigger reflow
+  nimbus.classList.remove('nimbus-flying-ltr', 'nimbus-flying-rtl', 'nimbus-turbo');
+  void nimbus.offsetWidth;
+
+  if (isLTR) {
+    nimbus.classList.add('nimbus-flying-ltr');
+  } else {
+    nimbus.classList.add('nimbus-flying-rtl');
+  }
+}
 
 function initNimbusClick() {
   const nimbus = document.getElementById('flyingNimbus');
   if (!nimbus) return;
 
+  // Launch initial random trajectory flight
+  launchRandomNimbusFlight();
+
+  // On every animation loop completion, randomize flight altitude & direction for the next pass
+  nimbus.addEventListener('animationiteration', () => {
+    if (!nimbus.classList.contains('nimbus-turbo')) {
+      launchRandomNimbusFlight();
+    }
+  });
+
   function triggerNimbusTurbo() {
-    // Clear any existing turbo timer
     if (nimbusTurboTimer) clearTimeout(nimbusTurboTimer);
 
-    // Apply high-velocity speed boost
+    // Apply high-velocity turbo speed in active direction
     nimbus.classList.remove('nimbus-turbo');
-    // Force reflow to restart turbo keyframe
     void nimbus.offsetWidth;
     nimbus.classList.add('nimbus-turbo');
 
@@ -1068,10 +1241,11 @@ function initNimbusClick() {
     drawLightningStrike();
     showToast("☁️ KINTO'UN TURBO SPEED ENGAGED! ⚡");
 
-    // Return to normal cruising speed after 4.5s
+    // Return to normal cruising speed & pick new random flight path after 4.2s
     nimbusTurboTimer = setTimeout(() => {
       nimbus.classList.remove('nimbus-turbo');
-    }, 4500);
+      launchRandomNimbusFlight();
+    }, 4200);
   }
 
   // Pointer events (uniform handling across desktop mouse, touch, and stylus)
