@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initDragonBallsCollector();
   initNimbusClick();
   initGlobalClickAnimation();
+  initScrollReveal();
+  initDbzJokePlaceholders();
 });
 
 // Escape key to close modal
@@ -162,7 +164,9 @@ function renderProjects(filterCategory = 'all') {
             <div class="btn-icon-circle"><i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></div>
           </button>
           <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" title="View Source Code on GitHub">
-            <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
             <span>GitHub</span>
           </a>
         </div>
@@ -171,6 +175,7 @@ function renderProjects(filterCategory = 'all') {
   `).join('');
 
   initLucideIcons();
+  if (window.refreshScrollReveal) window.refreshScrollReveal();
 }
 
 /* --- Project Filter Handlers --- */
@@ -225,7 +230,9 @@ window.openProjectModal = function(projectId) {
 
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
       <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-        <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
         <span>Explore GitHub Repository</span>
       </a>
       <button type="button" class="btn btn-outline" onclick="closeProjectModal()">
@@ -305,6 +312,8 @@ function renderCertifications() {
       </div>
     </div>
   `).join('');
+
+  if (window.refreshScrollReveal) window.refreshScrollReveal();
 }
 
 /* --- Toast Helper --- */
@@ -455,10 +464,12 @@ function initMobileMenu() {
     function setDrawerState(isOpen) {
       if (isOpen) {
         navMenu.classList.add('open');
+        document.body.classList.add('mobile-drawer-open');
         toggleBtn.setAttribute('aria-expanded', 'true');
         toggleBtn.innerHTML = '<i data-lucide="x" style="width: 22px; height: 22px;"></i>';
       } else {
         navMenu.classList.remove('open');
+        document.body.classList.remove('mobile-drawer-open');
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
       }
@@ -526,6 +537,22 @@ function initScrollSpy() {
 
   window.addEventListener('scroll', updateActiveLink, { passive: true });
   updateActiveLink();
+
+  // Clicking brand logo or back-to-top scrolls completely to absolute top (0, 0)
+  const topScrollLinks = document.querySelectorAll('.brand-logo, a[href="#hero"], .site-footer a[href="#hero"]');
+  topScrollLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+      if (history.pushState) {
+        history.pushState(null, null, window.location.pathname);
+      }
+    });
+  });
 }
 
 /* ==========================================================================
@@ -1326,24 +1353,18 @@ function initNimbusClick() {
   });
 }
 
-/* --- Global Click Animation Engine --- */
+/* --- Global Click Animation Engine (Shockwave Ripple Rings) --- */
 function initGlobalClickAnimation() {
-  const lightColors = ['#8B5CF6', '#F472B6', '#FBBF24', '#34D399', '#38BDF8'];
-  const saiyanColors = ['#FBBF24', '#F59E0B', '#38BDF8', '#EF4444', '#FEF08A'];
-
-  // Debounce flag to prevent double-firing on devices that emit both touch & pointer events
   let lastAnimTime = 0;
 
   function spawnClickAnimation(x, y) {
-    // Throttle: ignore if triggered within 50ms of last animation (prevents double-fire)
     const now = Date.now();
     if (now - lastAnimTime < 50) return;
     lastAnimTime = now;
 
     const isSaiyan = document.body.classList.contains('saiyan-mode');
-    const colorPalette = isSaiyan ? saiyanColors : lightColors;
 
-    // 1. Spawning shockwave expanding ring
+    // Spawning shockwave expanding ring
     const ring = document.createElement('div');
     ring.className = 'click-shockwave-ring';
     ring.style.left = `${x}px`;
@@ -1353,56 +1374,23 @@ function initGlobalClickAnimation() {
     ring.style.height = isSaiyan ? '50px' : '40px';
     document.body.appendChild(ring);
 
-    // 2. Spawning bouncy bursting particles
-    const particleCount = isSaiyan ? 8 : 6;
-    for (let i = 0; i < particleCount; i++) {
-      const p = document.createElement('div');
-      p.className = 'global-click-particle';
-      p.style.left = `${x}px`;
-      p.style.top = `${y}px`;
-      
-      const size = Math.floor(6 + Math.random() * 6);
-      p.style.width = `${size}px`;
-      p.style.height = `${size}px`;
-
-      const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-      p.style.backgroundColor = color;
-      p.style.boxShadow = isSaiyan ? `0 0 8px ${color}` : `2px 2px 0px #1E293B`;
-
-      // Random trajectory angle & velocity distance
-      const angle = (i / particleCount) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
-      const distance = 25 + Math.random() * 35;
-      const dx = Math.cos(angle) * distance;
-      const dy = Math.sin(angle) * distance;
-
-      p.style.setProperty('--dx', `${dx}px`);
-      p.style.setProperty('--dy', `${dy}px`);
-
-      document.body.appendChild(p);
-
-      setTimeout(() => p.remove(), 600);
-    }
-
     setTimeout(() => ring.remove(), 500);
   }
 
-  // Pointer events (works on desktop and most modern mobile browsers)
   document.addEventListener('pointerdown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
     spawnClickAnimation(e.clientX, e.clientY);
   });
 
-  // Touch events fallback (ensures mobile compatibility on all browsers)
   document.addEventListener('touchstart', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
     if (e.touches && e.touches.length > 0) {
       spawnClickAnimation(e.touches[0].clientX, e.touches[0].clientY);
     }
   }, { passive: true });
 
-  // Click event as final fallback (fires on all mobile browsers after touch)
   document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
     spawnClickAnimation(e.clientX, e.clientY);
   });
 }
@@ -1447,11 +1435,11 @@ function initPageIntroAnimation() {
   const skipBtn = document.getElementById('introSkipBtn');
   const progressBar = document.getElementById('introProgressBar');
   const soundPrompt = document.getElementById('introSoundPrompt');
-  const replayBtn = document.getElementById('replayIntroBtn');
 
   if (!overlay || !video) return;
 
-  // Add intro-running class to body for initial staged styling
+  // Add intro-running class to html & body for full-screen lock
+  document.documentElement.classList.add('page-intro-running');
   document.body.classList.add('page-intro-running');
 
   // Hard safety timer: Automatically finish intro at 2.5 seconds
@@ -1557,28 +1545,6 @@ function initPageIntroAnimation() {
       });
     });
   }
-
-  // 8. Replay Intro Button in Navbar & Mobile Drawer
-  if (replayBtn) {
-    replayBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      replayIntroAnimation();
-    });
-  }
-
-  const mobileDrawerIntroBtn = document.getElementById('mobileDrawerIntroBtn');
-  if (mobileDrawerIntroBtn) {
-    mobileDrawerIntroBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const navMenu = document.getElementById('navMenu');
-      const mobileToggle = document.getElementById('mobileMenuToggle');
-      if (navMenu && navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-        if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
-      }
-      replayIntroAnimation();
-    });
-  }
 }
 
 /**
@@ -1618,6 +1584,7 @@ function finishIntroTransition() {
     overlay.classList.add('transitioning');
 
     // Step 2: Unveil the webpage with smooth glide and spring
+    document.documentElement.classList.remove('page-intro-running');
     document.body.classList.remove('page-intro-running');
     document.body.classList.add('page-intro-revealed');
 
@@ -1646,6 +1613,7 @@ function replayIntroAnimation() {
 
   overlay.classList.remove('hidden');
   overlay.classList.remove('transitioning');
+  document.documentElement.classList.add('page-intro-running');
   document.body.classList.add('page-intro-running');
   document.body.classList.remove('page-intro-revealed');
 
@@ -1670,5 +1638,160 @@ function replayIntroAnimation() {
     });
   }
 }
+
+/* ==========================================================================
+   Scroll-Triggered Reveal Engine (IntersectionObserver with Staggered Cascades)
+   ========================================================================== */
+function initScrollReveal() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('is-revealed'));
+    return;
+  }
+
+  const observerOptions = {
+    threshold: 0.08,
+    rootMargin: '0px 0px -30px 0px'
+  };
+
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  function attachElements() {
+    const targets = document.querySelectorAll(
+      '.section-header, .stat-card, .skill-group, .timeline-item, .project-card, .achievement-card, .edu-card, .cert-card, .contact-wrapper, .hero-photo-frame, .hero-content, .card-sticker'
+    );
+
+    targets.forEach(el => {
+      if (!el.classList.contains('scroll-reveal')) {
+        el.classList.add('scroll-reveal');
+
+        // Apply natural staggered delays to sibling cards
+        const parentGrid = el.closest('.skills-grid, .projects-grid, .achievements-grid, .stats-grid, .education-grid, .timeline, .certs-grid');
+        if (parentGrid) {
+          const siblingIndex = Array.from(parentGrid.children).indexOf(el);
+          if (siblingIndex >= 0) {
+            const delayClass = `reveal-delay-${(siblingIndex % 6) + 1}`;
+            el.classList.add(delayClass);
+          }
+        }
+
+        revealObserver.observe(el);
+      }
+    });
+  }
+
+  // Initial attach
+  attachElements();
+
+  // Expose global refresh for dynamic cards (e.g. project filter clicks)
+  window.refreshScrollReveal = function() {
+    setTimeout(attachElements, 50);
+  };
+}
+
+/* ==========================================================================
+   Dragon Ball Inside Joke Placeholder Cycler & Prompt Generator
+   ========================================================================== */
+function initDbzJokePlaceholders() {
+  const nameInput = document.getElementById('senderName');
+  const emailInput = document.getElementById('senderEmail');
+  const messageInput = document.getElementById('senderMessage');
+  const rollBtn = document.getElementById('rollDbzPromptBtn');
+  if (!messageInput) return;
+
+  const dbzRoster = [
+    {
+      name: "Prince Vegeta IV (Prince of All Saiyans)",
+      email: "vegeta@planetvegeta.org",
+      msg: "Vegeta: What does the scouter say about your backend power level? OVER 9000! Join our engineering fleet at once."
+    },
+    {
+      name: "Lord Frieza (Galactic Real Estate CEO)",
+      email: "lordfrieza@galacticempire.corp",
+      msg: "Frieza: Greetings, monkey. This isn't even my architecture's final form! Fix our latency in 5 minutes."
+    },
+    {
+      name: "Perfect Cell (Biotech Systems Architect)",
+      email: "cell@perfection.biotech",
+      msg: "Cell: P is for Priceless... E is for Extinction of all bugs. Your 98% accuracy ML models are in Perfect Form!"
+    },
+    {
+      name: "Captain Ginyu (Ginyu Special Force Leader)",
+      email: "ginyu.force.pose@friezaforce.com",
+      msg: "Captain Ginyu: *Strikes dynamic pose* 🕺 We need a 10x Saiyan Engineer to lead the Ginyu backend squad!"
+    },
+    {
+      name: "Piccolo (Senior Systems Architect & Mentor)",
+      email: "piccolo@namekian-kami.dbz",
+      msg: "Piccolo: DODGE! That legacy codebase is about to blow! We have an enterprise backend role for you."
+    },
+    {
+      name: "Lord Beerus (God of Destruction & Tech Recruiter)",
+      email: "beerus.nap@universe7.god",
+      msg: "Lord Beerus: Whis told me your REST APIs are delicious. Work with us, or I'll Hakai your staging servers!"
+    },
+    {
+      name: "Majin Buu (Bug Exterminator)",
+      email: "buu.eats.candy@hercule-estate.net",
+      msg: "Majin Buu: Buu like your computer vision model! Subodh join team, Buu promise not to turn servers into candy!"
+    },
+    {
+      name: "Farmer with Shotgun (Power Level: 5)",
+      email: "farmer.shotgun@earth-outskirts.com",
+      msg: "Farmer: Holy smokes! Scouter says your coding speed is over 9000! Take my shotgun and sign our job offer!"
+    },
+    {
+      name: "Master Roshi (Jackie Chun / Kame House Coach)",
+      email: "roshi@kamehouse.tropical",
+      msg: "Master Roshi: Send two crates of Senzu Beans and your resume straight to Kame House for an interview!"
+    },
+    {
+      name: "King Kai (Planet 10G Cloud Infrastructure Lead)",
+      email: "kingkai@ten-gravity.otherworld",
+      msg: "King Kai: Tell me a coding joke that makes me laugh! ...Also, your 98% accuracy model is out of this world."
+    },
+    {
+      name: "Future Trunks (Time Patrol Lead)",
+      email: "trunks.sword@future-capsule.timeline",
+      msg: "Trunks: I traveled 20 years back in time to hire you before the Androids attacked our production clusters!"
+    },
+    {
+      name: "Mr. Satan (World Martial Arts Champion)",
+      email: "hercule.champ@worldchamp.dojo",
+      msg: "Mr. Satan: HAHAHA! The World Champion demands your backend wizardry! The other devs are all smoke and mirrors!"
+    }
+  ];
+
+  let currentJokeIndex = 0;
+
+  if (rollBtn) {
+    rollBtn.addEventListener('click', () => {
+      currentJokeIndex = (currentJokeIndex + 1) % dbzRoster.length;
+      const joke = dbzRoster[currentJokeIndex];
+      
+      messageInput.value = joke.msg;
+      if (nameInput && !nameInput.value) nameInput.placeholder = `e.g. ${joke.name}`;
+      if (emailInput && !emailInput.value) emailInput.placeholder = `e.g. ${joke.email}`;
+      
+      messageInput.focus();
+      
+      // Playful bounce & toast notification
+      rollBtn.style.transform = 'scale(1.15) rotate(-5deg)';
+      setTimeout(() => { rollBtn.style.transform = ''; }, 200);
+      
+      if (typeof showToast === 'function') {
+        showToast(`✨ Loaded DBZ Meme Prompt from ${joke.name.split(' ')[0]}!`);
+      }
+    });
+  }
+}
+
+
 
 
