@@ -2587,24 +2587,60 @@ body.page-intro-revealed main {
   transition: transform 0.25s var(--ease-bounce), filter 0.25s ease;
 }
 
-.fake-dragon-ball:hover {
-  transform: scale(1.22) rotate(-8deg);
-  filter: drop-shadow(0 0 12px #FBBF24) drop-shadow(2px 2px 0px #1E293B);
-}
-
 /* ==========================================================================
    Kid Goku Prank Modal & Fake Dragon Ball Trick Styles (Compact & Auto-Dismiss)
    ========================================================================== */
 
 .fake-dragon-ball {
   cursor: pointer;
-  filter: drop-shadow(2px 2px 0px rgba(30, 41, 59, 0.6));
-  transition: transform 0.25s var(--ease-bounce), filter 0.25s ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  animation: fake-ball-entice 3.2s infinite ease-in-out;
+  transition: transform 0.2s var(--ease-bounce), filter 0.2s ease;
+}
+
+@keyframes fake-ball-entice {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    filter: drop-shadow(2px 2px 0px rgba(30, 41, 59, 0.6));
+  }
+  25% {
+    transform: translateY(-5px) rotate(6deg) scale(1.08);
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9)) drop-shadow(3px 3px 0px #1E293B);
+  }
+  50% {
+    transform: translateY(1px) rotate(-3deg) scale(0.97);
+    filter: drop-shadow(2px 2px 0px rgba(30, 41, 59, 0.6));
+  }
+  75% {
+    transform: translateY(-3px) rotate(4deg) scale(1.05);
+    filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8)) drop-shadow(3px 3px 0px #1E293B);
+  }
 }
 
 .fake-dragon-ball:hover {
-  transform: scale(1.22) rotate(-8deg);
-  filter: drop-shadow(0 0 12px #FBBF24) drop-shadow(2px 2px 0px #1E293B);
+  transform: scale(1.32) rotate(14deg) !important;
+  filter: drop-shadow(0 0 20px #FBBF24) drop-shadow(0 0 32px #EF4444) drop-shadow(3px 3px 0px #1E293B) !important;
+  animation: none !important;
+}
+
+/* Floating Decoy Dragon Balls in empty/free spaces */
+.floating-decoy-ball {
+  position: absolute;
+  z-index: 12;
+  animation: decoy-space-drift 7s ease-in-out infinite alternate, fake-ball-entice 2.8s infinite ease-in-out;
+}
+
+@keyframes decoy-space-drift {
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(12px, -18px, 0) rotate(10deg); }
+  100% { transform: translate3d(-10px, 12px, 0) rotate(-10deg); }
 }
 
 .prank-modal-window {

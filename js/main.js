@@ -779,9 +779,30 @@ function renderDragonBallSVGs() {
       innerContent = createStarPolygon(c(12), c(9), r(2.2)) + createStarPolygon(c(22), c(9), r(2.2)) +
                      createStarPolygon(c(8), c(17), r(2.2)) + createStarPolygon(c(17), c(17), r(2.2)) + createStarPolygon(c(26), c(17), r(2.2)) +
                      createStarPolygon(c(12), c(25), r(2.2)) + createStarPolygon(c(22), c(25), r(2.2)) + createStarPolygon(c(17), c(9), r(2.0));
+    } else if (num === '9') {
+      // 9-Star Ancient Decoy Ball (3x3 grid of stars)
+      innerContent = createStarPolygon(c(10), c(10), r(2.0)) + createStarPolygon(c(17), c(10), r(2.0)) + createStarPolygon(c(24), c(10), r(2.0)) +
+                     createStarPolygon(c(10), c(17), r(2.0)) + createStarPolygon(c(17), c(17), r(2.0)) + createStarPolygon(c(24), c(17), r(2.0)) +
+                     createStarPolygon(c(10), c(24), r(2.0)) + createStarPolygon(c(17), c(24), r(2.0)) + createStarPolygon(c(24), c(24), r(2.0));
     } else if (num === '0') {
       // Blank smooth decoy orb with faint shine
       innerContent = '';
+    } else if (num === 'emoji') {
+      // Cool Sunglasses Emoji inside the orb!
+      innerContent = `<text x="${c(17)}" y="${c(23)}" font-size="${c(17)}" text-anchor="middle">😎</text>`;
+    } else if (num === 'spiral') {
+      // Hypnotic Spiral Galaxy Stars
+      innerContent = createStarPolygon(c(17), c(17), r(3.2)) +
+        `<path d="M ${c(17)} ${c(17)} m -${c(9)}, 0 a ${c(9)},${c(9)} 0 1,0 ${c(18)},0 a ${c(9)},${c(9)} 0 1,0 -${c(18)},0" stroke="#DC2626" stroke-width="${Math.max(1.2, 1.6 * scale)}" fill="none" stroke-dasharray="${c(3)},${c(2)}" />`;
+    } else if (num === 'cookie') {
+      // Painted Chocolate Chip Cookie Ball
+      innerContent = `<circle cx="${c(11)}" cy="${c(13)}" r="${c(2)}" fill="#581C87" /><circle cx="${c(22)}" cy="${c(12)}" r="${c(2.2)}" fill="#581C87" /><circle cx="${c(16)}" cy="${c(19)}" r="${c(1.8)}" fill="#581C87" /><circle cx="${c(10)}" cy="${c(23)}" r="${c(2.2)}" fill="#581C87" /><circle cx="${c(23)}" cy="${c(23)}" r="${c(2)}" fill="#581C87" />`;
+    } else if (num === 'glitch') {
+      // Cyber Matrix Glitch Decoy Ball
+      innerContent = `<text x="${c(17)}" y="${c(22)}" font-family="monospace" font-weight="900" font-size="${c(15)}" fill="#10B981" text-anchor="middle">⚡01</text>`;
+    } else if (num === '100') {
+      // 100-Star Ultra Mythic Ball
+      innerContent = `<text x="${c(17)}" y="${c(22)}" font-family="sans-serif" font-weight="900" font-size="${c(13)}" fill="#DC2626" text-anchor="middle">100★</text>`;
     } else if (num === 'cracked') {
       // Cracked 4-Star Ball with cartoon crack path
       innerContent = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8)) +
@@ -1036,7 +1057,11 @@ const kidGokuPrankQuotes = [
   "Bleeehh! 👅 Fooled ya! Master Roshi said fake Dragon Balls don't grant wishes!",
   "Aha! 🤪 That's my decoy ball! Check your Capsule Corp Dragon Radar to find the real ones!",
   "Bwahaha! 😋 Grandpa Gohan taught me that trick! Keep searching, silly!",
-  "Nya-ha-ha! 😛 You found a fake! Bulma's Dragon Radar only tracks authentic energy signatures!"
+  "Nya-ha-ha! 😛 You found a chocolate chip cookie painted orange! Delicious, but no wishes!",
+  "Woooosh! 💨 That's just a yellow smoke bomb! Don't let King Piccolo catch you with fakes!",
+  "Ehehe! 🤪 Even Oolong's shape-shifting looks more real than this ball!",
+  "Bleeeh! 😜 You tapped a 100-star ball! You can't summon 14 Shenrons at once!",
+  "Gotcha! 😋 Bulma told me only authentic Dragon Balls emit 7.5 micro-wave radar pings!"
 ];
 
 let kidGokuPrankTimer = null;
@@ -1239,7 +1264,6 @@ function initNimbusClick() {
     }
 
     drawLightningStrike();
-    showToast("☁️ KINTO'UN TURBO SPEED ENGAGED! ⚡");
 
     // Return to normal cruising speed & pick new random flight path after 4.2s
     nimbusTurboTimer = setTimeout(() => {
