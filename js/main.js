@@ -1033,9 +1033,7 @@ function initNimbusClick() {
   const nimbus = document.getElementById('flyingNimbus');
   if (!nimbus) return;
 
-  nimbus.addEventListener('click', (e) => {
-    e.stopPropagation();
-    
+  function triggerNimbusTurbo() {
     // Clear any existing turbo timer
     if (nimbusTurboTimer) clearTimeout(nimbusTurboTimer);
 
@@ -1063,7 +1061,21 @@ function initNimbusClick() {
     nimbusTurboTimer = setTimeout(() => {
       nimbus.classList.remove('nimbus-turbo');
     }, 4900);
+  }
+
+  // Desktop click
+  nimbus.addEventListener('click', (e) => {
+    e.stopPropagation();
+    triggerNimbusTurbo();
   });
+
+  // Mobile touch — fires immediately on tap (no 300ms delay like click)
+  // This is critical for fast-moving animated elements on touch devices
+  nimbus.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent delayed click from double-firing
+    e.stopPropagation();
+    triggerNimbusTurbo();
+  }, { passive: false });
 }
 
 /* --- Global Click Animation Engine --- */

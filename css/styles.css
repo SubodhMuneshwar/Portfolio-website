@@ -1742,9 +1742,13 @@ a {
   }
 
   .flying-nimbus {
-    width: 90px;
-    height: 50px;
+    width: 110px;
+    height: 65px;
     bottom: 60px;
+    /* Expand touch target beyond visible area for easier tapping */
+    padding: 12px;
+    margin: -12px;
+    touch-action: manipulation;
   }
 
   .toast-notice {

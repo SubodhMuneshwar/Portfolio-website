@@ -409,6 +409,7 @@ body.saiyan-mode .dragon-radar-widget {
   transition: transform 0.3s ease, filter 0.3s ease;
   animation: fly-nimbus 26s linear infinite;
   filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
+  touch-action: manipulation;
 }
 
 .flying-nimbus:hover {
