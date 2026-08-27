@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCertifications();
   initProjectFilters();
   initContactInteractions();
+  initConfettiTriggers();
   initMobileMenu();
+  initScrollSpy();
   initLucideIcons();
   initKeyboardShortcuts();
   initSaiyanMode();
@@ -136,7 +138,7 @@ function renderProjects(filterCategory = 'all') {
     : portfolioData.projects.filter(p => p.category === filterCategory);
 
   container.innerHTML = filtered.map(proj => `
-    <div class="project-card">
+    <div class="project-card project-card-enter">
       <div class="project-card-image-wrap">
         <img src="${proj.image}" alt="${proj.title}" class="project-card-image" loading="lazy" />
       </div>
@@ -320,38 +322,6 @@ function showToast(message) {
   }, 3000);
 }
 
-/* --- Contact & Clipboard Actions --- */
-function initContactInteractions() {
-  const copyEmailBtn = document.getElementById('copyEmailBtn');
-  if (copyEmailBtn) {
-    copyEmailBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText('subodhum1603@gmail.com');
-      showToast('🎉 Copied subodhum1603@gmail.com to clipboard!');
-      triggerConfetti();
-    });
-  }
-
-  const copyPhoneBtn = document.getElementById('copyPhoneBtn');
-  if (copyPhoneBtn) {
-    copyPhoneBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText('+919029920228');
-      showToast('📞 Copied +91 9029920228 to clipboard!');
-      triggerConfetti();
-    });
-  }
-
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('senderName').value;
-      showToast(`🚀 Thanks ${name}! Message prepared. Subodh will respond shortly!`);
-      triggerConfetti();
-      contactForm.reset();
-    });
-  }
-}
-
 /* --- Confetti Micro-Explosion --- */
 function triggerConfetti() {
   if (window.confetti) {
@@ -501,6 +471,39 @@ function initMobileMenu() {
       }
     });
   }
+}
+
+/* --- ScrollSpy Navigation Active Highlight --- */
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.navbar .nav-link[href^="#"]');
+  if (!sections.length || !navLinks.length) return;
+
+  function updateActiveLink() {
+    let currentId = '';
+    const scrollPos = window.scrollY + 120;
+
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = section.getAttribute('id');
+      }
+    });
+
+    if (currentId) {
+      navLinks.forEach(link => {
+        if (link.getAttribute('href') === `#${currentId}`) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+  }
+
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  updateActiveLink();
 }
 
 /* ==========================================================================
@@ -994,18 +997,26 @@ function initDragonBallsCollector() {
   }
 
   interactiveBalls.forEach(ball => {
-    ball.addEventListener('click', (e) => {
+    const handleBallCollect = (e) => {
       e.stopPropagation();
       const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
+      const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : (e.clientX || window.innerWidth / 2);
+      const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : (e.clientY || window.innerHeight / 2);
       
       if (ballNumber >= 1 && ballNumber <= 7) {
         if (!collectedBalls.has(ballNumber)) {
-          triggerDragonBallCollection(ballNumber, ball, e.clientX, e.clientY);
+          triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
         } else {
-          createKiSparks(e.clientX, e.clientY);
+          createKiSparks(clientX, clientY);
           showToast(`✨ ${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
         }
       }
+    };
+
+    ball.addEventListener('click', handleBallCollect);
+    ball.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      handleBallCollect(e);
     });
   });
 }
@@ -1057,25 +1068,30 @@ function initNimbusClick() {
     drawLightningStrike();
     showToast("☁️ KINTO'UN TURBO SPEED ENGAGED! ⚡");
 
-    // Return to normal cruising speed after 4.9s
+    // Return to normal cruising speed after 4.5s
     nimbusTurboTimer = setTimeout(() => {
       nimbus.classList.remove('nimbus-turbo');
-    }, 4900);
+    }, 4500);
   }
 
-  // Desktop click
-  nimbus.addEventListener('click', (e) => {
+  // Pointer events (uniform handling across desktop mouse, touch, and stylus)
+  nimbus.addEventListener('pointerdown', (e) => {
     e.stopPropagation();
     triggerNimbusTurbo();
   });
 
-  // Mobile touch — fires immediately on tap (no 300ms delay like click)
-  // This is critical for fast-moving animated elements on touch devices
+  // Mobile touch immediate trigger
   nimbus.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Prevent delayed click from double-firing
+    e.preventDefault();
     e.stopPropagation();
     triggerNimbusTurbo();
   }, { passive: false });
+
+  // Click fallback
+  nimbus.addEventListener('click', (e) => {
+    e.stopPropagation();
+    triggerNimbusTurbo();
+  });
 }
 
 /* --- Global Click Animation Engine --- */

@@ -48,12 +48,18 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  /* Preserve interactive click feedback animations even in reduced-motion mode */
+  /* Preserve interactive click feedback & playful Easter eggs across devices */
   .global-click-particle,
   .click-shockwave-ring,
   .ki-spark {
     animation-duration: 0.55s !important;
     animation-iteration-count: 1 !important;
+  }
+  .flying-nimbus {
+    animation: fly-nimbus 24s linear infinite !important;
+  }
+  .flying-nimbus.nimbus-turbo {
+    animation: fly-nimbus-turbo 4.5s cubic-bezier(0.25, 1, 0.5, 1) infinite !important;
   }
 }
 
@@ -355,13 +361,21 @@ a {
   font-size: var(--text-base);
   color: var(--fg);
   position: relative;
-  padding: 0.35rem 0.5rem;
+  padding: 0.35rem 0.65rem;
   border-radius: var(--radius-sm);
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link.active {
   color: var(--accent);
   background-color: #EDE9FE;
+}
+
+body.saiyan-mode .nav-link:hover,
+body.saiyan-mode .nav-link.active {
+  color: #FBBF24 !important;
+  background-color: rgba(251, 191, 36, 0.15) !important;
 }
 
 .nav-actions {
@@ -1742,13 +1756,11 @@ a {
   }
 
   .flying-nimbus {
-    width: 110px;
-    height: 65px;
-    bottom: 60px;
-    /* Expand touch target beyond visible area for easier tapping */
-    padding: 12px;
-    margin: -12px;
+    width: 120px;
+    height: 70px;
+    bottom: clamp(70px, 14vh, 120px);
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .toast-notice {
