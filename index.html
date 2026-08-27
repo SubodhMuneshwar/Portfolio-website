@@ -75,11 +75,6 @@
       </div>
     </div>
 
-    <!-- Intro Progress Bar at Bottom -->
-    <div class="intro-progress-container">
-      <div class="intro-progress-bar" id="introProgressBar"></div>
-    </div>
-
     <!-- Sound Tap Prompt -->
     <div class="intro-sound-prompt" id="introSoundPrompt">
       <i data-lucide="volume-2" style="width: 16px; height: 16px;"></i>
@@ -88,43 +83,70 @@
   </div>
 
   <!-- =========================================================================
-       Site Header / Navigation
+       Site Header / Navigation (Ultra-Professional Floating Command Header)
        ========================================================================= -->
   <header class="site-header" id="siteHeader">
     <div class="container">
       <nav class="navbar" aria-label="Main Navigation">
-        <a href="#hero" class="brand-logo" title="Subodh Uttam Muneshwar">
-          <div class="brand-badge">🚀</div>
-          <span>Subodh.dev</span>
+        <!-- Clean Modern Developer Brand Logo with 4-Star Dragon Ball -->
+        <a href="#hero" class="brand-logo" title="Subodh Uttam Muneshwar — Software & AI/ML Engineer">
+          <div class="brand-badge-box brand-db-orb" title="4-Star Dragon Ball">
+            <svg viewBox="0 0 36 36" width="34" height="34" class="brand-db-svg">
+              <defs>
+                <radialGradient id="brand-db-grad" cx="35%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#FFF952" />
+                  <stop offset="35%" stop-color="#FFAA00" />
+                  <stop offset="75%" stop-color="#EA580C" />
+                  <stop offset="100%" stop-color="#991B1B" />
+                </radialGradient>
+              </defs>
+              <!-- Outer Dragon Sphere -->
+              <circle cx="18" cy="18" r="16" fill="url(#brand-db-grad)" stroke="#1E293B" stroke-width="2" />
+              <!-- Glossy Specular Highlight Reflection -->
+              <ellipse cx="13" cy="10" rx="4.5" ry="2.2" fill="#FFFFFF" opacity="0.85" transform="rotate(-30 13 10)" />
+              <!-- 4 Red Dragon Stars in Diamond Arrangement -->
+              <polygon points="18,9.5 18.7,11.3 20.6,11.3 19.1,12.5 19.7,14.3 18,13.1 16.3,14.3 16.9,12.5 15.4,11.3 17.3,11.3" fill="#DC2626" />
+              <polygon points="11.5,17 12.2,18.8 14.1,18.8 12.6,20 13.2,21.8 11.5,20.6 9.8,21.8 10.4,20 8.9,18.8 10.8,18.8" fill="#DC2626" />
+              <polygon points="24.5,17 25.2,18.8 27.1,18.8 25.6,20 26.2,21.8 24.5,20.6 22.8,21.8 23.4,20 21.9,18.8 23.8,18.8" fill="#DC2626" />
+              <polygon points="18,24.5 18.7,26.3 20.6,26.3 19.1,27.5 19.7,29.3 18,28.1 16.3,29.3 16.9,27.5 15.4,26.3 17.3,26.3" fill="#DC2626" />
+            </svg>
+          </div>
+          <div class="brand-text-wrapper">
+            <span class="brand-name">Subodh.dev</span>
+            <span class="brand-sub">SOFTWARE ENGINEER</span>
+          </div>
         </a>
 
-        <ul class="nav-menu" id="navMenu">
-          <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#skills" class="nav-link">Skills</a></li>
-          <li><a href="#experience" class="nav-link">Experience</a></li>
-          <li><a href="#projects" class="nav-link">Projects</a></li>
-          <li><a href="#achievements" class="nav-link">Achievements</a></li>
-          <li><a href="#education" class="nav-link">Education</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
-          <li class="mobile-only-nav-item"><a href="#" class="nav-link nav-link-highlight" id="mobileDrawerIntroBtn">🎬 Replay Intro</a></li>
-        </ul>
+        <!-- Center Floating Navigation Capsule -->
+        <div class="nav-center-island">
+          <ul class="nav-menu" id="navMenu">
+            <li><a href="#about" class="nav-link"><i data-lucide="user" style="width: 14px; height: 14px;"></i><span>About</span></a></li>
+            <li><a href="#skills" class="nav-link"><i data-lucide="cpu" style="width: 14px; height: 14px;"></i><span>Skills</span></a></li>
+            <li><a href="#experience" class="nav-link"><i data-lucide="briefcase" style="width: 14px; height: 14px;"></i><span>Experience</span></a></li>
+            <li><a href="#projects" class="nav-link"><i data-lucide="code-2" style="width: 14px; height: 14px;"></i><span>Projects</span></a></li>
+            <li><a href="#achievements" class="nav-link"><i data-lucide="trophy" style="width: 14px; height: 14px;"></i><span>Honors</span></a></li>
+            <li><a href="#education" class="nav-link"><i data-lucide="graduation-cap" style="width: 14px; height: 14px;"></i><span>Education</span></a></li>
+            <li><a href="#contact" class="nav-link"><i data-lucide="mail" style="width: 14px; height: 14px;"></i><span>Contact</span></a></li>
+            <li class="mobile-only-nav-item"><a href="#" class="nav-link nav-link-highlight" id="mobileDrawerIntroBtn">🎬 Replay Intro</a></li>
+          </ul>
+        </div>
 
+        <!-- Right Quick Action Controls -->
         <div class="nav-actions">
-          <button type="button" class="btn btn-secondary btn-sm" id="replayIntroBtn"
-            title="Replay Anime Intro Animation!">
-            <i data-lucide="play" style="width: 14px; height: 14px;"></i>
-            <span class="btn-text-desktop">Intro</span>
+          <button type="button" class="nav-ctrl-btn nav-btn-intro" id="replayIntroBtn" title="Replay Intro Animation">
+            <i data-lucide="play" style="width: 13px; height: 13px;"></i>
+            <span class="btn-text-hide-sm">Intro</span>
           </button>
-          <button type="button" class="btn btn-tertiary btn-sm" id="saiyanModeBtn"
-            title="Toggle Dragon Ball / Super Saiyan Mode!">
-            <span style="display: inline-block; font-size: 14px;">🟠</span>
-            <span id="saiyanBtnText">Go Super Saiyan!</span>
+          <button type="button" class="nav-ctrl-btn nav-btn-saiyan" id="saiyanModeBtn" title="Toggle Super Saiyan Dark Mode" aria-pressed="false">
+            <span class="saiyan-btn-icon" style="font-size: 13px;">⚡</span>
+            <span id="saiyanBtnText">Saiyan</span>
           </button>
-          <a href="#contact" class="btn btn-primary btn-sm">
-            <span>Get in Touch</span>
+          <a href="#contact" class="btn btn-primary btn-sm nav-btn-connect">
+            <span>Connect</span>
+            <i data-lucide="send" style="width: 13px; height: 13px;"></i>
           </a>
           <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
-            <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
           </button>
         </div>
       </nav>

@@ -452,23 +452,44 @@ function initMobileMenu() {
   const navMenu = document.getElementById('navMenu');
   
   if (toggleBtn && navMenu) {
+    function setDrawerState(isOpen) {
+      if (isOpen) {
+        navMenu.classList.add('open');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        toggleBtn.innerHTML = '<i data-lucide="x" style="width: 22px; height: 22px;"></i>';
+      } else {
+        navMenu.classList.remove('open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
+      }
+      initLucideIcons();
+    }
+
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      setDrawerState(!isOpen);
     });
 
     // Auto-close menu when any nav link is clicked
     const navLinks = navMenu.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
-        navMenu.classList.remove('open');
+        setDrawerState(false);
       });
     });
 
     // Close when clicking outside
     document.addEventListener('click', (e) => {
       if (!navMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
-        navMenu.classList.remove('open');
+        setDrawerState(false);
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navMenu.classList.contains('open')) {
+        setDrawerState(false);
       }
     });
   }
@@ -518,18 +539,31 @@ function initSaiyanMode() {
   const saiyanBtnText = document.getElementById('saiyanBtnText');
   if (!saiyanBtn) return;
 
-  saiyanBtn.addEventListener('click', () => {
-    const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
-
-    if (!isCurrentlySaiyan) {
-      if (saiyanBtnText) saiyanBtnText.textContent = '⚡ Saiyan: ON!';
-      showToast('⚡ PLANET NAMEK: TRANSFORMATION INITIATED! KI LEVEL SURGING...');
+  function setSaiyanState(enableSaiyan) {
+    const iconSpan = saiyanBtn.querySelector('.saiyan-btn-icon');
+    if (enableSaiyan) {
+      document.body.classList.add('saiyan-mode');
+      document.documentElement.classList.add('saiyan-mode');
+      saiyanBtn.setAttribute('aria-pressed', 'true');
+      if (iconSpan) iconSpan.textContent = '✨';
+      if (saiyanBtnText) saiyanBtnText.textContent = 'Base';
+      saiyanBtn.title = 'Switch to Light (Base) Mode';
+      showToast('⚡ Super Saiyan Mode ON');
       runPlanetNamekTransformation();
     } else {
       document.body.classList.remove('saiyan-mode');
-      if (saiyanBtnText) saiyanBtnText.textContent = 'Go Super Saiyan!';
-      showToast('✨ Returned to Base Form.');
+      document.documentElement.classList.remove('saiyan-mode');
+      saiyanBtn.setAttribute('aria-pressed', 'false');
+      if (iconSpan) iconSpan.textContent = '⚡';
+      if (saiyanBtnText) saiyanBtnText.textContent = 'Saiyan';
+      saiyanBtn.title = 'Toggle Super Saiyan (Dark) Mode';
+      showToast('✨ Base Mode ON');
     }
+  }
+
+  saiyanBtn.addEventListener('click', () => {
+    const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
+    setSaiyanState(!isCurrentlySaiyan);
   });
 }
 
@@ -537,6 +571,7 @@ function initSaiyanMode() {
 function runPlanetNamekTransformation() {
   // 1. Immediately apply the dark Planet Namek destruction sky & body theme
   document.body.classList.add('saiyan-mode');
+  document.documentElement.classList.add('saiyan-mode');
   
   // 2. Trigger Planet Namek earthquake ground rumble
   document.body.classList.add('namek-earthquake');
@@ -550,7 +585,6 @@ function runPlanetNamekTransformation() {
   // 4. Sequential list of elements to power up one at a time
   const elementsToTransform = [
     document.querySelector('.hero-photo-frame'),
-    document.querySelector('.site-header'),
     document.querySelector('.hero-title'),
     document.querySelector('#statsGrid'),
     document.querySelector('#about .sticker-card'),
@@ -1400,7 +1434,9 @@ window.superSaiyanGodBlast = function() {
 /* ==========================================================================
    Super Saiyan Rosé Goku Black Start Animation & Smooth Transition Controller
    ========================================================================== */
+const MAX_INTRO_DURATION = 2.5; // Max 2.5 seconds duration
 let isIntroFinishing = false;
+let introTimer = null;
 
 function initPageIntroAnimation() {
   const overlay = document.getElementById('introOverlay');
@@ -1418,14 +1454,23 @@ function initPageIntroAnimation() {
   // Add intro-running class to body for initial staged styling
   document.body.classList.add('page-intro-running');
 
+  // Hard safety timer: Automatically finish intro at 2.5 seconds
+  if (introTimer) clearTimeout(introTimer);
+  introTimer = setTimeout(() => {
+    if (!isIntroFinishing) {
+      finishIntroTransition();
+    }
+  }, MAX_INTRO_DURATION * 1000);
+
   // 1. Video Progress updates
   video.addEventListener('timeupdate', () => {
-    if (video.duration && progressBar) {
-      const progressPercent = (video.currentTime / video.duration) * 100;
+    if (progressBar) {
+      const targetDuration = Math.min(MAX_INTRO_DURATION, video.duration || MAX_INTRO_DURATION);
+      const progressPercent = Math.min(100, (video.currentTime / targetDuration) * 100);
       progressBar.style.width = `${progressPercent}%`;
 
-      // Trigger seamless divine transition right as the final Ultra card blast reaches peak (~0.35s before end)
-      if (video.currentTime >= video.duration - 0.4 && !isIntroFinishing) {
+      // Trigger seamless transition at 2.5 seconds
+      if (video.currentTime >= targetDuration - 0.1 && !isIntroFinishing) {
         finishIntroTransition();
       }
     }
@@ -1543,6 +1588,11 @@ function finishIntroTransition() {
   if (isIntroFinishing) return;
   isIntroFinishing = true;
 
+  if (introTimer) {
+    clearTimeout(introTimer);
+    introTimer = null;
+  }
+
   const overlay = document.getElementById('introOverlay');
   const video = document.getElementById('introVideo');
   const progressBar = document.getElementById('introProgressBar');
@@ -1571,21 +1621,7 @@ function finishIntroTransition() {
     document.body.classList.remove('page-intro-running');
     document.body.classList.add('page-intro-revealed');
 
-    // Step 3: Trigger celebratory arrival sparks & lightning pulse
-    setTimeout(() => {
-      try {
-        if (typeof confetti === 'function') {
-          confetti({
-            particleCount: 45,
-            spread: 70,
-            origin: { y: 0.25 },
-            colors: ['#EC4899', '#D946EF', '#8B5CF6', '#F59E0B']
-          });
-        }
-      } catch (err) {}
-    }, 250);
-
-    // Step 4: Fully hide intro overlay after smooth transition completes
+    // Step 3: Fully hide intro overlay after smooth transition completes
     setTimeout(() => {
       overlay.classList.add('hidden');
       if (video) video.pause();
@@ -1618,6 +1654,14 @@ function replayIntroAnimation() {
 
   video.currentTime = 0;
   video.volume = 1.0;
+
+  // Auto-finish at 2.5s for replay as well
+  if (introTimer) clearTimeout(introTimer);
+  introTimer = setTimeout(() => {
+    if (!isIntroFinishing) {
+      finishIntroTransition();
+    }
+  }, MAX_INTRO_DURATION * 1000);
 
   const playPromise = video.play();
   if (playPromise !== undefined) {

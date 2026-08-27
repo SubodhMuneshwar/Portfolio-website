@@ -219,17 +219,18 @@ body.saiyan-mode .experience-card:hover {
 }
 
 body.saiyan-mode .site-header {
-  background-color: rgba(10, 20, 16, 0.92) !important;
-  border-bottom-color: #F59E0B !important;
+  background-color: rgba(10, 20, 16, 0.94) !important;
+  border-bottom-color: rgba(245, 158, 11, 0.4) !important;
 }
 
 body.saiyan-mode .nav-link {
   color: #F8FAFC !important;
 }
 
-body.saiyan-mode .nav-link:hover {
-  color: #FBBF24 !important;
-  background-color: #162C22 !important;
+body.saiyan-mode .nav-link:hover,
+body.saiyan-mode .nav-link.active {
+  color: #0A1410 !important;
+  background-color: #FBBF24 !important;
 }
 
 body.saiyan-mode p,
