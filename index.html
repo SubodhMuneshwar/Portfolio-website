@@ -82,6 +82,9 @@
     </div>
   </div>
 
+  <!-- Accessible Skip to Main Content Link -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
   <!-- =========================================================================
        Site Header / Navigation (Ultra-Professional Floating Command Header)
        ========================================================================= -->
@@ -91,24 +94,72 @@
         <!-- Clean Modern Developer Brand Logo with 4-Star Dragon Ball -->
         <a href="#" class="brand-logo" title="SUBODH — Software & AI/ML Engineer">
           <div class="brand-badge-box brand-db-orb" title="4-Star Dragon Ball">
-            <svg viewBox="0 0 36 36" width="34" height="34" class="brand-db-svg">
+            <svg viewBox="0 0 36 36" width="34" height="34" class="brand-db-svg" aria-hidden="true">
               <defs>
-                <radialGradient id="brand-db-grad" cx="35%" cy="30%" r="70%">
-                  <stop offset="0%" stop-color="#FFF952" />
-                  <stop offset="35%" stop-color="#FFAA00" />
-                  <stop offset="75%" stop-color="#EA580C" />
-                  <stop offset="100%" stop-color="#991B1B" />
+                <radialGradient id="brand-db-grad" cx="35%" cy="30%" r="72%">
+                  <stop offset="0%" stop-color="#FFF8B3" />
+                  <stop offset="14%" stop-color="#FFE040" />
+                  <stop offset="38%" stop-color="#FFB300" />
+                  <stop offset="65%" stop-color="#FF7A00" />
+                  <stop offset="85%" stop-color="#E64A00" />
+                  <stop offset="96%" stop-color="#BF2600" />
+                  <stop offset="100%" stop-color="#7A1200" />
                 </radialGradient>
+                <radialGradient id="brand-db-glow" cx="46%" cy="46%" r="54%">
+                  <stop offset="0%" stop-color="#FFFBEB" stop-opacity="0.65" />
+                  <stop offset="50%" stop-color="#FFC107" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#E65100" stop-opacity="0" />
+                </radialGradient>
+                <radialGradient id="brand-db-spec" cx="45%" cy="40%" r="55%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                  <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+                </radialGradient>
+                <radialGradient id="brand-db-rim" cx="50%" cy="85%" r="52%">
+                  <stop offset="0%" stop-color="#FFA000" stop-opacity="0.8" />
+                  <stop offset="70%" stop-color="#FF6D00" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#DD2C00" stop-opacity="0" />
+                </radialGradient>
+                <filter id="brand-star-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0.4" dy="0.6" stdDeviation="0.5" flood-color="#4A0E00" flood-opacity="0.75" />
+                </filter>
+                <clipPath id="brand-db-clip">
+                  <circle cx="18" cy="18" r="16" />
+                </clipPath>
               </defs>
               <!-- Outer Dragon Sphere -->
-              <circle cx="18" cy="18" r="16" fill="url(#brand-db-grad)" stroke="#1E293B" stroke-width="2" />
-              <!-- Glossy Specular Highlight Reflection -->
-              <ellipse cx="13" cy="10" rx="4.5" ry="2.2" fill="#FFFFFF" opacity="0.85" transform="rotate(-30 13 10)" />
-              <!-- 4 Red Dragon Stars in Diamond Arrangement -->
-              <polygon points="18,9.5 18.7,11.3 20.6,11.3 19.1,12.5 19.7,14.3 18,13.1 16.3,14.3 16.9,12.5 15.4,11.3 17.3,11.3" fill="#DC2626" />
-              <polygon points="11.5,17 12.2,18.8 14.1,18.8 12.6,20 13.2,21.8 11.5,20.6 9.8,21.8 10.4,20 8.9,18.8 10.8,18.8" fill="#DC2626" />
-              <polygon points="24.5,17 25.2,18.8 27.1,18.8 25.6,20 26.2,21.8 24.5,20.6 22.8,21.8 23.4,20 21.9,18.8 23.8,18.8" fill="#DC2626" />
-              <polygon points="18,24.5 18.7,26.3 20.6,26.3 19.1,27.5 19.7,29.3 18,28.1 16.3,29.3 16.9,27.5 15.4,26.3 17.3,26.3" fill="#DC2626" />
+              <circle cx="18" cy="18" r="16" fill="url(#brand-db-grad)" stroke="#2B0C02" stroke-width="1.8" />
+              <g clip-path="url(#brand-db-clip)">
+                <!-- Warm Bottom Bounce -->
+                <circle cx="18" cy="18" r="16" fill="url(#brand-db-rim)" />
+                <!-- Internal Glow -->
+                <circle cx="18" cy="18" r="16" fill="url(#brand-db-glow)" />
+                <!-- 4 Red Dragon Stars in Diamond Arrangement with 3D Depth -->
+                <g filter="url(#brand-star-shadow)">
+                  <!-- Top Star (18, 9.7) -->
+                  <polygon points="18,7.2 18.8,9.0 20.8,9.0 19.2,10.2 19.8,12.0 18,10.8 16.2,12.0 16.8,10.2 15.2,9.0 17.2,9.0" fill="#D60000" />
+                  <polygon points="18,7.2 18.5,8.4 19.5,8.4 18.7,9.1 19.0,10.1 18,9.4 17.0,10.1 17.3,9.1 16.5,8.4 17.5,8.4" fill="#FF4D4D" opacity="0.9" />
+                  
+                  <!-- Left Star (9.7, 18) -->
+                  <polygon points="9.7,15.5 10.5,17.3 12.5,17.3 10.9,18.5 11.5,20.3 9.7,19.1 7.9,20.3 8.5,18.5 6.9,17.3 8.9,17.3" fill="#D60000" />
+                  <polygon points="9.7,15.5 10.2,16.7 11.2,16.7 10.4,17.4 10.7,18.4 9.7,17.7 8.7,18.4 9.0,17.4 8.2,16.7 9.2,16.7" fill="#FF4D4D" opacity="0.9" />
+
+                  <!-- Right Star (26.3, 18) -->
+                  <polygon points="26.3,15.5 27.1,17.3 29.1,17.3 27.5,18.5 28.1,20.3 26.3,19.1 24.5,20.3 25.1,18.5 23.5,17.3 25.5,17.3" fill="#D60000" />
+                  <polygon points="26.3,15.5 26.8,16.7 27.8,16.7 27.0,17.4 27.3,18.4 26.3,17.7 25.3,18.4 25.6,17.4 24.8,16.7 25.8,16.7" fill="#FF4D4D" opacity="0.9" />
+
+                  <!-- Bottom Star (18, 26.3) -->
+                  <polygon points="18,23.8 18.8,25.6 20.8,25.6 19.2,26.8 19.8,28.6 18,27.4 16.2,28.6 16.8,26.8 15.2,25.6 17.2,25.6" fill="#D60000" />
+                  <polygon points="18,23.8 18.5,25.0 19.5,25.0 18.7,25.7 19.0,26.7 18,26.0 17.0,26.7 17.3,25.7 16.5,25.0 17.5,25.0" fill="#FF4D4D" opacity="0.9" />
+                </g>
+                <!-- Curved Glass Lens Specular Highlight -->
+                <ellipse cx="11.5" cy="9.0" rx="6.0" ry="3.2" fill="url(#brand-db-spec)" transform="rotate(-30 11.5 9.0)" />
+                <circle cx="10.0" cy="7.2" r="1.4" fill="#FFFFFF" opacity="0.95" />
+                <!-- Secondary Glint -->
+                <circle cx="26.2" cy="25.5" r="1.1" fill="#FFFFFF" opacity="0.6" />
+              </g>
+              <!-- Outer Rim Sheen -->
+              <circle cx="18" cy="18" r="15.8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8" />
             </svg>
           </div>
           <div class="brand-text-wrapper">
@@ -148,7 +199,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <!-- =========================================================================
          Hero Section ("Stable Grid, Wild Decoration")
          ========================================================================= -->
@@ -205,7 +256,7 @@
             <div class="hero-visual-wrapper">
               <!-- Subodh's Real Profile Photo in Playful Geometric Sticker Frame -->
               <div class="hero-photo-frame">
-                <img src="assets/subodh.jpg" alt="Subodh Uttam Muneshwar" class="hero-photo-img" />
+                <img src="assets/subodh.jpg" alt="Subodh Uttam Muneshwar" class="hero-photo-img" fetchpriority="high" width="320" height="320" />
               </div>
 
               <!-- Floating Sticker Badge 1: CGPI -->
@@ -590,12 +641,12 @@
 
                     <div class="form-group">
                       <label for="senderName" class="form-label">Your Name / Saiyan Title</label>
-                      <input type="text" id="senderName" name="name" class="form-input" placeholder="e.g. Prince Vegeta IV (Prince of All Saiyans)"
+                      <input type="text" id="senderName" name="name" class="form-input" autocomplete="name" placeholder="e.g. Prince Vegeta IV (Prince of All Saiyans)"
                         required />
                     </div>
                     <div class="form-group">
                       <label for="senderEmail" class="form-label">Scouter Frequency / Email</label>
-                      <input type="email" id="senderEmail" name="email" class="form-input"
+                      <input type="email" id="senderEmail" name="email" class="form-input" autocomplete="email" spellcheck="false"
                         placeholder="e.g. vegeta@planetvegeta.org" required />
                     </div>
                     <div class="form-group">
@@ -605,7 +656,7 @@
                           🎲 Roll Prompt
                         </button>
                       </div>
-                      <textarea id="senderMessage" name="message" class="form-textarea"
+                      <textarea id="senderMessage" name="message" class="form-textarea" autocomplete="off"
                         placeholder="Subodh! What does the scouter say about your backend power level? IT'S OVER 9000! Join our engineering fleet at once..." required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
@@ -676,7 +727,7 @@
        Flying Nimbus (Kinto'un) High-Res PNG Easter Egg
        ========================================================================= -->
   <div class="flying-nimbus" id="flyingNimbus" title="Click Kinto'un (Flying Nimbus) to Trigger Turbo Ki Boost!">
-    <img src="assets/nimbus.png" alt="Flying Nimbus (Kinto'un)" class="nimbus-img" />
+    <img src="assets/nimbus.png" alt="Flying Nimbus (Kinto'un)" class="nimbus-img" loading="lazy" width="160" height="100" />
   </div>
 
   <!-- =========================================================================
@@ -685,7 +736,7 @@
   <div class="dragon-radar-widget" id="dragonRadarWidget"
     title="Capsule Corp Dragon Radar: Click to Scan & Track Dragon Balls!" role="button" tabindex="0">
     <div class="radar-device-thumb">
-      <img src="assets/dragon_radar.png" alt="Dragon Radar" class="radar-device-img" />
+      <img src="assets/dragon_radar.png" alt="Dragon Radar" class="radar-device-img" loading="lazy" width="80" height="80" />
       <div class="radar-live-glow"></div>
       <div class="radar-mini-blips" id="radarMiniBlips">
         <!-- Dynamic radar blips -->
@@ -712,7 +763,7 @@
 
       <div class="radar-device-display">
         <div class="radar-device-frame">
-          <img src="assets/dragon_radar.png" alt="Dragon Radar Device" class="radar-full-device-img" />
+          <img src="assets/dragon_radar.png" alt="Dragon Radar Device" class="radar-full-device-img" loading="lazy" width="160" height="160" />
           
           <!-- Interactive Radar Grid & Signals -->
           <div class="radar-screen-viewport">
@@ -808,7 +859,7 @@
       </div>
 
       <div class="prank-image-frame">
-        <img src="assets/goku_prank.jpg" alt="Kid Goku Sticking Tongue Out - You Got Pranked!" class="prank-goku-img" />
+        <img src="assets/goku_prank.jpg" alt="Kid Goku Sticking Tongue Out - You Got Pranked!" class="prank-goku-img" loading="lazy" width="240" height="160" />
         <div class="prank-comic-sparkles">✨ 👅 💥</div>
       </div>
 

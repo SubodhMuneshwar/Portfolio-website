@@ -316,13 +316,15 @@ function renderCertifications() {
   if (window.refreshScrollReveal) window.refreshScrollReveal();
 }
 
-/* --- Toast Helper --- */
+/* --- Toast Helper (Accessible Live Region) --- */
 function showToast(message) {
   let toast = document.getElementById('toastNotice');
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'toastNotice';
     toast.className = 'toast-notice';
+    toast.setAttribute('aria-live', 'polite');
+    toast.setAttribute('role', 'status');
     document.body.appendChild(toast);
   }
   toast.textContent = message;
@@ -800,95 +802,165 @@ function playDragonBallCollectChime() {
 }
 
 function renderDragonBallSVGs() {
-  function createStarPolygon(cx, cy, r = 2.8) {
+  // Exact anime canonical star layouts (in 100x100 coordinate space)
+  const LAYOUTS = {
+    1: [[50, 50]],
+    2: [[37, 37], [63, 63]],
+    3: [[50, 32], [34, 63], [66, 63]],
+    // 4-Star: Iconic diamond arrangement (Grandpa Gohan's Dragon Ball from the anime!)
+    4: [[50, 27], [27, 50], [73, 50], [50, 73]],
+    // 5-Star: 4 outer diagonal stars + 1 center star
+    5: [[50, 50], [34, 34], [66, 34], [34, 66], [66, 66]],
+    // 6-Star: Symmetrical 2x3 column pattern
+    6: [[36, 32], [64, 32], [36, 50], [64, 50], [36, 68], [64, 68]],
+    // 7-Star: Hexagonal ring of 6 stars surrounding 1 center star
+    7: [[50, 50], [50, 26], [71, 38], [71, 62], [50, 74], [29, 62], [29, 38]],
+    // Multi-star decoy variants
+    8: [[36, 26], [64, 26], [24, 50], [50, 50], [76, 50], [36, 74], [64, 74], [50, 26]],
+    9: [[30, 30], [50, 30], [70, 30], [30, 50], [50, 50], [70, 50], [30, 70], [50, 70], [70, 70]]
+  };
+
+  // Build a crisp 5-pointed star polygon centered at (cx, cy)
+  function createStarPolygon(cx, cy, r) {
     let points = [];
-    for (let i = 0; i < 5; i++) {
-      let outerAngle = (i * 72 - 90) * Math.PI / 180;
-      let innerAngle = (i * 72 + 36 - 90) * Math.PI / 180;
-      points.push(`${cx + r * Math.cos(outerAngle)},${cy + r * Math.sin(outerAngle)}`);
-      points.push(`${cx + (r * 0.45) * Math.cos(innerAngle)},${cy + (r * 0.45) * Math.sin(innerAngle)}`);
+    for (let i = 0; i < 10; i++) {
+      const radius = i % 2 === 0 ? r : r * 0.40;
+      const angle = (Math.PI / 5) * i - Math.PI / 2;
+      points.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
     }
-    return `<polygon points="${points.join(' ')}" fill="#DC2626" />`;
+    return points.join(' ');
+  }
+
+  // Returns authentic deep ruby crimson stars floating inside the amber resin
+  function buildStars(starCoords, r) {
+    return starCoords.map(([sx, sy]) => {
+      const base = createStarPolygon(sx, sy, r);
+      // Dark amber-red shadow cast on the back of the sphere
+      const shadow = `<polygon points="${createStarPolygon(sx + 0.8, sy + 1.2, r)}" fill="#5A1500" opacity="0.75" />`;
+      // Deep anime crimson star body
+      const body = `<polygon points="${base}" fill="#D60000" />`;
+      // Subtle top-left ruby facet highlight
+      const hi = `<polygon points="${createStarPolygon(sx - 0.7, sy - 0.8, r * 0.65)}" fill="#FF4D4D" opacity="0.9" />`;
+      const glint = `<polygon points="${createStarPolygon(sx - 1.2, sy - 1.3, r * 0.35)}" fill="#FFFFFF" opacity="0.8" />`;
+      return shadow + body + hi + glint;
+    }).join('');
   }
 
   window.getBallSVGString = function(starNum, size = 34) {
+    const num = starNum ? starNum.toString() : '4';
+    const uid = `db-${num}-${size}-${Math.random().toString(36).slice(2, 7)}`;
+    const parsedNum = parseInt(num, 10);
+    const hasCanonicalLayout = !isNaN(parsedNum) && LAYOUTS[parsedNum];
+    
+    // Star radius scale (100x100 system)
+    const starR = parsedNum === 1 ? 11.5 : (parsedNum <= 3 ? 9.5 : (parsedNum === 4 ? 9.0 : (parsedNum <= 6 ? 8.2 : 7.6)));
+
     let innerContent = '';
-    const scale = size / 34;
-    const r = (radius) => radius * scale;
-    const c = (coord) => coord * scale;
 
-    const num = starNum.toString();
-
-    if (num === '1') {
-      innerContent = createStarPolygon(c(17), c(17), r(3.8));
-    } else if (num === '2') {
-      innerContent = createStarPolygon(c(12), c(17), r(3.0)) + createStarPolygon(c(22), c(17), r(3.0));
-    } else if (num === '3') {
-      innerContent = createStarPolygon(c(17), c(11), r(2.9)) + createStarPolygon(c(11.5), c(21.5), r(2.9)) + createStarPolygon(c(22.5), c(21.5), r(2.9));
-    } else if (num === '4') {
-      innerContent = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(12), r(2.8)) + createStarPolygon(c(12), c(22), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8));
-    } else if (num === '5') {
-      innerContent = createStarPolygon(c(17), c(10), r(2.6)) + createStarPolygon(c(10.5), c(15.5), r(2.6)) + createStarPolygon(c(23.5), c(15.5), r(2.6)) + createStarPolygon(c(13), c(23.5), r(2.6)) + createStarPolygon(c(21), c(23.5), r(2.6));
-    } else if (num === '6') {
-      innerContent = createStarPolygon(c(12), c(10.5), r(2.5)) + createStarPolygon(c(22), c(10.5), r(2.5)) + createStarPolygon(c(9.5), c(17), r(2.5)) + createStarPolygon(c(24.5), c(17), r(2.5)) + createStarPolygon(c(12), c(23.5), r(2.5)) + createStarPolygon(c(22), c(23.5), r(2.5));
-    } else if (num === '7') {
-      innerContent = createStarPolygon(c(17), c(17), r(2.5)) + createStarPolygon(c(17), c(9.5), r(2.3)) + createStarPolygon(c(23.5), c(13), r(2.3)) + createStarPolygon(c(23.5), c(21), r(2.3)) + createStarPolygon(c(17), c(24.5), r(2.3)) + createStarPolygon(c(10.5), c(21), r(2.3)) + createStarPolygon(c(10.5), c(13), r(2.3));
-    } 
-    // --- Fake Dragon Balls Trick Variations ---
-    else if (num === '8') {
-      // Impossible 8-Star Dragon Ball!
-      innerContent = createStarPolygon(c(12), c(9), r(2.2)) + createStarPolygon(c(22), c(9), r(2.2)) +
-                     createStarPolygon(c(8), c(17), r(2.2)) + createStarPolygon(c(17), c(17), r(2.2)) + createStarPolygon(c(26), c(17), r(2.2)) +
-                     createStarPolygon(c(12), c(25), r(2.2)) + createStarPolygon(c(22), c(25), r(2.2)) + createStarPolygon(c(17), c(9), r(2.0));
-    } else if (num === '9') {
-      // 9-Star Ancient Decoy Ball (3x3 grid of stars)
-      innerContent = createStarPolygon(c(10), c(10), r(2.0)) + createStarPolygon(c(17), c(10), r(2.0)) + createStarPolygon(c(24), c(10), r(2.0)) +
-                     createStarPolygon(c(10), c(17), r(2.0)) + createStarPolygon(c(17), c(17), r(2.0)) + createStarPolygon(c(24), c(17), r(2.0)) +
-                     createStarPolygon(c(10), c(24), r(2.0)) + createStarPolygon(c(17), c(24), r(2.0)) + createStarPolygon(c(24), c(24), r(2.0));
-    } else if (num === '0') {
-      // Blank smooth decoy orb with faint shine
+    // --- Authentic numbered balls (1..7) + multi-star decoys (8,9) ---
+    if (hasCanonicalLayout) {
+      innerContent = buildStars(LAYOUTS[parsedNum], starR);
+    }
+    // --- Decoy Trick Variations ---
+    else if (num === '0') {
       innerContent = '';
     } else if (num === 'emoji') {
-      // Cool Sunglasses Emoji inside the orb!
-      innerContent = `<text x="${c(17)}" y="${c(23)}" font-size="${c(17)}" text-anchor="middle">😎</text>`;
+      innerContent = `<text x="50" y="66" font-size="44" text-anchor="middle" filter="url(#db-star-shadow-${uid})">😎</text>`;
     } else if (num === 'spiral') {
-      // Hypnotic Spiral Galaxy Stars
-      innerContent = createStarPolygon(c(17), c(17), r(3.2)) +
-        `<path d="M ${c(17)} ${c(17)} m -${c(9)}, 0 a ${c(9)},${c(9)} 0 1,0 ${c(18)},0 a ${c(9)},${c(9)} 0 1,0 -${c(18)},0" stroke="#DC2626" stroke-width="${Math.max(1.2, 1.6 * scale)}" fill="none" stroke-dasharray="${c(3)},${c(2)}" />`;
+      innerContent = buildStars([[50, 50]], 10) +
+        `<path d="M 50 50 m -26, 0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0" stroke="#D60000" stroke-width="4.5" fill="none" stroke-dasharray="8,6" opacity="0.9" />`;
     } else if (num === 'cookie') {
-      // Painted Chocolate Chip Cookie Ball
-      innerContent = `<circle cx="${c(11)}" cy="${c(13)}" r="${c(2)}" fill="#581C87" /><circle cx="${c(22)}" cy="${c(12)}" r="${c(2.2)}" fill="#581C87" /><circle cx="${c(16)}" cy="${c(19)}" r="${c(1.8)}" fill="#581C87" /><circle cx="${c(10)}" cy="${c(23)}" r="${c(2.2)}" fill="#581C87" /><circle cx="${c(23)}" cy="${c(23)}" r="${c(2)}" fill="#581C87" />`;
+      innerContent = `<circle cx="33" cy="38" r="6.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="65" cy="35" r="7" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="48" cy="56" r="5.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="30" cy="68" r="6.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="68" cy="68" r="6" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" />`;
     } else if (num === 'glitch') {
-      // Cyber Matrix Glitch Decoy Ball
-      innerContent = `<text x="${c(17)}" y="${c(22)}" font-family="monospace" font-weight="900" font-size="${c(15)}" fill="#10B981" text-anchor="middle">⚡01</text>`;
+      innerContent = `<text x="50" y="64" font-family="monospace" font-weight="900" font-size="38" fill="#10B981" text-anchor="middle" filter="drop-shadow(0 0 6px #10B981)">⚡01</text>`;
     } else if (num === '100') {
-      // 100-Star Ultra Mythic Ball
-      innerContent = `<text x="${c(17)}" y="${c(22)}" font-family="sans-serif" font-weight="900" font-size="${c(13)}" fill="#DC2626" text-anchor="middle">100★</text>`;
+      innerContent = `<text x="50" y="64" font-family="sans-serif" font-weight="900" font-size="34" fill="#D60000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">100★</text>`;
     } else if (num === 'cracked') {
-      // Cracked 4-Star Ball with cartoon crack path
-      innerContent = createStarPolygon(c(12), c(12), r(2.8)) + createStarPolygon(c(22), c(22), r(2.8)) +
-        `<path d="M ${c(6)} ${c(14)} L ${c(14)} ${c(19)} L ${c(18)} ${c(16)} L ${c(28)} ${c(22)}" stroke="#1E293B" stroke-width="${Math.max(1.5, 2 * scale)}" stroke-linecap="round" fill="none" />` +
-        `<rect x="${c(12)}" y="${c(15)}" width="${c(10)}" height="${c(4)}" rx="${c(1)}" fill="#FDE68A" stroke="#1E293B" stroke-width="1" transform="rotate(-20 ${c(17)} ${c(17)})" />`;
+      innerContent = buildStars([[36, 36], [64, 64]], 8.5) +
+        `<path d="M 18 42 L 42 56 L 54 48 L 82 65" stroke="#1E293B" stroke-width="5" stroke-linecap="round" fill="none" />` +
+        `<rect x="36" y="45" width="28" height="11" rx="3" fill="#FDE68A" stroke="#1E293B" stroke-width="2.5" transform="rotate(-20 50 50)" />`;
     } else if (num === 'question') {
-      // Mystery question mark
-      innerContent = `<text x="${c(17)}" y="${c(23)}" font-family="sans-serif" font-weight="900" font-size="${c(18)}" fill="#DC2626" text-anchor="middle">?</text>`;
+      innerContent = `<text x="50" y="68" font-family="sans-serif" font-weight="900" font-size="52" fill="#D60000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">?</text>`;
     } else if (num === 'rock') {
-      // Painted orange pebble
-      innerContent = `<circle cx="${c(14)}" cy="${c(14)}" r="${c(1.5)}" fill="#78350F" /><circle cx="${c(21)}" cy="${c(20)}" r="${c(2)}" fill="#78350F" /><circle cx="${c(12)}" cy="${c(22)}" r="${c(1.5)}" fill="#78350F" />`;
+      innerContent = `<circle cx="42" cy="42" r="5" fill="#78350F" /><circle cx="62" cy="58" r="6" fill="#78350F" /><circle cx="36" cy="65" r="4.5" fill="#78350F" />`;
     }
 
     return `
-      <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="display: block; pointer-events: none;">
+      <svg viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none;" aria-hidden="true">
         <defs>
-          <radialGradient id="db-orb-${num}-${size}" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stop-color="#FDE047" />
-            <stop offset="65%" stop-color="#F59E0B" />
-            <stop offset="100%" stop-color="#EA580C" />
+          <!-- Authentic Anime Crystal Amber Body: glowing sunlit core to fiery orange-amber rim -->
+          <radialGradient id="db-body-${uid}" cx="35%" cy="30%" r="72%">
+            <stop offset="0%" stop-color="#FFF8B3" />
+            <stop offset="14%" stop-color="#FFE040" />
+            <stop offset="38%" stop-color="#FFB300" />
+            <stop offset="65%" stop-color="#FF7A00" />
+            <stop offset="85%" stop-color="#E64A00" />
+            <stop offset="96%" stop-color="#BF2600" />
+            <stop offset="100%" stop-color="#7A1200" />
           </radialGradient>
+
+          <!-- Internal light scatter glow -->
+          <radialGradient id="db-glow-${uid}" cx="46%" cy="46%" r="54%">
+            <stop offset="0%" stop-color="#FFFBEB" stop-opacity="0.65" />
+            <stop offset="50%" stop-color="#FFC107" stop-opacity="0.25" />
+            <stop offset="100%" stop-color="#E65100" stop-opacity="0" />
+          </radialGradient>
+
+          <!-- Primary anime glass lens crescent highlight -->
+          <radialGradient id="db-gloss-${uid}" cx="45%" cy="40%" r="55%">
+            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+            <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.45" />
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+          </radialGradient>
+
+          <!-- Warm bottom-right ambient bounce light -->
+          <radialGradient id="db-rim-${uid}" cx="50%" cy="85%" r="52%">
+            <stop offset="0%" stop-color="#FFA000" stop-opacity="0.8" />
+            <stop offset="70%" stop-color="#FF6D00" stop-opacity="0.4" />
+            <stop offset="100%" stop-color="#DD2C00" stop-opacity="0" />
+          </radialGradient>
+
+          <!-- Internal shadow filter for floating stars -->
+          <filter id="db-star-shadow-${uid}" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="1.2" dy="1.8" stdDeviation="1.5" flood-color="#4A0E00" flood-opacity="0.75" />
+          </filter>
+
+          <filter id="db-blur-${uid}" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.4" />
+          </filter>
+
+          <clipPath id="db-clip-${uid}">
+            <circle cx="50" cy="50" r="46" />
+          </clipPath>
         </defs>
-        <circle cx="${c(17)}" cy="${c(17)}" r="${r(15)}" fill="url(#db-orb-${num}-${size})" stroke="#1E293B" stroke-width="${Math.max(1.5, 2 * scale)}" />
-        <ellipse cx="${c(12)}" cy="${c(10)}" rx="${r(4)}" ry="${r(2)}" fill="#FFFFFF" opacity="0.6" transform="rotate(-30 ${c(12)} ${c(10)})" />
-        ${innerContent}
+
+        <!-- Base anime crystal amber sphere -->
+        <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" stroke="#2B0C02" stroke-width="3.5" />
+
+        <g clip-path="url(#db-clip-${uid})">
+          <!-- Warm bottom bounce light -->
+          <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" />
+          
+          <!-- Volumetric inner amber glow -->
+          <circle cx="50" cy="50" r="46" fill="url(#db-glow-${uid})" />
+
+          <!-- Submerged ruby stars floating inside the crystal -->
+          <g filter="url(#db-star-shadow-${uid})">
+            ${innerContent}
+          </g>
+
+          <!-- Anime curved glass lens highlight at upper-left -->
+          <ellipse cx="32" cy="25" rx="17" ry="9" fill="url(#db-gloss-${uid})" filter="url(#db-blur-${uid})" transform="rotate(-30 32 25)" />
+          
+          <!-- Bright anime pinpoint specular shine -->
+          <circle cx="28" cy="20" r="4" fill="#FFFFFF" opacity="0.95" />
+          
+          <!-- Secondary subtle ambient glint on lower-right -->
+          <circle cx="73" cy="71" r="3.2" fill="#FFFFFF" opacity="0.6" />
+        </g>
+
+        <!-- Outer crystal glass boundary ring highlight -->
+        <circle cx="50" cy="50" r="45.2" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" />
       </svg>
     `;
   };
@@ -897,12 +969,18 @@ function renderDragonBallSVGs() {
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
     ball.innerHTML = window.getBallSVGString(ballNum, 34);
+    ball.setAttribute('role', 'button');
+    ball.setAttribute('tabindex', '0');
+    ball.setAttribute('aria-label', `${ballNum}-Star Dragon Ball`);
   });
 
   // Render SVG inside fake decoy dragon balls
   document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
     const fakeType = ball.getAttribute('data-fake-ball');
     ball.innerHTML = window.getBallSVGString(fakeType, 34);
+    ball.setAttribute('role', 'button');
+    ball.setAttribute('tabindex', '0');
+    ball.setAttribute('aria-label', `Mystery Dragon Ball`);
   });
 
   // Render SVG inside Shenron modal celebration balls
@@ -952,7 +1030,7 @@ function renderRadarHUD() {
       return `
         <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusSector('${ball.selector}')" style="cursor: pointer;">
           <div class="radar-signal-card-ball">
-            ${window.getBallSVGString(ball.num, 20)}
+            ${window.getBallSVGString(ball.num, 24)}
           </div>
           <div class="radar-signal-card-info">
             <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '✅' : '📡'}</span>
@@ -1023,9 +1101,9 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
   playDragonBallCollectChime();
   createKiSparks(clickX, clickY);
 
-  // 2. Render enlarged ball SVG (110px)
+  // 2. Render enlarged ball SVG (120px) with photorealistic crystal layers
   if (enlargedBall) {
-    enlargedBall.innerHTML = window.getBallSVGString(ballNumber, 110);
+    enlargedBall.innerHTML = window.getBallSVGString(ballNumber, 120) + '<div class="db-rim-light"></div>';
   }
   if (title) {
     title.textContent = `${ballNumber}-Star Dragon Ball`;
@@ -1047,7 +1125,7 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
 
     const flyer = document.createElement('div');
     flyer.className = 'db-flying-clone';
-    flyer.innerHTML = window.getBallSVGString(ballNumber, 90);
+    flyer.innerHTML = window.getBallSVGString(ballNumber, 90) + '<div class="db-rim-light"></div>';
     flyer.style.left = `${startX - 85}px`;
     flyer.style.top = `${startY - 85}px`;
     document.body.appendChild(flyer);
@@ -1097,38 +1175,55 @@ function playPrankBoingSound() {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(160, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(720, ctx.currentTime + 0.16);
-    osc.frequency.exponentialRampToValueAtTime(240, ctx.currentTime + 0.36);
-    gain.gain.setValueAtTime(0.32, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.42);
+
+    osc.type = 'triangle';
+    const now = ctx.currentTime;
+
+    // Playful cartoon boing pitch sweep
+    osc.frequency.setValueAtTime(140, now);
+    osc.frequency.exponentialRampToValueAtTime(520, now + 0.12);
+    osc.frequency.exponentialRampToValueAtTime(260, now + 0.25);
+    osc.frequency.exponentialRampToValueAtTime(420, now + 0.38);
+
+    gain.gain.setValueAtTime(0.22, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.42);
+
+    osc.start(now);
+    osc.stop(now + 0.46);
   } catch (e) {}
 }
 
 const kidGokuPrankQuotes = [
   "Bleh! 😝 That's not a real Dragon Ball! That's just an ordinary orange rock I found in the woods!",
   "Hehehe! 😜 You got tricked! That ball has 8 stars! Shenron only has 7!",
-  "Bleeehh! 👅 Fooled ya! Master Roshi said fake Dragon Balls don't grant wishes!",
-  "Aha! 🤪 That's my decoy ball! Check your Capsule Corp Dragon Radar to find the real ones!",
   "Bwahaha! 😋 Grandpa Gohan taught me that trick! Keep searching, silly!",
-  "Nya-ha-ha! 😛 You found a chocolate chip cookie painted orange! Delicious, but no wishes!",
-  "Woooosh! 💨 That's just a yellow smoke bomb! Don't let King Piccolo catch you with fakes!",
-  "Ehehe! 🤪 Even Oolong's shape-shifting looks more real than this ball!",
+  "Aww man! 🤣 You fell for Master Roshi's painted decoy ball!",
+  "Bleeeh! 👅 You can't summon Shenron with a painted sphere! Check your Dragon Radar!",
+  "Pfft! 🤪 That ball is made of sugar candy! Master Roshi ate the other half!",
+  "Oopsie! 😆 That's a Capsule Corp prototype ball from Bulma's workshop!",
+  "Bleeeh! 👅 Master Roshi said fake Dragon Balls don't grant wishes!",
   "Bleeeh! 😜 You tapped a 100-star ball! You can't summon 14 Shenrons at once!",
   "Gotcha! 😋 Bulma told me only authentic Dragon Balls emit 7.5 micro-wave radar pings!"
 ];
 
 let kidGokuPrankTimer = null;
+let kidGokuPrankAnimation = null;
 
 window.triggerKidGokuPrank = function(fakeType, clickX, clickY) {
-  if (kidGokuPrankTimer) clearTimeout(kidGokuPrankTimer);
+  if (kidGokuPrankTimer) {
+    clearTimeout(kidGokuPrankTimer);
+    kidGokuPrankTimer = null;
+  }
+  if (kidGokuPrankAnimation) {
+    kidGokuPrankAnimation.cancel();
+    kidGokuPrankAnimation = null;
+  }
 
   playPrankBoingSound();
   createKiSparks(clickX, clickY);
@@ -1142,31 +1237,52 @@ window.triggerKidGokuPrank = function(fakeType, clickX, clickY) {
   const modal = document.getElementById('kidGokuPrankModal');
   const timerBar = document.getElementById('prankTimerBar');
 
-  if (timerBar) {
-    // Reset timer progress bar animation
-    timerBar.style.animation = 'none';
-    void timerBar.offsetWidth;
-    timerBar.style.animation = '';
-  }
-
   if (modal) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     initLucideIcons();
   }
 
-  showToast("🤪 BLEH! Fooled ya! That's a FAKE Dragon Ball!");
+  // Exact 5-second countdown timer animation & auto-dismiss
+  if (timerBar) {
+    timerBar.style.transform = 'scaleX(1)';
+    if (typeof timerBar.animate === 'function') {
+      kidGokuPrankAnimation = timerBar.animate(
+        [
+          { transform: 'scaleX(1)' },
+          { transform: 'scaleX(0)' }
+        ],
+        {
+          duration: 5000,
+          easing: 'linear',
+          fill: 'forwards'
+        }
+      );
+      kidGokuPrankAnimation.onfinish = () => {
+        closeKidGokuPrankModal();
+      };
+    } else {
+      kidGokuPrankTimer = setTimeout(() => {
+        closeKidGokuPrankModal();
+      }, 5000);
+    }
+  } else {
+    kidGokuPrankTimer = setTimeout(() => {
+      closeKidGokuPrankModal();
+    }, 5000);
+  }
 
-  // Auto-dismiss after 7 seconds
-  kidGokuPrankTimer = setTimeout(() => {
-    closeKidGokuPrankModal();
-  }, 7000);
+  showToast("🤪 BLEH! Fooled ya! That's a FAKE Dragon Ball!");
 };
 
 window.closeKidGokuPrankModal = function() {
   if (kidGokuPrankTimer) {
     clearTimeout(kidGokuPrankTimer);
     kidGokuPrankTimer = null;
+  }
+  if (kidGokuPrankAnimation) {
+    kidGokuPrankAnimation.cancel();
+    kidGokuPrankAnimation = null;
   }
 
   const modal = document.getElementById('kidGokuPrankModal');
@@ -1196,9 +1312,15 @@ function initDragonBallsCollector() {
       e.stopPropagation();
       openDragonRadarModal();
     });
+    radarWidget.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openDragonRadarModal();
+      }
+    });
   }
 
-  // Real 7 Dragon Balls Click / Touch Handler
+  // Real 7 Dragon Balls Click / Touch / Keyboard Handler
   interactiveBalls.forEach(ball => {
     const handleBallCollect = (e) => {
       e.stopPropagation();
@@ -1221,9 +1343,20 @@ function initDragonBallsCollector() {
       e.preventDefault();
       handleBallCollect(e);
     });
+    ball.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const rect = ball.getBoundingClientRect();
+        handleBallCollect({
+          stopPropagation: () => {},
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2
+        });
+      }
+    });
   });
 
-  // Fake Decoy Dragon Balls Click / Touch Handler (Kid Goku Prank)
+  // Fake Decoy Dragon Balls Click / Touch / Keyboard Handler (Kid Goku Prank)
   fakeBalls.forEach(fakeBall => {
     const handleFakeClick = (e) => {
       e.stopPropagation();
@@ -1237,6 +1370,17 @@ function initDragonBallsCollector() {
     fakeBall.addEventListener('touchend', (e) => {
       e.preventDefault();
       handleFakeClick(e);
+    });
+    fakeBall.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const rect = fakeBall.getBoundingClientRect();
+        handleFakeClick({
+          stopPropagation: () => {},
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2
+        });
+      }
     });
   });
 }
@@ -1422,7 +1566,7 @@ window.superSaiyanGodBlast = function() {
 /* ==========================================================================
    Super Saiyan Rosé Goku Black Start Animation & Smooth Transition Controller
    ========================================================================== */
-const MAX_INTRO_DURATION = 2.5; // Max 2.5 seconds duration
+const MAX_INTRO_DURATION = 3.0; // Max 3.0 seconds duration
 let isIntroFinishing = false;
 let introTimer = null;
 
@@ -1442,7 +1586,7 @@ function initPageIntroAnimation() {
   document.documentElement.classList.add('page-intro-running');
   document.body.classList.add('page-intro-running');
 
-  // Hard safety timer: Automatically finish intro at 2.5 seconds
+  // Hard safety timer: Automatically finish intro at 3.0 seconds
   if (introTimer) clearTimeout(introTimer);
   introTimer = setTimeout(() => {
     if (!isIntroFinishing) {
@@ -1457,7 +1601,7 @@ function initPageIntroAnimation() {
       const progressPercent = Math.min(100, (video.currentTime / targetDuration) * 100);
       progressBar.style.width = `${progressPercent}%`;
 
-      // Trigger seamless transition at 2.5 seconds
+      // Trigger seamless transition at 3.0 seconds
       if (video.currentTime >= targetDuration - 0.1 && !isIntroFinishing) {
         finishIntroTransition();
       }

@@ -104,10 +104,50 @@ body {
 }
 
 /* --- Accessibility & Focus States --- */
+.skip-to-content {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  background: var(--tertiary);
+  color: #0A1410;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 3px 3px 0px var(--border);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  z-index: 999999999;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus-visible {
+  top: 1rem;
+  outline: none;
+}
+
+section, [id] {
+  scroll-margin-top: calc(var(--header-height) + 1.25rem);
+}
+
+h1, h2, h3, .section-title, .hero-title, .modal-title {
+  text-wrap: balance;
+}
+
+.stat-number, .radar-count-display, .scouter-telemetry-chip, .cgpa-score, .timeline-date {
+  font-variant-numeric: tabular-nums;
+}
+
 :focus-visible {
   outline: none;
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--accent) !important;
+}
+
+body.saiyan-mode :focus-visible {
+  border-color: #FBBF24 !important;
+  box-shadow: 0 0 0 3px #0A1410, 0 0 0 6px #FBBF24 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -132,6 +172,10 @@ body {
   }
   .flying-nimbus.nimbus-turbo {
     animation-duration: 4.2s !important;
+  }
+  /* Stop continuous decorative ticker scrolling under prefers-reduced-motion */
+  .ticker-track {
+    animation: none !important;
   }
 }
 
@@ -569,7 +613,7 @@ body.saiyan-mode .nav-center-island {
   display: inline-flex;
   align-items: center;
   gap: 0.38rem;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -1787,7 +1831,7 @@ body.saiyan-mode .scouter-icon-box.bg-pink {
   height: 34px;
   border-radius: 8px;
   color: var(--muted-fg);
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
   flex-shrink: 0;
   border: 1.5px solid transparent;
 }
@@ -1957,7 +2001,7 @@ body.saiyan-mode .btn-micro-joke {
   font-family: var(--font-body);
   font-size: var(--text-base);
   color: #1E293B;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   box-shadow: 2px 2px 0px transparent;
 }
 
@@ -2288,29 +2332,40 @@ body.saiyan-mode .form-textarea:focus {
     justify-content: center;
     width: 42px;
     height: 42px;
-    background: var(--card);
-    border: 2px solid var(--border);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid var(--border);
     border-radius: var(--radius-md);
-    box-shadow: 2.5px 2.5px 0px var(--border);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
     cursor: pointer;
     color: var(--fg);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     flex-shrink: 0;
   }
 
   .mobile-toggle:hover {
-    background: var(--tertiary);
+    background: linear-gradient(135deg, rgba(254, 240, 138, 0.9), rgba(253, 224, 71, 0.7));
     color: #0A1410;
+    transform: scale(1.05);
   }
 
   body.saiyan-mode .mobile-toggle {
-    background: #0F1E17;
-    border-color: #F59E0B;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(245, 158, 11, 0.45);
     color: #F8FAFC;
-    box-shadow: 2px 2px 0px #000000;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 0 12px rgba(245, 158, 11, 0.08);
   }
 
-  /* Full Width Animated Mobile Drawer Navigation */
+  body.saiyan-mode .mobile-toggle:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.8));
+    border-color: #FBBF24;
+    color: #0A1410;
+  }
+
+  /* Full Width Animated Mobile Glass Drawer Navigation */
   .nav-menu {
     display: none;
   }
@@ -2324,12 +2379,13 @@ body.saiyan-mode .form-textarea:focus {
     right: 0;
     width: 100vw;
     width: 100%;
-    background-color: #FFFDF5 !important;
-    background: #FFFDF5 !important;
-    border-bottom: 3px solid var(--border);
-    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.45);
+    background: linear-gradient(180deg, rgba(255, 253, 245, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%) !important;
+    backdrop-filter: blur(28px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+    border-bottom: 2px solid rgba(15, 23, 42, 0.12) !important;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
     padding: 1.25rem 1rem 1.75rem;
-    gap: 0.65rem;
+    gap: 0.75rem;
     z-index: 100000;
     max-height: calc(100vh - var(--header-height));
     max-height: calc(100dvh - var(--header-height));
@@ -2349,147 +2405,25 @@ body.saiyan-mode .form-textarea:focus {
     }
   }
 
-  body.saiyan-mode .nav-menu.open {
-    background-color: #0A1410 !important;
-    background: #0A1410 !important;
-    border-color: #F59E0B !important;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
-  }
-
-  /* Scouter / Capsule Corp Header at Top of Drawer */
-  .mobile-drawer-header {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.65rem 0.95rem;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15));
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 0.25rem;
-    box-shadow: 2px 2px 0px var(--border);
-  }
-
-  body.saiyan-mode .mobile-drawer-header {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(56, 189, 248, 0.18));
-    border-color: #F59E0B;
-    box-shadow: 2px 2px 0px #000000;
-  }
-
-  .db-drawer-scouter {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .db-kanji-kame {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background: #EF4444;
-    color: #FFFFFF;
-    border-radius: 50%;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 900;
-    font-size: 0.8rem;
-    border: 1.5px solid var(--border);
-    box-shadow: 1px 1px 0px var(--border);
-  }
-
-  .db-drawer-label {
-    font-family: var(--font-heading);
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    color: var(--fg);
-  }
-
-  body.saiyan-mode .db-drawer-label {
-    color: #FBBF24;
-  }
-
-  .db-power-level {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 900;
-    background: #FBBF24;
-    color: #0A1410;
-    padding: 0.2rem 0.55rem;
-    border-radius: 999px;
-    border: 1.5px solid #0A1410;
-    box-shadow: 1.5px 1.5px 0px #0A1410;
-    letter-spacing: 0.05em;
-  }
-
-  /* Individual DBZ Styled Nav Links */
-  .db-nav-kanji {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #FBBF24, #F59E0B);
-    color: #0A1410;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 900;
-    font-size: 0.95rem;
-    border: 2px solid var(--border);
-    box-shadow: 2px 2px 0px var(--border);
-    flex-shrink: 0;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .db-nav-kanji.db-kanji-rose {
-    background: linear-gradient(135deg, #EC4899, #D946EF);
-    color: #FFFFFF;
-    border-color: #EC4899;
-  }
-
-  .db-nav-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    text-align: left;
-  }
-
-  .db-nav-title {
-    font-family: var(--font-heading);
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--fg);
-    line-height: 1.15;
-  }
-
-  .db-nav-sub {
-    display: block !important;
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--muted-fg);
-    line-height: 1;
-  }
-
-  body.saiyan-mode .db-nav-title {
-    color: #F8FAFC;
-  }
-
-  body.saiyan-mode .db-nav-sub {
-    color: #94A3B8;
-  }
-
-  body.saiyan-mode .db-nav-kanji {
-    background: linear-gradient(135deg, #FBBF24, #F59E0B);
-    color: #0A1410;
-    border-color: #F59E0B;
-    box-shadow: 2px 2px 0px #000000;
-  }
-
-  .nav-link:hover .db-nav-kanji,
-  .nav-link.active .db-nav-kanji {
-    transform: rotate(8deg) scale(1.1);
-    box-shadow: 0 0 12px #FBBF24;
+  @keyframes navItemPopIn {
+    0% {
+      opacity: 0;
+      transform: translateY(32px) scale(0.88);
+      filter: blur(6px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-6px) scale(1.03);
+      filter: blur(0px);
+    }
+    82% {
+      transform: translateY(2px) scale(0.99);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0px);
+    }
   }
 
   .nav-menu li {
@@ -2497,34 +2431,60 @@ body.saiyan-mode .form-textarea:focus {
     list-style: none;
   }
 
+  .nav-menu.open li {
+    opacity: 0;
+    animation: navItemPopIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .nav-menu.open li:nth-child(1) { animation-delay: 0.08s; }
+  .nav-menu.open li:nth-child(2) { animation-delay: 0.16s; }
+  .nav-menu.open li:nth-child(3) { animation-delay: 0.24s; }
+  .nav-menu.open li:nth-child(4) { animation-delay: 0.32s; }
+  .nav-menu.open li:nth-child(5) { animation-delay: 0.40s; }
+  .nav-menu.open li:nth-child(6) { animation-delay: 0.48s; }
+  .nav-menu.open li:nth-child(7) { animation-delay: 0.56s; }
+  .nav-menu.open li:nth-child(8) { animation-delay: 0.64s; }
+
+  /* Glassmorphism Mobile Nav Link Buttons */
   .nav-link {
     width: 100% !important;
-    padding: 0.85rem 1.15rem !important;
-    border-radius: 14px !important;
-    background-color: var(--card);
-    border: 2px solid var(--border);
-    font-size: 1rem !important;
+    padding: 0.95rem 1.25rem !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.45) 100%) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+    font-size: 1.02rem !important;
     font-weight: 800;
     text-align: left;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    gap: 0.85rem !important;
-    box-shadow: 3px 3px 0px var(--border);
-    color: var(--fg);
+    gap: 0.95rem !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+    color: var(--fg) !important;
     text-decoration: none;
     box-sizing: border-box;
-    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
   }
 
   .nav-link:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0px var(--border);
+    transform: scale(0.98);
   }
 
   .nav-link:hover,
   .nav-link.active {
-    background-color: var(--tertiary) !important;
+    background: linear-gradient(135deg, rgba(254, 240, 138, 0.85) 0%, rgba(253, 224, 71, 0.7) 100%) !important;
+    border-color: rgba(245, 158, 11, 0.8) !important;
+    color: #0A1410 !important;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+    transform: translateX(4px) scale(1.01) !important;
+  }
+
+  .nav-link:hover .nav-link-icon,
+  .nav-link.active .nav-link-icon,
+  .nav-link:hover .mobile-nav-arrow,
+  .nav-link.active .mobile-nav-arrow {
     color: #0A1410 !important;
   }
 
@@ -2535,24 +2495,48 @@ body.saiyan-mode .form-textarea:focus {
     height: 18px !important;
     color: var(--muted-fg);
     opacity: 0.8;
+    transition: transform 0.2s ease, color 0.2s ease;
   }
 
+  .nav-link:hover .mobile-nav-arrow,
+  .nav-link.active .mobile-nav-arrow {
+    transform: translateX(3px);
+  }
+
+  /* Ultra-Glassy Nav Links in Saiyan / Dark Mode */
   body.saiyan-mode .nav-link {
-    background-color: #0F1E17 !important;
-    border-color: rgba(245, 158, 11, 0.4) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(245, 158, 11, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1.5px solid rgba(245, 158, 11, 0.38) !important;
     color: #F8FAFC !important;
-    box-shadow: 3px 3px 0px #000000 !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 16px rgba(245, 158, 11, 0.08) !important;
   }
 
   body.saiyan-mode .nav-link:hover,
   body.saiyan-mode .nav-link.active {
-    background-color: #FBBF24 !important;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.8) 100%) !important;
     color: #0A1410 !important;
     border-color: #FBBF24 !important;
+    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+    transform: translateX(4px) scale(1.01) !important;
+  }
+
+  body.saiyan-mode .nav-link .nav-link-icon {
+    color: #FBBF24 !important;
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.4));
   }
 
   body.saiyan-mode .mobile-nav-arrow {
     color: #FBBF24 !important;
+  }
+
+  body.saiyan-mode .nav-link:hover .nav-link-icon,
+  body.saiyan-mode .nav-link.active .nav-link-icon,
+  body.saiyan-mode .nav-link:hover .mobile-nav-arrow,
+  body.saiyan-mode .nav-link.active .mobile-nav-arrow {
+    color: #0A1410 !important;
+    filter: none !important;
   }
 
   body.mobile-drawer-open .flying-nimbus,
@@ -3475,41 +3459,58 @@ body.page-intro-revealed .site-footer {
 
 .radar-signal-dot {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
-  font-weight: 900;
   cursor: pointer;
   pointer-events: auto;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+  /* Each dot contains a tiny realistic dragon ball SVG via JS */
+  background: transparent;
+}
+
+.radar-signal-dot svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
   transition: transform 0.2s ease;
 }
 
 .radar-signal-dot.signal-uncollected {
-  background-color: #FDE047;
-  box-shadow: 0 0 8px #F59E0B, 0 0 16px #EF4444;
-  animation: radar-dot-ping 1.4s infinite ease-in-out;
+  animation: radar-dot-ping 1.8s infinite ease-in-out;
 }
 
 .radar-signal-dot.signal-collected {
-  background: radial-gradient(circle, #FDE047 30%, #EA580C 100%);
-  box-shadow: 0 0 10px #F59E0B;
-  border: 1px solid #FFFFFF;
+  box-shadow: 0 0 14px #F59E0B, 0 0 28px rgba(251, 191, 36, 0.6);
+  border: 2px solid rgba(254, 240, 138, 0.9);
 }
 
-.radar-signal-dot.signal-collected::after {
-  content: '★';
-  color: #DC2626;
-  font-size: 7px;
+.radar-signal-dot:hover {
+  transform: translate(-50%, -50%) scale(1.35);
+  filter: drop-shadow(0 0 10px #FBBF24) drop-shadow(0 0 20px #EF4444);
+  z-index: 10;
+}
+
+.radar-signal-dot:hover svg {
+  transform: scale(1.15) rotate(-5deg);
 }
 
 @keyframes radar-dot-ping {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  50% { transform: translate(-50%, -50%) scale(1.6); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.7; }
+}
+
+/* Mini radar blips (smaller, simpler) */
+#radarMiniBlips span {
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+#radarMiniBlips span:hover {
+  box-shadow: 0 0 8px #F59E0B, 0 0 16px #EF4444;
+  transform: translate(-50%, -50%) scale(1.4);
 }
 
 /* Radar Signals Status List */
@@ -3641,7 +3642,11 @@ body.page-intro-revealed .site-footer {
   to { transform: translate(-50%, -50%) rotate(360deg) scale(0.9); }
 }
 
-/* 3D Enlarged Shining Dragon Ball */
+/* ==========================================================================
+   3D Enlarged Shining Dragon Ball — Photorealistic Material & Animation
+   ========================================================================== */
+
+/* Core ball container */
 .db-enlarged-ball {
   width: 170px;
   height: 170px;
@@ -3650,36 +3655,158 @@ body.page-intro-revealed .site-footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 35% 30%, #FEF08A 0%, #FBBF24 40%, #F59E0B 70%, #D97706 88%, #9A3412 100%);
-  box-shadow: 0 0 50px #F59E0B, 0 0 100px #EF4444, inset -12px -12px 30px rgba(154, 52, 18, 0.85), inset 12px 12px 25px rgba(254, 240, 138, 0.95);
-  border: 3px solid rgba(254, 240, 138, 0.8);
+  /* Multi-layered material: base + subsurface + sheen */
+  background:
+    /* Layer 4: Specular hotspot — small bright window reflection */
+    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.15) 40%, transparent 70%),
+    /* Layer 3: Subsurface scattering glow (light penetrating the sphere) */
+    radial-gradient(circle at 50% 50%, rgba(254,243,199,0.45) 0%, rgba(251,191,36,0.1) 60%, transparent 100%),
+    /* Layer 2: Core orange body with warm color shift toward the edges */
+    radial-gradient(circle at 36% 32%, #FFF7CC 0%, #FDE047 22%, #F59E0B 52%, #EA580C 78%, #9A3412 100%);
+  box-shadow:
+    /* Outer magical aura glow */
+    0 0 60px 8px rgba(245, 158, 11, 0.55),
+    0 0 120px 20px rgba(239, 68, 68, 0.35),
+    /* Deep contact shadow under the ball */
+    0 20px 40px -10px rgba(15, 23, 42, 0.6),
+    /* Inner shadow for sphere volume (concave) */
+    inset -10px -10px 28px rgba(154, 52, 18, 0.9),
+    inset 10px 10px 24px rgba(254, 240, 138, 0.9);
+  border: 2.5px solid rgba(254, 240, 138, 0.7);
   margin-bottom: 1.75rem;
-  animation: db-ball-shine 2s infinite alternate ease-in-out;
+  /* Animation drives a subtle "breathing" pulse + slow rotation for dynamic catch-lights */
+  animation: db-ball-breathe 3.5s infinite ease-in-out, db-ball-spin 20s infinite linear;
+  transform-style: preserve-3d;
 }
 
-/* Curved 3D Specular Reflection */
-.db-enlarged-ball::before {
+/* Layered pseudo-elements for additional specular & caustic detail */
+.db-enlarged-ball::before,
+.db-enlarged-ball::after {
   content: '';
   position: absolute;
-  top: 14%;
-  left: 20%;
-  width: 55px;
-  height: 28px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 80%);
-  transform: rotate(-35deg);
   pointer-events: none;
+  transform-style: preserve-3d;
 }
 
-@keyframes db-ball-shine {
-  0% {
-    transform: scale(1) rotate(-3deg);
-    box-shadow: 0 0 45px #F59E0B, 0 0 90px #EF4444, inset -12px -12px 30px rgba(154, 52, 18, 0.85), inset 12px 12px 25px rgba(254, 240, 138, 0.95);
+/* Primary curved specular highlight ("window reflection") */
+.db-enlarged-ball::before {
+  top: 12%;
+  left: 18%;
+  width: 58px;
+  height: 30px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 50%, transparent 85%);
+  transform: rotate(-32deg) translateZ(2px);
+  filter: blur(1.5px);
+  animation: db-spec-wobble 4s infinite ease-in-out;
+}
+
+/* Secondary tight hotspot */
+.db-enlarged-ball::after {
+  top: 16%;
+  left: 16%;
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, transparent 70%);
+  transform: translateZ(3px);
+  filter: blur(0.5px);
+}
+
+/* Rim light / bottom bounce — separate element so it stays fixed relative to the sphere */
+.db-enlarged-ball .db-rim-light {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 75%, transparent 40%, rgba(254,215,170,0.55) 100%);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Subtle pulsing scale + brightness oscillation */
+@keyframes db-ball-breathe {
+  0%, 100% {
+    transform: scale(1) rotate(-2deg);
+    box-shadow:
+      0 0 55px 6px rgba(245, 158, 11, 0.5),
+      0 0 110px 18px rgba(239, 68, 68, 0.3),
+      0 20px 40px -10px rgba(15, 23, 42, 0.6),
+      inset -10px -10px 28px rgba(154, 52, 18, 0.9),
+      inset 10px 10px 24px rgba(254, 240, 138, 0.9);
   }
-  100% {
-    transform: scale(1.08) rotate(3deg);
-    box-shadow: 0 0 70px #FDE047, 0 0 130px #EF4444, inset -12px -12px 35px rgba(154, 52, 18, 0.9), inset 14px 14px 30px rgba(255, 255, 255, 1);
+  50% {
+    transform: scale(1.06) rotate(2deg);
+    box-shadow:
+      0 0 75px 12px rgba(253, 224, 71, 0.6),
+      0 0 140px 28px rgba(239, 68, 68, 0.45),
+      0 24px 48px -8px rgba(15, 23, 42, 0.5),
+      inset -12px -12px 32px rgba(154, 52, 18, 0.95),
+      inset 12px 12px 28px rgba(255, 255, 255, 1);
   }
+}
+
+/* Slow continuous rotation so highlights travel across the surface */
+@keyframes db-ball-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Gentle wobble on the primary specular to catch light dynamically */
+@keyframes db-spec-wobble {
+  0%, 100% { transform: rotate(-32deg) translateZ(2px) scale(1); opacity: 0.9; }
+  50% { transform: rotate(-28deg) translateZ(2px) scale(1.08); opacity: 1; }
+}
+
+/* The star SVG inside the enlarged ball gets a slight 3D pop */
+.db-enlarged-ball > svg {
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+  transform: translateZ(4px);
+  animation: db-stars-float 4s infinite ease-in-out;
+}
+
+@keyframes db-stars-float {
+  0%, 100% { transform: translateZ(4px) translateY(0) rotate(0deg); }
+  50% { transform: translateZ(6px) translateY(-2px) rotate(1.5deg); }
+}
+
+/* Fly-to-radar clone inherits the same realism */
+.db-flying-clone {
+  position: fixed;
+  z-index: 1000000;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 50%, transparent 80%),
+    radial-gradient(circle at 50% 50%, rgba(254,243,199,0.4) 0%, rgba(251,191,36,0.08) 60%, transparent 100%),
+    radial-gradient(circle at 36% 32%, #FFF7CC 0%, #FDE047 22%, #F59E0B 52%, #EA580C 78%, #9A3412 100%);
+  box-shadow:
+    0 0 60px 8px rgba(245, 158, 11, 0.6),
+    0 0 120px 20px rgba(239, 68, 68, 0.4),
+    0 20px 40px -10px rgba(15, 23, 42, 0.5),
+    inset -10px -10px 28px rgba(154, 52, 18, 0.9),
+    inset 10px 10px 24px rgba(254, 240, 138, 0.9);
+  border: 2.5px solid rgba(254, 240, 138, 0.7);
+  pointer-events: none;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+.db-flying-clone::before {
+  content: '';
+  position: absolute;
+  top: 12%; left: 18%;
+  width: 58px; height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.9) 0%, transparent 85%);
+  transform: rotate(-32deg) translateZ(2px);
+  filter: blur(1.5px);
+}
+.db-flying-clone .db-rim-light {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 50% 75%, transparent 40%, rgba(254,215,170,0.55) 100%);
+  pointer-events: none; mix-blend-mode: screen;
 }
 
 .db-collect-banner {
@@ -3743,16 +3870,6 @@ body.page-intro-revealed .site-footer {
 
 .fake-dragon-ball {
   cursor: pointer;
-  filter: drop-shadow(2px 2px 0px rgba(30, 41, 59, 0.6));
-  transition: transform 0.25s var(--ease-bounce), filter 0.25s ease;
-}
-
-/* ==========================================================================
-   Kid Goku Prank Modal & Fake Dragon Ball Trick Styles (Compact & Auto-Dismiss)
-   ========================================================================== */
-
-.fake-dragon-ball {
-  cursor: pointer;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -3762,32 +3879,40 @@ body.page-intro-revealed .site-footer {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   animation: fake-ball-entice 3.2s infinite ease-in-out;
-  transition: transform 0.2s var(--ease-bounce), filter 0.2s ease;
+  transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s ease, filter 0.25s ease;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
 }
 
 @keyframes fake-ball-entice {
   0%, 100% {
     transform: translateY(0) rotate(0deg) scale(1);
-    filter: drop-shadow(2px 2px 0px rgba(30, 41, 59, 0.6));
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
   }
   25% {
     transform: translateY(-5px) rotate(6deg) scale(1.08);
-    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9)) drop-shadow(3px 3px 0px #1E293B);
+    box-shadow: 0 8px 18px rgba(251, 191, 36, 0.7), 0 0 24px rgba(245, 158, 11, 0.4);
   }
   50% {
     transform: translateY(1px) rotate(-3deg) scale(0.97);
-    filter: drop-shadow(2px 2px 0px rgba(30, 41, 59, 0.6));
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
   }
   75% {
     transform: translateY(-3px) rotate(4deg) scale(1.05);
-    filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8)) drop-shadow(3px 3px 0px #1E293B);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.6), 0 0 20px rgba(245, 158, 11, 0.3);
   }
 }
 
 .fake-dragon-ball:hover {
-  transform: scale(1.32) rotate(14deg) !important;
-  filter: drop-shadow(0 0 20px #FBBF24) drop-shadow(0 0 32px #EF4444) drop-shadow(3px 3px 0px #1E293B) !important;
+  transform: translateY(-3px) scale(1.25) rotate(10deg) !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.75), 0 0 35px rgba(239, 68, 68, 0.5), 2px 2px 0px #1E293B !important;
   animation: none !important;
+  z-index: 15;
+}
+
+.fake-dragon-ball:active {
+  transform: translateY(1px) scale(0.96) !important;
+  transition-duration: 0.08s;
 }
 
 /* Floating Decoy Dragon Balls in empty/free spaces */
@@ -3829,22 +3954,18 @@ body.saiyan-mode .prank-modal-window {
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
-  background: rgba(30, 41, 59, 0.12);
+  height: 5px;
+  background: rgba(30, 41, 59, 0.15);
   overflow: hidden;
-  z-index: 5;
+  z-index: 10;
 }
 
-.modal-backdrop.active .prank-timer-bar {
+.prank-timer-bar {
   height: 100%;
   width: 100%;
   background: linear-gradient(90deg, #F59E0B, #EF4444);
-  animation: prank-timer-countdown 7s linear forwards;
-}
-
-@keyframes prank-timer-countdown {
-  0% { width: 100%; }
-  100% { width: 0%; }
+  transform-origin: left center;
+  transform: scaleX(1);
 }
 
 @keyframes prank-modal-pop {
@@ -3884,8 +4005,8 @@ body.saiyan-mode .prank-modal-window {
 .prank-image-frame {
   position: relative;
   width: 100%;
-  max-width: 190px;
-  height: 125px;
+  max-width: 240px;
+  height: 160px;
   margin: 0 auto 0.75rem auto;
   border-radius: var(--radius-md);
   border: 2.5px solid #1E293B;

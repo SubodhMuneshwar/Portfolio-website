@@ -219,8 +219,10 @@ body.saiyan-mode .experience-card:hover {
 }
 
 body.saiyan-mode .site-header {
-  background-color: rgba(10, 20, 16, 0.94) !important;
-  border-bottom-color: rgba(245, 158, 11, 0.4) !important;
+  background-color: rgba(10, 20, 16, 0.78) !important;
+  border-bottom-color: rgba(245, 158, 11, 0.35) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
 }
 
 body.saiyan-mode .nav-link {
@@ -541,7 +543,7 @@ body.saiyan-mode .dragon-radar-widget {
   }
 }
 
-/* Collectible Dragon Balls */
+/* Collectible Dragon Balls (Ultra-Realistic Crystal Amber Orbs) */
 .dragon-ball, .shenron-star-ball {
   display: inline-flex;
   align-items: center;
@@ -549,27 +551,45 @@ body.saiyan-mode .dragon-radar-widget {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  box-shadow: 2px 2px 0px #1E293B;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 12px rgba(245, 158, 11, 0.35), inset 0 -2px 6px rgba(120, 53, 15, 0.4);
   cursor: pointer;
-  transition: var(--transition-bounce);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
   user-select: none;
   position: relative;
   vertical-align: middle;
   flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .dragon-ball:hover, .shenron-star-ball:hover {
-  transform: scale(1.2) rotate(10deg);
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 3px 3px 0px #1E293B;
+  transform: translateY(-3px) scale(1.22);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.75), 0 0 35px rgba(251, 191, 36, 0.6), 2px 2px 0px #1E293B;
+  z-index: 10;
+}
+
+.dragon-ball:active, .shenron-star-ball:active {
+  transform: translateY(1px) scale(0.96);
+  transition-duration: 0.08s;
 }
 
 .dragon-ball.collected, .shenron-star-ball.collected {
-  animation: dragon-ball-glow 1.5s infinite alternate;
+  animation: dragon-ball-glow 2.2s infinite ease-in-out alternate;
 }
 
 @keyframes dragon-ball-glow {
-  from { box-shadow: 0 0 6px #F59E0B, 2px 2px 0px #1E293B; }
-  to { box-shadow: 0 0 16px #FBBF24, 0 0 24px #EF4444, 2px 2px 0px #1E293B; }
+  0% {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(239, 68, 68, 0.3), 2px 2px 0px #1E293B;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(251, 191, 36, 0.9), 0 0 32px rgba(245, 158, 11, 0.6), 0 0 45px rgba(239, 68, 68, 0.4), 2px 2px 0px #1E293B;
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(239, 68, 68, 0.3), 2px 2px 0px #1E293B;
+    transform: scale(1);
+  }
 }
 
 /* Ki Charge Blast Particle Effect */
