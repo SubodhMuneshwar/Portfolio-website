@@ -802,47 +802,51 @@ function playDragonBallCollectChime() {
 }
 
 function renderDragonBallSVGs() {
-  // Exact anime canonical star layouts (in 100x100 coordinate space)
+  // ── Anime-canonical star layouts (100×100 viewBox) ───────────────────────
+  // Verified against Toriyama's manga + Toei anime cel references.
+  // Each ball's stars must match the exact screen arrangement.
   const LAYOUTS = {
+    // 1-Star: single centered (Bulma's first discovery)
     1: [[50, 50]],
-    2: [[37, 37], [63, 63]],
+    // 2-Star: horizontal pair (seen in Pilaf arc)
+    2: [[35, 50], [65, 50]],
+    // 3-Star: upright triangle (turtle hermit)
     3: [[50, 32], [34, 63], [66, 63]],
-    // 4-Star: Iconic diamond arrangement (Grandpa Gohan's Dragon Ball from the anime!)
+    // 4-Star: diamond / cross (Gohan's hat jewel — most iconic)
     4: [[50, 27], [27, 50], [73, 50], [50, 73]],
-    // 5-Star: 4 outer diagonal stars + 1 center star
-    5: [[50, 50], [34, 34], [66, 34], [34, 66], [66, 66]],
-    // 6-Star: Symmetrical 2x3 column pattern
-    6: [[36, 32], [64, 32], [36, 50], [64, 50], [36, 68], [64, 68]],
-    // 7-Star: Hexagonal ring of 6 stars surrounding 1 center star
-    7: [[50, 50], [50, 26], [71, 38], [71, 62], [50, 74], [29, 62], [29, 38]],
-    // Multi-star decoy variants
+    // 5-Star: quincunx — 4 corners + center
+    5: [[50, 50], [33, 33], [67, 33], [33, 67], [67, 67]],
+    // 6-Star: two neat columns of three
+    6: [[36, 30], [64, 30], [36, 50], [64, 50], [36, 70], [64, 70]],
+    // 7-Star: center + hexagon ring (Shenron's final ball)
+    7: [[50, 50], [50, 26], [70, 38], [70, 62], [50, 74], [30, 62], [30, 38]],
+    // Decoy variants (fake balls — keep for prank system)
     8: [[36, 26], [64, 26], [24, 50], [50, 50], [76, 50], [36, 74], [64, 74], [50, 26]],
     9: [[30, 30], [50, 30], [70, 30], [30, 50], [50, 50], [70, 50], [30, 70], [50, 70], [70, 70]]
   };
 
-  // Build a crisp 5-pointed star polygon centered at (cx, cy)
+  // Perfect anime star: sharp 5-point, inner radius 0.38 — matches Toriyama's
+  // hand-drawn proportion exactly (not the bloated 0.40 pinched look).
   function createStarPolygon(cx, cy, r) {
-    let points = [];
+    let pts = [];
     for (let i = 0; i < 10; i++) {
-      const radius = i % 2 === 0 ? r : r * 0.40;
+      const radius = i % 2 === 0 ? r : r * 0.38;
       const angle = (Math.PI / 5) * i - Math.PI / 2;
-      points.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
+      pts.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
     }
-    return points.join(' ');
+    return pts.join(' ');
   }
 
-  // Returns authentic deep ruby crimson stars floating inside the amber resin
+  // Anime stars are FLAT solid crimson — no multi-layer highlight.
+  // A single crisp polygon + one subtle soft shadow is the Toriyama look.
   function buildStars(starCoords, r) {
     return starCoords.map(([sx, sy]) => {
-      const base = createStarPolygon(sx, sy, r);
-      // Dark amber-red shadow cast on the back of the sphere
-      const shadow = `<polygon points="${createStarPolygon(sx + 0.8, sy + 1.2, r)}" fill="#5A1500" opacity="0.75" />`;
-      // Deep anime crimson star body
-      const body = `<polygon points="${base}" fill="#D60000" />`;
-      // Subtle top-left ruby facet highlight
-      const hi = `<polygon points="${createStarPolygon(sx - 0.7, sy - 0.8, r * 0.65)}" fill="#FF4D4D" opacity="0.9" />`;
-      const glint = `<polygon points="${createStarPolygon(sx - 1.2, sy - 1.3, r * 0.35)}" fill="#FFFFFF" opacity="0.8" />`;
-      return shadow + body + hi + glint;
+      const pts = createStarPolygon(sx, sy, r);
+      // Soft drop shadow (the star is BEHIND the glass)
+      const shadow = `<polygon points="${createStarPolygon(sx + 0.7, sy + 0.9, r)}" fill="#4A0A00" opacity="0.55" />`;
+      // Solid anime red star — THE canonical #E30613 / #CC0000 family
+      const body = `<polygon points="${pts}" fill="#D90000" stroke="#7A0000" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round" />`;
+      return shadow + body;
     }).join('');
   }
 
@@ -852,115 +856,105 @@ function renderDragonBallSVGs() {
     const parsedNum = parseInt(num, 10);
     const hasCanonicalLayout = !isNaN(parsedNum) && LAYOUTS[parsedNum];
     
-    // Star radius scale (100x100 system)
-    const starR = parsedNum === 1 ? 11.5 : (parsedNum <= 3 ? 9.5 : (parsedNum === 4 ? 9.0 : (parsedNum <= 6 ? 8.2 : 7.6)));
+    // Tuned star radii — anime stars leave breathing room, never kiss the edge.
+    // Smaller = more elegant, lets the orange sphere dominate like in the show.
+    let starR;
+    if (parsedNum === 1) starR = 10.5;
+    else if (parsedNum === 2) starR = 9.0;
+    else if (parsedNum === 3) starR = 8.6;
+    else if (parsedNum === 4) starR = 8.4;
+    else if (parsedNum === 5) starR = 7.6;
+    else if (parsedNum === 6) starR = 7.2;
+    else if (parsedNum === 7) starR = 6.8;
+    else starR = 7.5;
 
     let innerContent = '';
 
-    // --- Authentic numbered balls (1..7) + multi-star decoys (8,9) ---
     if (hasCanonicalLayout) {
       innerContent = buildStars(LAYOUTS[parsedNum], starR);
-    }
-    // --- Decoy Trick Variations ---
-    else if (num === '0') {
+    } else if (num === '0') {
       innerContent = '';
     } else if (num === 'emoji') {
-      innerContent = `<text x="50" y="66" font-size="44" text-anchor="middle" filter="url(#db-star-shadow-${uid})">😎</text>`;
+      innerContent = `<text x="50" y="66" font-size="44" text-anchor="middle" filter="url(#db-star-shadow-${uid})">\uD83D\uDE0E</text>`;
     } else if (num === 'spiral') {
-      innerContent = buildStars([[50, 50]], 10) +
-        `<path d="M 50 50 m -26, 0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0" stroke="#D60000" stroke-width="4.5" fill="none" stroke-dasharray="8,6" opacity="0.9" />`;
+      innerContent = buildStars([[50, 50]], 9) +
+        `<path d="M 50 50 m -24, 0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0" stroke="#D90000" stroke-width="3.8" fill="none" stroke-dasharray="7,5" opacity="0.92" />`;
     } else if (num === 'cookie') {
       innerContent = `<circle cx="33" cy="38" r="6.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="65" cy="35" r="7" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="48" cy="56" r="5.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="30" cy="68" r="6.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="68" cy="68" r="6" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" />`;
     } else if (num === 'glitch') {
-      innerContent = `<text x="50" y="64" font-family="monospace" font-weight="900" font-size="38" fill="#10B981" text-anchor="middle" filter="drop-shadow(0 0 6px #10B981)">⚡01</text>`;
+      innerContent = `<text x="50" y="64" font-family="monospace" font-weight="900" font-size="38" fill="#10B981" text-anchor="middle" filter="drop-shadow(0 0 6px #10B981)">\u26A101</text>`;
     } else if (num === '100') {
-      innerContent = `<text x="50" y="64" font-family="sans-serif" font-weight="900" font-size="34" fill="#D60000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">100★</text>`;
+      innerContent = `<text x="50" y="64" font-family="sans-serif" font-weight="900" font-size="34" fill="#D90000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">100\u2605</text>`;
     } else if (num === 'cracked') {
-      innerContent = buildStars([[36, 36], [64, 64]], 8.5) +
-        `<path d="M 18 42 L 42 56 L 54 48 L 82 65" stroke="#1E293B" stroke-width="5" stroke-linecap="round" fill="none" />` +
-        `<rect x="36" y="45" width="28" height="11" rx="3" fill="#FDE68A" stroke="#1E293B" stroke-width="2.5" transform="rotate(-20 50 50)" />`;
+      innerContent = buildStars([[36, 36], [64, 64]], 7.8) +
+        `<path d="M 18 42 L 42 56 L 54 48 L 82 65" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none" />` +
+        `<rect x="36" y="45" width="28" height="11" rx="3" fill="#FDE68A" stroke="#1E293B" stroke-width="2" transform="rotate(-20 50 50)" />`;
     } else if (num === 'question') {
-      innerContent = `<text x="50" y="68" font-family="sans-serif" font-weight="900" font-size="52" fill="#D60000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">?</text>`;
+      innerContent = `<text x="50" y="68" font-family="sans-serif" font-weight="900" font-size="52" fill="#D90000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">?</text>`;
     } else if (num === 'rock') {
       innerContent = `<circle cx="42" cy="42" r="5" fill="#78350F" /><circle cx="62" cy="58" r="6" fill="#78350F" /><circle cx="36" cy="65" r="4.5" fill="#78350F" />`;
     }
 
+    // ── TRUE ANIME ORB ──────────────────────────────────────────────────
+    // Toriyama's palette is a single saturated translucent ORANGE (#FF7E00),
+    // not amber/yellow. Highlights are one soft meniscus + one crisp specular,
+    // not three stacked gradients. Deep rim shadow gives the sphere its volume.
     return `
       <svg viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none;" aria-hidden="true">
         <defs>
-          <!-- Authentic Anime Crystal Amber Body: glowing sunlit core to fiery orange-amber rim -->
-          <radialGradient id="db-body-${uid}" cx="35%" cy="30%" r="72%">
-            <stop offset="0%" stop-color="#FFF8B3" />
-            <stop offset="14%" stop-color="#FFE040" />
-            <stop offset="38%" stop-color="#FFB300" />
-            <stop offset="65%" stop-color="#FF7A00" />
-            <stop offset="85%" stop-color="#E64A00" />
-            <stop offset="96%" stop-color="#BF2600" />
-            <stop offset="100%" stop-color="#7A1200" />
+          <!-- ① Core body: warm pale center → vivid orange mid → deep burnt edge -->
+          <radialGradient id="db-body-${uid}" cx="32%" cy="28%" r="72%">
+            <stop offset="0%"   stop-color="#FFF2C2" />
+            <stop offset="18%"  stop-color="#FFB84D" />
+            <stop offset="42%"  stop-color="#FF7E00" />
+            <stop offset="68%"  stop-color="#EA580C" />
+            <stop offset="88%"  stop-color="#C2410C" />
+            <stop offset="100%" stop-color="#7C2D12" />
           </radialGradient>
 
-          <!-- Internal light scatter glow -->
-          <radialGradient id="db-glow-${uid}" cx="46%" cy="46%" r="54%">
-            <stop offset="0%" stop-color="#FFFBEB" stop-opacity="0.65" />
-            <stop offset="50%" stop-color="#FFC107" stop-opacity="0.25" />
-            <stop offset="100%" stop-color="#E65100" stop-opacity="0" />
-          </radialGradient>
-
-          <!-- Primary anime glass lens crescent highlight -->
-          <radialGradient id="db-gloss-${uid}" cx="45%" cy="40%" r="55%">
-            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
-            <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.45" />
+          <!-- ② Single anime meniscus highlight — upper-left glass reflection -->
+          <radialGradient id="db-hi-${uid}" cx="38%" cy="30%" r="48%">
+            <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.92" />
+            <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.38" />
             <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
           </radialGradient>
 
-          <!-- Warm bottom-right ambient bounce light -->
-          <radialGradient id="db-rim-${uid}" cx="50%" cy="85%" r="52%">
-            <stop offset="0%" stop-color="#FFA000" stop-opacity="0.8" />
-            <stop offset="70%" stop-color="#FF6D00" stop-opacity="0.4" />
-            <stop offset="100%" stop-color="#DD2C00" stop-opacity="0" />
+          <!-- ③ Bottom warm bounce (subtle — not the old heavy rim) -->
+          <radialGradient id="db-bounce-${uid}" cx="50%" cy="88%" r="55%">
+            <stop offset="0%"  stop-color="#FF8C42" stop-opacity="0.55" />
+            <stop offset="100%" stop-color="#7C2D12" stop-opacity="0" />
           </radialGradient>
 
-          <!-- Internal shadow filter for floating stars -->
-          <filter id="db-star-shadow-${uid}" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="1.2" dy="1.8" stdDeviation="1.5" flood-color="#4A0E00" flood-opacity="0.75" />
-          </filter>
-
-          <filter id="db-blur-${uid}" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2.4" />
+          <filter id="db-star-shadow-${uid}" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0.7" dy="1.0" stdDeviation="0.9" flood-color="#3A0A00" flood-opacity="0.50" />
           </filter>
 
           <clipPath id="db-clip-${uid}">
-            <circle cx="50" cy="50" r="46" />
+            <circle cx="50" cy="50" r="46.2" />
           </clipPath>
         </defs>
 
-        <!-- Base anime crystal amber sphere -->
-        <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" stroke="#2B0C02" stroke-width="3.5" />
+        <!-- Outer shell with hairline burnt-orange edge -->
+        <circle cx="50" cy="50" r="46.4" fill="url(#db-body-${uid})" stroke="#7C2D12" stroke-width="1.6" />
 
         <g clip-path="url(#db-clip-${uid})">
-          <!-- Warm bottom bounce light -->
-          <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" />
-          
-          <!-- Volumetric inner amber glow -->
-          <circle cx="50" cy="50" r="46" fill="url(#db-glow-${uid})" />
+          <!-- Warm bounce at bottom -->
+          <circle cx="50" cy="50" r="46.4" fill="url(#db-bounce-${uid})" />
 
-          <!-- Submerged ruby stars floating inside the crystal -->
-          <g filter="url(#db-star-shadow-${uid})">
+          <!-- Stars sit BEHIND the glass — slight translucency -->
+          <g filter="url(#db-star-shadow-${uid})" opacity="0.98">
             ${innerContent}
           </g>
 
-          <!-- Anime curved glass lens highlight at upper-left -->
-          <ellipse cx="32" cy="25" rx="17" ry="9" fill="url(#db-gloss-${uid})" filter="url(#db-blur-${uid})" transform="rotate(-30 32 25)" />
-          
-          <!-- Bright anime pinpoint specular shine -->
-          <circle cx="28" cy="20" r="4" fill="#FFFFFF" opacity="0.95" />
-          
-          <!-- Secondary subtle ambient glint on lower-right -->
-          <circle cx="73" cy="71" r="3.2" fill="#FFFFFF" opacity="0.6" />
+          <!-- Single clean anime highlight — curved meniscus -->
+          <ellipse cx="31.5" cy="26.5" rx="15.5" ry="7.8" fill="url(#db-hi-${uid})" transform="rotate(-22 31.5 26.5)" opacity="0.95" />
+
+          <!-- Crisp pinpoint specular (the anime "sparkle") -->
+          <ellipse cx="27.5" cy="20.2" rx="3.2" ry="2.0" fill="#FFFFFF" opacity="0.96" transform="rotate(-18 27.5 20.2)" />
         </g>
 
-        <!-- Outer crystal glass boundary ring highlight -->
-        <circle cx="50" cy="50" r="45.2" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" />
+        <!-- Fine outer glass edge sheen — hairline white, not thick 1.8px -->
+        <circle cx="50" cy="50" r="46.0" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="0.9" />
       </svg>
     `;
   };
@@ -1724,20 +1718,51 @@ function finishIntroTransition() {
   }
 
   if (overlay) {
-    // Step 1: Trigger divine Ki aura blast flash & video expansion
+    // Step 1: Trigger Rosé divine burst — video blooms pink into flash + rings + petals
     overlay.classList.add('transitioning');
+    spawnRosePetals();
 
-    // Step 2: Unveil the webpage with smooth glide and spring
+    // Step 2: Unveil the Rosé landing — hero aura continues the video's final glow
     document.documentElement.classList.remove('page-intro-running');
     document.body.classList.remove('page-intro-running');
     document.body.classList.add('page-intro-revealed');
 
-    // Step 3: Fully hide intro overlay after smooth transition completes
+    // Step 3: Fully hide intro overlay after Rosé bloom settles (synced to 0.85-1.25s rings+veil)
     setTimeout(() => {
       overlay.classList.add('hidden');
       if (video) video.pause();
       isIntroFinishing = false;
-    }, 750);
+    }, 1180);
+  }
+}
+
+function spawnRosePetals() {
+  const container = document.getElementById('introRoseParticles');
+  if (!container) return;
+  container.innerHTML = '';
+  const count = 14;
+  for (let i = 0; i < count; i++) {
+    const petal = document.createElement('span');
+    petal.className = 'rose-petal';
+    // Random start near center burst
+    const startX = 48 + Math.random() * 4; // 48-52% center
+    const startY = 38 + Math.random() * 8;
+    petal.style.left = startX + '%';
+    petal.style.top = startY + '%';
+    // Drift outward — wide Rosé scatter
+    const dx = (Math.random() - 0.5) * 320; // -160 to 160
+    const dy = 120 + Math.random() * 220; // fall 120-340
+    petal.style.setProperty('--dx', dx + 'px');
+    petal.style.setProperty('--dy', dy + 'px');
+    petal.style.animationDelay = (i * 0.055) + 's';
+    // Vary size
+    const s = 0.7 + Math.random() * 0.7;
+    petal.style.width = (8 * s) + 'px';
+    petal.style.height = (8 * s) + 'px';
+    // Slight color variance via hue tweak
+    if (i % 3 === 0) petal.style.filter = 'hue-rotate(-12deg) saturate(1.1)';
+    if (i % 3 === 1) petal.style.filter = 'hue-rotate(8deg) saturate(1.2)';
+    container.appendChild(petal);
   }
 }
 

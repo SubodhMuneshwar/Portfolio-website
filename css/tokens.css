@@ -15,24 +15,26 @@
   --border: #1E293B;            /* Chunky 2.5px dark border */
   --border-light: #E2E8F0;      /* Light border for inner dividers */
 
-  /* Playful Vibrant Accents */
-  --accent: #8B5CF6;            /* Vivid Violet (Primary Brand) */
+  /* Goku Black Rosé — Mystical Rose Palette (matches intro final burst) */
+  --accent: #FF2E97;            /* Rosé Pink — primary (Goku Black hair/aura) */
   --accent-fg: #FFFFFF;
-  --accent-hover: #7C3AED;
+  --accent-hover: #E0116B;
   
-  --secondary: #F472B6;         /* Hot Pink (Playful pop) */
+  --secondary: #7209B7;         /* Rosé Violet — deep aura */
   --secondary-fg: #FFFFFF;
-  --secondary-hover: #EC4899;
+  --secondary-hover: #5A0891;
 
-  --tertiary: #FBBF24;          /* Amber / Sunshine Yellow */
-  --tertiary-fg: #1E293B;
-  --tertiary-hover: #F59E0B;
+  --tertiary: #FFB3C6;          /* Soft Rosé Petal — warm highlight */
+  --tertiary-fg: #4A0A1F;
+  --tertiary-hover: #FF8FAB;
 
-  --quaternary: #34D399;        /* Emerald / Mint Freshness */
+  --quaternary: #34D399;        /* Emerald — kept for balance (stats/accents) */
   --quaternary-fg: #1E293B;
   --quaternary-hover: #10B981;
 
-  --cyan-pop: #38BDF8;          /* Cyan / Sky Blue pop */
+  --cyan-pop: #B5179E;          /* Rosé Magenta — replaces sky blue */
+  --rose-void: #070510;
+  --rose-glow: rgba(255,46,151,0.22);
 
   /* Typography */
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -543,7 +545,7 @@ body.saiyan-mode .dragon-radar-widget {
   }
 }
 
-/* Collectible Dragon Balls (Ultra-Realistic Crystal Amber Orbs) */
+/* Collectible Dragon Balls — anime-accurate: SVG owns all shading */
 .dragon-ball, .shenron-star-ball {
   display: inline-flex;
   align-items: center;
@@ -551,7 +553,8 @@ body.saiyan-mode .dragon-radar-widget {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 12px rgba(245, 158, 11, 0.35), inset 0 -2px 6px rgba(120, 53, 15, 0.4);
+  /* Single subtle contact shadow — let the SVG gradients do the sphere shading */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
   user-select: none;
@@ -560,11 +563,13 @@ body.saiyan-mode .dragon-radar-widget {
   flex-shrink: 0;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  background: transparent;
 }
 
 .dragon-ball:hover, .shenron-star-ball:hover {
-  transform: translateY(-3px) scale(1.22);
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.75), 0 0 35px rgba(251, 191, 36, 0.6), 2px 2px 0px #1E293B;
+  transform: translateY(-3px) scale(1.20);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.32), 0 0 22px rgba(255, 126, 0, 0.45);
+  filter: brightness(1.05);
   z-index: 10;
 }
 
@@ -579,15 +584,15 @@ body.saiyan-mode .dragon-radar-widget {
 
 @keyframes dragon-ball-glow {
   0% {
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(239, 68, 68, 0.3), 2px 2px 0px #1E293B;
+    box-shadow: 0 0 10px rgba(255, 126, 0, 0.45), 0 0 18px rgba(220, 0, 0, 0.22);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 18px rgba(251, 191, 36, 0.9), 0 0 32px rgba(245, 158, 11, 0.6), 0 0 45px rgba(239, 68, 68, 0.4), 2px 2px 0px #1E293B;
-    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(255, 126, 0, 0.70), 0 0 28px rgba(255, 126, 0, 0.40), 0 0 36px rgba(220, 0, 0, 0.28);
+    transform: scale(1.04);
   }
   100% {
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(239, 68, 68, 0.3), 2px 2px 0px #1E293B;
+    box-shadow: 0 0 10px rgba(255, 126, 0, 0.45), 0 0 18px rgba(220, 0, 0, 0.22);
     transform: scale(1);
   }
 }

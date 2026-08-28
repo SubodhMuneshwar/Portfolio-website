@@ -60,7 +60,7 @@ body::-webkit-scrollbar-thumb {
 ::-webkit-scrollbar-thumb:hover,
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover {
-  background: #8B5CF6;
+  background: #FF2E97;
 }
 
 /* Super Saiyan (Dark) Mode Scrollbar */
@@ -211,22 +211,22 @@ a {
   bottom: -6px;
   width: 100%;
   height: 8px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%238B5CF6' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23FF2E97' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
   background-size: 16px 6px;
 }
 
 .highlight-pink::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23F472B6' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23E0116B' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 .highlight-yellow::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23FBBF24' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23FFB3C6' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-/* Marker Pen Highlight */
+/* Marker Pen Highlight — Rosé */
 .marker-highlight {
-  background: linear-gradient(120deg, rgba(251, 191, 36, 0.4) 0%, rgba(251, 191, 36, 0.4) 100%);
+  background: linear-gradient(120deg, rgba(255,46,151,0.18) 0%, rgba(255,179,198,0.35) 100%);
   padding: 0 6px;
   border-radius: 4px;
   display: inline;
@@ -428,10 +428,13 @@ a {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(255, 253, 245, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: var(--border-width) solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(255,46,151,0.06) 0%, transparent 100%),
+    rgba(255, 253, 245, 0.88);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border-bottom: 2.5px solid var(--border);
+  box-shadow: 0 1px 0 rgba(255,46,151,0.10), 0 8px 24px rgba(15,10,28,0.06);
   transition: var(--transition-normal);
 }
 
@@ -486,7 +489,7 @@ a {
 
 .brand-logo:hover .brand-badge-box.brand-db-orb {
   transform: rotate(18deg) scale(1.15);
-  filter: drop-shadow(0 0 12px #FBBF24) drop-shadow(2px 2px 0px #1E293B);
+  filter: drop-shadow(0 0 14px rgba(255,46,151,0.55)) drop-shadow(0 0 22px rgba(114,9,183,0.30)) drop-shadow(2px 2px 0px #1E293B);
 }
 
 body.saiyan-mode .brand-badge-box.brand-db-orb {
@@ -560,13 +563,13 @@ body.saiyan-mode .brand-logo:hover .brand-sub {
 .nav-center-island {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.85);
+  background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.82) 100%);
   border: 2px solid var(--border);
   border-radius: var(--radius-full);
   padding: 0.32rem 0.55rem;
-  box-shadow: 2.5px 2.5px 0px var(--border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 2.5px 2.5px 0px var(--border), 0 0 0 1px rgba(255,46,151,0.06);
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
 }
 
 @media (max-width: 1200px) and (min-width: 1025px) {
@@ -640,7 +643,8 @@ body.saiyan-mode .nav-link .nav-link-icon {
 .nav-link:hover,
 .nav-link.active {
   color: var(--accent);
-  background-color: #EDE9FE;
+  background-color: rgba(255,46,151,0.12);
+  box-shadow: inset 0 0 0 1px rgba(255,46,151,0.14);
 }
 
 body.saiyan-mode .nav-link {
@@ -699,12 +703,55 @@ body.saiyan-mode .nav-link.active {
   display: none;
 }
 
-/* --- Hero Section --- */
+/* --- Hero Section — HIGH-VISIBILITY Goku Black Rosé aura (unmissable echo of video's final burst) --- */
 .hero-section {
   padding-top: 3.5rem;
   padding-bottom: 4.5rem;
   position: relative;
   overflow: hidden;
+  background:
+    radial-gradient(ellipse 72% 58% at 50% 2%, rgba(255,46,151,0.22) 0%, rgba(224,17,107,0.16) 28%, transparent 64%),
+    radial-gradient(ellipse 52% 42% at 88% 22%, rgba(114,9,183,0.20) 0%, rgba(181,23,158,0.12) 32%, transparent 62%),
+    radial-gradient(ellipse 36% 30% at 12% 38%, rgba(255,118,170,0.14) 0%, transparent 62%),
+    linear-gradient(180deg, rgba(20,8,32,0.06) 0%, transparent 55%),
+    transparent;
+  border-bottom: 2px solid rgba(255,46,151,0.08);
+}
+
+/* Dark (Saiyan) mode — remove ALL pink/Rosé gradients; clean Namek void */
+body.saiyan-mode .hero-section {
+  background: transparent !important;
+  background-image: none !important;
+  border-bottom: 2.5px solid rgba(245, 158, 11, 0.18) !important;
+  box-shadow: none !important;
+}
+body.saiyan-mode .hero-section::before,
+body.saiyan-mode .hero-section::after,
+body.saiyan-mode .hero-grid::after {
+  display: none !important;
+  opacity: 0 !important;
+  animation: none !important;
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.saiyan-mode .site-header {
+  background: rgba(10, 20, 16, 0.78) !important;
+  background-image: none !important;
+  border-bottom-color: rgba(245, 158, 11, 0.35) !important;
+  box-shadow: none !important;
+}
+body.saiyan-mode.page-intro-revealed .hero-section::before,
+body.saiyan-mode.page-intro-revealed .hero-section::after,
+body.saiyan-mode.page-intro-revealed .hero-grid::after,
+body.saiyan-mode.page-intro-revealed .site-header {
+  background: rgba(10, 20, 16, 0.78) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.saiyan-mode.page-intro-revealed .hero-section {
+  background: transparent !important;
+  background-image: none !important;
 }
 
 .hero-grid {
@@ -712,6 +759,7 @@ body.saiyan-mode .nav-link.active {
   grid-template-columns: 1.15fr 0.85fr;
   gap: 3.5rem;
   align-items: center;
+  position: relative;
 }
 
 .hero-content {
@@ -2345,8 +2393,10 @@ body.saiyan-mode .form-textarea:focus {
   }
 
   .mobile-toggle:hover {
-    background: linear-gradient(135deg, rgba(254, 240, 138, 0.9), rgba(253, 224, 71, 0.7));
-    color: #0A1410;
+    background: linear-gradient(135deg, rgba(255,46,151,0.14) 0%, rgba(255,179,198,0.22) 100%);
+    border-color: rgba(255,46,151,0.28) !important;
+    color: #4A0A1F;
+    box-shadow: 0 4px 18px rgba(255,46,151,0.18), inset 0 1px 1px rgba(255,255,255,0.9);
     transform: scale(1.05);
   }
 
@@ -2379,10 +2429,10 @@ body.saiyan-mode .form-textarea:focus {
     right: 0;
     width: 100vw;
     width: 100%;
-    background: linear-gradient(180deg, rgba(255, 253, 245, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%) !important;
+    background: linear-gradient(180deg, rgba(255,46,151,0.07) 0%, rgba(255, 253, 245, 0.88) 22%, rgba(255, 255, 255, 0.78) 100%) !important;
     backdrop-filter: blur(28px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-    border-bottom: 2px solid rgba(15, 23, 42, 0.12) !important;
+    border-bottom: 2px solid rgba(255,46,151,0.14) !important;
     box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
     padding: 1.25rem 1rem 1.75rem;
     gap: 0.75rem;
@@ -2474,10 +2524,10 @@ body.saiyan-mode .form-textarea:focus {
 
   .nav-link:hover,
   .nav-link.active {
-    background: linear-gradient(135deg, rgba(254, 240, 138, 0.85) 0%, rgba(253, 224, 71, 0.7) 100%) !important;
-    border-color: rgba(245, 158, 11, 0.8) !important;
-    color: #0A1410 !important;
-    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+    background: linear-gradient(135deg, rgba(255,46,151,0.14) 0%, rgba(255,179,198,0.20) 100%) !important;
+    border-color: rgba(255,46,151,0.32) !important;
+    color: #4A0A1F !important;
+    box-shadow: 0 8px 24px rgba(255,46,151,0.18), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
     transform: translateX(4px) scale(1.01) !important;
   }
 
@@ -2880,7 +2930,13 @@ body.saiyan-mode .form-textarea:focus {
   min-height: 100dvh !important;
   min-height: -webkit-fill-available !important;
   z-index: 99999999 !important;
-  background-color: #000000 !important;
+  /* Goku Black Rosé void — HIGH VISIBILITY: intense pink-violet nebula matching final frame */
+  background:
+    radial-gradient(ellipse 92% 68% at 50% 32%, rgba(255,46,151,0.42) 0%, rgba(224,17,107,0.30) 22%, rgba(114,9,183,0.28) 42%, transparent 66%),
+    radial-gradient(ellipse 78% 48% at 50% 100%, rgba(255,20,120,0.24) 0%, transparent 58%),
+    radial-gradient(ellipse 44% 32% at 14% 52%, rgba(255,118,170,0.18) 0%, transparent 62%),
+    linear-gradient(180deg, #0A0514 0%, #140A28 50%, #070510 100%) !important;
+  background-color: #070510 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -2893,7 +2949,7 @@ body.saiyan-mode .form-textarea:focus {
   -webkit-transform: translateZ(0);
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.05s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   user-select: none;
 }
@@ -2918,7 +2974,7 @@ body.saiyan-mode .form-textarea:focus {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: #000000 !important;
+  background: #070510 !important;
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
@@ -2937,39 +2993,115 @@ body.saiyan-mode .form-textarea:focus {
   object-fit: cover !important;
   object-position: center center !important;
   vertical-align: middle !important;
-  background-color: #000000 !important;
-  filter: brightness(1) blur(0px);
-  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease;
+  background-color: #070510 !important;
+  filter: brightness(1) blur(0px) saturate(1);
+  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s ease;
 }
 
-/* Flash backdrop triggered on completion / smooth transition */
+/* Rosé divine burst — ULTRA VISIBLE: full-screen pink supernova (pink→magenta→violet→void) */
 .intro-flash {
   position: absolute;
-  inset: -20%;
-  width: 140%;
-  height: 140%;
+  inset: -28%;
+  width: 156%;
+  height: 156%;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(circle at center, rgba(244, 114, 182, 0.95) 0%, rgba(217, 70, 239, 0.75) 35%, rgba(147, 51, 234, 0.5) 60%, rgba(3, 3, 5, 0.95) 100%);
+  background:
+    radial-gradient(circle at 50% 40%, #FF2E97 0%, #FF1A7A 12%, #E0116B 24%, rgba(199,12,120,0.92) 38%, rgba(134,14,160,0.72) 56%, rgba(44,8,64,0.58) 74%, transparent 86%);
   mix-blend-mode: screen;
-  transform: scale(0.9);
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(0px) saturate(1.35) brightness(1.05);
+  transform: scale(0.78);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s ease;
   z-index: 10;
 }
 
-/* Transition active state */
+/* Rosé energy rings — expand from burst center, bridging into hero aura */
+.intro-rose-rings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.rose-ring {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255,46,151,0.85);
+  box-shadow: 0 0 18px rgba(255,46,151,0.6), inset 0 0 18px rgba(255,46,151,0.25);
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.rose-ring.ring-1 { border-color: rgba(255,46,151,0.92); box-shadow: 0 0 22px rgba(255,46,151,0.7), inset 0 0 20px rgba(255,46,151,0.30); }
+.rose-ring.ring-2 { border-color: rgba(224,17,107,0.78); box-shadow: 0 0 18px rgba(224,17,107,0.55), inset 0 0 16px rgba(224,17,107,0.22); width: 110px; height: 110px; }
+.rose-ring.ring-3 { border-color: rgba(114,9,183,0.62); box-shadow: 0 0 16px rgba(114,9,183,0.45), inset 0 0 14px rgba(114,9,183,0.18); width: 90px; height: 90px; }
+
+/* Drifting Rosé petals / Ki sparks */
+.intro-rose-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 12;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.rose-petal {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50% 0 50% 50%;
+  background: radial-gradient(circle at 30% 30%, #FF8FAB 0%, #FF2E97 55%, #7209B7 100%);
+  box-shadow: 0 0 8px rgba(255,46,151,0.7);
+  opacity: 0;
+  transform: rotate(28deg) scale(0.7);
+}
+
+/* Transition active state — Rosé bloom: video blooms pink, flash expands into landing aura */
 .intro-overlay.transitioning {
   pointer-events: none;
 }
 
+.intro-overlay.transitioning .intro-rose-rings,
+.intro-overlay.transitioning .intro-rose-particles {
+  opacity: 1;
+}
+
+.intro-overlay.transitioning .rose-ring.ring-1 { animation: rose-ring-expand 1.25s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards; }
+.intro-overlay.transitioning .rose-ring.ring-2 { animation: rose-ring-expand 1.25s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards; }
+.intro-overlay.transitioning .rose-ring.ring-3 { animation: rose-ring-expand 1.25s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards; }
+
+@keyframes rose-ring-expand {
+  0%   { opacity: 0; transform: scale(0.25); filter: blur(0px); }
+  18%  { opacity: 1; transform: scale(0.55); }
+  100% { opacity: 0; transform: scale(4.2); filter: blur(2px); }
+}
+
+.intro-overlay.transitioning .rose-petal { animation: rose-petal-drift 1.55s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes rose-petal-drift {
+  0%   { opacity: 0; transform: translate3d(0, 0, 0) rotate(28deg) scale(0.6); }
+  18%  { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--dx, 40px), var(--dy, 180px), 0) rotate(180deg) scale(1.15); filter: blur(0.5px); }
+}
+
 .intro-overlay.transitioning .intro-video {
-  transform: scale(1.15);
-  filter: brightness(2.4) contrast(1.2) blur(6px);
+  transform: translate(-50%, -50%) scale(1.32) !important;
+  filter: brightness(2.15) contrast(1.12) blur(14px) saturate(1.55) hue-rotate(-10deg);
 }
 
 .intro-overlay.transitioning .intro-flash {
   opacity: 1;
-  transform: scale(1.2);
+  transform: scale(1.48);
+  filter: blur(4px) saturate(1.45) brightness(1.15);
 }
 
 .intro-overlay.transitioning .intro-controls,
@@ -3144,14 +3276,14 @@ body.saiyan-mode .form-textarea:focus {
   pointer-events: none;
 }
 
-/* Webpage Entrance Transition */
+/* Webpage Entrance Transition — Rosé veil bridges video ending to landing */
 html.page-intro-running,
 body.page-intro-running {
   overflow: hidden !important;
   height: 100% !important;
   max-height: 100% !important;
   touch-action: none !important;
-  background-color: #000000 !important;
+  background-color: #070510 !important;
 }
 
 body.page-intro-running .site-header,
@@ -3169,7 +3301,139 @@ body.page-intro-revealed .site-footer {
   opacity: 1 !important;
   transform: scale(1);
   filter: blur(0px);
-  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease;
+  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s ease;
+}
+
+/* Rosé landing veil — INTENSE: video's final aura floods hero then settles to strong lingering glow */
+body.page-intro-revealed .hero-section {
+  position: relative;
+}
+
+body.page-intro-revealed .hero-section::before {
+  content: '';
+  position: absolute;
+  inset: -60px -30px -30px -30px;
+  background:
+    radial-gradient(ellipse 78% 66% at 50% 12%, rgba(255,46,151,0.42) 0%, rgba(224,17,107,0.28) 26%, rgba(181,23,158,0.18) 44%, transparent 62%),
+    radial-gradient(ellipse 56% 48% at 82% 28%, rgba(114,9,183,0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 46% 38% at 16% 46%, rgba(255,118,170,0.22) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(26,10,40,0.22) 0%, rgba(255,46,151,0.06) 42%, transparent 78%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: rose-hero-veil-settle 1.9s cubic-bezier(0.16, 1, 0.3, 1) 0.10s forwards;
+}
+
+@keyframes rose-hero-veil-settle {
+  0%   { opacity: 1;    transform: scale(1.14); filter: blur(14px) saturate(1.45) brightness(1.18); }
+  40%  { opacity: 0.88; transform: scale(1.05); filter: blur(6px) saturate(1.22) brightness(1.08); }
+  100% { opacity: 0.78; transform: scale(1);    filter: blur(0px) saturate(1) brightness(1); }
+}
+
+/* Rosé scythe energy streak — thin diagonal slash like Black's scythe, very visible */
+body.page-intro-revealed .hero-section::after {
+  content: '';
+  position: absolute;
+  top: 14%;
+  left: -8%;
+  width: 116%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,46,151,0) 8%, rgba(255,46,151,0.9) 28%, #FF2E97 50%, rgba(114,9,183,0.85) 72%, transparent 92%);
+  box-shadow: 0 0 18px rgba(255,46,151,0.7), 0 0 36px rgba(114,9,183,0.5);
+  opacity: 0;
+  transform: translateX(-6%) rotate(-7deg) scaleX(0.7);
+  z-index: 1;
+  pointer-events: none;
+  animation: rose-scythe-slash 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+@keyframes rose-scythe-slash {
+  0% { opacity: 0; transform: translateX(-12%) rotate(-7deg) scaleX(0.45); filter: blur(4px); }
+  45% { opacity: 1; transform: translateX(0%) rotate(-7deg) scaleX(1.08); filter: blur(0px); }
+  100% { opacity: 0.32; transform: translateX(0%) rotate(-7deg) scaleX(1); filter: blur(0.5px); }
+}
+
+body.page-intro-revealed .hero-content,
+body.page-intro-revealed .hero-visual {
+  animation: rose-hero-content-rise 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+body.page-intro-revealed .hero-visual { animation-delay: 0.10s; }
+
+@keyframes rose-hero-content-rise {
+  0% { opacity: 0; transform: translateY(28px) scale(0.97); filter: blur(10px) brightness(1.22) saturate(1.35); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1) saturate(1); }
+}
+
+/* Header blooms with Rosé border glow — clearly tied to intro's palette */
+body.page-intro-revealed .site-header {
+  animation: rose-header-bloom 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  box-shadow: 0 2px 0 rgba(255,46,151,0.18), 0 8px 32px rgba(114,9,183,0.10);
+  border-bottom-color: rgba(255,46,151,0.22) !important;
+  transition: border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+@keyframes rose-header-bloom {
+  0% { opacity: 0; transform: translateY(-18px); filter: blur(12px); border-bottom-color: rgba(255,46,151,0.0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* Photo frame gets Rosé Ki halo during landing — unmissable */
+body.page-intro-revealed .hero-photo-frame {
+  animation: rose-photo-halo 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+  box-shadow: 0 0 0 3px rgba(255,46,151,0.32), 0 0 32px rgba(255,46,151,0.45), 0 0 64px rgba(114,9,183,0.32), 8px 8px 0px var(--border) !important;
+}
+
+@keyframes rose-photo-halo {
+  0% { box-shadow: 0 0 0 0 rgba(255,46,151,0), 0 0 0 rgba(0,0,0,0), 8px 8px 0px var(--border); filter: brightness(1.25) saturate(1.4); }
+  55% { box-shadow: 0 0 0 4px rgba(255,46,151,0.42), 0 0 42px rgba(255,46,151,0.65), 0 0 78px rgba(114,9,183,0.42), 8px 8px 0px var(--border); }
+  100% { box-shadow: 0 0 0 3px rgba(255,46,151,0.22), 0 0 28px rgba(255,46,151,0.32), 0 0 48px rgba(114,9,183,0.20), 8px 8px 0px var(--border); }
+}
+
+/* Attractive staggered cascade — badge→title→desc→CTAs→pills bloom in sequence */
+body.page-intro-revealed .hero-badge   { animation: rose-el-rise 0.75s cubic-bezier(0.16,1,0.3,1) 0.38s both; }
+body.page-intro-revealed .hero-title   { animation: rose-el-rise 0.80s cubic-bezier(0.16,1,0.3,1) 0.46s both; }
+body.page-intro-revealed .hero-description { animation: rose-el-rise 0.75s cubic-bezier(0.16,1,0.3,1) 0.56s both; }
+body.page-intro-revealed .hero-ctas    { animation: rose-el-rise 0.70s cubic-bezier(0.16,1,0.3,1) 0.64s both; }
+body.page-intro-revealed .hero-pills   { animation: rose-el-rise 0.70s cubic-bezier(0.16,1,0.3,1) 0.72s both; }
+
+@keyframes rose-el-rise {
+  0% { opacity: 0; transform: translateY(18px) scale(0.98); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* Diagonal Rosé light sweep across hero — like Black's scythe light trailing into landing */
+body.page-intro-revealed .hero-grid::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -30%;
+  width: 42%;
+  height: 140%;
+  background: linear-gradient(112deg, transparent 42%, rgba(255,255,255,0.0) 46%, rgba(255,46,151,0.22) 49%, rgba(255,255,255,0.85) 50%, rgba(255,46,151,0.22) 51%, transparent 54%, transparent 100%);
+  filter: blur(1px);
+  opacity: 0;
+  transform: skewX(-14deg) translateX(-30%);
+  pointer-events: none;
+  z-index: 3;
+  animation: rose-hero-sweep 1.35s cubic-bezier(0.16,1,0.3,1) 0.85s forwards;
+}
+
+@keyframes rose-hero-sweep {
+  0%   { opacity: 0; transform: skewX(-14deg) translateX(-42%); }
+  22%  { opacity: 1; }
+  100% { opacity: 0; transform: skewX(-14deg) translateX(210%); }
+}
+
+/* Seamless veil: body background fades from Rosé void to paper through hero */
+body { transition: background-color 0.95s cubic-bezier(0.16,1,0.3,1); }
+
+/* Mobile tuning for Rosé veil — keep blend without overflow */
+@media (max-width: 768px) {
+  body.page-intro-revealed .hero-section::before { inset: -30px -16px -16px -16px; }
+  body.page-intro-revealed .hero-section::after { top: 9%; height: 1.5px; }
+  body.page-intro-revealed .hero-grid::after { width: 68%; left: -22%; }
+  .intro-rose-rings .rose-ring { width: 110px !important; height: 110px !important; }
 }
 
 /* Responsive adjustments for Intro Overlay & Navigation */
@@ -3646,7 +3910,7 @@ body.page-intro-revealed .site-footer {
    3D Enlarged Shining Dragon Ball — Photorealistic Material & Animation
    ========================================================================== */
 
-/* Core ball container */
+/* Core ball container — now a clean wrapper, SVG owns all sphere shading */
 .db-enlarged-ball {
   width: 170px;
   height: 170px;
@@ -3655,158 +3919,58 @@ body.page-intro-revealed .site-footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Multi-layered material: base + subsurface + sheen */
-  background:
-    /* Layer 4: Specular hotspot — small bright window reflection */
-    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.15) 40%, transparent 70%),
-    /* Layer 3: Subsurface scattering glow (light penetrating the sphere) */
-    radial-gradient(circle at 50% 50%, rgba(254,243,199,0.45) 0%, rgba(251,191,36,0.1) 60%, transparent 100%),
-    /* Layer 2: Core orange body with warm color shift toward the edges */
-    radial-gradient(circle at 36% 32%, #FFF7CC 0%, #FDE047 22%, #F59E0B 52%, #EA580C 78%, #9A3412 100%);
-  box-shadow:
-    /* Outer magical aura glow */
-    0 0 60px 8px rgba(245, 158, 11, 0.55),
-    0 0 120px 20px rgba(239, 68, 68, 0.35),
-    /* Deep contact shadow under the ball */
-    0 20px 40px -10px rgba(15, 23, 42, 0.6),
-    /* Inner shadow for sphere volume (concave) */
-    inset -10px -10px 28px rgba(154, 52, 18, 0.9),
-    inset 10px 10px 24px rgba(254, 240, 138, 0.9);
-  border: 2.5px solid rgba(254, 240, 138, 0.7);
+  background: transparent;
+  border: none;
   margin-bottom: 1.75rem;
-  /* Animation drives a subtle "breathing" pulse + slow rotation for dynamic catch-lights */
-  animation: db-ball-breathe 3.5s infinite ease-in-out, db-ball-spin 20s infinite linear;
-  transform-style: preserve-3d;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 36px rgba(255, 126, 0, 0.45));
+  animation: db-ball-breathe 3.5s infinite ease-in-out;
 }
 
-/* Layered pseudo-elements for additional specular & caustic detail */
 .db-enlarged-ball::before,
 .db-enlarged-ball::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  transform-style: preserve-3d;
+  display: none;
 }
 
-/* Primary curved specular highlight ("window reflection") */
-.db-enlarged-ball::before {
-  top: 12%;
-  left: 18%;
-  width: 58px;
-  height: 30px;
-  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 50%, transparent 85%);
-  transform: rotate(-32deg) translateZ(2px);
-  filter: blur(1.5px);
-  animation: db-spec-wobble 4s infinite ease-in-out;
-}
-
-/* Secondary tight hotspot */
-.db-enlarged-ball::after {
-  top: 16%;
-  left: 16%;
-  width: 18px;
-  height: 18px;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, transparent 70%);
-  transform: translateZ(3px);
-  filter: blur(0.5px);
-}
-
-/* Rim light / bottom bounce — separate element so it stays fixed relative to the sphere */
 .db-enlarged-ball .db-rim-light {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 75%, transparent 40%, rgba(254,215,170,0.55) 100%);
-  pointer-events: none;
-  mix-blend-mode: screen;
+  display: none;
 }
 
-/* Subtle pulsing scale + brightness oscillation */
 @keyframes db-ball-breathe {
-  0%, 100% {
-    transform: scale(1) rotate(-2deg);
-    box-shadow:
-      0 0 55px 6px rgba(245, 158, 11, 0.5),
-      0 0 110px 18px rgba(239, 68, 68, 0.3),
-      0 20px 40px -10px rgba(15, 23, 42, 0.6),
-      inset -10px -10px 28px rgba(154, 52, 18, 0.9),
-      inset 10px 10px 24px rgba(254, 240, 138, 0.9);
-  }
-  50% {
-    transform: scale(1.06) rotate(2deg);
-    box-shadow:
-      0 0 75px 12px rgba(253, 224, 71, 0.6),
-      0 0 140px 28px rgba(239, 68, 68, 0.45),
-      0 24px 48px -8px rgba(15, 23, 42, 0.5),
-      inset -12px -12px 32px rgba(154, 52, 18, 0.95),
-      inset 12px 12px 28px rgba(255, 255, 255, 1);
-  }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 18px 26px rgba(0,0,0,0.45)) drop-shadow(0 0 32px rgba(255,126,0,0.45)); }
+  50%       { transform: scale(1.05); filter: drop-shadow(0 22px 36px rgba(0,0,0,0.50)) drop-shadow(0 0 48px rgba(255,126,0,0.65)); }
 }
 
-/* Slow continuous rotation so highlights travel across the surface */
-@keyframes db-ball-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Gentle wobble on the primary specular to catch light dynamically */
-@keyframes db-spec-wobble {
-  0%, 100% { transform: rotate(-32deg) translateZ(2px) scale(1); opacity: 0.9; }
-  50% { transform: rotate(-28deg) translateZ(2px) scale(1.08); opacity: 1; }
-}
-
-/* The star SVG inside the enlarged ball gets a slight 3D pop */
 .db-enlarged-ball > svg {
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
-  transform: translateZ(4px);
-  animation: db-stars-float 4s infinite ease-in-out;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  max-width: 170px;
+  max-height: 170px;
 }
 
-@keyframes db-stars-float {
-  0%, 100% { transform: translateZ(4px) translateY(0) rotate(0deg); }
-  50% { transform: translateZ(6px) translateY(-2px) rotate(1.5deg); }
-}
-
-/* Fly-to-radar clone inherits the same realism */
+/* Fly-to-radar clone — clean wrapper, no faux gradients */
 .db-flying-clone {
   position: fixed;
   z-index: 1000000;
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 50%, transparent 80%),
-    radial-gradient(circle at 50% 50%, rgba(254,243,199,0.4) 0%, rgba(251,191,36,0.08) 60%, transparent 100%),
-    radial-gradient(circle at 36% 32%, #FFF7CC 0%, #FDE047 22%, #F59E0B 52%, #EA580C 78%, #9A3412 100%);
-  box-shadow:
-    0 0 60px 8px rgba(245, 158, 11, 0.6),
-    0 0 120px 20px rgba(239, 68, 68, 0.4),
-    0 20px 40px -10px rgba(15, 23, 42, 0.5),
-    inset -10px -10px 28px rgba(154, 52, 18, 0.9),
-    inset 10px 10px 24px rgba(254, 240, 138, 0.9);
-  border: 2.5px solid rgba(254, 240, 138, 0.7);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 16px 24px rgba(0,0,0,0.45)) drop-shadow(0 0 28px rgba(255,126,0,0.55));
   pointer-events: none;
   transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform-style: preserve-3d;
 }
-.db-flying-clone::before {
-  content: '';
-  position: absolute;
-  top: 12%; left: 18%;
-  width: 58px; height: 30px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.9) 0%, transparent 85%);
-  transform: rotate(-32deg) translateZ(2px);
-  filter: blur(1.5px);
-}
-.db-flying-clone .db-rim-light {
-  position: absolute; inset: 0; border-radius: 50%;
-  background: radial-gradient(circle at 50% 75%, transparent 40%, rgba(254,215,170,0.55) 100%);
-  pointer-events: none; mix-blend-mode: screen;
+.db-flying-clone::before { display: none; }
+.db-flying-clone .db-rim-light { display: none; }
+.db-flying-clone > svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
 }
 
 .db-collect-banner {
@@ -3847,23 +4011,6 @@ body.page-intro-revealed .site-footer {
   text-shadow: 0 0 12px rgba(74, 222, 128, 0.6);
 }
 
-/* Fly to Radar Stage (interpolated by JS) */
-.db-flying-clone {
-  position: fixed;
-  z-index: 1000000;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #FEF08A 0%, #FBBF24 40%, #F59E0B 70%, #EA580C 100%);
-  box-shadow: 0 0 50px #F59E0B, 0 0 90px #EF4444;
-  border: 2.5px solid #FFFFFF;
-  pointer-events: none;
-  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ==========================================================================
    Kid Goku Prank Modal & Fake Dragon Ball Trick Styles
    ========================================================================== */
@@ -3881,31 +4028,33 @@ body.page-intro-revealed .site-footer {
   animation: fake-ball-entice 3.2s infinite ease-in-out;
   transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s ease, filter 0.25s ease;
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+  background: transparent;
 }
 
 @keyframes fake-ball-entice {
   0%, 100% {
     transform: translateY(0) rotate(0deg) scale(1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
   }
   25% {
     transform: translateY(-5px) rotate(6deg) scale(1.08);
-    box-shadow: 0 8px 18px rgba(251, 191, 36, 0.7), 0 0 24px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.30), 0 0 18px rgba(255, 126, 0, 0.38);
   }
   50% {
     transform: translateY(1px) rotate(-3deg) scale(0.97);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 10px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
   }
   75% {
     transform: translateY(-3px) rotate(4deg) scale(1.05);
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.6), 0 0 20px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.30), 0 0 18px rgba(255, 126, 0, 0.35);
   }
 }
 
 .fake-dragon-ball:hover {
   transform: translateY(-3px) scale(1.25) rotate(10deg) !important;
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.75), 0 0 35px rgba(239, 68, 68, 0.5), 2px 2px 0px #1E293B !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.32), 0 0 22px rgba(255, 126, 0, 0.45) !important;
+  filter: brightness(1.05);
   animation: none !important;
   z-index: 15;
 }
