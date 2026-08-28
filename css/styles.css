@@ -4025,37 +4025,18 @@ body { transition: background-color 0.95s cubic-bezier(0.16,1,0.3,1); }
   flex-shrink: 0;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  animation: fake-ball-entice 3.2s infinite ease-in-out;
-  transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s ease, filter 0.25s ease;
+  /* Identical to real balls now — no wobble to give away prank */
+  animation: none;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
   border-radius: 50%;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
   background: transparent;
 }
 
-@keyframes fake-ball-entice {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg) scale(1);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
-  }
-  25% {
-    transform: translateY(-5px) rotate(6deg) scale(1.08);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.30), 0 0 18px rgba(255, 126, 0, 0.38);
-  }
-  50% {
-    transform: translateY(1px) rotate(-3deg) scale(0.97);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
-  }
-  75% {
-    transform: translateY(-3px) rotate(4deg) scale(1.05);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.30), 0 0 18px rgba(255, 126, 0, 0.35);
-  }
-}
-
 .fake-dragon-ball:hover {
-  transform: translateY(-3px) scale(1.25) rotate(10deg) !important;
+  transform: translateY(-3px) scale(1.20) !important;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.32), 0 0 22px rgba(255, 126, 0, 0.45) !important;
   filter: brightness(1.05);
-  animation: none !important;
   z-index: 15;
 }
 
@@ -4064,11 +4045,11 @@ body { transition: background-color 0.95s cubic-bezier(0.16,1,0.3,1); }
   transition-duration: 0.08s;
 }
 
-/* Floating Decoy Dragon Balls in empty/free spaces */
+/* Floating Decoy Dragon Balls in empty/free spaces — drift only, no prank wobble */
 .floating-decoy-ball {
   position: absolute;
   z-index: 12;
-  animation: decoy-space-drift 7s ease-in-out infinite alternate, fake-ball-entice 2.8s infinite ease-in-out;
+  animation: decoy-space-drift 7s ease-in-out infinite alternate;
 }
 
 @keyframes decoy-space-drift {

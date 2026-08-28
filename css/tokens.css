@@ -597,6 +597,21 @@ body.saiyan-mode .dragon-radar-widget {
   }
 }
 
+/* Radar-targeted ball — pulsing Rosé highlight when jumped to from radar */
+.dragon-ball.radar-target-highlight {
+  outline: 3px solid #FF2E97;
+  outline-offset: 4px;
+  animation: radar-target-pulse 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 30;
+}
+
+@keyframes radar-target-pulse {
+  0%   { outline-color: rgba(255,46,151,0); transform: scale(1); }
+  15%  { outline-color: #FF2E97; transform: scale(1.14); box-shadow: 0 0 20px rgba(255,46,151,0.55); }
+  45%  { outline-color: #FF7E00; transform: scale(1.08); box-shadow: 0 0 28px rgba(255,126,0,0.45); }
+  100% { outline-color: rgba(255,46,151,0); transform: scale(1); }
+}
+
 /* Ki Charge Blast Particle Effect */
 .ki-spark {
   position: absolute;

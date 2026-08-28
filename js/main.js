@@ -872,27 +872,18 @@ function renderDragonBallSVGs() {
 
     if (hasCanonicalLayout) {
       innerContent = buildStars(LAYOUTS[parsedNum], starR);
-    } else if (num === '0') {
-      innerContent = '';
-    } else if (num === 'emoji') {
-      innerContent = `<text x="50" y="66" font-size="44" text-anchor="middle" filter="url(#db-star-shadow-${uid})">\uD83D\uDE0E</text>`;
-    } else if (num === 'spiral') {
-      innerContent = buildStars([[50, 50]], 9) +
-        `<path d="M 50 50 m -24, 0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0" stroke="#D90000" stroke-width="3.8" fill="none" stroke-dasharray="7,5" opacity="0.92" />`;
-    } else if (num === 'cookie') {
-      innerContent = `<circle cx="33" cy="38" r="6.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="65" cy="35" r="7" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="48" cy="56" r="5.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="30" cy="68" r="6.5" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" /><circle cx="68" cy="68" r="6" fill="#4A1D96" filter="url(#db-star-shadow-${uid})" />`;
-    } else if (num === 'glitch') {
-      innerContent = `<text x="50" y="64" font-family="monospace" font-weight="900" font-size="38" fill="#10B981" text-anchor="middle" filter="drop-shadow(0 0 6px #10B981)">\u26A101</text>`;
-    } else if (num === '100') {
-      innerContent = `<text x="50" y="64" font-family="sans-serif" font-weight="900" font-size="34" fill="#D90000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">100\u2605</text>`;
-    } else if (num === 'cracked') {
-      innerContent = buildStars([[36, 36], [64, 64]], 7.8) +
-        `<path d="M 18 42 L 42 56 L 54 48 L 82 65" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none" />` +
-        `<rect x="36" y="45" width="28" height="11" rx="3" fill="#FDE68A" stroke="#1E293B" stroke-width="2" transform="rotate(-20 50 50)" />`;
-    } else if (num === 'question') {
-      innerContent = `<text x="50" y="68" font-family="sans-serif" font-weight="900" font-size="52" fill="#D90000" text-anchor="middle" filter="url(#db-star-shadow-${uid})">?</text>`;
-    } else if (num === 'rock') {
-      innerContent = `<circle cx="42" cy="42" r="5" fill="#78350F" /><circle cx="62" cy="58" r="6" fill="#78350F" /><circle cx="36" cy="65" r="4.5" fill="#78350F" />`;
+    } else {
+      // Prank balls now MIMIC normal balls — random 1-7 so you can't tell by look
+      const rnd = 1 + Math.floor(Math.random() * 7);
+      let rndR;
+      if (rnd === 1) rndR = 10.5;
+      else if (rnd === 2) rndR = 9.0;
+      else if (rnd === 3) rndR = 8.6;
+      else if (rnd === 4) rndR = 8.4;
+      else if (rnd === 5) rndR = 7.6;
+      else if (rnd === 6) rndR = 7.2;
+      else rndR = 6.8;
+      innerContent = buildStars(LAYOUTS[rnd], rndR);
     }
 
     // ── TRUE ANIME ORB ──────────────────────────────────────────────────
@@ -959,28 +950,80 @@ function renderDragonBallSVGs() {
     `;
   };
 
-  // Render SVG inside real section dragon balls
+  // ── TRUE RANDOM: shuffle which 7 of the 22 slots hold the REAL balls — no fixed pattern ──
+  const pool = Array.from(document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]'));
+  // Fisher-Yates shuffle pool
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const starPool = [1,2,3,4,5,6,7];
+  for (let i = starPool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [starPool[i], starPool[j]] = [starPool[j], starPool[i]];
+  }
+  pool.forEach((el, idx) => {
+    if (idx < 7) {
+      // This slot becomes a REAL Dragon Ball (goes to radar)
+      el.classList.add('dragon-ball');
+      el.classList.remove('fake-dragon-ball');
+      el.removeAttribute('data-fake-ball');
+      el.setAttribute('data-ball', String(starPool[idx]));
+    } else {
+      // Remaining slots become PRANK balls — but will LOOK identical to real
+      el.classList.add('dragon-ball', 'fake-dragon-ball');
+      el.removeAttribute('data-ball');
+      el.setAttribute('data-fake-ball', String(1 + Math.floor(Math.random() * 7)));
+    }
+  });
+
+  // Render SVG inside real section dragon balls (now shuffled)
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
     ball.innerHTML = window.getBallSVGString(ballNum, 34);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
     ball.setAttribute('aria-label', `${ballNum}-Star Dragon Ball`);
+    ball.title = `Collect the ${ballNum}-Star Dragon Ball!`;
   });
 
-  // Render SVG inside fake decoy dragon balls
+  // Render SVG inside fake decoy dragon balls — now VISUALLY IDENTICAL to real (random 1-7)
   document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
-    const fakeType = ball.getAttribute('data-fake-ball');
-    ball.innerHTML = window.getBallSVGString(fakeType, 34);
+    const rnd = 1 + Math.floor(Math.random() * 7);
+    ball.innerHTML = window.getBallSVGString(String(rnd), 34);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `Mystery Dragon Ball`);
+    ball.setAttribute('aria-label', `${rnd}-Star Dragon Ball`);
+    ball.title = `Collect the ${rnd}-Star Dragon Ball!`;
+    ball.dataset.visualStars = String(rnd);
   });
 
   // Render SVG inside Shenron modal celebration balls
   document.querySelectorAll('.shenron-star-ball[data-shenron-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-shenron-ball');
     ball.innerHTML = window.getBallSVGString(ballNum, 34);
+  });
+
+  // ── Random scatter: floating decoys jump to new random spots each load ──
+  document.querySelectorAll('.floating-decoy-ball').forEach(el => {
+    const top = (4 + Math.random() * 72).toFixed(2);
+    const left = (3 + Math.random() * 82).toFixed(2);
+    el.style.top = top + '%';
+    el.style.left = left + '%';
+    el.style.right = 'auto';
+    el.style.bottom = 'auto';
+    const rot = (Math.random() * 26 - 13).toFixed(1);
+    const sc = (0.90 + Math.random() * 0.22).toFixed(2);
+    el.style.transform = `rotate(${rot}deg) scale(${sc})`;
+  });
+  // Inline balls: subtle random offset so even fixed-in-header balls don't sit identically each reload
+  document.querySelectorAll('.dragon-ball:not(.floating-decoy-ball), .fake-dragon-ball:not(.floating-decoy-ball)').forEach(el => {
+    if (el.classList.contains('shenron-star-ball')) return;
+    const dx = (Math.random() * 12 - 6).toFixed(1);
+    const dy = (Math.random() * 8 - 4).toFixed(1);
+    el.style.position = 'relative';
+    el.style.left = dx + 'px';
+    el.style.top = dy + 'px';
   });
 }
 
@@ -1010,9 +1053,9 @@ function renderRadarHUD() {
       return `
         <div class="radar-signal-dot ${isCollected ? 'signal-collected' : 'signal-uncollected'}"
              style="left: ${ball.x}%; top: ${ball.y}%;"
-             title="${ball.name} (${isCollected ? 'Collected' : 'Detected'})"
-             onclick="focusSector('${ball.selector}')">
-          ${isCollected ? '' : ball.num}
+             title="${ball.name} (${isCollected ? 'Collected — click to view' : 'Click to locate exact position!'})"
+             onclick="focusDragonBall(${ball.num})">
+           ${isCollected ? '' : ball.num}
         </div>
       `;
     }).join('');
@@ -1022,7 +1065,7 @@ function renderRadarHUD() {
     signalsList.innerHTML = dragonBallLocations.map(ball => {
       const isCollected = collectedBalls.has(ball.num);
       return `
-        <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusSector('${ball.selector}')" style="cursor: pointer;">
+        <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusDragonBall(${ball.num})" style="cursor: pointer;" title="${isCollected ? 'Already secured' : 'Click to jump to exact Dragon Ball location'}">
           <div class="radar-signal-card-ball">
             ${window.getBallSVGString(ball.num, 24)}
           </div>
@@ -1043,6 +1086,42 @@ window.focusSector = function(selector) {
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     target.classList.add('saiyan-charging');
     setTimeout(() => target.classList.remove('saiyan-charging'), 1200);
+  }
+};
+
+window.focusDragonBall = function(num) {
+  const isCollected = collectedBalls.has(num);
+  closeDragonRadarModal();
+  if (isCollected) {
+    showToast(`⭐ ${num}-Star Ball already secured! (${collectedBalls.size}/7) — keep hunting the rest!`);
+    return;
+  }
+  // Find the EXACT orb element that currently holds this star (after pool shuffle it could be anywhere on page)
+  const ball = document.querySelector(`.dragon-ball[data-ball="${num}"]`);
+  if (ball) {
+    ball.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    // Highlight after scroll settles so user spots it instantly
+    setTimeout(() => {
+      ball.classList.add('radar-target-highlight');
+      ball.classList.add('saiyan-charging');
+      const rect = ball.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      createKiSparks(cx, cy);
+      setTimeout(() => createKiSparks(cx, cy), 180);
+      ball.style.filter = 'drop-shadow(0 0 18px #FF2E97) drop-shadow(0 0 32px #FF7E00) brightness(1.18)';
+      showToast(`📡 Tracking ${num}-Star Ball — look for the pulsing orb!`);
+      setTimeout(() => {
+        ball.classList.remove('radar-target-highlight');
+        ball.classList.remove('saiyan-charging');
+        ball.style.filter = '';
+      }, 1800);
+    }, 520);
+  } else {
+    // Fallback: go to sector
+    const info = dragonBallLocations.find(b => b.num === num);
+    if (info) window.focusSector(info.selector);
+    else showToast(`📡 Scanning for ${num}-Star Ball...`);
   }
 };
 
