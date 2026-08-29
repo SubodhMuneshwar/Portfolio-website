@@ -1639,19 +1639,16 @@ window.superSaiyanGodBlast = function() {
 /* ==========================================================================
    Super Saiyan Rosé Goku Black Start Animation & Smooth Transition Controller
    ========================================================================== */
-const MAX_INTRO_DURATION = 3.0; // Max 3.0 seconds duration
+const INTRO_TARGET_DURATION = 6.2; // Aligned with new_intro.mp4 climax (6.63s total)
+const INTRO_FALLBACK_TIMEOUT = 1.8; // Max 1.8s buffer time before automatic graceful transition
 let isIntroFinishing = false;
 let introTimer = null;
+let introFallbackTimer = null;
+let introRafId = null;
 
 function initPageIntroAnimation() {
   const overlay = document.getElementById('introOverlay');
   const video = document.getElementById('introVideo');
-  const audioBtn = document.getElementById('introAudioBtn');
-  const audioIcon = document.getElementById('introAudioIcon');
-  const audioText = document.getElementById('introAudioText');
-  const skipBtn = document.getElementById('introSkipBtn');
-  const progressBar = document.getElementById('introProgressBar');
-  const soundPrompt = document.getElementById('introSoundPrompt');
 
   if (!overlay || !video) return;
 
@@ -1659,113 +1656,103 @@ function initPageIntroAnimation() {
   document.documentElement.classList.add('page-intro-running');
   document.body.classList.add('page-intro-running');
 
-  // Hard safety timer: Automatically finish intro at 3.0 seconds
-  if (introTimer) clearTimeout(introTimer);
-  introTimer = setTimeout(() => {
-    if (!isIntroFinishing) {
+  let hasStartedPlaying = false;
+
+  // Always keep muted
+  video.muted = true;
+  video.volume = 0;
+
+  // Frame-synced check to transition at climax (6.2s or video duration)
+  function checkPlaybackLoop() {
+    if (isIntroFinishing) return;
+
+    const targetTime = video.duration ? Math.min(INTRO_TARGET_DURATION, video.duration - 0.15) : INTRO_TARGET_DURATION;
+    if (video.currentTime >= targetTime - 0.05) {
       finishIntroTransition();
+      return;
     }
-  }, MAX_INTRO_DURATION * 1000);
 
-  // 1. Video Progress updates
-  video.addEventListener('timeupdate', () => {
-    if (progressBar) {
-      const targetDuration = Math.min(MAX_INTRO_DURATION, video.duration || MAX_INTRO_DURATION);
-      const progressPercent = Math.min(100, (video.currentTime / targetDuration) * 100);
-      progressBar.style.width = `${progressPercent}%`;
+    introRafId = requestAnimationFrame(checkPlaybackLoop);
+  }
 
-      // Trigger seamless transition at 3.0 seconds
-      if (video.currentTime >= targetDuration - 0.1 && !isIntroFinishing) {
-        finishIntroTransition();
-      }
+  // 1. When video starts actual playback
+  const onVideoPlaying = () => {
+    if (hasStartedPlaying) return;
+    hasStartedPlaying = true;
+
+    // Clear fallback buffer timer once video is actively rendering frames
+    if (introFallbackTimer) {
+      clearTimeout(introFallbackTimer);
+      introFallbackTimer = null;
     }
+
+    // Start playback check loop
+    if (introRafId) cancelAnimationFrame(introRafId);
+    introRafId = requestAnimationFrame(checkPlaybackLoop);
+
+    // Hard ceiling timer for intro duration
+    if (introTimer) clearTimeout(introTimer);
+    introTimer = setTimeout(() => {
+      if (!isIntroFinishing) finishIntroTransition();
+    }, (INTRO_TARGET_DURATION + 0.4) * 1000);
+  };
+
+  video.addEventListener('playing', onVideoPlaying);
+  video.addEventListener('canplay', () => {
+    video.play().catch(() => {});
   });
 
   // 2. Video Ended handler
   video.addEventListener('ended', () => {
-    if (!isIntroFinishing) {
-      finishIntroTransition();
-    }
+    if (!isIntroFinishing) finishIntroTransition();
   });
 
   // 3. Fallback on load/play error
-  video.addEventListener('error', (e) => {
-    console.warn('Intro video playback notice:', e);
+  video.addEventListener('error', () => {
     finishIntroTransition();
   });
 
-  // 4. Sound Toggle logic
-  function toggleAudio(forceState = null) {
-    const shouldMute = forceState !== null ? !forceState : !video.muted;
-    video.muted = shouldMute;
-
-    if (!video.muted) {
-      video.volume = 1.0;
-      if (audioBtn) audioBtn.classList.add('audio-active');
-      if (audioText) audioText.textContent = 'Mute Audio';
-      if (audioIcon) {
-        audioIcon.setAttribute('data-lucide', 'volume-2');
-        initLucideIcons();
-      }
-      if (soundPrompt) soundPrompt.classList.add('hidden');
-    } else {
-      if (audioBtn) audioBtn.classList.remove('audio-active');
-      if (audioText) audioText.textContent = 'Enable Audio';
-      if (audioIcon) {
-        audioIcon.setAttribute('data-lucide', 'volume-x');
-        initLucideIcons();
-      }
+  // 4. Safe buffer watchdog: If video takes too long on slow mobile connections, transition immediately
+  if (introFallbackTimer) clearTimeout(introFallbackTimer);
+  introFallbackTimer = setTimeout(() => {
+    if (!hasStartedPlaying && !isIntroFinishing) {
+      finishIntroTransition();
     }
-  }
+  }, INTRO_FALLBACK_TIMEOUT * 1000);
 
-  if (audioBtn) {
-    audioBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleAudio();
-    });
-  }
-
-  // Clicking on overlay anywhere can also toggle audio if muted, or skip if already unmuted
-  overlay.addEventListener('click', (e) => {
-    if (e.target.closest('.intro-btn') || isIntroFinishing) return;
-    if (video.muted) {
-      toggleAudio(true);
-    }
+  // 5. Tap or Click ANYWHERE on screen/overlay to skip intro and enter portfolio directly
+  overlay.addEventListener('click', () => {
+    finishIntroTransition();
   });
 
-  // 5. Skip Button handler
-  if (skipBtn) {
-    skipBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
+  document.addEventListener('touchstart', (e) => {
+    if (!overlay.classList.contains('hidden') && !isIntroFinishing) {
       finishIntroTransition();
-    });
-  }
+    }
+  }, { passive: true });
 
-  // 6. Keyboard shortcut: Esc or Space to skip intro
+  // 6. Keyboard shortcuts: Any key (Esc, Space, Enter) skips intro directly
   document.addEventListener('keydown', (e) => {
     if (!overlay.classList.contains('hidden') && !isIntroFinishing) {
-      if (e.key === 'Escape' || e.code === 'Space') {
+      if (e.key === 'Escape' || e.code === 'Space' || e.key === 'Enter') {
         e.preventDefault();
         finishIntroTransition();
       }
     }
   });
 
-  // 7. Start Video Playback
+  // 7. Start Silent Playback immediately
+  video.muted = true;
   const playPromise = video.play();
   if (playPromise !== undefined) {
-    playPromise.catch((err) => {
-      console.log('Autoplay started in muted mode or waiting for interaction:', err);
-      video.muted = true;
-      video.play().catch(() => {
-        // If still blocked, user can tap overlay or skip
-      });
+    playPromise.catch(() => {
+      // Autoplay fallback: watchdog will seamlessly transition
     });
   }
 }
 
 /**
- * Executes the cinematic smooth transition from the anime intro into the portfolio
+ * Executes the fast, cinematic smooth transition from the anime intro into the portfolio
  */
 function finishIntroTransition() {
   if (isIntroFinishing) return;
@@ -1775,43 +1762,43 @@ function finishIntroTransition() {
     clearTimeout(introTimer);
     introTimer = null;
   }
+  if (introFallbackTimer) {
+    clearTimeout(introFallbackTimer);
+    introFallbackTimer = null;
+  }
+  if (introRafId) {
+    cancelAnimationFrame(introRafId);
+    introRafId = null;
+  }
 
   const overlay = document.getElementById('introOverlay');
   const video = document.getElementById('introVideo');
-  const progressBar = document.getElementById('introProgressBar');
 
-  if (progressBar) progressBar.style.width = '100%';
-
-  // Smooth audio fade-down
-  if (video && !video.muted) {
-    let currentVol = video.volume;
-    const fadeInterval = setInterval(() => {
-      if (currentVol > 0.15) {
-        currentVol -= 0.15;
-        video.volume = Math.max(0, currentVol);
-      } else {
-        clearInterval(fadeInterval);
-        video.muted = true;
-      }
-    }, 50);
+  if (video) {
+    try {
+      video.muted = true;
+      video.volume = 0;
+    } catch (e) {}
   }
 
   if (overlay) {
-    // Step 1: Trigger Rosé divine burst — video blooms pink into flash + rings + petals
+    // Step 1: Trigger Rosé divine burst (GPU-accelerated pink bloom + energy rings)
     overlay.classList.add('transitioning');
     spawnRosePetals();
 
-    // Step 2: Unveil the Rosé landing — hero aura continues the video's final glow
+    // Step 2: Unveil the landing page immediately
     document.documentElement.classList.remove('page-intro-running');
     document.body.classList.remove('page-intro-running');
     document.body.classList.add('page-intro-revealed');
 
-    // Step 3: Fully hide intro overlay after Rosé bloom settles (synced to 0.85-1.25s rings+veil)
+    // Step 3: Fully hide intro overlay after 550ms (fast, punchy handoff)
     setTimeout(() => {
       overlay.classList.add('hidden');
-      if (video) video.pause();
+      if (video) {
+        try { video.pause(); } catch (e) {}
+      }
       isIntroFinishing = false;
-    }, 1180);
+    }, 550);
   }
 }
 
@@ -1819,28 +1806,22 @@ function spawnRosePetals() {
   const container = document.getElementById('introRoseParticles');
   if (!container) return;
   container.innerHTML = '';
-  const count = 14;
+  const count = 12;
   for (let i = 0; i < count; i++) {
     const petal = document.createElement('span');
     petal.className = 'rose-petal';
-    // Random start near center burst
-    const startX = 48 + Math.random() * 4; // 48-52% center
+    const startX = 48 + Math.random() * 4;
     const startY = 38 + Math.random() * 8;
     petal.style.left = startX + '%';
     petal.style.top = startY + '%';
-    // Drift outward — wide Rosé scatter
-    const dx = (Math.random() - 0.5) * 320; // -160 to 160
-    const dy = 120 + Math.random() * 220; // fall 120-340
+    const dx = (Math.random() - 0.5) * 280;
+    const dy = 100 + Math.random() * 180;
     petal.style.setProperty('--dx', dx + 'px');
     petal.style.setProperty('--dy', dy + 'px');
-    petal.style.animationDelay = (i * 0.055) + 's';
-    // Vary size
-    const s = 0.7 + Math.random() * 0.7;
+    petal.style.animationDelay = (i * 0.04) + 's';
+    const s = 0.7 + Math.random() * 0.6;
     petal.style.width = (8 * s) + 'px';
     petal.style.height = (8 * s) + 'px';
-    // Slight color variance via hue tweak
-    if (i % 3 === 0) petal.style.filter = 'hue-rotate(-12deg) saturate(1.1)';
-    if (i % 3 === 1) petal.style.filter = 'hue-rotate(8deg) saturate(1.2)';
     container.appendChild(petal);
   }
 }
@@ -1851,8 +1832,6 @@ function spawnRosePetals() {
 function replayIntroAnimation() {
   const overlay = document.getElementById('introOverlay');
   const video = document.getElementById('introVideo');
-  const progressBar = document.getElementById('introProgressBar');
-  const soundPrompt = document.getElementById('introSoundPrompt');
 
   if (!overlay || !video) return;
 
@@ -1865,25 +1844,22 @@ function replayIntroAnimation() {
   document.body.classList.add('page-intro-running');
   document.body.classList.remove('page-intro-revealed');
 
-  if (progressBar) progressBar.style.width = '0%';
-  if (soundPrompt) soundPrompt.classList.remove('hidden');
+  try {
+    video.currentTime = 0;
+    video.muted = true;
+    video.volume = 0;
+  } catch (e) {}
 
-  video.currentTime = 0;
-  video.volume = 1.0;
-
-  // Auto-finish at 2.5s for replay as well
   if (introTimer) clearTimeout(introTimer);
   introTimer = setTimeout(() => {
     if (!isIntroFinishing) {
       finishIntroTransition();
     }
-  }, MAX_INTRO_DURATION * 1000);
+  }, (INTRO_TARGET_DURATION + 0.3) * 1000);
 
   const playPromise = video.play();
   if (playPromise !== undefined) {
-    playPromise.catch((err) => {
-      console.warn('Replay play notice:', err);
-    });
+    playPromise.catch(() => {});
   }
 }
 
