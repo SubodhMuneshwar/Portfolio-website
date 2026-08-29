@@ -27,6 +27,8 @@ const portfolioData = {
       category: "Programming Languages",
       icon: "code",
       color: "accent",
+      power: 9001,
+      level: 94,
       items: [
         { name: "Python", level: "Expert", tag: "Primary" },
         { name: "C#", level: "Advanced", tag: "Enterprise" },
@@ -39,6 +41,8 @@ const portfolioData = {
       category: "Backend & Systems",
       icon: "server",
       color: "secondary",
+      power: 8850,
+      level: 90,
       items: [
         { name: "Flask", level: "Expert", tag: "Python REST" },
         { name: "ASP.NET", level: "Advanced", tag: "C# Enterprise" },
@@ -51,6 +55,8 @@ const portfolioData = {
       category: "AI, ML & Vision",
       icon: "cpu",
       color: "tertiary",
+      power: 8700,
+      level: 88,
       items: [
         { name: "OpenCV", level: "Advanced", tag: "Computer Vision" },
         { name: "CNN / Deep Learning", level: "Advanced", tag: "Neural Nets" },
@@ -63,6 +69,8 @@ const portfolioData = {
       category: "Frontend & UI/UX",
       icon: "layout",
       color: "quaternary",
+      power: 7200,
+      level: 73,
       items: [
         { name: "HTML5 & CSS3", level: "Expert", tag: "Semantic" },
         { name: "JavaScript (ES6+)", level: "Advanced", tag: "Modern" },
@@ -74,6 +82,8 @@ const portfolioData = {
       category: "Databases, Cloud & Tools",
       icon: "database",
       color: "cyan-pop",
+      power: 8150,
+      level: 82,
       items: [
         { name: "MySQL", level: "Advanced", tag: "RDBMS" },
         { name: "Oracle Database", level: "Proficient", tag: "Enterprise" },
@@ -86,6 +96,8 @@ const portfolioData = {
       category: "Core Concepts",
       icon: "git-merge",
       color: "accent",
+      power: 7900,
+      level: 80,
       items: [
         { name: "Data Structures & Algorithms", level: "Strong", tag: "Core" },
         { name: "Object-Oriented Programming (OOP)", level: "Strong", tag: "Design" },

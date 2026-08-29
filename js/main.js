@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalClickAnimation();
   initScrollReveal();
   initDbzJokePlaceholders();
+  initHeroRotatingWord();
 });
 
 // Escape key to close modal
@@ -66,7 +67,7 @@ function initHeroStats() {
   `).join('');
 }
 
-/* --- Render Skills Matrix --- */
+/* --- Render Skills Matrix — with Scouter Power Levels (Claude PowerBar-inspired) --- */
 function renderSkills() {
   const container = document.getElementById('skillsGrid');
   if (!container || !portfolioData.skills) return;
@@ -79,6 +80,13 @@ function renderSkills() {
         </div>
         <h3 class="skill-card-title">${cat.category}</h3>
       </div>
+      ${cat.power ? `
+      <div class="skill-power-row" aria-label="${cat.category} power ${cat.power}">
+        <div class="skill-power-track" role="progressbar" aria-valuenow="${cat.level}" aria-valuemin="0" aria-valuemax="100">
+          <div class="skill-power-fill" data-level="${cat.level}" style="background:var(--${cat.color});width:0%"></div>
+        </div>
+        <span class="skill-power-label" style="color:var(--${cat.color})"><span class="skill-power-dot" style="background:var(--${cat.color})"></span>PWR <strong>${cat.power.toLocaleString()}</strong> · ${cat.level}%</span>
+      </div>` : ''}
       <div class="skill-items-wrap">
         ${cat.items.map(skill => `
           <div class="skill-chip">
@@ -89,6 +97,11 @@ function renderSkills() {
       </div>
     </div>
   `).join('');
+  const fills=container.querySelectorAll('.skill-power-fill[data-level]');
+  if(!fills.length) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ fills.forEach(f=>f.style.width=f.dataset.level+'%'); return; }
+  const io=new IntersectionObserver((entries,obs)=>{entries.forEach(e=>{if(e.isIntersecting){const f=e.target; requestAnimationFrame(()=>{f.style.width=f.dataset.level+'%'; f.classList.add('is-animated');}); obs.unobserve(f);}});},{threshold:.35});
+  fills.forEach(f=>io.observe(f));
 }
 
 /* --- Render Experience --- */
@@ -562,23 +575,167 @@ function initScrollSpy() {
    Staggered element transformation, lightning storm, and earthquake rumble
    ========================================================================== */
 
-/* --- Super Saiyan Theme Toggle --- */
+/* --- Super Saiyan Theme Toggle — persistent + system-aware (Claude-inspired) --- */
 function initSaiyanMode() {
   const saiyanBtn = document.getElementById('saiyanModeBtn');
   const saiyanBtnText = document.getElementById('saiyanBtnText');
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
   if (!saiyanBtn) return;
 
-  function setSaiyanState(enableSaiyan) {
+  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan?'#060E0A':'#FF2E97'); }
+
+  function playSaiyanTransformationCutscene(onTransition) {
+    const overlay = document.getElementById('saiyanVideoOverlay');
+    const video = document.getElementById('saiyanCutsceneVideo');
+    const flash = document.getElementById('saiyanCutsceneFlash');
+    const skipBtn = document.getElementById('saiyanCutsceneSkip');
+
+    if (!overlay || !video) {
+      if (typeof onTransition === 'function') onTransition();
+      return;
+    }
+
+    let isCutsceneEnding = false;
+    let cutsceneRafId = null;
+    let fallbackTimer = null;
+
+    function finishCutscene() {
+      if (isCutsceneEnding) return;
+      isCutsceneEnding = true;
+
+      if (cutsceneRafId) {
+        cancelAnimationFrame(cutsceneRafId);
+        cutsceneRafId = null;
+      }
+      if (fallbackTimer) {
+        clearTimeout(fallbackTimer);
+        fallbackTimer = null;
+      }
+
+      // 1. Redirect to Home Page (Hero section at top) immediately under the transition
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        if (window.location.hash) {
+          history.replaceState(null, null, window.location.pathname + window.location.search);
+        }
+      } catch(e) {}
+
+      // 2. Transition DOM to Super Saiyan dark mode immediately
+      try {
+        if (typeof onTransition === 'function') onTransition();
+      } catch(e) {
+        console.error('Saiyan transition error:', e);
+      }
+
+      // 3. Trigger visual golden Ki energy flash
+      if (flash) flash.classList.add('flashing');
+      try { drawLightningStrike(); } catch(e) {}
+
+      // 4. Add smooth reveal shockwave to hero section on the home page
+      try {
+        const hero = document.querySelector('.hero-section');
+        if (hero) {
+          hero.classList.remove('saiyan-reveal-shockwave');
+          void hero.offsetWidth;
+          hero.classList.add('saiyan-reveal-shockwave');
+        }
+      } catch(e) {}
+
+      // 5. Cross-fade out the cutscene overlay smoothly over 550ms
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+
+      setTimeout(() => {
+        if (flash) flash.classList.remove('flashing');
+        try { video.pause(); } catch(e) {}
+      }, 550);
+    }
+
+    // Prepare overlay, lock scroll, and start playback
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    video.currentTime = 0;
+    video.muted = true;
+
+    // Track playback progress frame-by-frame to transition smoothly at the video climax/end
+    function monitorCutscene() {
+      if (isCutsceneEnding) return;
+
+      if (video.duration && video.duration > 0) {
+        // Transition 0.15s before video hard-ends to ensure zero freeze/lag
+        if (video.currentTime >= video.duration - 0.18) {
+          finishCutscene();
+          return;
+        }
+      }
+
+      cutsceneRafId = requestAnimationFrame(monitorCutscene);
+    }
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        cutsceneRafId = requestAnimationFrame(monitorCutscene);
+      }).catch(() => {
+        // If autoplay fails, fallback gracefully
+        finishCutscene();
+      });
+    }
+
+    video.onended = finishCutscene;
+    video.onerror = finishCutscene;
+
+    // Attach skip listeners with 350ms buffer so initial button click doesn't trigger skip
+    setTimeout(() => {
+      if (isCutsceneEnding) return;
+
+      overlay.onclick = (e) => {
+        e.stopPropagation();
+        finishCutscene();
+      };
+
+      if (skipBtn) {
+        skipBtn.onclick = (e) => {
+          e.stopPropagation();
+          finishCutscene();
+        };
+      }
+
+      const onKeyDown = (e) => {
+        if (overlay.classList.contains('active')) {
+          document.removeEventListener('keydown', onKeyDown);
+          finishCutscene();
+        }
+      };
+      document.addEventListener('keydown', onKeyDown);
+    }, 350);
+
+    // Watchdog fallback (15s max)
+    fallbackTimer = setTimeout(finishCutscene, 15000);
+  }
+
+  function setSaiyanState(enableSaiyan, opts={}) {
+    const silent=!!opts.silent, noPersist=!!opts.noPersist;
     const iconSpan = saiyanBtn.querySelector('.saiyan-btn-icon');
+    
     if (enableSaiyan) {
-      document.body.classList.add('saiyan-mode');
-      document.documentElement.classList.add('saiyan-mode');
-      saiyanBtn.setAttribute('aria-pressed', 'true');
-      if (iconSpan) iconSpan.textContent = '✨';
-      if (saiyanBtnText) saiyanBtnText.textContent = 'Base';
-      saiyanBtn.title = 'Switch to Light (Base) Mode';
-      showToast('⚡ Super Saiyan Mode ON');
-      runPlanetNamekTransformation();
+      const applySaiyan = () => {
+        document.body.classList.add('saiyan-mode');
+        document.documentElement.classList.add('saiyan-mode');
+        saiyanBtn.setAttribute('aria-pressed', 'true');
+        if (iconSpan) iconSpan.textContent = '✨';
+        if (saiyanBtnText) saiyanBtnText.textContent = 'Base';
+        saiyanBtn.title = 'Switch to Light (Base) Mode';
+        syncMeta(true);
+        if(!noPersist) try{localStorage.setItem('portfolio-theme','saiyan');}catch(e){}
+        if(!silent){ showToast('⚡ Super Saiyan Mode ON'); runPlanetNamekTransformation(); }
+      };
+
+      if (!silent) {
+        playSaiyanTransformationCutscene(applySaiyan);
+      } else {
+        applySaiyan();
+      }
     } else {
       document.body.classList.remove('saiyan-mode');
       document.documentElement.classList.remove('saiyan-mode');
@@ -586,14 +743,30 @@ function initSaiyanMode() {
       if (iconSpan) iconSpan.textContent = '⚡';
       if (saiyanBtnText) saiyanBtnText.textContent = 'Saiyan';
       saiyanBtn.title = 'Toggle Super Saiyan (Dark) Mode';
-      showToast('✨ Base Mode ON');
+      syncMeta(false);
+      if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
+      if(!silent) showToast('✨ Base Mode ON');
     }
   }
+
+  // Sync body with html anti-FOUC state without re-triggering animation
+  if(document.documentElement.classList.contains('saiyan-mode')){
+    document.body.classList.add('saiyan-mode');
+    setSaiyanState(true,{silent:true,noPersist:true});
+  } else syncMeta(false);
+
+  // Follow OS only if user hasn't chosen
+  try{
+    const mql=window.matchMedia('(prefers-color-scheme: dark)');
+    const onOSChange=(e)=>{ if(localStorage.getItem('portfolio-theme')) return; setSaiyanState(e.matches,{silent:true}); };
+    if(mql.addEventListener) mql.addEventListener('change',onOSChange); else if(mql.addListener) mql.addListener(onOSChange);
+  }catch(e){}
 
   saiyanBtn.addEventListener('click', () => {
     const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
     setSaiyanState(!isCurrentlySaiyan);
   });
+  window.setSaiyanState=setSaiyanState;
 }
 
 /* --- Planet Namek Destruction / Staggered Transformation Engine --- */
@@ -1612,28 +1785,234 @@ function initGlobalClickAnimation() {
   });
 }
 
-/* --- Shenron Modal & Wish Action --- */
+/* ==========================================================================
+   Realistic Cinematic Shenron Emergence from Dragon Balls & Wish Engine
+   ========================================================================== */
+let shenronTimelineTimers = [];
+let shenronStormLoopId = null;
+
+function playShenronThunderSynth() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    // Sub-bass thunder rumble
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(45, now);
+    osc.frequency.exponentialRampToValueAtTime(20, now + 1.8);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(140, now);
+    filter.frequency.exponentialRampToValueAtTime(40, now + 1.8);
+
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 2.0);
+  } catch (e) {}
+}
+
+function playShenronRoarSound() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    // Resonant harmonic dragon roar sweep
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(90, now);
+    osc1.frequency.exponentialRampToValueAtTime(220, now + 0.6);
+    osc1.frequency.exponentialRampToValueAtTime(60, now + 2.2);
+
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(180, now);
+    osc2.frequency.exponentialRampToValueAtTime(440, now + 0.6);
+    osc2.frequency.exponentialRampToValueAtTime(110, now + 2.2);
+
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.3);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 2.3);
+    osc2.stop(now + 2.3);
+  } catch (e) {}
+}
+
+function startShenronLightningStorm() {
+  const canvas = document.getElementById('shenronLightningCanvas');
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+
+  function renderStormFrame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // 25% chance per tick to flash a branching bolt
+    if (Math.random() < 0.28) {
+      drawSingleBolt(ctx, canvas.width, canvas.height);
+      if (Math.random() < 0.35) {
+        playShenronThunderSynth();
+      }
+    }
+    shenronStormLoopId = setTimeout(renderStormFrame, 120 + Math.random() * 260);
+  }
+  renderStormFrame();
+}
+
+function stopShenronLightningStorm() {
+  if (shenronStormLoopId) {
+    clearTimeout(shenronStormLoopId);
+    shenronStormLoopId = null;
+  }
+  const canvas = document.getElementById('shenronLightningCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
 window.openShenronModal = function() {
   const modal = document.getElementById('shenronModal');
-  if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+  if (!modal) return;
+
+  // Clear any leftover timers
+  shenronTimelineTimers.forEach(t => clearTimeout(t));
+  shenronTimelineTimers = [];
+
+  // Reset stage classes
+  modal.classList.remove('balls-active', 'beam-active', 'dragon-active', 'decree-active');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Phase 1 (0.0s): Dark Sky & Lightning Strikes begin
+  startShenronLightningStorm();
+  playShenronThunderSynth();
+
+  // Phase 2 (0.2s): The 7 Dragon Balls at the base surge with pulsating golden Ki
+  const t1 = setTimeout(() => {
+    modal.classList.add('balls-active');
+    playDragonBallCollectChime();
+  }, 200);
+
+  // Phase 3 (1.0s): Golden Energy Vortex erupts upward from the 7 balls
+  const t2 = setTimeout(() => {
+    modal.classList.add('beam-active');
+    playSuperSaiyanAuraSound();
     drawLightningStrike();
-  }
+  }, 1000);
+
+  // Phase 4 (2.0s): Shenron Dragon emerges directly from the vortex at the balls and ascends
+  const t3 = setTimeout(() => {
+    modal.classList.add('dragon-active');
+    playShenronRoarSound();
+    drawLightningStrike();
+    triggerLightningStorm(4);
+  }, 2000);
+
+  // Phase 5 (3.8s): Simple, sleek wish speech bubble appears
+  const t4 = setTimeout(() => {
+    modal.classList.add('decree-active');
+    playDragonBallCollectChime();
+  }, 3800);
+
+  shenronTimelineTimers.push(t1, t2, t3, t4);
 };
 
 window.closeShenronModal = function() {
   const modal = document.getElementById('shenronModal');
   if (modal) {
-    modal.classList.remove('active');
+    modal.classList.remove('active', 'balls-active', 'beam-active', 'dragon-active', 'decree-active');
     document.body.style.overflow = '';
+  }
+  stopShenronLightningStorm();
+  shenronTimelineTimers.forEach(t => clearTimeout(t));
+  shenronTimelineTimers = [];
+};
+
+window.grantShenronWish = function(type) {
+  playShenronRoarSound();
+  drawLightningStrike();
+  triggerLightningStorm(5);
+
+  if (type === 'hire') {
+    showToast("🐉 'YOUR WISH HAS BEEN GRANTED! CONNECTING WITH SUBODH!'");
+    setTimeout(() => {
+      closeShenronModal();
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const messageBox = document.getElementById('message');
+        if (messageBox) {
+          messageBox.value = "Hi Subodh! I collected all 7 Dragon Balls and summoned Shenron to connect with you regarding a Software / AI/ML Engineering opportunity!";
+          messageBox.focus();
+        }
+      }
+    }, 850);
+  } else if (type === 'saiyan') {
+    showToast("🐉 'SUPER SAIYAN GOD OVERDRIVE UNLEASHED!'");
+    if (!document.body.classList.contains('saiyan-mode')) {
+      toggleSaiyanMode();
+    }
+    setTimeout(() => {
+      closeShenronModal();
+    }, 850);
+  } else if (type === 'blast') {
+    showToast("🐉 'DRAGON FIST KAMEHAMEHA DETONATED!'");
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 160,
+        spread: 120,
+        origin: { y: 0.5 },
+        colors: ['#F59E0B', '#10B981', '#FF2E97', '#38BDF8', '#FFFFFF']
+      });
+    }
+    setTimeout(() => {
+      closeShenronModal();
+    }, 1000);
   }
 };
 
-window.superSaiyanGodBlast = function() {
+window.scatterDragonBallsAgain = function() {
+  closeShenronModal();
+  collectedBalls.clear();
+
+  // Re-enable and reshuffle all dragon balls across the webpage
+  document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
+    ball.classList.remove('collected', 'ball-disappeared');
+    ball.style.display = '';
+    ball.style.visibility = '';
+    ball.style.opacity = '';
+    ball.setAttribute('aria-hidden', 'false');
+    ball.setAttribute('tabindex', '0');
+  });
+
+  renderDragonBallSVGs();
+  updateRadarMiniBlips();
+
+  const radarCount = document.getElementById('ballsFoundCount');
+  if (radarCount) radarCount.textContent = '0';
+
   drawLightningStrike();
-  triggerLightningStorm(6);
-  showToast("🐉 'YOUR WISH HAS BEEN GRANTED!'");
+  playDragonBallCollectChime();
+  showToast("🐉 The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
 };
 
 /* ==========================================================================
@@ -2014,6 +2393,33 @@ function initDbzJokePlaceholders() {
       }
     });
   }
+}
+
+/* ==========================================================================
+   Hero Rotating Word — Claude-inspired scouter cycling (1.8s)
+   Cycles Backend Builder → Full-Stack Builder → AI/ML Engineer
+   Respects prefers-reduced-motion — keeps static first word
+   ========================================================================== */
+function initHeroRotatingWord() {
+  const el = document.getElementById('heroRotatingWord');
+  if (!el) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const words = ['Backend Builder', 'Full-Stack Builder', 'AI/ML Engineer'];
+  // Ensure starting index matches current text; fallback to 0
+  let idx = words.indexOf(el.textContent.trim());
+  if (idx < 0) idx = 0;
+  setInterval(() => {
+    idx = (idx + 1) % words.length;
+    el.classList.remove('is-entering');
+    el.classList.add('is-exiting');
+    setTimeout(() => {
+      el.textContent = words[idx];
+      el.classList.remove('is-exiting');
+      void el.offsetWidth;
+      el.classList.add('is-entering');
+      setTimeout(() => el.classList.remove('is-entering'), 520);
+    }, 320);
+  }, 1800);
 }
 
 

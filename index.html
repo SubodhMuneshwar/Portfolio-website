@@ -27,9 +27,13 @@
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FF2E97' stroke='%231E293B' stroke-width='8'/%3E%3Ctext x='50' y='62' font-family='sans-serif' font-weight='900' font-size='42' fill='%23FFFDF5' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 
+  <!-- Anti-FOUC: restore Saiyan theme before first paint (Claude-inspired) -->
+  <script>
+    (function(){try{var s=localStorage.getItem('portfolio-theme');var w=s?s==='saiyan':window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if(w){document.documentElement.classList.add('saiyan-mode');var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#0A1410';}}catch(e){}})();
+  </script>
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260828_rose8">
-  <link rel="stylesheet" href="css/styles.css?v=20260828_rose8">
+  <link rel="stylesheet" href="css/tokens.css?v=20260831_db4">
+  <link rel="stylesheet" href="css/styles.css?v=20260831_db4">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -75,58 +79,36 @@
         <!-- Clean Modern Developer Brand Logo with 4-Star Dragon Ball -->
         <a href="#" class="brand-logo" title="SUBODH — Software & AI/ML Engineer">
           <div class="brand-badge-box brand-db-orb" title="4-Star Dragon Ball">
-            <svg viewBox="0 0 100 100" width="34" height="34" class="brand-db-svg" aria-hidden="true">
+                        <svg viewBox="0 0 100 100" width="34" height="34" class="brand-db-svg" aria-hidden="true">
               <defs>
-                <radialGradient id="brand-db-body" cx="32%" cy="28%" r="72%">
-                  <stop offset="0%" stop-color="#FFF2C2" />
-                  <stop offset="18%" stop-color="#FFB84D" />
-                  <stop offset="42%" stop-color="#FF7E00" />
-                  <stop offset="68%" stop-color="#EA580C" />
-                  <stop offset="88%" stop-color="#C2410C" />
-                  <stop offset="100%" stop-color="#7C2D12" />
+                <radialGradient id="brand-db-body" cx="34%" cy="28%" r="78%">
+                  <stop offset="0%" stop-color="#FFF3C4" />
+                  <stop offset="26%" stop-color="#FFD54A" />
+                  <stop offset="62%" stop-color="#FFA51F" />
+                  <stop offset="100%" stop-color="#C2610A" />
                 </radialGradient>
-                <radialGradient id="brand-db-hi" cx="38%" cy="30%" r="48%">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.92" />
-                  <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.38" />
+                <radialGradient id="brand-db-gloss" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
                   <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
                 </radialGradient>
-                <filter id="brand-db-drop" x="-30%" y="-30%" width="160%" height="160%">
-                  <feDropShadow dx="1.2" dy="1.8" stdDeviation="1.5" flood-color="#4A0E00" flood-opacity="0.75" />
-                </filter>
-                <clipPath id="brand-db-mask">
-                  <circle cx="50" cy="50" r="46" />
-                </clipPath>
+                <radialGradient id="brand-db-rim" cx="50%" cy="82%" r="52%">
+                  <stop offset="0%" stop-color="#FF8A3D" stop-opacity="0.75" />
+                  <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0" />
+                </radialGradient>
               </defs>
-              <circle cx="50" cy="50" r="46" fill="url(#brand-db-body)" stroke="#2B0C02" stroke-width="3.5" />
-              <g clip-path="url(#brand-db-mask)">
-                <!-- 4 Stars in Canonical Diamond Arrangement -->
-                <g filter="url(#brand-db-drop)">
-                  <!-- Top Star (50, 27) -->
-                  <polygon points="50,19 52.4,24.5 58.4,24.5 53.6,28.2 55.4,33.7 50,30 44.6,33.7 46.4,28.2 41.6,24.5 47.6,24.5" fill="#D60000" />
-                  <polygon points="50,19 51.5,22.8 55.5,22.8 52.2,25.2 53.5,29.0 50,26.5 46.5,29.0 47.8,25.2 44.5,22.8 48.5,22.8" fill="#FF4D4D" opacity="0.9" />
-
-                  <!-- Left Star (27, 50) -->
-                  <polygon points="27,42 29.4,47.5 35.4,47.5 30.6,51.2 32.4,56.7 27,53 21.6,56.7 23.4,51.2 18.6,47.5 24.6,47.5" fill="#D60000" />
-                  <polygon points="27,42 28.5,45.8 32.5,45.8 29.2,48.2 30.5,52.0 27,49.5 23.5,52.0 24.8,48.2 21.5,45.8 25.5,45.8" fill="#FF4D4D" opacity="0.9" />
-
-                  <!-- Right Star (73, 50) -->
-                  <polygon points="73,42 75.4,47.5 81.4,47.5 76.6,51.2 78.4,56.7 73,53 67.6,56.7 69.4,51.2 64.6,47.5 70.6,47.5" fill="#D60000" />
-                  <polygon points="73,42 74.5,45.8 78.5,45.8 75.2,48.2 76.5,52.0 73,49.5 69.5,52.0 70.8,48.2 67.5,45.8 71.5,45.8" fill="#FF4D4D" opacity="0.9" />
-
-                  <!-- Bottom Star (50, 73) -->
-                  <polygon points="50,65 52.4,70.5 58.4,70.5 53.6,74.2 55.4,79.7 50,76 44.6,79.7 46.4,74.2 41.6,70.5 47.6,70.5" fill="#D60000" />
-                  <polygon points="50,65 51.5,68.8 55.5,68.8 52.2,71.2 53.5,75.0 50,72.5 46.5,75.0 47.8,71.2 44.5,68.8 48.5,68.8" fill="#FF4D4D" opacity="0.9" />
-                </g>
-                <!-- Glass Reflection -->
-                <ellipse cx="32" cy="25" rx="17" ry="9" fill="url(#brand-db-hi)" transform="rotate(-30 32 25)" />
-                <circle cx="28" cy="20" r="4" fill="#FFFFFF" opacity="0.95" />
-              </g>
-              <circle cx="50" cy="50" r="45.2" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" />
+              <circle cx="50" cy="50" r="46" fill="url(#brand-db-body)" />
+              <circle cx="50" cy="50" r="46" fill="url(#brand-db-rim)" />
+              <polygon points="37.00,28.50 39.10,34.11 45.08,34.37 40.40,38.10 42.00,43.88 37.00,40.57 32.00,43.88 33.60,38.10 28.92,34.37 34.90,34.11" fill="#E11D48" />
+              <polygon points="63.00,28.50 65.10,34.11 71.08,34.37 66.40,38.10 68.00,43.88 63.00,40.57 58.00,43.88 59.60,38.10 54.92,34.37 60.90,34.11" fill="#E11D48" />
+              <polygon points="37.00,54.50 39.10,60.11 45.08,60.37 40.40,64.10 42.00,69.88 37.00,66.57 32.00,69.88 33.60,64.10 28.92,60.37 34.90,60.11" fill="#E11D48" />
+              <polygon points="63.00,54.50 65.10,60.11 71.08,60.37 66.40,64.10 68.00,69.88 63.00,66.57 58.00,69.88 59.60,64.10 54.92,60.37 60.90,60.11" fill="#E11D48" />
+              <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#brand-db-gloss)" transform="rotate(-28 33 27)" />
+              <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" />
             </svg>
           </div>
           <div class="brand-text-wrapper">
             <span class="brand-name">SUBODH</span>
-            <span class="brand-sub">SOFTWARE & AI/ML ENGINEER</span>
+            <span class="brand-sub">SOFTWARE ENGINEER</span>
           </div>
         </a>
 
@@ -146,7 +128,7 @@
         <!-- Right Quick Action Controls -->
         <div class="nav-actions">
           <button type="button" class="nav-ctrl-btn nav-btn-saiyan" id="saiyanModeBtn" title="Toggle Super Saiyan Dark Mode" aria-pressed="false">
-            <span class="saiyan-btn-icon" style="font-size: 13px;">⚡</span>
+            <span class="saiyan-btn-icon" style="font-size: 13px;"></span>
             <span id="saiyanBtnText">Saiyan</span>
           </button>
           <a href="#contact" class="btn btn-primary btn-sm nav-btn-connect">
@@ -169,14 +151,10 @@
       <div class="container">
         <div class="hero-grid">
           <div class="hero-content">
-            <div class="hero-badge">
-              <span>⚡ Open for Software & AI/ML Roles</span>
-              <span class="dragon-ball fake-dragon-ball" data-fake-ball="8" title="Wait... an 8-Star Dragon Ball?!"></span>
-            </div>
-
             <h1 class="hero-title">
-              Hi, I'm <span class="highlight-squiggle">Subodh Muneshwar</span> — Software Engineer & <span
-                class="highlight-squiggle highlight-pink">Backend Builder</span>.
+              <span class="hero-kicker">Hi, I'm</span>
+              <span class="hero-name highlight-squiggle">Subodh Muneshwar</span>
+              <span class="hero-role">Software Engineer & <span class="highlight-squiggle highlight-pink hero-rotating-word" id="heroRotatingWord" aria-live="polite" aria-atomic="true">Backend Builder</span></span>
             </h1>
 
             <p class="hero-description">
@@ -756,6 +734,17 @@
   </div>
 
   <!-- =========================================================================
+       Super Saiyan Mode Transformation Cutscene Video Overlay
+       ========================================================================= -->
+  <div id="saiyanVideoOverlay" class="saiyan-cutscene-overlay" aria-hidden="true">
+    <video id="saiyanCutsceneVideo" class="saiyan-cutscene-video" playsinline preload="auto" muted>
+      <source src="assets/saiyan.mp4" type="video/mp4">
+    </video>
+    <div class="saiyan-cutscene-flash" id="saiyanCutsceneFlash"></div>
+    <button type="button" class="saiyan-cutscene-skip" id="saiyanCutsceneSkip" aria-label="Skip Saiyan Cutscene">Skip ✕</button>
+  </div>
+
+  <!-- =========================================================================
        Full-Screen Dragon Ball Collection Animation Overlay
        ========================================================================= -->
   <div id="dragonBallCollectOverlay" class="db-collect-overlay" aria-hidden="true">
@@ -775,32 +764,72 @@
   </div>
 
   <!-- =========================================================================
-       Shenron Wish Modal Dialog
+       Cinematic Realistic Shenron Summon & Simple Wish Experience
        ========================================================================= -->
-  <div class="modal-backdrop" id="shenronModal" onclick="if(event.target===this) closeShenronModal()">
-    <div class="modal-window" style="text-align: center; border-color: #10B981; box-shadow: 10px 10px 0px #065F46;">
-      <button type="button" class="modal-close-btn" onclick="closeShenronModal()" aria-label="Close modal">✕</button>
-      <div style="font-size: 3.5rem; margin-bottom: 0.5rem; animation: pulse-bounce 2s infinite;">🐉 ✨</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #059669; margin-bottom: 0.5rem;">SHENRON HAS BEEN SUMMONED!
-      </h2>
-      <p style="font-size: 1.15rem; color: #334155; margin-bottom: 1.5rem; font-weight: 700;">
-        "State your wish! You have collected all 7 Dragon Balls across Subodh's portfolio!"
-      </p>
-      <div style="display: flex; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap;">
-        <span class="shenron-star-ball collected" data-shenron-ball="1"></span>
-        <span class="shenron-star-ball collected" data-shenron-ball="2"></span>
-        <span class="shenron-star-ball collected" data-shenron-ball="3"></span>
-        <span class="shenron-star-ball collected" data-shenron-ball="4"></span>
-        <span class="shenron-star-ball collected" data-shenron-ball="5"></span>
-        <span class="shenron-star-ball collected" data-shenron-ball="6"></span>
-        <span class="shenron-star-ball collected" data-shenron-ball="7"></span>
+  <div id="shenronModal" class="shenron-cinematic" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Shenron Summoning Sequence">
+    <!-- Dark Sky & Dynamic Lightning Storm Canvas -->
+    <canvas id="shenronLightningCanvas" class="shenron-storm-canvas"></canvas>
+    
+    <!-- Atmospheric Storm Sky & Ground Ki Glow -->
+    <div class="shenron-sky-overlay"></div>
+    <div class="shenron-ground-glow"></div>
+
+    <!-- Dismiss Button -->
+    <button type="button" class="shenron-cinematic-close" onclick="closeShenronModal()" aria-label="Close Shenron Summon">✕</button>
+
+    <!-- Stage 1 & 2: Dragon Emerging from the 7 Dragon Balls Cluster -->
+    <div class="shenron-emergence-stage" id="shenronEmergenceStage">
+      <!-- Golden Ki Beam & Swirling Energy Tornado rising from the balls -->
+      <div class="shenron-vortex-beam" id="shenronVortexBeam">
+        <div class="vortex-core"></div>
+        <div class="vortex-spiral-1"></div>
+        <div class="vortex-spiral-2"></div>
+        <div class="vortex-particles"></div>
       </div>
-      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <a href="#contact" class="btn btn-primary" onclick="closeShenronModal()">
-          <span>Wish: Hire / Connect with Subodh! 🚀</span>
-        </a>
-        <button type="button" class="btn btn-tertiary trigger-confetti" onclick="superSaiyanGodBlast()">
-          <span>💥 Kamehameha Blast!</span>
+
+      <!-- Shenron Dragon Art: Emerges, uncoils and ascends directly from the balls below -->
+      <div class="shenron-dragon-wrapper" id="shenronDragonWrapper">
+        <img src="assets/shenron_summon.jpg" alt="Eternal Dragon Shenron Emerging from Dragon Balls" class="shenron-dragon-img" id="shenronDragonImg" />
+        <div class="shenron-dragon-aura"></div>
+      </div>
+
+      <!-- The 7 Real Dragon Balls at the base where the Dragon emerges -->
+      <div class="shenron-altar-balls" id="shenronAltarBalls">
+        <div class="altar-ground-blast"></div>
+        <div class="altar-balls-cluster">
+          <span class="shenron-star-ball collected" data-shenron-ball="1"></span>
+          <span class="shenron-star-ball collected" data-shenron-ball="2"></span>
+          <span class="shenron-star-ball collected" data-shenron-ball="3"></span>
+          <span class="shenron-star-ball collected" data-shenron-ball="4"></span>
+          <span class="shenron-star-ball collected" data-shenron-ball="5"></span>
+          <span class="shenron-star-ball collected" data-shenron-ball="6"></span>
+          <span class="shenron-star-ball collected" data-shenron-ball="7"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 3: Simple, Elegant Wish Grant Screen -->
+    <div class="shenron-simple-wish-panel" id="shenronDecreePanel">
+      <div class="shenron-wish-speech">
+        <span class="shenron-speech-avatar">🐉</span>
+        <div class="shenron-speech-text">
+          <div class="shenron-title-tag">ETERNAL DRAGON SHENRON</div>
+          <p class="shenron-dialogue-line">"I am the Eternal Dragon. Speak your wish."</p>
+        </div>
+      </div>
+
+      <div class="shenron-simple-actions">
+        <button type="button" class="btn btn-primary shenron-wish-btn" onclick="grantShenronWish('hire')">
+          <span>💼 Hire / Connect with Subodh 🚀</span>
+        </button>
+        <button type="button" class="btn btn-secondary shenron-wish-btn" onclick="grantShenronWish('saiyan')">
+          <span>⚡ Super Saiyan Mode 🔥</span>
+        </button>
+        <button type="button" class="btn btn-tertiary shenron-wish-btn" onclick="grantShenronWish('blast')">
+          <span>💥 Dragon Blast</span>
+        </button>
+        <button type="button" class="btn btn-outline shenron-wish-btn shenron-scatter-btn" onclick="scatterDragonBallsAgain()" title="Scatter balls to hunt again">
+          <span>🔄 Scatter Balls</span>
         </button>
       </div>
     </div>
@@ -849,8 +878,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260828_rose8"></script>
-  <script src="js/main.js?v=20260828_rose8"></script>
+  <script src="js/data.js?v=20260831_db4"></script>
+  <script src="js/main.js?v=20260831_db4"></script>
 </body>
 
 </html>

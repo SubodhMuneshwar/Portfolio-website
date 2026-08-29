@@ -15,30 +15,30 @@
   --border: #1E293B;            /* Chunky 2.5px dark border */
   --border-light: #E2E8F0;      /* Light border for inner dividers */
 
-  /* Goku Black Rosé — Mystical Rose Palette (matches intro final burst) */
-  --accent: #FF2E97;            /* Rosé Pink — primary (Goku Black hair/aura) */
+  /* Refined Rosé + Space Grotesk — balanced indigo/amber (better harmony with geometric headings) */
+  --accent: #FF2E97;            /* Rosé Pink — primary (kept) */
   --accent-fg: #FFFFFF;
   --accent-hover: #E0116B;
   
-  --secondary: #7209B7;         /* Rosé Violet — deep aura */
+  --secondary: #4F46E5;         /* Modern Indigo — cleaner complement to Rosé + Space Grotesk */
   --secondary-fg: #FFFFFF;
-  --secondary-hover: #5A0891;
+  --secondary-hover: #4338CA;
 
-  --tertiary: #FFB3C6;          /* Soft Rosé Petal — warm highlight */
-  --tertiary-fg: #4A0A1F;
-  --tertiary-hover: #FF8FAB;
+  --tertiary: #FDE68A;          /* Warm Amber — softer highlight, pairs with Inter body */
+  --tertiary-fg: #1E293B;
+  --tertiary-hover: #FCD34D;
 
-  --quaternary: #34D399;        /* Emerald — kept for balance (stats/accents) */
-  --quaternary-fg: #1E293B;
-  --quaternary-hover: #10B981;
+  --quaternary: #0EA5E9;        /* Sky Tech — pairs with Inter/Space Grotesk */
+  --quaternary-fg: #FFFFFF;
+  --quaternary-hover: #0284C7;
 
-  --cyan-pop: #B5179E;          /* Rosé Magenta — replaces sky blue */
+  --cyan-pop: #06B6D4;          /* Cyan — tech accent */
   --rose-void: #070510;
   --rose-glow: rgba(255,46,151,0.22);
 
-  /* Typography */
-  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography — Space Grotesk (headings/labels) + Inter (body) — user choice */
+  --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 
   /* Type Scale (Major Third - 1.25) */
@@ -88,31 +88,31 @@
    Dark stormy green-black sky, crackling electric lightning, and Super Saiyan Golden Ki
    ========================================================================== */
 body.saiyan-mode {
-  --bg: #0A1410;                /* Dark Cataclysmic Namek Sky */
-  --fg: #F8FAFC;                /* High contrast bright text */
-  --muted: #13241D;             /* Dark Namek rock */
+  --bg: #060E0A;                /* Deep Obsidian Namek Base */
+  --fg: #F8FAFC;                /* Ultra-crisp high contrast text */
+  --muted: #0D1A14;             /* Sleek dark surface */
   --muted-fg: #94A3B8;          /* Slate 400 */
-  --card: #0F1E17;              /* Deep Namek Obsidian Card */
-  --card-alt: #162C22;          /* Fissure stone */
-  --input: #13261E;             /* Dark input */
+  --card: #0A1611;              /* Rich Obsidian Card */
+  --card-alt: #10241B;          /* Elevated surface */
+  --input: #0D1C15;             /* Input background */
   --border: #F59E0B;            /* Glowing Golden Ki border */
-  --border-light: #1E3A2D;      /* Muted Namek divider */
+  --border-light: #163326;      /* Subtle dark border */
 
   /* Saiyan Ki & Namek Lightning Colors */
   --accent: #FBBF24;            /* Super Saiyan Golden Ki */
-  --accent-fg: #0A1410;         /* Dark text on golden buttons */
+  --accent-fg: #060E0A;         /* Dark text on golden buttons */
   --accent-hover: #F59E0B;
   
-  --secondary: #EF4444;         /* Goku Gi Crimson / Magma core */
+  --secondary: #10B981;         /* Emerald Dragon Aura */
   --secondary-fg: #FFFFFF;
-  --secondary-hover: #DC2626;
+  --secondary-hover: #059669;
 
   --tertiary: #FDE047;          /* Pure SSJ Golden Light */
-  --tertiary-fg: #0A1410;
+  --tertiary-fg: #060E0A;
   --tertiary-hover: #FBBF24;
 
   --quaternary: #38BDF8;        /* Super Saiyan Electric Blue / Cyan Lightning */
-  --quaternary-fg: #0A1410;
+  --quaternary-fg: #060E0A;
   --quaternary-hover: #0EA5E9;
 
   --shadow-color: #000000;
@@ -121,11 +121,15 @@ body.saiyan-mode {
   --shadow-lg: 6px 6px 0px 0px #F59E0B;
   --shadow-xl: 8px 8px 0px 0px #F59E0B;
 
-  background-color: #0A1410;
-  background-image: radial-gradient(#163024 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+  background-color: #060E0A;
+  background-image: 
+    radial-gradient(ellipse at 15% 10%, rgba(16, 185, 129, 0.09) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
+    radial-gradient(#142A20 1.5px, transparent 1.5px);
+  background-size: 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed, fixed, scroll;
   color: #F8FAFC;
-  transition: background-color 0.8s ease, color 0.5s ease;
+  transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
 }
 
 /* Screen Earthquake Rumble on Power-Up */
