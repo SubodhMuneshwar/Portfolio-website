@@ -26,7 +26,42 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initDbzJokePlaceholders();
   initHeroRotatingWord();
+  initPhotoRevealLens();
 });
+
+function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, now);
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + duration);
+  } catch(e) {}
+}
+
+/* --- 1-Click Copy Contact Info --- */
+window.copyContactEmail = function() {
+  const email = 'muneshwarsubodh1@gmail.com';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(email).then(() => {
+      showToast('📋 Copied email (muneshwarsubodh1@gmail.com) to clipboard!');
+      playWebAudioTone(587, 'triangle', 0.12, 0.1);
+    }).catch(() => {
+      prompt('Copy Subodh\'s email:', email);
+    });
+  } else {
+    prompt('Copy Subodh\'s email:', email);
+  }
+};
 
 // Escape key to close modal
 function initKeyboardShortcuts() {
@@ -1059,66 +1094,35 @@ function renderDragonBallSVGs() {
       innerContent = buildStars(LAYOUTS[rnd], rndR);
     }
 
-    // ── TRUE ANIME ORB ──────────────────────────────────────────────────
-    // Toriyama's palette is a single saturated translucent ORANGE (#FF7E00),
-    // not amber/yellow. Highlights are one soft meniscus + one crisp specular,
-    // not three stacked gradients. Deep rim shadow gives the sphere its volume.
+    // ── UNIFIED SPHERE SHELL ──────────────────────────────────────────
+    // Now identical to the brand header orb (index.html:82) — same 3
+    // radial gradients, same gloss ellipse, same rim & stroke.
+    // Only the stars (innerContent / LAYOUTS) remain dynamic.
     return `
       <svg viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none;" aria-hidden="true">
         <defs>
-          <!-- ① Core body: warm pale center → vivid orange mid → deep burnt edge -->
-          <radialGradient id="db-body-${uid}" cx="32%" cy="28%" r="72%">
-            <stop offset="0%"   stop-color="#FFF2C2" />
-            <stop offset="18%"  stop-color="#FFB84D" />
-            <stop offset="42%"  stop-color="#FF7E00" />
-            <stop offset="68%"  stop-color="#EA580C" />
-            <stop offset="88%"  stop-color="#C2410C" />
-            <stop offset="100%" stop-color="#7C2D12" />
+          <radialGradient id="db-body-${uid}" cx="34%" cy="28%" r="78%">
+            <stop offset="0%" stop-color="#FFF3C4" />
+            <stop offset="26%" stop-color="#FFD54A" />
+            <stop offset="62%" stop-color="#FFA51F" />
+            <stop offset="100%" stop-color="#C2610A" />
           </radialGradient>
-
-          <!-- ② Single anime meniscus highlight — upper-left glass reflection -->
-          <radialGradient id="db-hi-${uid}" cx="38%" cy="30%" r="48%">
-            <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.92" />
-            <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.38" />
+          <radialGradient id="db-gloss-${uid}" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
             <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
           </radialGradient>
-
-          <!-- ③ Bottom warm bounce (subtle — not the old heavy rim) -->
-          <radialGradient id="db-bounce-${uid}" cx="50%" cy="88%" r="55%">
-            <stop offset="0%"  stop-color="#FF8C42" stop-opacity="0.55" />
-            <stop offset="100%" stop-color="#7C2D12" stop-opacity="0" />
+          <radialGradient id="db-rim-${uid}" cx="50%" cy="82%" r="52%">
+            <stop offset="0%" stop-color="#FF8A3D" stop-opacity="0.75" />
+            <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0" />
           </radialGradient>
-
-          <filter id="db-star-shadow-${uid}" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0.7" dy="1.0" stdDeviation="0.9" flood-color="#3A0A00" flood-opacity="0.50" />
-          </filter>
-
-          <clipPath id="db-clip-${uid}">
-            <circle cx="50" cy="50" r="46.2" />
-          </clipPath>
         </defs>
-
-        <!-- Outer shell with hairline burnt-orange edge -->
-        <circle cx="50" cy="50" r="46.4" fill="url(#db-body-${uid})" stroke="#7C2D12" stroke-width="1.6" />
-
-        <g clip-path="url(#db-clip-${uid})">
-          <!-- Warm bounce at bottom -->
-          <circle cx="50" cy="50" r="46.4" fill="url(#db-bounce-${uid})" />
-
-          <!-- Stars sit BEHIND the glass — slight translucency -->
-          <g filter="url(#db-star-shadow-${uid})" opacity="0.98">
-            ${innerContent}
-          </g>
-
-          <!-- Single clean anime highlight — curved meniscus -->
-          <ellipse cx="31.5" cy="26.5" rx="15.5" ry="7.8" fill="url(#db-hi-${uid})" transform="rotate(-22 31.5 26.5)" opacity="0.95" />
-
-          <!-- Crisp pinpoint specular (the anime "sparkle") -->
-          <ellipse cx="27.5" cy="20.2" rx="3.2" ry="2.0" fill="#FFFFFF" opacity="0.96" transform="rotate(-18 27.5 20.2)" />
+        <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" />
+        <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" />
+        <g opacity="0.98">
+          ${innerContent}
         </g>
-
-        <!-- Fine outer glass edge sheen — hairline white, not thick 1.8px -->
-        <circle cx="50" cy="50" r="46.0" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="0.9" />
+        <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#db-gloss-${uid})" transform="rotate(-28 33 27)" />
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" />
       </svg>
     `;
   };
@@ -2029,7 +2033,13 @@ function initPageIntroAnimation() {
   const overlay = document.getElementById('introOverlay');
   const video = document.getElementById('introVideo');
 
-  if (!overlay || !video) return;
+  if (!overlay || !video) {
+    // Intro removed — ensure landing is immediately visible (no veil lock)
+    document.documentElement.classList.remove('page-intro-running');
+    document.body.classList.remove('page-intro-running');
+    document.body.classList.add('page-intro-revealed');
+    return;
+  }
 
   // Add intro-running class to html & body for full-screen lock
   document.documentElement.classList.add('page-intro-running');
@@ -2420,6 +2430,42 @@ function initHeroRotatingWord() {
       setTimeout(() => el.classList.remove('is-entering'), 520);
     }, 320);
   }, 1800);
+}
+
+/* ── Cursor-following face-aligned photo reveal (light: rose2.jpg, dark: goku.webp) ── */
+function initPhotoRevealLens() {
+  const frame = document.getElementById('heroPhotoFrame');
+  if (!frame) return;
+  const reveal = frame.querySelector('.hero-photo-reveal');
+  if (!reveal) return;
+  if (window.matchMedia('(hover: none)').matches || window.matchMedia('(pointer: coarse)').matches) return;
+  // Preload both reveal images for instant lens
+  try { new Image().src = 'assets/rose2.jpg'; new Image().src = 'assets/goku.webp'; } catch(e) {}
+  let rafId = null;
+  let px = 0, py = 0;
+  function apply() {
+    rafId = null;
+    reveal.style.setProperty('--rx', px + 'px');
+    reveal.style.setProperty('--ry', py + 'px');
+  }
+  frame.addEventListener('mousemove', (e) => {
+    const r = frame.getBoundingClientRect();
+    px = e.clientX - r.left;
+    py = e.clientY - r.top;
+    px = Math.max(0, Math.min(px, r.width));
+    py = Math.max(0, Math.min(py, r.height));
+    if (rafId === null) rafId = requestAnimationFrame(apply);
+  });
+  frame.addEventListener('mouseenter', (e) => {
+    const r = frame.getBoundingClientRect();
+    px = e.clientX - r.left;
+    py = e.clientY - r.top;
+    reveal.style.setProperty('--rx', px + 'px');
+    reveal.style.setProperty('--ry', py + 'px');
+  });
+  frame.addEventListener('mouseleave', () => {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  });
 }
 
 

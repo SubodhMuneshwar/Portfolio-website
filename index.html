@@ -43,30 +43,6 @@
 <body>
   <!-- Fullscreen Planet Namek Super Saiyan Lightning Storm Canvas -->
   <canvas id="lightningOverlay"></canvas>
-
-  <!-- =========================================================================
-       Cinematic Super Saiyan Rosé Goku Black Start Animation Overlay
-       ========================================================================= -->
-  <div id="introOverlay" class="intro-overlay" aria-label="Intro Animation" role="dialog" aria-modal="true">
-    <div class="intro-video-wrapper">
-      <video id="introVideo" class="intro-video" autoplay playsinline webkit-playsinline x5-playsinline preload="auto" muted>
-        <source src="assets/new_intro.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-      </video>
-    </div>
-
-    <!-- Divine Ki Energy Burst Flash Backdrop for Seamless Transition -->
-    <div class="intro-flash" id="introFlash"></div>
-    <!-- Expanding Rosé Energy Rings — ripple outward from burst center -->
-    <div class="intro-rose-rings" id="introRoseRings" aria-hidden="true">
-      <span class="rose-ring ring-1"></span>
-      <span class="rose-ring ring-2"></span>
-      <span class="rose-ring ring-3"></span>
-    </div>
-    <!-- Drifting Rosé petals / Ki sparks bridging video → landing -->
-    <div class="intro-rose-particles" id="introRoseParticles" aria-hidden="true"></div>
-  </div>
-
   <!-- Accessible Skip to Main Content Link -->
   <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
@@ -168,6 +144,10 @@
                 <span>Explore Featured Work</span>
                 <div class="btn-icon-circle"><i data-lucide="arrow-down" style="width: 14px; height: 14px;"></i></div>
               </a>
+              <button type="button" class="btn btn-secondary copy-email-btn" onclick="copyContactEmail()" title="Copy Email to Clipboard">
+                <i data-lucide="copy" style="width: 15px; height: 15px;"></i>
+                <span>Copy Email</span>
+              </button>
               <a href="https://github.com/SubodhMuneshwar" target="_blank" rel="noopener noreferrer" class="btn btn-outline" title="GitHub Profile">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -194,33 +174,48 @@
 
           <div class="hero-visual">
             <div class="hero-visual-wrapper">
-              <!-- Subodh's Real Profile Photo in Playful Geometric Sticker Frame -->
-              <div class="hero-photo-frame">
-                <img src="assets/subodh.jpg" alt="Subodh Uttam Muneshwar" class="hero-photo-img" fetchpriority="high" width="320" height="320" />
-              </div>
+              <!-- Ambient Dual-Mode Ki Aura Glow Behind Photo -->
+              <div class="hero-ambient-aura"></div>
 
-              <!-- Floating Sticker Badge 1: CGPI -->
-              <div class="hero-floating-pill pill-top-right">
-                <div class="pill-icon-box bg-pink">⭐</div>
-                <div>
-                  <div class="pill-title text-white">9.14 CGPI</div>
-                  <div class="pill-subtitle">B.E. Comp Engg</div>
+              <!-- High-Tech / Saiyan HUD Card Frame -->
+              <div class="hero-hud-frame">
+                <span class="hud-corner hud-top-left"></span>
+                <span class="hud-corner hud-top-right"></span>
+                <span class="hud-corner hud-bottom-left"></span>
+                <span class="hud-corner hud-bottom-right"></span>
+
+                <!-- Top Telemetry Decal Bar -->
+                <div class="hero-card-header-bar">
+                  <div class="hero-card-mode-tag">
+                    <span class="hero-mode-dot"></span>
+                    <span class="hero-mode-text-light">CAPSULE CORP · DEV-01</span>
+                    <span class="hero-mode-text-dark">⚡ SAIYAN MODE · OVER 9000</span>
+                  </div>
+                  <div class="hero-card-scouter-readout">PWR: 9.14</div>
+                </div>
+
+                <!-- Sleek Portrait Frame — premium refined with cursor reveal -->
+                <div class="hero-photo-frame" id="heroPhotoFrame">
+                  <img src="assets/subodh.jpg" alt="Subodh Uttam Muneshwar" class="hero-photo-img" fetchpriority="high" width="340" height="340" />
+                  <div class="hero-photo-shimmer"></div>
+                  <div class="hero-photo-vignette" aria-hidden="true"></div>
+                  <!-- Face-aligned transitioning reveal -->
+                  <div class="hero-photo-reveal" aria-hidden="true">
+                    <div class="hero-reveal-layer hero-reveal-rose"></div>
+                    <div class="hero-reveal-layer hero-reveal-goku"></div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Floating Sticker Badge 2: Tech -->
-              <div class="hero-floating-pill pill-bottom-left">
-                <div class="pill-icon-box bg-mint">⚡</div>
-                <div>
-                  <div class="pill-title text-dark">Python • C#</div>
-                  <div class="pill-subtitle">Backend & AI/ML</div>
-                </div>
+              <!-- Clean Floating Status Telemetry Badge -->
+              <div class="hero-clean-badge">
+                <span class="status-pulse-dot"></span>
+                <span class="hero-clean-badge-text">
+                  <strong class="badge-text-light">⭐ 9.14 CGPI</strong>
+                  <strong class="badge-text-dark">⚡ 9.14 CGPI</strong>
+                  <span>· Open to Full-Time Roles</span>
+                </span>
               </div>
-
-              <!-- Background Memphis shapes & Floating Tempting Decoy Ball -->
-              <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: -16px; left: -14px;" data-fake-ball="emoji" title="✨ Rare Saiyan Orb spotted?! Click me!"></span>
-              <div class="floating-shape shape-star">✨</div>
-              <div class="floating-shape shape-circle-yellow"></div>
             </div>
           </div>
         </div>

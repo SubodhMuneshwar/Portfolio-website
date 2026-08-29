@@ -701,6 +701,13 @@ body.saiyan-mode .nav-link.active {
   font-weight: 800;
 }
 
+.copy-email-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+}
+
 .nav-btn-connect {
   display: inline-flex;
   align-items: center;
@@ -951,6 +958,7 @@ body.saiyan-mode .hero-description {
   background-color: var(--tertiary);
 }
 
+/* --- Hero Visual: Capsule Corp / Super Saiyan HUD Portrait Frame --- */
 .hero-visual {
   position: relative;
   display: flex;
@@ -961,27 +969,225 @@ body.saiyan-mode .hero-description {
 .hero-visual-wrapper {
   position: relative;
   width: 100%;
-  max-width: 440px;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Ambient Radial Ki Aura — premium soft glow, more refined */
+.hero-ambient-aura {
+  position: absolute;
+  inset: -28px;
+  background: radial-gradient(circle at center, rgba(79, 70, 229, 0.18) 0%, rgba(255, 46, 151, 0.10) 38%, rgba(6, 182, 212, 0.06) 62%, transparent 74%);
+  filter: blur(32px);
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: hero-aura-breathe 7s ease-in-out infinite alternate;
+}
+
+@keyframes hero-aura-breathe {
+  0% { transform: scale(0.96); opacity: 0.75; }
+  100% { transform: scale(1.04); opacity: 1; }
+}
+
+body.saiyan-mode .hero-ambient-aura {
+  background: radial-gradient(circle at center, rgba(245, 158, 11, 0.28) 0%, rgba(16, 185, 129, 0.20) 48%, rgba(56, 189, 248, 0.10) 66%, transparent 74%) !important;
+  filter: blur(38px);
+}
+
+/* HUD Card Frame — premium refined, cleaner, more professional */
+.hero-hud-frame {
+  position: relative;
+  width: 100%;
+  padding: 16px 16px 20px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.94) 100%);
+  border: 1.5px solid rgba(15, 23, 42, 0.07);
+  box-shadow:
+    0 20px 44px -16px rgba(15, 23, 42, 0.16),
+    0 6px 18px -6px rgba(79, 70, 229, 0.07),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 2;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.hero-hud-frame:hover {
+  transform: translateY(-4px);
+  border-color: rgba(79, 70, 229, 0.16);
+  box-shadow:
+    0 28px 56px -14px rgba(15, 23, 42, 0.20),
+    0 10px 28px -8px rgba(79, 70, 229, 0.12),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+body.saiyan-mode .hero-hud-frame {
+  background: linear-gradient(180deg, rgba(10, 22, 16, 0.96) 0%, rgba(6, 14, 10, 0.92) 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.38) !important;
+  box-shadow:
+    0 22px 56px -12px rgba(0, 0, 0, 0.88),
+    0 0 22px rgba(245, 158, 11, 0.22),
+    0 0 42px rgba(16, 185, 129, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+body.saiyan-mode .hero-hud-frame:hover {
+  border-color: rgba(245, 158, 11, 0.62) !important;
+  box-shadow:
+    0 30px 68px -12px rgba(0, 0, 0, 0.96),
+    0 0 32px rgba(245, 158, 11, 0.42),
+    0 0 60px rgba(16, 185, 129, 0.26) !important;
+}
+
+/* HUD High-Tech Corner Brackets — refined minimal */
+.hud-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(79, 70, 229, 0.32);
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.hud-top-left {
+  top: 10px;
+  left: 10px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+  border-top-left-radius: 10px;
+}
+
+.hud-top-right {
+  top: 10px;
+  right: 10px;
+  border-top: 1.5px solid;
+  border-right: 1.5px solid;
+  border-top-right-radius: 10px;
+}
+
+.hud-bottom-left {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 1.5px solid;
+  border-left: 1.5px solid;
+  border-bottom-left-radius: 10px;
+}
+
+.hud-bottom-right {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+  border-bottom-right-radius: 10px;
+}
+
+.hero-hud-frame:hover .hud-corner {
+  border-color: rgba(79, 70, 229, 0.50);
+}
+
+body.saiyan-mode .hud-corner {
+  border-color: rgba(245, 158, 11, 0.62) !important;
+}
+
+body.saiyan-mode .hero-hud-frame:hover .hud-corner {
+  border-color: rgba(245, 158, 11, 0.85) !important;
+}
+
+/* Top Telemetry Header Bar */
+.hero-card-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.hero-card-mode-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted-fg);
+}
+
+.hero-mode-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3B82F6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+}
+
+body.saiyan-mode .hero-mode-dot {
+  background: #F59E0B !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.9) !important;
+}
+
+.hero-mode-text-light {
+  display: inline;
+  color: #475569;
+}
+
+.hero-mode-text-dark {
+  display: none;
+}
+
+body.saiyan-mode .hero-mode-text-light {
+  display: none;
+}
+
+body.saiyan-mode .hero-mode-text-dark {
+  display: inline;
+  color: #FEF08A !important;
+}
+
+.hero-card-scouter-readout {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(79, 70, 229, 0.08);
+  color: #4F46E5;
+  font-weight: 800;
+}
+
+body.saiyan-mode .hero-card-scouter-readout {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34D399 !important;
+}
+
+/* Inner Portrait Container — premium refined */
 .hero-photo-frame {
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-width: 380px;
-  margin: 0 auto;
-  border-radius: 40px 40px 40px 12px;
-  background-color: var(--accent);
-  border: 3.5px solid var(--border);
-  box-shadow: 8px 8px 0px 0px var(--border);
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
-  transition: var(--transition-bounce);
-  animation: float-gentle 5s ease-in-out infinite;
+  background: #0F172A;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 10px 28px rgba(15, 23, 42, 0.10);
+  isolation: isolate;
 }
 
-.hero-photo-frame:hover {
-  transform: translate(-3px, -3px) rotate(-1deg);
-  box-shadow: 12px 12px 0px 0px var(--secondary);
+.hero-photo-frame:hover .hero-photo-shimmer {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.hero-photo-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.28) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 3;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-photo-img {
@@ -990,80 +1196,166 @@ body.saiyan-mode .hero-description {
   object-fit: cover;
   object-position: top center;
   display: block;
+  border-radius: 20px;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
 }
 
-/* Floating Sticker Pills on Hero Photo */
-.hero-floating-pill {
+/* Removed scale on hover to keep face alignment perfect and eliminate left-edge seam line */
+.hero-hud-frame:hover .hero-photo-img {
+  transform: none;
+}
+
+.hero-photo-vignette {
   position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.55rem 1rem;
-  border-radius: var(--radius-full);
-  border: var(--border-width) solid var(--border);
-  box-shadow: var(--shadow-md);
-  background-color: var(--card);
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 62%, rgba(15, 23, 42, 0.07) 100%);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 20px;
+}
+
+body.saiyan-mode .hero-photo-frame {
+  border-color: rgba(245, 158, 11, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 12px 32px rgba(0,0,0,0.55);
+}
+
+body.saiyan-mode .hero-photo-vignette {
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.32) 100%);
+}
+
+/* ── Face-aligned smooth circular reveal (no hard ring) ──────────── */
+.hero-photo-reveal {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  z-index: 4;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.hero-photo-frame:hover .hero-photo-reveal {
+  opacity: 1;
+}
+
+.hero-reveal-layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  opacity: 0;
+  /* Extra-extra smooth feathered circular mask — 112px outer, 18px solid core, 18→112px ultra-buttery dissolve */
+  -webkit-mask-image: radial-gradient(circle 112px at var(--rx, 50%) var(--ry, 50%), black 18px, rgba(0,0,0,0.96) 36px, rgba(0,0,0,0.84) 48px, rgba(0,0,0,0.62) 60px, rgba(0,0,0,0.38) 72px, rgba(0,0,0,0.16) 84px, rgba(0,0,0,0.04) 96px, transparent 112px);
+  mask-image: radial-gradient(circle 112px at var(--rx, 50%) var(--ry, 50%), black 18px, rgba(0,0,0,0.96) 36px, rgba(0,0,0,0.84) 48px, rgba(0,0,0,0.62) 60px, rgba(0,0,0,0.38) 72px, rgba(0,0,0,0.16) 84px, rgba(0,0,0,0.04) 96px, transparent 112px);
+  /* Fallback for browsers without mask support */
+  clip-path: circle(92px at var(--rx, 50%) var(--ry, 50%));
+  -webkit-clip-path: circle(92px at var(--rx, 50%) var(--ry, 50%));
+  will-change: mask-image, clip-path;
+  transition: opacity 0.28s cubic-bezier(0.16,1,0.3,1);
+  border-radius: 20px;
+  filter: saturate(1.04) contrast(1.02);
+}
+
+/* Light mode → Rose — face-aligned to Subodh (50% x, ~36% y in container) */
+.hero-reveal-rose {
+  background-image: url('../assets/rose2.jpg');
+  /* rose2.jpg 538×994 portrait ~0.541 aspect vs subodh 0.884: cover 1.848× height overflows 0.848×; 52% 77% aligns Rose eyes (55% src) with Subodh eyes (36% container) — completely aligned */
+  background-size: cover;
+  background-position: 52% 77%;
+}
+
+/* Dark mode → Goku — tall portrait, face aligned */
+.hero-reveal-goku {
+  background-image: url('../assets/goku.webp');
+  /* Goku 640×1137 portrait: cover 1.777×; 50% 76% shifts Goku eyes a bit more up */
+  background-size: cover;
+  background-position: 50% 76%;
+}
+
+/* Light: Rose, Dark: Goku — smooth, no hard ring */
+body:not(.saiyan-mode) .hero-photo-frame:hover .hero-reveal-rose { opacity: 1; }
+body.saiyan-mode .hero-photo-frame:hover .hero-reveal-goku { opacity: 1; }
+body.saiyan-mode .hero-photo-frame:hover .hero-reveal-rose { opacity: 0; }
+
+/* Disable on touch / coarse pointer */
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+  .hero-photo-reveal { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal-layer { transition: opacity 0.18s ease !important; }
+}
+
+/* Clean Telemetry Badge Below Card */
+.hero-clean-badge {
+  margin-top: -14px;
+  position: relative;
   z-index: 10;
-  transition: var(--transition-bounce);
-}
-
-.hero-floating-pill:hover {
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.pill-top-right {
-  top: 20px;
-  right: -10px;
-  background-color: var(--secondary);
-}
-
-.pill-bottom-left {
-  bottom: 25px;
-  left: -15px;
-  background-color: var(--card);
-}
-
-.pill-icon-box {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-
-.pill-icon-box.bg-pink {
-  background-color: #FFFFFF;
-}
-
-.pill-icon-box.bg-mint {
-  background-color: var(--quaternary);
-}
-
-.pill-title {
+  gap: 0.55rem;
+  padding: 0.46rem 1.2rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1.5px solid rgba(15, 23, 42, 0.08);
+  color: var(--fg);
   font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow:
+    0 12px 28px -4px rgba(15, 23, 42, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  white-space: nowrap;
+}
+
+.hero-clean-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px -4px rgba(15, 23, 42, 0.16);
+}
+
+.badge-text-light {
+  display: inline;
+  color: #0F172A;
   font-weight: 800;
-  font-size: var(--text-sm);
-  line-height: 1.1;
 }
 
-.pill-title.text-white {
-  color: #FFFFFF;
+.badge-text-dark {
+  display: none;
 }
 
-.pill-title.text-dark {
-  color: var(--fg);
+body.saiyan-mode .badge-text-light {
+  display: none;
 }
 
-.pill-subtitle {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.7rem;
-  color: var(--fg);
-  opacity: 0.9;
+body.saiyan-mode .badge-text-dark {
+  display: inline;
+  color: #FEF08A !important;
+  font-weight: 800;
+}
+
+.status-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+  animation: hero-status-ping 1.8s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes hero-status-ping {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.75; box-shadow: 0 0 14px rgba(34, 197, 94, 0.95); }
+}
+
+body.saiyan-mode .hero-clean-badge {
+  background: rgba(10, 20, 16, 0.92) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #E2E8F0 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65), 0 0 15px rgba(16, 185, 129, 0.2) !important;
 }
 
 /* Floating Memphis Shapes */
