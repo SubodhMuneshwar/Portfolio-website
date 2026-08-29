@@ -2949,9 +2949,10 @@ body.saiyan-mode .form-textarea:focus {
   -webkit-transform: translateZ(0);
   opacity: 1;
   visibility: visible;
-  transition: opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.05s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
   user-select: none;
+  will-change: opacity;
 }
 
 .intro-overlay.hidden {
@@ -2998,7 +2999,7 @@ body.saiyan-mode .form-textarea:focus {
   transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
 }
 
-/* Rosé divine burst — ULTRA VISIBLE: full-screen pink supernova (pink→magenta→violet→void) */
+/* Rosé divine burst — full-screen pink supernova */
 .intro-flash {
   position: absolute;
   inset: -20%;
@@ -3070,6 +3071,8 @@ body.saiyan-mode .form-textarea:focus {
 /* Transition active state — Rosé bloom: fast, fluid, hardware-accelerated */
 .intro-overlay.transitioning {
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .intro-overlay.transitioning .intro-rose-rings,
@@ -3077,9 +3080,9 @@ body.saiyan-mode .form-textarea:focus {
   opacity: 1;
 }
 
-.intro-overlay.transitioning .rose-ring.ring-1 { animation: rose-ring-expand 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.04s forwards; }
-.intro-overlay.transitioning .rose-ring.ring-2 { animation: rose-ring-expand 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.10s forwards; }
-.intro-overlay.transitioning .rose-ring.ring-3 { animation: rose-ring-expand 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.16s forwards; }
+.intro-overlay.transitioning .rose-ring.ring-1 { animation: rose-ring-expand 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.02s forwards; }
+.intro-overlay.transitioning .rose-ring.ring-2 { animation: rose-ring-expand 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards; }
+.intro-overlay.transitioning .rose-ring.ring-3 { animation: rose-ring-expand 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.14s forwards; }
 
 @keyframes rose-ring-expand {
   0%   { opacity: 0; transform: scale(0.25) translateZ(0); }
@@ -3087,7 +3090,7 @@ body.saiyan-mode .form-textarea:focus {
   100% { opacity: 0; transform: scale(3.6) translateZ(0); }
 }
 
-.intro-overlay.transitioning .rose-petal { animation: rose-petal-drift 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.intro-overlay.transitioning .rose-petal { animation: rose-petal-drift 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 @keyframes rose-petal-drift {
   0%   { opacity: 0; transform: translate3d(0, 0, 0) rotate(28deg) scale(0.6); }
@@ -3104,8 +3107,6 @@ body.saiyan-mode .form-textarea:focus {
   opacity: 1;
   transform: scale(1.25) translateZ(0);
 }
-
-
 
 /* Webpage Entrance Transition — Rosé veil bridges video ending to landing */
 html.page-intro-running,
@@ -3130,12 +3131,10 @@ body.page-intro-revealed main,
 body.page-intro-revealed .site-footer {
   visibility: visible !important;
   opacity: 1 !important;
-  transform: scale(1);
-  filter: blur(0px);
-  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s ease;
+  transition: opacity 0.45s ease;
 }
 
-/* Rosé landing veil — INTENSE: video's final aura floods hero then settles to strong lingering glow */
+/* Rosé landing veil — smooth hardware-accelerated ambient glow */
 body.page-intro-revealed .hero-section {
   position: relative;
 }
@@ -3143,121 +3142,73 @@ body.page-intro-revealed .hero-section {
 body.page-intro-revealed .hero-section::before {
   content: '';
   position: absolute;
-  inset: -60px -30px -30px -30px;
+  inset: -40px -20px -20px -20px;
   background:
-    radial-gradient(ellipse 78% 66% at 50% 12%, rgba(255,46,151,0.42) 0%, rgba(224,17,107,0.28) 26%, rgba(181,23,158,0.18) 44%, transparent 62%),
-    radial-gradient(ellipse 56% 48% at 82% 28%, rgba(114,9,183,0.32) 0%, transparent 60%),
-    radial-gradient(ellipse 46% 38% at 16% 46%, rgba(255,118,170,0.22) 0%, transparent 58%),
-    linear-gradient(180deg, rgba(26,10,40,0.22) 0%, rgba(255,46,151,0.06) 42%, transparent 78%);
+    radial-gradient(ellipse 75% 65% at 50% 10%, rgba(255,46,151,0.25) 0%, rgba(224,17,107,0.15) 30%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 85% 25%, rgba(114,9,183,0.18) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  animation: rose-hero-veil-settle 1.9s cubic-bezier(0.16, 1, 0.3, 1) 0.10s forwards;
+  animation: rose-hero-veil-settle 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
 }
 
 @keyframes rose-hero-veil-settle {
-  0%   { opacity: 1;    transform: scale(1.14); filter: blur(14px) saturate(1.45) brightness(1.18); }
-  40%  { opacity: 0.88; transform: scale(1.05); filter: blur(6px) saturate(1.22) brightness(1.08); }
-  100% { opacity: 0.78; transform: scale(1);    filter: blur(0px) saturate(1) brightness(1); }
+  0%   { opacity: 1; transform: scale(1.06) translateZ(0); }
+  100% { opacity: 0.65; transform: scale(1) translateZ(0); }
 }
 
-/* Rosé scythe energy streak — thin diagonal slash like Black's scythe, very visible */
-body.page-intro-revealed .hero-section::after {
-  content: '';
-  position: absolute;
-  top: 14%;
-  left: -8%;
-  width: 116%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,46,151,0) 8%, rgba(255,46,151,0.9) 28%, #FF2E97 50%, rgba(114,9,183,0.85) 72%, transparent 92%);
-  box-shadow: 0 0 18px rgba(255,46,151,0.7), 0 0 36px rgba(114,9,183,0.5);
-  opacity: 0;
-  transform: translateX(-6%) rotate(-7deg) scaleX(0.7);
-  z-index: 1;
-  pointer-events: none;
-  animation: rose-scythe-slash 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
-}
-
-@keyframes rose-scythe-slash {
-  0% { opacity: 0; transform: translateX(-12%) rotate(-7deg) scaleX(0.45); filter: blur(4px); }
-  45% { opacity: 1; transform: translateX(0%) rotate(-7deg) scaleX(1.08); filter: blur(0px); }
-  100% { opacity: 0.32; transform: translateX(0%) rotate(-7deg) scaleX(1); filter: blur(0.5px); }
-}
-
+/* Hero elements staggered kinetic rise (transform/opacity only for 60/120fps) */
 body.page-intro-revealed .hero-content,
 body.page-intro-revealed .hero-visual {
-  animation: rose-hero-content-rise 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rose-hero-content-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
 }
 
-body.page-intro-revealed .hero-visual { animation-delay: 0.10s; }
+body.page-intro-revealed .hero-visual { animation-delay: 0.08s; }
 
 @keyframes rose-hero-content-rise {
-  0% { opacity: 0; transform: translateY(28px) scale(0.97); filter: blur(10px) brightness(1.22) saturate(1.35); }
-  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1) saturate(1); }
+  0% { opacity: 0; transform: translate3d(0, 18px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-/* Header blooms with Rosé border glow — clearly tied to intro's palette */
+/* Header blooms smoothly into position */
 body.page-intro-revealed .site-header {
-  animation: rose-header-bloom 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
-  box-shadow: 0 2px 0 rgba(255,46,151,0.18), 0 8px 32px rgba(114,9,183,0.10);
-  border-bottom-color: rgba(255,46,151,0.22) !important;
-  transition: border-color 0.8s ease, box-shadow 0.8s ease;
+  animation: rose-header-bloom 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both;
+  will-change: transform, opacity;
 }
 
 @keyframes rose-header-bloom {
-  0% { opacity: 0; transform: translateY(-18px); filter: blur(12px); border-bottom-color: rgba(255,46,151,0.0); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  0% { opacity: 0; transform: translate3d(0, -12px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-/* Photo frame gets Rosé Ki halo during landing — unmissable */
+/* Photo frame kinetic entry */
 body.page-intro-revealed .hero-photo-frame {
-  animation: rose-photo-halo 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
-  box-shadow: 0 0 0 3px rgba(255,46,151,0.32), 0 0 32px rgba(255,46,151,0.45), 0 0 64px rgba(114,9,183,0.32), 8px 8px 0px var(--border) !important;
+  animation: rose-photo-halo 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  will-change: transform, box-shadow;
 }
 
 @keyframes rose-photo-halo {
-  0% { box-shadow: 0 0 0 0 rgba(255,46,151,0), 0 0 0 rgba(0,0,0,0), 8px 8px 0px var(--border); filter: brightness(1.25) saturate(1.4); }
-  55% { box-shadow: 0 0 0 4px rgba(255,46,151,0.42), 0 0 42px rgba(255,46,151,0.65), 0 0 78px rgba(114,9,183,0.42), 8px 8px 0px var(--border); }
-  100% { box-shadow: 0 0 0 3px rgba(255,46,151,0.22), 0 0 28px rgba(255,46,151,0.32), 0 0 48px rgba(114,9,183,0.20), 8px 8px 0px var(--border); }
+  0% { box-shadow: 0 0 0 0 rgba(255,46,151,0), 8px 8px 0px var(--border); }
+  50% { box-shadow: 0 0 0 4px rgba(255,46,151,0.35), 0 0 35px rgba(255,46,151,0.5), 8px 8px 0px var(--border); }
+  100% { box-shadow: 8px 8px 0px var(--border); }
 }
 
-/* Attractive staggered cascade — badge→title→desc→CTAs→pills bloom in sequence */
-body.page-intro-revealed .hero-badge   { animation: rose-el-rise 0.75s cubic-bezier(0.16,1,0.3,1) 0.38s both; }
-body.page-intro-revealed .hero-title   { animation: rose-el-rise 0.80s cubic-bezier(0.16,1,0.3,1) 0.46s both; }
-body.page-intro-revealed .hero-description { animation: rose-el-rise 0.75s cubic-bezier(0.16,1,0.3,1) 0.56s both; }
-body.page-intro-revealed .hero-ctas    { animation: rose-el-rise 0.70s cubic-bezier(0.16,1,0.3,1) 0.64s both; }
-body.page-intro-revealed .hero-pills   { animation: rose-el-rise 0.70s cubic-bezier(0.16,1,0.3,1) 0.72s both; }
+/* Staggered text & CTA kinetic cascades */
+body.page-intro-revealed .hero-badge   { animation: rose-el-rise 0.60s cubic-bezier(0.16,1,0.3,1) 0.15s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-title   { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.22s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-description { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.30s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-ctas    { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.36s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-pills   { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.42s both; will-change: transform, opacity; }
 
 @keyframes rose-el-rise {
-  0% { opacity: 0; transform: translateY(18px) scale(0.98); filter: blur(6px); }
-  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  0% { opacity: 0; transform: translate3d(0, 14px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-/* Diagonal Rosé light sweep across hero — like Black's scythe light trailing into landing */
-body.page-intro-revealed .hero-grid::after {
-  content: '';
-  position: absolute;
-  top: -20%;
-  left: -30%;
-  width: 42%;
-  height: 140%;
-  background: linear-gradient(112deg, transparent 42%, rgba(255,255,255,0.0) 46%, rgba(255,46,151,0.22) 49%, rgba(255,255,255,0.85) 50%, rgba(255,46,151,0.22) 51%, transparent 54%, transparent 100%);
-  filter: blur(1px);
-  opacity: 0;
-  transform: skewX(-14deg) translateX(-30%);
-  pointer-events: none;
-  z-index: 3;
-  animation: rose-hero-sweep 1.35s cubic-bezier(0.16,1,0.3,1) 0.85s forwards;
-}
-
-@keyframes rose-hero-sweep {
-  0%   { opacity: 0; transform: skewX(-14deg) translateX(-42%); }
-  22%  { opacity: 1; }
-  100% { opacity: 0; transform: skewX(-14deg) translateX(210%); }
-}
-
-/* Seamless veil: body background fades from Rosé void to paper through hero */
-body { transition: background-color 0.95s cubic-bezier(0.16,1,0.3,1); }
+/* Smooth veil: body background crossfade */
+body { transition: background-color 0.8s cubic-bezier(0.16,1,0.3,1); }
 
 /* Mobile tuning for Rosé veil — keep blend without overflow */
 @media (max-width: 768px) {
