@@ -1341,9 +1341,26 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
   const radarWidget = document.getElementById('dragonRadarWidget');
   const radarCount = document.getElementById('ballsFoundCount');
 
-  // Mark collected
+  // Mark collected and make it disappear from the page (puff + vanish)
   collectedBalls.add(ballNumber);
-  if (sourceBall) sourceBall.classList.add('collected');
+  if (sourceBall) {
+    sourceBall.classList.add('collected');
+    // Puff animation then hide — blends with site's playful poof
+    setTimeout(() => {
+      sourceBall.classList.add('ball-disappeared');
+      sourceBall.setAttribute('aria-hidden', 'true');
+      sourceBall.setAttribute('tabindex', '-1');
+      sourceBall.style.pointerEvents = 'none';
+    }, 380);
+    // After poof, remove from layout so it truly disappears from webpage
+    setTimeout(() => {
+      if (sourceBall.classList.contains('ball-disappeared')) {
+        sourceBall.style.display = 'none';
+        sourceBall.style.visibility = 'hidden';
+        sourceBall.style.opacity = '0';
+      }
+    }, 1050);
+  }
 
   // 1. Play magical chime and create sparkle burst at click point
   playDragonBallCollectChime();
@@ -2149,6 +2166,7 @@ window.scatterDragonBallsAgain = function() {
     ball.style.display = '';
     ball.style.visibility = '';
     ball.style.opacity = '';
+    ball.style.pointerEvents = '';
     ball.setAttribute('aria-hidden', 'false');
     ball.setAttribute('tabindex', '0');
   });
