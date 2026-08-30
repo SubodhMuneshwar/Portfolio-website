@@ -784,18 +784,16 @@ function initSaiyanMode() {
     }
   }
 
-  // Sync body with html anti-FOUC state without re-triggering animation
+  // Sync body with html anti-FOUC state without re-triggering animation — light is default
   if(document.documentElement.classList.contains('saiyan-mode')){
     document.body.classList.add('saiyan-mode');
     setSaiyanState(true,{silent:true,noPersist:true});
-  } else syncMeta(false);
-
-  // Follow OS only if user hasn't chosen
-  try{
-    const mql=window.matchMedia('(prefers-color-scheme: dark)');
-    const onOSChange=(e)=>{ if(localStorage.getItem('portfolio-theme')) return; setSaiyanState(e.matches,{silent:true}); };
-    if(mql.addEventListener) mql.addEventListener('change',onOSChange); else if(mql.addListener) mql.addListener(onOSChange);
-  }catch(e){}
+  } else {
+    // Ensure light mode is fully applied on first visit (no stored preference → light)
+    document.documentElement.classList.remove('saiyan-mode');
+    document.body.classList.remove('saiyan-mode');
+    syncMeta(false);
+  }
 
   saiyanBtn.addEventListener('click', () => {
     const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
@@ -1893,6 +1891,150 @@ function stopShenronLightningStorm() {
   }
 }
 
+/* ==========================================================================
+   Shenron Greenscreen Video — Chroma Key & Blend Engine
+   Uses canvas to remove pure green background (#00FF00 range) and blend
+   Shenron over the dark storm. Falls back to mix-blend-mode if canvas fails.
+   ========================================================================== */
+let shenronChromaRaf = null;
+let shenronVideoEl = null;
+let shenronCanvasEl = null;
+let shenronCanvasCtx = null;
+let shenronChromaActive = false;
+
+function initShenronVideoChroma() {
+  if (shenronVideoEl && shenronCanvasEl) return;
+  shenronVideoEl = document.getElementById('shenronVideo');
+  shenronCanvasEl = document.getElementById('shenronChromaCanvas');
+  if (!shenronVideoEl || !shenronCanvasEl) return;
+  try {
+    shenronCanvasCtx = shenronCanvasEl.getContext('2d', { willReadFrequently: true });
+  } catch (e) {
+    shenronCanvasCtx = shenronCanvasEl.getContext('2d');
+  }
+  // Ensure video is muted and playsinline for mobile autoplay
+  shenronVideoEl.muted = true;
+  shenronVideoEl.playsInline = true;
+  shenronVideoEl.preload = 'auto';
+  // Fallback: if video fails to load, show fallback image
+  shenronVideoEl.addEventListener('error', () => {
+    console.warn('Shenron video failed, using fallback image');
+    if (shenronCanvasEl) shenronCanvasEl.style.display = 'none';
+    const fallback = document.getElementById('shenronDragonImg');
+    if (fallback) fallback.style.opacity = '0.98';
+    shenronVideoEl.classList.add('fallback-visible');
+  });
+}
+
+function startShenronChromaLoop() {
+  initShenronVideoChroma();
+  if (!shenronVideoEl || !shenronCanvasEl || !shenronCanvasCtx) {
+    // Fallback to CSS blend mode
+    if (shenronVideoEl) {
+      shenronVideoEl.classList.add('fallback-visible');
+      shenronVideoEl.style.display = 'block';
+      shenronVideoEl.play().catch(() => {});
+    }
+    return;
+  }
+  shenronChromaActive = true;
+  // Size canvas to wrapper size for performance (downscale on mobile)
+  const wrapper = document.getElementById('shenronDragonWrapper');
+  const isMobile = window.innerWidth < 768;
+  const targetW = isMobile ? 640 : 960;
+  const targetH = isMobile ? 360 : 540;
+  shenronCanvasEl.width = targetW;
+  shenronCanvasEl.height = targetH;
+  // Ensure video is playing
+  shenronVideoEl.currentTime = 0;
+  const playPromise = shenronVideoEl.play();
+  if (playPromise) playPromise.catch(() => {
+    // Autoplay blocked, fallback to image
+    console.warn('Shenron video autoplay blocked');
+    shenronVideoEl.classList.add('fallback-visible');
+  });
+  // Start RAF loop
+  function renderChroma() {
+    if (!shenronChromaActive || !shenronVideoEl || shenronVideoEl.paused || shenronVideoEl.ended) {
+      if (shenronChromaActive && shenronVideoEl && !shenronVideoEl.ended) {
+        shenronChromaRaf = requestAnimationFrame(renderChroma);
+      }
+      return;
+    }
+    const cw = shenronCanvasEl.width;
+    const ch = shenronCanvasEl.height;
+    try {
+      shenronCanvasCtx.drawImage(shenronVideoEl, 0, 0, cw, ch);
+      const imageData = shenronCanvasCtx.getImageData(0, 0, cw, ch);
+      const data = imageData.data;
+      // Chroma key: remove greenscreen, preserve Shenron's desaturated scales
+      // Background is bright saturated green; Shenron's own green is darker desaturated (G~70-110, R~60-80)
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i+1], b = data[i+2];
+        // Two-tier detection: pure bright green vs. green-dominant spill
+        const isPureGreen = g > 140 && r < 110 && b < 110 && g > r + 40 && g > b + 40;
+        const isGreenDominant = g > 95 && g > r + 12 && g > b + 18;
+        const isGreenScreen = isPureGreen || isGreenDominant;
+        if (isGreenScreen) {
+          const diff = Math.min(g - r, g - b);
+          if (diff > 60 || isPureGreen) {
+            // Pure / strong green -> fully transparent
+            data[i+3] = 0;
+          } else if (diff > 18) {
+            // Fringe / spill (yellow aura mixed with green) -> mostly transparent + desaturate
+            const t = (diff - 18) / 42; // 0..1
+            data[i+3] = 255 * (0.22 + 0.08 * (1 - t)); // 22% to 8% opacity -> almost transparent
+            // Pull green toward neutral to kill spill
+            const avg = (r + b) * 0.5;
+            data[i] = r * 0.55 + avg * 0.45;
+            data[i+1] = g * 0.25 + avg * 0.75;
+            data[i+2] = b * 0.55 + avg * 0.45;
+          } else {
+            // Very weak green edge -> faint feather
+            data[i+3] = 255 * 0.35;
+            data[i+1] = data[i+1] * 0.6 + ((r + b) / 2) * 0.4;
+          }
+        }
+        // Also make near-black letterbox at bottom transparent-ish to blend with dark storm
+        // The video has black bars at bottom (0,0,0) - keep but blend, no need to remove
+      }
+      shenronCanvasCtx.putImageData(imageData, 0, 0);
+    } catch (e) {
+      // If getImageData fails due to CORS, fallback to CSS blend
+      console.warn('Chroma canvas failed, fallback to blend mode', e);
+      shenronVideoEl.classList.add('fallback-visible');
+      shenronChromaActive = false;
+      return;
+    }
+    shenronChromaRaf = requestAnimationFrame(renderChroma);
+  }
+  renderChroma();
+}
+
+function stopShenronChromaLoop() {
+  shenronChromaActive = false;
+  if (shenronChromaRaf) {
+    cancelAnimationFrame(shenronChromaRaf);
+    shenronChromaRaf = null;
+  }
+  if (shenronVideoEl) {
+    try { shenronVideoEl.pause(); } catch(e) {}
+    shenronVideoEl.currentTime = 0;
+    shenronVideoEl.classList.remove('fallback-visible');
+  }
+  if (shenronCanvasEl && shenronCanvasCtx) {
+    try { shenronCanvasCtx.clearRect(0, 0, shenronCanvasEl.width, shenronCanvasEl.height); } catch(e) {}
+  }
+}
+
+// Pre-init on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initShenronVideoChroma();
+  // Preload video metadata
+  const v = document.getElementById('shenronVideo');
+  if (v) v.load();
+});
+
 window.openShenronModal = function() {
   const modal = document.getElementById('shenronModal');
   if (!modal) return;
@@ -1929,6 +2071,8 @@ window.openShenronModal = function() {
     playShenronRoarSound();
     drawLightningStrike();
     triggerLightningStorm(4);
+    // Start greenscreen video with chroma key blending
+    startShenronChromaLoop();
   }, 2000);
 
   // Phase 5 (3.8s): Simple, sleek wish speech bubble appears
@@ -1947,6 +2091,7 @@ window.closeShenronModal = function() {
     document.body.style.overflow = '';
   }
   stopShenronLightningStorm();
+  stopShenronChromaLoop();
   shenronTimelineTimers.forEach(t => clearTimeout(t));
   shenronTimelineTimers = [];
 };
