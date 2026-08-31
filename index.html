@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#FF2E97">
+  <meta name="theme-color" content="#0C0A14">
+  <link rel="icon" type="image/png" href="assets/fav.png?v=20260831">
   <title>Subodh Uttam Muneshwar — Software Engineer & Backend / AI/ML Developer</title>
   <meta name="description"
     content="Portfolio of Subodh Uttam Muneshwar: Software Engineer specializing in Python, C#/.NET, Flask, REST APIs, and Machine Learning / Computer Vision pipelines.">
@@ -23,17 +24,17 @@
   <meta name="twitter:description" content="Software Engineer specializing in Python, C#/.NET, Flask, REST APIs, and AI/ML Computer Vision pipelines.">
   <meta name="twitter:image" content="assets/subodh.jpg">
 
-  <!-- Favicon / SVG Brand Icon — Rosé -->
-  <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FF2E97' stroke='%231E293B' stroke-width='8'/%3E%3Ctext x='50' y='62' font-family='sans-serif' font-weight='900' font-size='42' fill='%23FFFDF5' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+  <!-- Favicon — fav.png -->
 
   <!-- Anti-FOUC: restore theme before first paint — light is default, dark only if user explicitly chose Saiyan -->
   <script>
     (function(){try{var s=localStorage.getItem('portfolio-theme');if(s==='saiyan'){document.documentElement.classList.add('saiyan-mode');var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#0A1410';}}catch(e){}})();
   </script>
+  <!-- Preload Shenron for instant summon -->
+  <link rel="preload" as="image" href="assets/shenron.png" fetchpriority="high">
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260831_db4">
-  <link rel="stylesheet" href="css/styles.css?v=20260831_db4">
+  <link rel="stylesheet" href="css/tokens.css?v=20260831_scatterFinal27">
+  <link rel="stylesheet" href="css/styles.css?v=20260831_scatterFinal27">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -271,7 +272,7 @@
           </div>
           <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding-top: 0.5rem;">
             <h2 style="font-size: 2rem;">Engineering scalable backends and intelligent ML architectures.</h2>
-            <p style="font-size: 1.15rem; color: #334155; line-height: 1.7;">
+            <p style="font-size: 1.15rem; color: var(--muted-fg); line-height: 1.7;">
               I am a Software Engineer with a deep foundation in <strong class="marker-highlight">Python, backend
                 architecture, REST APIs, and AI/ML applications</strong>. With enterprise experience developing
               SAP-integrated RBAC platforms at Rashtriya Chemicals & Fertilizers and building 98% accuracy
@@ -826,6 +827,10 @@
     <div class="shenron-sky-overlay"></div>
     <div class="shenron-ground-glow"></div>
 
+    <!-- Scatter Dispersal FX: Golden burst flash & expanding ki ring -->
+    <div class="shenron-scatter-flash" aria-hidden="true"></div>
+    <div class="shenron-scatter-ring" aria-hidden="true"></div>
+
     <!-- Dismiss Button -->
     <button type="button" class="shenron-cinematic-close" onclick="closeShenronModal()" aria-label="Close Shenron Summon">✕</button>
 
@@ -839,15 +844,9 @@
         <div class="vortex-particles"></div>
       </div>
 
-      <!-- Shenron Dragon Art: Video with greenscreen removal, emerges from the balls -->
+      <!-- Shenron Dragon Art: Emerges from the balls -->
       <div class="shenron-dragon-wrapper" id="shenronDragonWrapper">
-        <!-- Greenscreen video - chroma removed via canvas, blended with dark storm -->
-        <video id="shenronVideo" class="shenron-video" playsinline muted preload="auto" poster="assets/shenron_summon.jpg">
-          <source src="assets/shenron.mp4" type="video/mp4">
-        </video>
-        <canvas id="shenronChromaCanvas" class="shenron-chroma-canvas" aria-hidden="true"></canvas>
-        <!-- Fallback still image if video fails -->
-        <img src="assets/shenron_summon.jpg" alt="Eternal Dragon Shenron Emerging from Dragon Balls" class="shenron-dragon-img fallback-img" id="shenronDragonImg" loading="lazy" />
+        <img src="assets/shenron.png" alt="Eternal Dragon Shenron Emerging from Dragon Balls" class="shenron-dragon-img" id="shenronDragonImg" loading="eager" fetchpriority="high" decoding="async" />
         <div class="shenron-dragon-aura"></div>
       </div>
 
@@ -878,13 +877,13 @@
 
       <div class="shenron-simple-actions">
         <button type="button" class="btn btn-primary shenron-wish-btn" onclick="grantShenronWish('hire')">
-          <span>💼 Hire / Connect with Subodh 🚀</span>
+          <span>💼 Hire / Connect with Subodh</span>
         </button>
-        <button type="button" class="btn btn-secondary shenron-wish-btn" onclick="grantShenronWish('saiyan')">
-          <span>⚡ Super Saiyan Mode 🔥</span>
+        <button type="button" class="btn btn-outline shenron-wish-btn" onclick="grantShenronWish('resume')">
+          <span>📄 View Resume</span>
         </button>
-        <button type="button" class="btn btn-tertiary shenron-wish-btn" onclick="grantShenronWish('blast')">
-          <span>💥 Dragon Blast</span>
+        <button type="button" class="btn btn-outline shenron-wish-btn" onclick="grantShenronWish('projects')">
+          <span>🚀 Explore Projects</span>
         </button>
         <button type="button" class="btn btn-outline shenron-wish-btn shenron-scatter-btn" onclick="scatterDragonBallsAgain()" title="Scatter balls to hunt again">
           <span>🔄 Scatter Balls</span>
@@ -936,8 +935,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260831_db4"></script>
-  <script src="js/main.js?v=20260831_db4"></script>
+  <script src="js/data.js?v=20260831_scatterFinal27"></script>
+  <script src="js/main.js?v=20260831_scatterFinal27"></script>
 </body>
 
 </html>

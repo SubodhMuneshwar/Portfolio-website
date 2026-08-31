@@ -21,12 +21,20 @@ document.addEventListener('DOMContentLoaded', () => {
   initKeyboardShortcuts();
   initSaiyanMode();
   initDragonBallsCollector();
-  initNimbusClick();
+  initNimbusDrag();
   initGlobalClickAnimation();
   initScrollReveal();
   initDbzJokePlaceholders();
   initHeroRotatingWord();
   initPhotoRevealLens();
+  initScrollProgress();
+  initHeroParallax();
+  initCardSpotlight();
+  initCardTilt();
+  initMagneticButtons();
+  initStatCountUp();
+  initFlashcardDecks();
+  initScrollFlashDrift();
 });
 
 function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
@@ -617,7 +625,7 @@ function initSaiyanMode() {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   if (!saiyanBtn) return;
 
-  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan?'#060E0A':'#FF2E97'); }
+  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan?'#060E0A':'#0C0A14'); }
 
   function playSaiyanTransformationCutscene(onTransition) {
     const overlay = document.getElementById('saiyanVideoOverlay');
@@ -833,24 +841,24 @@ function runPlanetNamekTransformation() {
 
   // 5. Staggered power-up: each element surges with Ki aura and sparks in sequence
   elementsToTransform.forEach((el, index) => {
-    setTimeout(() => {
-      el.classList.add('saiyan-charging');
-      
-      // Spawn Ki electrical sparks around this element's bounding box
-      const rect = el.getBoundingClientRect();
-      const sparkX = rect.left + rect.width / 2;
-      const sparkY = rect.top + window.scrollY + rect.height / 2;
-      createKiSparks(sparkX, sparkY);
+setTimeout(() => {
+        el.classList.add('saiyan-charging');
+        
+        // Spawn Ki electrical sparks around this element's bounding box
+        const rect = el.getBoundingClientRect();
+        const sparkX = rect.left + rect.width / 2;
+        const sparkY = rect.top + window.scrollY + rect.height / 2;
+        createKiSparks(sparkX, sparkY);
 
-      // Trigger micro lightning flash around the mid-point of transformation
-      if (index === 0 || index === 4 || index === 7) {
-        drawLightningStrike();
-      }
+        // Trigger micro lightning flash around the mid-point of transformation
+        if (index === 0 || index === 4 || index === 7) {
+          drawLightningStrike();
+        }
 
-      setTimeout(() => {
-        el.classList.remove('saiyan-charging');
-      }, 700);
-    }, index * 180); // Staggered by 180ms per element
+        setTimeout(() => {
+          el.classList.remove('saiyan-charging');
+        }, 700);
+      }, index * 250); // Staggered by 250ms per element for dramatic effect
   });
 }
 
@@ -1681,6 +1689,80 @@ function initDragonBallsCollector() {
   }
 }
 
+// Rebind handlers after a scatter reshuffle (removes stale listeners from shuffled pool)
+function rebindDragonBallHandlers() {
+  // Strip old listeners by cloning nodes (dataset/class already correct after renderDragonBallSVGs)
+  document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(el => {
+    if (el.classList.contains('shenron-star-ball')) return; // keep Shenron altar balls untouched
+    const clone = el.cloneNode(true);
+    el.parentNode.replaceChild(clone, el);
+  });
+
+  const freshReal = document.querySelectorAll('.dragon-ball[data-ball]');
+  const freshFake = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
+
+  freshReal.forEach(ball => {
+    const handleBallCollect = (e) => {
+      e.stopPropagation();
+      const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
+      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
+      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
+      if (ballNumber >= 1 && ballNumber <= 7) {
+        if (!collectedBalls.has(ballNumber)) {
+          triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
+        } else {
+          createKiSparks(clientX, clientY);
+          showToast(`✨ ${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
+        }
+      }
+    };
+    ball.addEventListener('click', handleBallCollect);
+    ball.addEventListener('touchend', (e) => { e.preventDefault(); handleBallCollect(e); });
+    ball.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const rect = ball.getBoundingClientRect();
+        handleBallCollect({ stopPropagation: () => {}, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
+      }
+    });
+  });
+
+  freshFake.forEach(fakeBall => {
+    const handleFakeClick = (e) => {
+      e.stopPropagation();
+      const fakeType = fakeBall.getAttribute('data-fake-ball');
+      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
+      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
+      triggerKidGokuPrank(fakeType, clientX, clientY);
+    };
+    fakeBall.addEventListener('click', handleFakeClick);
+    fakeBall.addEventListener('touchend', (e) => { e.preventDefault(); handleFakeClick(e); });
+    fakeBall.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const rect = fakeBall.getBoundingClientRect();
+        handleFakeClick({ stopPropagation: () => {}, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
+      }
+    });
+  });
+
+  // Re-attach ticker pause handlers for freshly cloned ticker balls
+  const tickerTrack = document.querySelector('.ticker-track');
+  if (tickerTrack) {
+    const tickerBalls = document.querySelectorAll('.ticker-container .dragon-ball, .ticker-container .fake-dragon-ball');
+    tickerBalls.forEach(b => {
+      b.addEventListener('touchstart', () => tickerTrack.classList.add('ticker-paused'), {passive: true});
+      b.addEventListener('touchend', () => setTimeout(() => tickerTrack.classList.remove('ticker-paused'), 900), {passive: true});
+      b.addEventListener('mousedown', () => tickerTrack.classList.add('ticker-paused'));
+      b.addEventListener('mouseleave', () => tickerTrack.classList.remove('ticker-paused'));
+      b.addEventListener('focus', () => tickerTrack.classList.add('ticker-paused'));
+      b.addEventListener('blur', () => tickerTrack.classList.remove('ticker-paused'));
+    });
+  }
+}
+
 /* --- Ki Spark Click Effect --- */
 function createKiSparks(x, y) {
   for (let i = 0; i < 6; i++) {
@@ -1731,66 +1813,129 @@ function launchRandomNimbusFlight() {
   }
 }
 
-function initNimbusClick() {
+function initNimbusDrag() {
   const nimbus = document.getElementById('flyingNimbus');
   if (!nimbus) return;
 
-  // Launch initial random trajectory flight
   launchRandomNimbusFlight();
 
-  // On every animation loop completion, randomize flight altitude & direction for the next pass
   nimbus.addEventListener('animationiteration', () => {
-    if (!nimbus.classList.contains('nimbus-turbo')) {
+    if (!nimbus.classList.contains('nimbus-turbo') && !nimbus.classList.contains('nimbus-dragging')) {
       launchRandomNimbusFlight();
     }
   });
 
+  const HOLD_DELAY = 300;
+  let holdTimer = null;
+  let isDragging = false;
+  let activePointerId = null;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let nimbusStartLeft = 0;
+  let nimbusStartTop = 0;
+
   function triggerNimbusTurbo() {
     if (nimbusTurboTimer) clearTimeout(nimbusTurboTimer);
-
-    // Apply high-velocity turbo speed in active direction
     nimbus.classList.remove('nimbus-turbo');
     void nimbus.offsetWidth;
     nimbus.classList.add('nimbus-turbo');
 
-    // Spawn Ki sparks & trailing cloud puffs around nimbus
     const rect = nimbus.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-
     for (let i = 0; i < 10; i++) {
       setTimeout(() => {
         createKiSparks(cx + (Math.random() * 40 - 20), cy + (Math.random() * 30 - 15));
       }, i * 100);
     }
-
     drawLightningStrike();
 
-    // Return to normal cruising speed & pick new random flight path after 4.2s
     nimbusTurboTimer = setTimeout(() => {
       nimbus.classList.remove('nimbus-turbo');
       launchRandomNimbusFlight();
     }, 4200);
   }
 
-  // Pointer events (uniform handling across desktop mouse, touch, and stylus)
-  nimbus.addEventListener('pointerdown', (e) => {
-    e.stopPropagation();
-    triggerNimbusTurbo();
-  });
+  function onWindowPointerMove(e) {
+    if (e.pointerId !== activePointerId || !isDragging) return;
+    e.preventDefault();
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    nimbus.style.position = 'fixed';
+    nimbus.style.left = `${nimbusStartLeft + dx - nimbus.offsetWidth / 2}px`;
+    nimbus.style.top = `${nimbusStartTop + dy - nimbus.offsetHeight / 2}px`;
+    nimbus.style.transform = 'none';
+  }
 
-  // Mobile touch immediate trigger
-  nimbus.addEventListener('touchstart', (e) => {
+  function onWindowPointerUp(e) {
+    if (e.pointerId !== activePointerId) return;
+    window.removeEventListener('pointermove', onWindowPointerMove);
+    window.removeEventListener('pointerup', onWindowPointerUp);
+    window.removeEventListener('pointercancel', onWindowPointerUp);
+
+    if (holdTimer) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+      // Resume animation since we're not dragging (click without hold triggers turbo)
+      nimbus.style.animationPlayState = '';
+      activePointerId = null;
+      triggerNimbusTurbo();
+      return;
+    }
+
+    if (!isDragging) return;
+    isDragging = false;
+    nimbus.classList.remove('nimbus-dragging');
+    nimbus.style.animationPlayState = '';
+
+    const rect = nimbus.getBoundingClientRect();
+    const viewH = window.innerHeight;
+    const topPct = Math.round((rect.top + rect.height / 2) / viewH * 100);
+    const clampedTop = Math.max(5, Math.min(85, topPct));
+
+    nimbus.style.position = '';
+    nimbus.style.left = '';
+    nimbus.style.top = '';
+    nimbus.style.transform = '';
+
+    nimbus.style.setProperty('--nimbus-top', `${clampedTop}%`);
+    nimbus.classList.remove('nimbus-flying-ltr', 'nimbus-flying-rtl', 'nimbus-turbo');
+    void nimbus.offsetWidth;
+    const midX = rect.left + rect.width / 2;
+    const isLTR = midX < window.innerWidth / 2;
+    nimbus.classList.add(isLTR ? 'nimbus-flying-ltr' : 'nimbus-flying-rtl');
+    activePointerId = null;
+  }
+
+  nimbus.addEventListener('pointerdown', (e) => {
+    if (e.button && e.button !== 0) return;
+    if (activePointerId !== null) return;
     e.preventDefault();
     e.stopPropagation();
-    triggerNimbusTurbo();
-  }, { passive: false });
 
-  // Click fallback
-  nimbus.addEventListener('click', (e) => {
-    e.stopPropagation();
-    triggerNimbusTurbo();
+    activePointerId = e.pointerId;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+
+    // Immediately pause animation and capture position so nimbus stays in place during hold
+    nimbus.style.animationPlayState = 'paused';
+    const rect = nimbus.getBoundingClientRect();
+    nimbusStartLeft = rect.left + rect.width / 2;
+    nimbusStartTop = rect.top + rect.height / 2;
+
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      isDragging = true;
+      nimbus.classList.add('nimbus-dragging');
+    }, HOLD_DELAY);
+
+    window.addEventListener('pointermove', onWindowPointerMove);
+    window.addEventListener('pointerup', onWindowPointerUp);
+    window.addEventListener('pointercancel', onWindowPointerUp);
   });
+
+  nimbus.addEventListener('dragstart', (e) => e.preventDefault());
+  nimbus.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 /* --- Global Click Animation Engine (Shockwave Ripple Rings) --- */
@@ -1939,148 +2084,14 @@ function stopShenronLightningStorm() {
   }
 }
 
-/* ==========================================================================
-   Shenron Greenscreen Video — Chroma Key & Blend Engine
-   Uses canvas to remove pure green background (#00FF00 range) and blend
-   Shenron over the dark storm. Falls back to mix-blend-mode if canvas fails.
-   ========================================================================== */
-let shenronChromaRaf = null;
-let shenronVideoEl = null;
-let shenronCanvasEl = null;
-let shenronCanvasCtx = null;
-let shenronChromaActive = false;
+/* Shenron image-based summon — no video/chroma needed */
+function startShenronChromaLoop() { /* no-op: using shenron.png */ }
+function stopShenronChromaLoop() { /* no-op: using shenron.png */ }
 
-function initShenronVideoChroma() {
-  if (shenronVideoEl && shenronCanvasEl) return;
-  shenronVideoEl = document.getElementById('shenronVideo');
-  shenronCanvasEl = document.getElementById('shenronChromaCanvas');
-  if (!shenronVideoEl || !shenronCanvasEl) return;
-  try {
-    shenronCanvasCtx = shenronCanvasEl.getContext('2d', { willReadFrequently: true });
-  } catch (e) {
-    shenronCanvasCtx = shenronCanvasEl.getContext('2d');
-  }
-  // Ensure video is muted and playsinline for mobile autoplay
-  shenronVideoEl.muted = true;
-  shenronVideoEl.playsInline = true;
-  shenronVideoEl.preload = 'auto';
-  // Fallback: if video fails to load, show fallback image
-  shenronVideoEl.addEventListener('error', () => {
-    console.warn('Shenron video failed, using fallback image');
-    if (shenronCanvasEl) shenronCanvasEl.style.display = 'none';
-    const fallback = document.getElementById('shenronDragonImg');
-    if (fallback) fallback.style.opacity = '0.98';
-    shenronVideoEl.classList.add('fallback-visible');
-  });
-}
-
-function startShenronChromaLoop() {
-  initShenronVideoChroma();
-  if (!shenronVideoEl || !shenronCanvasEl || !shenronCanvasCtx) {
-    // Fallback to CSS blend mode
-    if (shenronVideoEl) {
-      shenronVideoEl.classList.add('fallback-visible');
-      shenronVideoEl.style.display = 'block';
-      shenronVideoEl.play().catch(() => {});
-    }
-    return;
-  }
-  shenronChromaActive = true;
-  // Size canvas to wrapper size for performance (downscale on mobile)
-  const wrapper = document.getElementById('shenronDragonWrapper');
-  const isMobile = window.innerWidth < 768;
-  const targetW = isMobile ? 640 : 960;
-  const targetH = isMobile ? 360 : 540;
-  shenronCanvasEl.width = targetW;
-  shenronCanvasEl.height = targetH;
-  // Ensure video is playing
-  shenronVideoEl.currentTime = 0;
-  const playPromise = shenronVideoEl.play();
-  if (playPromise) playPromise.catch(() => {
-    // Autoplay blocked, fallback to image
-    console.warn('Shenron video autoplay blocked');
-    shenronVideoEl.classList.add('fallback-visible');
-  });
-  // Start RAF loop
-  function renderChroma() {
-    if (!shenronChromaActive || !shenronVideoEl || shenronVideoEl.paused || shenronVideoEl.ended) {
-      if (shenronChromaActive && shenronVideoEl && !shenronVideoEl.ended) {
-        shenronChromaRaf = requestAnimationFrame(renderChroma);
-      }
-      return;
-    }
-    const cw = shenronCanvasEl.width;
-    const ch = shenronCanvasEl.height;
-    try {
-      shenronCanvasCtx.drawImage(shenronVideoEl, 0, 0, cw, ch);
-      const imageData = shenronCanvasCtx.getImageData(0, 0, cw, ch);
-      const data = imageData.data;
-      // Chroma key: remove greenscreen, preserve Shenron's desaturated scales
-      // Background is bright saturated green; Shenron's own green is darker desaturated (G~70-110, R~60-80)
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i], g = data[i+1], b = data[i+2];
-        // Two-tier detection: pure bright green vs. green-dominant spill
-        const isPureGreen = g > 140 && r < 110 && b < 110 && g > r + 40 && g > b + 40;
-        const isGreenDominant = g > 95 && g > r + 12 && g > b + 18;
-        const isGreenScreen = isPureGreen || isGreenDominant;
-        if (isGreenScreen) {
-          const diff = Math.min(g - r, g - b);
-          if (diff > 60 || isPureGreen) {
-            // Pure / strong green -> fully transparent
-            data[i+3] = 0;
-          } else if (diff > 18) {
-            // Fringe / spill (yellow aura mixed with green) -> mostly transparent + desaturate
-            const t = (diff - 18) / 42; // 0..1
-            data[i+3] = 255 * (0.22 + 0.08 * (1 - t)); // 22% to 8% opacity -> almost transparent
-            // Pull green toward neutral to kill spill
-            const avg = (r + b) * 0.5;
-            data[i] = r * 0.55 + avg * 0.45;
-            data[i+1] = g * 0.25 + avg * 0.75;
-            data[i+2] = b * 0.55 + avg * 0.45;
-          } else {
-            // Very weak green edge -> faint feather
-            data[i+3] = 255 * 0.35;
-            data[i+1] = data[i+1] * 0.6 + ((r + b) / 2) * 0.4;
-          }
-        }
-        // Also make near-black letterbox at bottom transparent-ish to blend with dark storm
-        // The video has black bars at bottom (0,0,0) - keep but blend, no need to remove
-      }
-      shenronCanvasCtx.putImageData(imageData, 0, 0);
-    } catch (e) {
-      // If getImageData fails due to CORS, fallback to CSS blend
-      console.warn('Chroma canvas failed, fallback to blend mode', e);
-      shenronVideoEl.classList.add('fallback-visible');
-      shenronChromaActive = false;
-      return;
-    }
-    shenronChromaRaf = requestAnimationFrame(renderChroma);
-  }
-  renderChroma();
-}
-
-function stopShenronChromaLoop() {
-  shenronChromaActive = false;
-  if (shenronChromaRaf) {
-    cancelAnimationFrame(shenronChromaRaf);
-    shenronChromaRaf = null;
-  }
-  if (shenronVideoEl) {
-    try { shenronVideoEl.pause(); } catch(e) {}
-    shenronVideoEl.currentTime = 0;
-    shenronVideoEl.classList.remove('fallback-visible');
-  }
-  if (shenronCanvasEl && shenronCanvasCtx) {
-    try { shenronCanvasCtx.clearRect(0, 0, shenronCanvasEl.width, shenronCanvasEl.height); } catch(e) {}
-  }
-}
-
-// Pre-init on DOM ready
+// Preload shenron image on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-  initShenronVideoChroma();
-  // Preload video metadata
-  const v = document.getElementById('shenronVideo');
-  if (v) v.load();
+  const img = document.getElementById('shenronDragonImg');
+  if (img) { img.src = 'assets/shenron.png'; }
 });
 
 window.openShenronModal = function() {
@@ -2113,21 +2124,20 @@ window.openShenronModal = function() {
     drawLightningStrike();
   }, 1000);
 
-  // Phase 4 (2.0s): Shenron Dragon emerges directly from the vortex at the balls and ascends
+  // Phase 4 (1.1s): Shenron Dragon emerges — faster for snappier summon
   const t3 = setTimeout(() => {
     modal.classList.add('dragon-active');
     playShenronRoarSound();
     drawLightningStrike();
-    triggerLightningStorm(4);
-    // Start greenscreen video with chroma key blending
+    triggerLightningStorm(2);
     startShenronChromaLoop();
-  }, 2000);
+  }, 1100);
 
-  // Phase 5 (3.8s): Simple, sleek wish speech bubble appears
+  // Phase 5 (1.9s): Wish console appears
   const t4 = setTimeout(() => {
     modal.classList.add('decree-active');
     playDragonBallCollectChime();
-  }, 3800);
+  }, 1900);
 
   shenronTimelineTimers.push(t1, t2, t3, t4);
 };
@@ -2135,9 +2145,14 @@ window.openShenronModal = function() {
 window.closeShenronModal = function() {
   const modal = document.getElementById('shenronModal');
   if (modal) {
-    modal.classList.remove('active', 'balls-active', 'beam-active', 'dragon-active', 'decree-active');
+    modal.classList.remove('active', 'balls-active', 'beam-active', 'dragon-active', 'decree-active', 'scattering');
     document.body.style.overflow = '';
   }
+  // Cleanup scatter clones + formation glow and re-enable button if interrupted mid-flight
+  document.querySelectorAll('.db-scatter-clone').forEach(c => c.remove());
+  document.querySelectorAll('.db-circle-central-glow').forEach(c => c.remove());
+  const scatterBtn = document.querySelector('.shenron-scatter-btn');
+  if (scatterBtn) scatterBtn.disabled = false;
   stopShenronLightningStorm();
   stopShenronChromaLoop();
   shenronTimelineTimers.forEach(t => clearTimeout(t));
@@ -2145,9 +2160,7 @@ window.closeShenronModal = function() {
 };
 
 window.grantShenronWish = function(type) {
-  playShenronRoarSound();
   drawLightningStrike();
-  triggerLightningStorm(5);
 
   if (type === 'hire') {
     showToast("🐉 'YOUR WISH HAS BEEN GRANTED! CONNECTING WITH SUBODH!'");
@@ -2159,58 +2172,244 @@ window.grantShenronWish = function(type) {
         const messageBox = document.getElementById('message');
         if (messageBox) {
           messageBox.value = "Hi Subodh! I collected all 7 Dragon Balls and summoned Shenron to connect with you regarding a Software / AI/ML Engineering opportunity!";
-          messageBox.focus();
+          try { messageBox.focus(); } catch(e){}
         }
       }
-    }, 850);
-  } else if (type === 'saiyan') {
-    showToast("🐉 'SUPER SAIYAN GOD OVERDRIVE UNLEASHED!'");
-    if (!document.body.classList.contains('saiyan-mode')) {
-      toggleSaiyanMode();
-    }
+    }, 650);
+  } else if (type === 'resume') {
+    showToast("🐉 'YOUR WISH HAS BEEN GRANTED! OPENING RESUME!'");
     setTimeout(() => {
       closeShenronModal();
-    }, 850);
-  } else if (type === 'blast') {
-    showToast("🐉 'DRAGON FIST KAMEHAMEHA DETONATED!'");
-    if (typeof confetti === 'function') {
-      confetti({
-        particleCount: 160,
-        spread: 120,
-        origin: { y: 0.5 },
-        colors: ['#F59E0B', '#10B981', '#FF2E97', '#38BDF8', '#FFFFFF']
-      });
-    }
+      const link = document.createElement('a');
+      link.href = 'assets/Subodh_Muneshwar_ATS_Resume.pdf';
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.download = 'Subodh_Muneshwar_ATS_Resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => link.remove(), 1000);
+      // fallback to opening in new tab if download blocked
+      setTimeout(() => { window.open('assets/Subodh_Muneshwar_ATS_Resume.pdf', '_blank', 'noopener'); }, 400);
+    }, 500);
+  } else if (type === 'projects') {
+    showToast("🐉 'YOUR WISH HAS BEEN GRANTED! SHOWING PROJECTS!'");
     setTimeout(() => {
       closeShenronModal();
-    }, 1000);
+      const proj = document.getElementById('projects');
+      if (proj) proj.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 550);
   }
 };
 
 window.scatterDragonBallsAgain = function() {
-  closeShenronModal();
-  collectedBalls.clear();
+  const modal = document.getElementById('shenronModal');
+  const scatterBtn = document.querySelector('.shenron-scatter-btn');
 
-  // Re-enable and reshuffle all dragon balls across the webpage
-  document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
-    ball.classList.remove('collected', 'ball-disappeared');
-    ball.style.removeProperty('display');
-    ball.style.removeProperty('visibility');
-    ball.style.removeProperty('opacity');
-    ball.style.removeProperty('pointer-events');
-    ball.setAttribute('aria-hidden', 'false');
-    ball.setAttribute('tabindex', '0');
+  // If modal not active (edge: called outside cinematic), fallback to instant scatter
+  const isModalActive = modal && modal.classList.contains('active');
+  if (!isModalActive) {
+    closeShenronModal();
+    collectedBalls.clear();
+    document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
+      ball.classList.remove('collected', 'ball-disappeared');
+      ball.style.removeProperty('display');
+      ball.style.removeProperty('visibility');
+      ball.style.removeProperty('opacity');
+      ball.style.removeProperty('pointer-events');
+      ball.setAttribute('aria-hidden', 'false');
+      ball.setAttribute('tabindex', '0');
+    });
+    renderDragonBallSVGs();
+    updateRadarMiniBlips();
+    try { rebindDragonBallHandlers(); } catch(e) {}
+    const radarCount = document.getElementById('ballsFoundCount');
+    if (radarCount) radarCount.textContent = '0';
+    drawLightningStrike();
+    playDragonBallCollectChime();
+    showToast("🐉 The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
+    // Staggered pop entrance for the newly scattered page balls
+    const fallbackBalls = document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]');
+    fallbackBalls.forEach((ball, idx) => {
+      ball.classList.remove('scattered-entrance');
+      void ball.offsetWidth;
+      ball.style.animationDelay = (idx * 105) + 'ms';
+      ball.classList.add('scattered-entrance');
+      const scFallback = setTimeout(() => {
+        ball.classList.remove('scattered-entrance');
+        ball.style.removeProperty('animation-delay');
+      }, 3800 + idx * 10);
+      ball.addEventListener('animationend', () => {
+        clearTimeout(scFallback);
+        ball.classList.remove('scattered-entrance');
+        ball.style.removeProperty('animation-delay');
+      }, { once: true });
+    });
+    return;
+  }
+
+  // Prevent double-trigger while scattering
+  if (modal.classList.contains('scattering')) return;
+  modal.classList.add('scattering');
+  if (scatterBtn) scatterBtn.disabled = true;
+  document.body.style.overflow = 'hidden';
+
+  // Cinematic FX: roar, thunder, lightning burst
+  try { playShenronRoarSound(); } catch(e) {}
+  try { playShenronThunderSynth(); } catch(e) {}
+  try { drawLightningStrike(); triggerLightningStorm(3); } catch(e) {}
+
+  const altarBalls = modal.querySelectorAll('.shenron-star-ball');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clones = [];
+
+  // Viewport center for the formation circle — gather then scatter opposite
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const centerX = vw / 2;
+  const centerY = vh / 2;
+  const isMobileCircle = vw < 480;
+  const isTabletCircle = vw < 768;
+  const circleRadius = isMobileCircle ? 68 : isTabletCircle ? 86 : 112;
+  const maxDist = Math.max(vw, vh) * 0.92 + 180;
+
+  // Central formation glow — create early so it is visible while circle forms
+  const circleGlow = document.createElement('div');
+  circleGlow.className = 'db-circle-central-glow';
+  circleGlow.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(circleGlow);
+  void circleGlow.offsetWidth;
+  setTimeout(() => { if (circleGlow.parentNode) circleGlow.remove(); }, 4400);
+
+  altarBalls.forEach((ball, i) => {
+    const rect = ball.getBoundingClientRect();
+    if (!rect.width && !rect.height) return;
+    const starNum = ball.getAttribute('data-shenron-ball') || String(i + 1);
+    const clone = document.createElement('div');
+    clone.className = 'db-scatter-clone';
+    clone.setAttribute('aria-hidden', 'true');
+    clone.innerHTML = `<div class="db-scatter-clone-inner">${window.getBallSVGString ? window.getBallSVGString(starNum, window.innerWidth < 480 ? 46 : window.innerWidth < 768 ? 52 : 64) : ''}</div>`;
+    const size = window.innerWidth < 480 ? 50 : window.innerWidth < 768 ? 56 : 68;
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+    clone.style.left = (originX - size / 2) + 'px';
+    clone.style.top = (originY - size / 2) + 'px';
+
+    const baseAngle = (i / 7) * Math.PI * 2 - Math.PI / 2; // start at top, clockwise
+    const jitter = (Math.random() - 0.5) * 0.32; // keep circle neat ±9°
+    const angle = baseAngle + jitter;
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+
+    // Circle formation around viewport center
+    const circleX = centerX + cosA * circleRadius;
+    const circleY = centerY + sinA * circleRadius;
+    const circleOffsetX = circleX - originX;
+    const circleOffsetY = circleY - originY;
+
+    // Scatter target far beyond the circle, opposite direction (outward from center)
+    let scatterDist = maxDist;
+    const distScale = 0.9 + Math.random() * 0.18;
+    scatterDist *= distScale;
+    const scatterX = centerX + cosA * scatterDist;
+    const scatterY = centerY + sinA * scatterDist;
+    const biasedScatterY = scatterY - (sinA > 0 ? 60 : 0);
+    const scatterOffsetX = scatterX - originX;
+    const scatterOffsetY = biasedScatterY - originY;
+
+    const rot = (520 + Math.random() * 420) * (Math.random() > 0.5 ? 1 : -1);
+
+    clone.style.setProperty('--circle-x', circleOffsetX.toFixed(1) + 'px');
+    clone.style.setProperty('--circle-y', circleOffsetY.toFixed(1) + 'px');
+    clone.style.setProperty('--scatter-x', scatterOffsetX.toFixed(1) + 'px');
+    clone.style.setProperty('--scatter-y', scatterOffsetY.toFixed(1) + 'px');
+    clone.style.setProperty('--scatter-rot', rot.toFixed(1) + 'deg');
+    clone.style.setProperty('--scatter-delay', (i * 34) + 'ms');
+    document.body.appendChild(clone);
+    clones.push(clone);
+
+    setTimeout(() => {
+      createKiSparks(originX, originY);
+    }, i * 62);
   });
 
-  renderDragonBallSVGs();
-  updateRadarMiniBlips();
 
-  const radarCount = document.getElementById('ballsFoundCount');
-  if (radarCount) radarCount.textContent = '0';
+  // Central altar burst sparks
+  setTimeout(() => {
+    const altar = document.getElementById('shenronAltarBalls');
+    if (altar) {
+      const r = altar.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      for (let k = 0; k < 8; k++) {
+        setTimeout(() => createKiSparks(cx + (Math.random() * 110 - 55), cy + (Math.random() * 32 - 16)), k * 98);
+      }
+    }
+  }, 140);
 
-  drawLightningStrike();
-  playDragonBallCollectChime();
-  showToast("🐉 The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
+  const flightMs = prefersReduced ? 1600 : 4400;
+
+  setTimeout(() => {
+    // Remove flying clones + formation glow
+    clones.forEach(c => { if (c.parentNode) c.remove(); });
+    document.querySelectorAll(".db-circle-central-glow").forEach(c => { if (c.parentNode) c.remove(); });
+    // Safety: clear any stray clones after a beat
+    setTimeout(() => document.querySelectorAll('.db-scatter-clone').forEach(c => c.remove()), 400);
+
+    // Unlock modal and then reshuffle page balls
+    if (modal) modal.classList.remove('scattering');
+    closeShenronModal();
+    collectedBalls.clear();
+
+    document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
+      ball.classList.remove('collected', 'ball-disappeared', 'scattered-entrance', 'collected');
+      ball.style.removeProperty('display');
+      ball.style.removeProperty('visibility');
+      ball.style.removeProperty('opacity');
+      ball.style.removeProperty('pointer-events');
+      ball.style.removeProperty('animation-delay');
+      ball.setAttribute('aria-hidden', 'false');
+      ball.setAttribute('tabindex', '0');
+    });
+
+    renderDragonBallSVGs();
+    updateRadarMiniBlips();
+    try { rebindDragonBallHandlers(); } catch(e) {}
+
+    const radarCount = document.getElementById('ballsFoundCount');
+    if (radarCount) radarCount.textContent = '0';
+
+    // Staggered golden pop entrance across the freshly scattered world
+    const pageBalls = document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]');
+    pageBalls.forEach((ball, idx) => {
+      ball.classList.remove('scattered-entrance');
+      void ball.offsetWidth;
+      ball.style.animationDelay = (idx * 105) + 'ms';
+      ball.classList.add('scattered-entrance');
+      const scFallback2 = setTimeout(() => {
+        ball.classList.remove('scattered-entrance');
+        ball.style.removeProperty('animation-delay');
+      }, 3800 + idx * 10);
+      ball.addEventListener('animationend', () => {
+        clearTimeout(scFallback2);
+        ball.classList.remove('scattered-entrance');
+        ball.style.removeProperty('animation-delay');
+      }, { once: true });
+    });
+
+    // Celebrate dispersal with radar pulse + lightning + chime
+    const radarWidget = document.getElementById('dragonRadarWidget');
+    if (radarWidget) {
+      radarWidget.classList.remove('radar-ping-blast');
+      void radarWidget.offsetWidth;
+      radarWidget.classList.add('radar-ping-blast');
+      setTimeout(() => radarWidget.classList.remove('radar-ping-blast'), 800);
+    }
+    try { drawLightningStrike(); } catch(e) {}
+    if (!prefersReduced) try { triggerLightningStorm(3); } catch(e) {}
+    try { playDragonBallCollectChime(); } catch(e) {}
+    showToast("🐉 The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
+    if (scatterBtn) scatterBtn.disabled = false;
+  }, flightMs);
 };
 
 /* ==========================================================================
@@ -2471,7 +2670,7 @@ function initScrollReveal() {
 
   function attachElements() {
     const targets = document.querySelectorAll(
-      '.section-header, .stat-card, .skill-group, .timeline-item, .project-card, .achievement-card, .edu-card, .cert-card, .contact-wrapper, .hero-photo-frame, .hero-content, .card-sticker'
+      '.section-header, .stat-card, .skill-category-card, .sticker-card, .experience-card, .project-card, .achievement-card, .edu-card, .cert-card, .scouter-card-wrapper, .hero-content, .hero-visual'
     );
 
     targets.forEach(el => {
@@ -2479,7 +2678,7 @@ function initScrollReveal() {
         el.classList.add('scroll-reveal');
 
         // Apply natural staggered delays to sibling cards
-        const parentGrid = el.closest('.skills-grid, .projects-grid, .achievements-grid, .stats-grid, .education-grid, .timeline, .certs-grid');
+        const parentGrid = el.closest('.skills-grid, .projects-grid, .achievements-grid, .stats-grid, .edu-cert-grid, .experience-timeline');
         if (parentGrid) {
           const siblingIndex = Array.from(parentGrid.children).indexOf(el);
           if (siblingIndex >= 0) {
@@ -2500,6 +2699,344 @@ function initScrollReveal() {
   window.refreshScrollReveal = function() {
     setTimeout(attachElements, 50);
   };
+}
+
+/* --- Dynamic: Scroll Progress Bar --- */
+function initScrollProgress() {
+  if (document.querySelector('.scroll-progress-bar')) return;
+  const bar = document.createElement('div');
+  bar.className = 'scroll-progress-bar';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.prepend(bar);
+  let ticking = false;
+  function update() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    const v = isFinite(scrolled) ? Math.max(0, Math.min(1, scrolled)) : 0;
+    document.documentElement.style.setProperty('--scroll-progress', String(v));
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}
+
+/* --- Dynamic: Hero Parallax (rAF, respects reduced-motion) --- */
+function initHeroParallax() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.querySelector('.hero-section');
+  if (!hero) return;
+  let ticking = false;
+  function onScroll() {
+    const y = window.scrollY;
+    // only parallax while hero is in view
+    if (y < hero.offsetHeight + 200) {
+      hero.style.setProperty('--parallax-y', y + 'px');
+      const scale = 1 + Math.min(y / 4000, 0.06);
+      hero.style.setProperty('--aura-scale', String(scale));
+    }
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  onScroll();
+}
+
+/* --- Dynamic: Card Spotlight (cursor follow) — delegated for dynamic cards --- */
+function initCardSpotlight() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  document.addEventListener('pointermove', (e) => {
+    const card = e.target.closest('.sticker-card, .stat-card, .skill-category-card, .experience-card, .project-card, .achievement-card, .edu-card, .cert-card');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100;
+    const y = ((e.clientY - r.top) / r.height) * 100;
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
+  }, { passive: true });
+}
+
+/* --- Dynamic: Card Tilt (subtle 3D) — delegated + auto-class --- */
+function initCardTilt() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function markTiltCards() {
+    document.querySelectorAll('.stat-card, .skill-category-card, .project-card, .achievement-card').forEach(c => c.classList.add('tilt-card'));
+  }
+  markTiltCards();
+  const mo = new MutationObserver(markTiltCards);
+  mo.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('pointermove', (e) => {
+    const card = e.target.closest('.stat-card, .skill-category-card, .project-card, .achievement-card');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    const rx = (px * 6).toFixed(2) + 'deg';
+    const ry = (-py * 6).toFixed(2) + 'deg';
+    card.style.setProperty('--tilt-x', rx);
+    card.style.setProperty('--tilt-y', ry);
+  }, { passive: true });
+  document.addEventListener('pointerleave', (e) => {
+    const card = e.target.closest('.stat-card, .skill-category-card, .project-card, .achievement-card');
+    if (!card) return;
+    card.style.setProperty('--tilt-x', '0deg');
+    card.style.setProperty('--tilt-y', '0deg');
+  }, true);
+}
+
+/* --- Dynamic: Magnetic Buttons — delegated --- */
+function initMagneticButtons() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  document.querySelectorAll('.btn, .nav-ctrl-btn, .filter-btn').forEach(b => b.classList.add('magnetic'));
+  const mo = new MutationObserver(() => {
+    document.querySelectorAll('.btn, .nav-ctrl-btn, .filter-btn').forEach(b => b.classList.add('magnetic'));
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('pointermove', (e) => {
+    const btn = e.target.closest('.btn.magnetic, .nav-ctrl-btn.magnetic, .filter-btn.magnetic');
+    if (!btn) return;
+    const r = btn.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width / 2)) * 0.18;
+    const dy = (e.clientY - (r.top + r.height / 2)) * 0.22;
+    btn.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+  }, { passive: true });
+  document.addEventListener('pointerleave', (e) => {
+    const btn = e.target.closest('.btn.magnetic, .nav-ctrl-btn.magnetic, .filter-btn.magnetic');
+    if (!btn) return;
+    btn.style.transform = '';
+  }, true);
+}
+
+/* --- Dynamic: Stat Count-Up --- */
+function initStatCountUp() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const vals = document.querySelectorAll('.stat-value');
+  if (!vals.length || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const raw = el.textContent.trim();
+      // extract leading number
+      const m = raw.match(/^([\d.]+)(.*)$/);
+      if (!m) { obs.unobserve(el); return; }
+      const num = parseFloat(m[1]);
+      const suffix = m[2] || '';
+      if (isNaN(num)) { obs.unobserve(el); return; }
+      const isFloat = m[1].includes('.');
+      const decimals = isFloat ? (m[1].split('.')[1] || '').length : 0;
+      const duration = 1100;
+      const start = performance.now();
+      el.classList.add('is-counting');
+      function tick(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const cur = num * eased;
+        el.textContent = (isFloat ? cur.toFixed(decimals) : Math.round(cur).toString()) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+        else { el.textContent = raw; el.classList.remove('is-counting'); }
+      }
+      requestAnimationFrame(tick);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  vals.forEach(v => io.observe(v));
+}
+
+/* --- Dynamic: Flashcard Decks (Skills / Projects / Achievements) --- */
+function initFlashcardDecks() {
+  const deckSelectors = ['#skillsGrid', '#projectsGrid', '#achievementsGrid'];
+  deckSelectors.forEach(sel => {
+    const grid = document.querySelector(sel);
+    if (!grid) return;
+    if (grid.classList.contains('flashcard-track')) return;
+
+    grid.classList.add('flashcard-track');
+
+    // Wrap with scroller for edge fades + nav
+    const wrap = document.createElement('div');
+    wrap.className = 'flashcard-scroller-wrap';
+    grid.parentNode.insertBefore(wrap, grid);
+    wrap.appendChild(grid);
+
+    // Nav
+    const nav = document.createElement('div');
+    nav.className = 'flashcard-nav';
+    nav.innerHTML = `
+      <button type="button" class="flashcard-arrow flashcard-prev" aria-label="Previous cards"><i data-lucide="chevron-left" style="width:18px;height:18px;"></i></button>
+      <div class="flashcard-dots" role="tablist"></div>
+      <button type="button" class="flashcard-arrow flashcard-next" aria-label="Next cards"><i data-lucide="chevron-right" style="width:18px;height:18px;"></i></button>
+    `;
+    wrap.appendChild(nav);
+    if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
+
+    const prevBtn = nav.querySelector('.flashcard-prev');
+    const nextBtn = nav.querySelector('.flashcard-next');
+    const dotsWrap = nav.querySelector('.flashcard-dots');
+
+    let dots = [];
+    function buildDots() {
+      dotsWrap.innerHTML = '';
+      dots = [];
+      const cards = grid.children;
+      for (let i = 0; i < cards.length; i++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'flashcard-dot';
+        dot.setAttribute('aria-label', `Go to card ${i+1}`);
+        dot.setAttribute('role', 'tab');
+        dot.addEventListener('click', () => {
+          cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        });
+        dotsWrap.appendChild(dot);
+        dots.push(dot);
+      }
+    }
+    buildDots();
+
+    function updateState() {
+      const max = grid.scrollWidth - grid.clientWidth;
+      const atStart = grid.scrollLeft <= 4;
+      const atEnd = grid.scrollLeft >= max - 4;
+      wrap.classList.toggle('at-start', atStart);
+      wrap.classList.toggle('at-end', atEnd);
+      if (prevBtn) prevBtn.disabled = atStart;
+      if (nextBtn) nextBtn.disabled = atEnd;
+      // active dot = closest to center
+      const gridRect = grid.getBoundingClientRect();
+      const mid = gridRect.left + gridRect.width / 2;
+      let best = 0; let bestDist = Infinity;
+      Array.from(grid.children).forEach((c, idx) => {
+        const r = c.getBoundingClientRect();
+        const d = Math.abs((r.left + r.right)/2 - mid);
+        if (d < bestDist) { bestDist = d; best = idx; }
+      });
+      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === best));
+    }
+
+    const cardWidth = () => {
+      const first = grid.children[0];
+      if (!first) return 380;
+      const style = getComputedStyle(first);
+      const gap = parseFloat(getComputedStyle(grid).gap) || 24;
+      return first.getBoundingClientRect().width + gap;
+    };
+
+    prevBtn.addEventListener('click', () => {
+      grid.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', () => {
+      grid.scrollBy({ left: cardWidth(), behavior: 'smooth' });
+    });
+
+    let ticking = false;
+    grid.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { updateState(); ticking = false; }); }
+    }, { passive: true });
+
+    // Drag to scroll
+    let isDown = false, startX = 0, startLeft = 0, hasDragged = false;
+    grid.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      isDown = true; hasDragged = false;
+      grid.dataset.dragging = '1';
+      startX = e.clientX; startLeft = grid.scrollLeft;
+      grid.setPointerCapture(e.pointerId);
+      grid.style.scrollSnapType = 'none';
+      grid.style.scrollBehavior = 'auto';
+    });
+    grid.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) hasDragged = true;
+      grid.scrollLeft = startLeft - dx;
+    });
+    function endDrag(e) {
+      if (!isDown) return;
+      isDown = false;
+      delete grid.dataset.dragging;
+      grid.style.scrollSnapType = '';
+      grid.style.scrollBehavior = '';
+      try { grid.releasePointerCapture(e.pointerId); } catch(err){}
+      // prevent click on cards if dragged
+      if (hasDragged) {
+        const handler = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+        grid.addEventListener('click', handler, { capture: true, once: true });
+        setTimeout(() => hasDragged = false, 50);
+      }
+    }
+    grid.addEventListener('pointerup', endDrag);
+    grid.addEventListener('pointercancel', endDrag);
+    grid.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevBtn.click(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); nextBtn.click(); }
+    });
+
+    // Keyboard focusable track
+    grid.setAttribute('tabindex', '0');
+    grid.setAttribute('aria-label', 'Flashcard deck — drag or use arrows to navigate');
+
+    // Observe card count changes (e.g., project filter)
+    const mo = new MutationObserver(() => { buildDots(); requestAnimationFrame(updateState); });
+    mo.observe(grid, { childList: true });
+
+    // Initial state + on resize
+    requestAnimationFrame(updateState);
+    window.addEventListener('resize', updateState, { passive: true });
+
+    // Re-trigger scroll-reveal for new layout
+    if (window.refreshScrollReveal) window.refreshScrollReveal();
+  });
+}
+
+/* --- Scroll Flash: vertical scroll nudges flashcard decks (deck drifts) --- */
+function initScrollFlashDrift() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(pointer: coarse)').matches) return; // keep touch clean
+  const decks = () => document.querySelectorAll('.flashcard-track');
+  let lastY = window.scrollY;
+  let ticking = false;
+  let visible = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) visible.add(e.target);
+      else visible.delete(e.target);
+    });
+  }, { rootMargin: '-18% 0px -18% 0px', threshold: 0 });
+  decks().forEach(d => io.observe(d));
+  // also observe future decks
+  const mo = new MutationObserver(() => decks().forEach(d => { if (!d._flashObserved) { io.observe(d); d._flashObserved = true; }}));
+  mo.observe(document.body, { childList: true, subtree: true });
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const curY = window.scrollY;
+      const delta = curY - lastY;
+      lastY = curY;
+      if (Math.abs(delta) < 1 || visible.size === 0) { ticking = false; return; }
+      // only drift when scrolling at moderate speed (avoid micro-jitters)
+      const nudge = delta * 0.24;
+      visible.forEach(deck => {
+        if (deck.dataset.dragging === '1') return;
+        if (deck._scrollLock) return;
+        const max = deck.scrollWidth - deck.clientWidth;
+        if (max <= 4) return;
+        let next = deck.scrollLeft + nudge;
+        next = Math.max(0, Math.min(max, next));
+        // ease with lerp to avoid jank
+        deck.scrollLeft = next;
+        deck._scrollLock = true;
+        setTimeout(() => { deck._scrollLock = false; }, 60);
+      });
+      ticking = false;
+    });
+  }, { passive: true });
 }
 
 /* ==========================================================================

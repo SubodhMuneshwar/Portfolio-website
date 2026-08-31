@@ -313,11 +313,15 @@ body.saiyan-mode .marker-highlight {
 .section-title {
   font-size: clamp(2rem, 4vw, 2.75rem);
   margin-bottom: 1rem;
+  text-wrap: balance;
 }
 
 .section-subtitle {
   font-size: var(--text-lg);
   color: var(--muted-fg);
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- Buttons ("The Candy Buttons") --- */
@@ -353,6 +357,15 @@ body.saiyan-mode .marker-highlight {
 .btn:active {
   transform: translate(2px, 2px);
   box-shadow: var(--shadow-sm);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn-primary:focus-visible {
+  outline-color: var(--accent-fg);
 }
 
 .btn-primary {
@@ -404,7 +417,7 @@ body.saiyan-mode .marker-highlight {
 .btn-icon-circle {
   width: 26px;
   height: 26px;
-  background-color: #FFFFFF;
+  background-color: var(--card);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -427,6 +440,15 @@ body.saiyan-mode .marker-highlight {
 .sticker-card:hover {
   transform: translate(-3px, -3px) rotate(-0.5deg);
   box-shadow: var(--shadow-lg);
+}
+
+body.saiyan-mode .sticker-card:hover,
+body.saiyan-mode .project-card:hover,
+body.saiyan-mode .experience-card:hover,
+body.saiyan-mode .achievement-card:hover {
+  transform: translate(-3px, -3px) rotate(-0.5deg) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
 .sticker-card.card-pink:hover {
@@ -687,6 +709,11 @@ body.saiyan-mode .nav-link .nav-link-icon {
   box-shadow: inset 0 0 0 1px rgba(255,46,151,0.14);
 }
 
+.nav-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 body.saiyan-mode .nav-link {
   color: #F8FAFC;
 }
@@ -763,6 +790,29 @@ body.saiyan-mode .nav-link.active {
     radial-gradient(ellipse 90% 14% at 50% 100%, rgba(253,230,138,0.18) 0%, transparent 62%),
     transparent;
   border-bottom: 1px solid rgba(30,41,59,0.06);
+}
+
+/* Goku Rose subtle ambient energy field overlay (light mode only) */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 15% 25%, rgba(255, 46, 151, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(244, 114, 182, 0.025) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 46, 151, 0.015) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: goku-rose-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes goku-rose-pulse {
+  0% { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.01); }
+}
+
+body.saiyan-mode .hero-section::before {
+  display: none !important;
 }
 
 /* Dark (Saiyan) mode — remove ALL pink/Rosé gradients; clean Namek void */
@@ -942,14 +992,11 @@ body.saiyan-mode .hero-rotating-word {
   font-family: var(--font-body);
   font-size: clamp(1.02rem, 1.8vw, 1.18rem);
   font-weight: 400;
-  color: #475569;
+  color: var(--muted-fg);
   max-width: 46rem;
   margin-bottom: 1.85rem;
   line-height: 1.72;
   letter-spacing: -0.01em;
-}
-body.saiyan-mode .hero-description {
-  color: #CBD5E1;
 }
 
 .hero-ctas {
@@ -1043,6 +1090,27 @@ body.saiyan-mode .hero-ambient-aura {
   z-index: 2;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
   animation: float-gentle 6s ease-in-out infinite;
+}
+
+/* Subtle Goku Rose accent ring on hover (light mode only) */
+.hero-hud-frame::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(255, 46, 151, 0.08) 0%, rgba(244, 114, 182, 0.05) 50%, rgba(255, 46, 151, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-hud-frame:hover::before {
+  opacity: 1;
+}
+
+body.saiyan-mode .hero-hud-frame::before {
+  display: none;
 }
 
 .hero-hud-frame:hover {
@@ -1193,13 +1261,20 @@ body.saiyan-mode .hero-card-scouter-readout {
 .hero-photo-frame {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 20px;
+  border-radius: 40px 40px 40px 12px;
   overflow: hidden;
   position: relative;
   background: #0F172A;
   border: 1px solid rgba(15, 23, 42, 0.07);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 10px 28px rgba(15, 23, 42, 0.10);
   isolation: isolate;
+  transition: var(--transition-bounce);
+  animation: float-gentle 5s ease-in-out infinite;
+}
+
+.hero-photo-frame:hover {
+  transform: translate(-3px, -3px) rotate(-1deg);
+  box-shadow: 8px 8px 0px 0px var(--secondary);
 }
 
 .hero-photo-frame:hover .hero-photo-shimmer {
@@ -1225,7 +1300,7 @@ body.saiyan-mode .hero-card-scouter-readout {
   object-fit: cover;
   object-position: top center;
   display: block;
-  border-radius: 20px;
+  border-radius: 40px 40px 40px 12px;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
 }
 
@@ -1240,7 +1315,7 @@ body.saiyan-mode .hero-card-scouter-readout {
   background: radial-gradient(ellipse at center, transparent 62%, rgba(15, 23, 42, 0.07) 100%);
   pointer-events: none;
   z-index: 2;
-  border-radius: 20px;
+  border-radius: 40px 40px 40px 12px;
 }
 
 body.saiyan-mode .hero-photo-frame {
@@ -1248,8 +1323,15 @@ body.saiyan-mode .hero-photo-frame {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 12px 32px rgba(0,0,0,0.55);
 }
 
+body.saiyan-mode .hero-photo-frame:hover {
+  transform: translate(-3px, -3px) rotate(-1deg);
+  border-color: #F59E0B;
+  box-shadow: 8px 8px 0px 0px #F59E0B, 0 0 25px rgba(245, 158, 11, 0.35) !important;
+}
+
 body.saiyan-mode .hero-photo-vignette {
   background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.32) 100%);
+  border-radius: 40px 40px 40px 12px;
 }
 
 /* ── Face-aligned smooth circular reveal (no hard ring) ──────────── */
@@ -1260,7 +1342,7 @@ body.saiyan-mode .hero-photo-vignette {
   opacity: 0;
   transition: opacity 0.22s ease;
   z-index: 4;
-  border-radius: 20px;
+  border-radius: 40px 40px 40px 12px;
   overflow: hidden;
 }
 
@@ -1281,7 +1363,7 @@ body.saiyan-mode .hero-photo-vignette {
   -webkit-clip-path: circle(92px at var(--rx, 50%) var(--ry, 50%));
   will-change: mask-image, clip-path;
   transition: opacity 0.28s cubic-bezier(0.16,1,0.3,1);
-  border-radius: 20px;
+  border-radius: 40px 40px 40px 12px;
   filter: saturate(1.04) contrast(1.02);
 }
 
@@ -1291,6 +1373,21 @@ body.saiyan-mode .hero-photo-vignette {
   /* rose2.jpg 538×994 portrait ~0.541 aspect vs subodh 0.884: cover 1.848× height overflows 0.848×; 52% 77% aligns Rose eyes (55% src) with Subodh eyes (36% container) — completely aligned */
   background-size: cover;
   background-position: 52% 77%;
+}
+
+/* Subtle Goku Rose glow on rose reveal layer (light mode only) */
+body:not(.saiyan-mode) .hero-reveal-rose::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--rx, 50%) var(--ry, 50%), rgba(255, 46, 151, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+body:not(.saiyan-mode) .hero-photo-frame:hover .hero-reveal-rose::after {
+  opacity: 1;
 }
 
 /* Dark mode → Goku — tall portrait, face aligned */
@@ -1435,6 +1532,16 @@ body.saiyan-mode .hero-clean-badge {
   position: relative;
   overflow: hidden;
 }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--secondary), var(--quaternary));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
 
 .stat-card:hover {
   transform: translateY(-4px);
@@ -1558,6 +1665,7 @@ body.saiyan-mode .hero-clean-badge {
   padding: 1.75rem;
   position: relative;
   transition: var(--transition-bounce);
+  overflow: hidden;
 }
 
 .skill-category-card:hover {
@@ -1571,7 +1679,7 @@ body.saiyan-mode .hero-clean-badge {
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px dashed #CBD5E1;
+  border-bottom: 2px dashed var(--border-light);
 }
 
 .skill-icon-box {
@@ -1588,6 +1696,7 @@ body.saiyan-mode .hero-clean-badge {
 .skill-card-title {
   font-size: var(--text-lg);
   font-weight: 800;
+  text-wrap: balance;
 }
 
 .skill-items-wrap {
@@ -1700,7 +1809,7 @@ body.saiyan-mode .hero-clean-badge {
 
 .exp-description {
   font-size: var(--text-base);
-  color: #334155;
+  color: var(--muted-fg);
   margin-bottom: 1.5rem;
   font-weight: 600;
 }
@@ -1718,7 +1827,7 @@ body.saiyan-mode .hero-clean-badge {
   align-items: flex-start;
   gap: 0.75rem;
   font-size: var(--text-base);
-  color: #334155;
+  color: var(--fg);
 }
 
 .exp-bullet-icon {
@@ -1743,8 +1852,8 @@ body.saiyan-mode .hero-clean-badge {
 }
 
 .exp-tag {
-  background-color: #F8FAFC;
-  border: 1.5px solid var(--border);
+  background-color: var(--muted);
+  border: 1.5px solid var(--border-light);
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-full);
   font-family: var(--font-mono);
@@ -1784,6 +1893,11 @@ body.saiyan-mode .hero-clean-badge {
   color: #FFFFFF;
   box-shadow: var(--shadow-md);
   transform: translate(-2px, -2px);
+}
+
+.filter-btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .projects-grid {
@@ -1923,8 +2037,8 @@ body.saiyan-mode .hero-clean-badge {
 }
 
 .ach-icon-circle {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: var(--border-width) solid var(--border);
   display: inline-flex;
@@ -1938,6 +2052,7 @@ body.saiyan-mode .hero-clean-badge {
   font-size: var(--text-lg);
   font-weight: 800;
   margin-bottom: 0.5rem;
+  text-wrap: balance;
 }
 
 .ach-org {
@@ -1951,7 +2066,7 @@ body.saiyan-mode .hero-clean-badge {
 
 .ach-desc {
   font-size: var(--text-sm);
-  color: #334155;
+  color: var(--muted-fg);
   line-height: 1.55;
 }
 
@@ -1976,6 +2091,7 @@ body.saiyan-mode .hero-clean-badge {
   box-shadow: var(--shadow-md);
   transition: var(--transition-bounce);
   position: relative;
+  overflow: hidden;
 }
 
 .edu-card:hover {
@@ -2004,6 +2120,7 @@ body.saiyan-mode .hero-clean-badge {
   align-items: center;
   gap: 1.25rem;
   transition: var(--transition-bounce);
+  overflow: hidden;
 }
 
 .cert-card:hover {
@@ -4672,7 +4789,7 @@ body { transition: background-color 0.8s cubic-bezier(0.16,1,0.3,1); }
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease;
 }
 
 .db-collect-overlay.active {
@@ -5150,6 +5267,316 @@ body.saiyan-mode .prank-hint-sub {
 }
 
 /* ==========================================================================
+   Dynamic Polish — Scroll Progress, Card Spotlight, Tilt, Badge Float
+   ========================================================================== */
+
+/* Scroll progress bar (JS drives --scroll-progress) */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--secondary), var(--quaternary));
+  transform-origin: left center;
+  transform: scaleX(var(--scroll-progress, 0));
+  z-index: 99999;
+  pointer-events: none;
+  transition: transform 0.08s linear;
+  opacity: 0.95;
+}
+body.saiyan-mode .scroll-progress-bar {
+  background: linear-gradient(90deg, #F59E0B, #FBBF24, #34D399);
+  box-shadow: 0 0 10px rgba(251,191,36,0.55);
+}
+
+/* Spotlight — subtle cursor follow glow inside cards */
+.sticker-card, .stat-card, .skill-category-card, .experience-card, .achievement-card, .edu-card, .cert-card, .project-card {
+  --mx: 50%;
+  --my: 50%;
+}
+.sticker-card::after, .stat-card::after, .skill-category-card::after, .experience-card::after, .achievement-card::after, .edu-card::after, .cert-card::after, .project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx) var(--my), rgba(79,70,229,0.10), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.sticker-card:hover::after, .stat-card:hover::after, .skill-category-card:hover::after, .experience-card:hover::after, .achievement-card:hover::after, .edu-card:hover::after, .cert-card:hover::after, .project-card:hover::after {
+  opacity: 1;
+}
+body.saiyan-mode .sticker-card::after, body.saiyan-mode .stat-card::after, body.saiyan-mode .skill-category-card::after, body.saiyan-mode .experience-card::after, body.saiyan-mode .achievement-card::after, body.saiyan-mode .edu-card::after, body.saiyan-mode .cert-card::after, body.saiyan-mode .project-card::after {
+  background: radial-gradient(420px circle at var(--mx) var(--my), rgba(251,191,36,0.14), transparent 62%);
+}
+
+/* Ensure card content sits above spotlight */
+.sticker-card > *, .stat-card > *, .skill-category-card > *, .experience-card > *, .achievement-card > *, .edu-card > *, .cert-card > *, .project-card .project-card-body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tilt — JS sets --tilt-x / --tilt-y */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tilt-card:hover {
+    transform: perspective(900px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateZ(0);
+  }
+}
+
+/* Badge gentle float */
+.card-floating-badge {
+  animation: badge-float 4.2s ease-in-out infinite;
+}
+.card-floating-badge:nth-child(2) { animation-delay: 0.3s; }
+@keyframes badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-floating-badge { animation: none !important; }
+}
+
+/* Magnetic button helper */
+.btn.magnetic {
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+/* Stat value count-up shimmer */
+.stat-value.is-counting {
+  background: linear-gradient(90deg, var(--fg) 30%, var(--accent) 50%, var(--fg) 70%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: stat-shimmer 1.1s ease-out;
+}
+@keyframes stat-shimmer {
+  0% { background-position: 120% 0; }
+  100% { background-position: -20% 0; }
+}
+
+/* Hero parallax — JS drives --parallax-y */
+.hero-section {
+  --parallax-y: 0px;
+}
+.hero-content {
+  transform: translateY(calc(var(--parallax-y) * 0.18));
+  will-change: transform;
+}
+.hero-visual {
+  transform: translateY(calc(var(--parallax-y) * 0.32));
+  will-change: transform;
+}
+.hero-ambient-aura {
+  transform: translateY(calc(var(--parallax-y) * 0.12)) scale(var(--aura-scale, 1));
+}
+
+/* Section header underline draw */
+.section-title {
+  position: relative;
+}
+.section-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: 0.85rem auto 0;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: center;
+  transition: opacity 0.55s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.scroll-reveal.is-revealed .section-title::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+body.saiyan-mode .section-title::after {
+  background: linear-gradient(90deg, #F59E0B, #34D399);
+}
+
+/* ==========================================================================
+   Flashcard Deck — Horizontal Snap Scroller (Skills / Projects / Achievements)
+   ========================================================================== */
+.flashcard-scroller-wrap {
+  position: relative;
+}
+
+.flashcard-track {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
+  -webkit-overflow-scrolling: touch;
+  gap: 1.5rem;
+  padding: 1rem 1rem 1.5rem;
+  margin: 0 -1rem;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-x pan-y;
+}
+.flashcard-track::-webkit-scrollbar { display: none; }
+.flashcard-track:active { cursor: grabbing; }
+
+.flashcard-track > .skill-category-card,
+.flashcard-track > .project-card,
+.flashcard-track > .achievement-card {
+  flex: 0 0 clamp(300px, 36vw, 380px);
+  min-width: clamp(300px, 36vw, 380px);
+  max-width: 380px;
+  scroll-snap-align: center;
+  scroll-snap-stop: normal;
+  user-select: text;
+}
+
+/* Edge fade to hint horizontal scroll */
+.flashcard-scroller-wrap::before,
+.flashcard-scroller-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 1.5rem;
+  width: 28px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+.flashcard-scroller-wrap::before {
+  left: -1rem;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+.flashcard-scroller-wrap::after {
+  right: -1rem;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+.flashcard-scroller-wrap.at-start::before { opacity: 0; }
+.flashcard-scroller-wrap.at-end::after { opacity: 0; }
+
+.flashcard-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-top: 1.1rem;
+}
+
+.flashcard-arrow {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2.5px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  color: var(--fg);
+  flex-shrink: 0;
+}
+.flashcard-arrow:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: var(--tertiary);
+}
+.flashcard-arrow:active { transform: translateY(0); }
+.flashcard-arrow:disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+body.saiyan-mode .flashcard-arrow {
+  background: #0A1611;
+  border-color: #F59E0B;
+  color: #FBBF24;
+}
+
+.flashcard-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.flashcard-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  border: 2px solid var(--border);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: width 0.22s cubic-bezier(0.16,1,0.3,1), background-color 0.18s ease, border-color 0.18s ease;
+}
+.flashcard-dot.is-active {
+  width: 22px;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+body.saiyan-mode .flashcard-dot.is-active {
+  background: #F59E0B;
+  border-color: #F59E0B;
+}
+
+/* Flashcard reveal: pop one-by-one like a deck being dealt */
+.flashcard-track {
+  perspective: 1100px;
+  perspective-origin: center center;
+}
+.flashcard-track .scroll-reveal {
+  opacity: 0;
+  transform: translateY(32px) scale(0.84) rotate(-1.5deg);
+  transform-origin: center center;
+  filter: blur(5px);
+  transition:
+    opacity 0.62s cubic-bezier(0.16,1,0.3,1),
+    transform 0.68s cubic-bezier(0.34,1.56,0.64,1),
+    filter 0.52s ease;
+  will-change: opacity, transform;
+}
+.flashcard-track .scroll-reveal.is-revealed {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) rotate(0) !important;
+  filter: blur(0) !important;
+}
+/* One-by-one stagger — more spacing than global so pop is obvious */
+.flashcard-track .reveal-delay-1 { transition-delay: 0s !important; }
+.flashcard-track .reveal-delay-2 { transition-delay: 0.12s !important; }
+.flashcard-track .reveal-delay-3 { transition-delay: 0.24s !important; }
+.flashcard-track .reveal-delay-4 { transition-delay: 0.36s !important; }
+.flashcard-track .reveal-delay-5 { transition-delay: 0.48s !important; }
+.flashcard-track .reveal-delay-6 { transition-delay: 0.60s !important; }
+
+/* (view-timeline variant removed for reliable one-by-one pop via IntersectionObserver) */
+
+@media (max-width: 640px) {
+  .flashcard-track > .skill-category-card,
+  .flashcard-track > .project-card,
+  .flashcard-track > .achievement-card {
+    flex-basis: min(84vw, 360px);
+    min-width: min(84vw, 360px);
+  }
+  .flashcard-track { gap: 1rem; scroll-padding-inline: 0.75rem; }
+  .flashcard-arrow { width: 44px; height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flashcard-track { scroll-behavior: auto; }
+  .flashcard-track .scroll-reveal { transform: none !important; }
+}
+
+/* ==========================================================================
    Realistic Cinematic Shenron Emergence from Dragon Balls & Clean Wish UI
    ========================================================================== */
 
@@ -5168,7 +5595,7 @@ body.saiyan-mode .prank-hint-sub {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.75s ease;
+  transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.5s ease;
   user-select: none;
 }
 
@@ -5188,34 +5615,33 @@ body.saiyan-mode .prank-hint-sub {
   pointer-events: none;
 }
 
-/* Atmospheric Overlays */
+/* Atmospheric Overlays — simplified for fast load */
 .shenron-sky-overlay {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.22) 0%, transparent 65%),
-    radial-gradient(ellipse at 50% 90%, rgba(245, 158, 11, 0.28) 0%, rgba(5, 150, 105, 0.15) 40%, rgba(2, 6, 23, 0.88) 75%, #010408 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.16) 0%, transparent 58%),
+    radial-gradient(ellipse at 50% 92%, rgba(251,191,36,0.14) 0%, rgba(2,6,23,0.94) 62%, #010408 100%);
   z-index: 1;
   pointer-events: none;
 }
 
 .shenron-ground-glow {
   position: absolute;
-  bottom: -30px;
-  left: 0;
-  right: 0;
-  height: 45vh;
-  background: radial-gradient(ellipse at 50% 100%, rgba(251, 191, 36, 0.55) 0%, rgba(245, 158, 11, 0.28) 40%, transparent 75%);
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92vw;
+  max-width: 1000px;
+  height: 36vh;
+  background: radial-gradient(ellipse at 50% 100%, rgba(251,191,36,0.28) 0%, transparent 72%);
   z-index: 2;
   pointer-events: none;
-  filter: blur(30px);
+  filter: blur(18px);
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transition: opacity 0.9s ease;
 }
-
-.shenron-cinematic.active .shenron-ground-glow {
-  opacity: 1;
-}
+.shenron-cinematic.active .shenron-ground-glow { opacity: 1; }
 
 /* Dismiss / Close Button */
 .shenron-cinematic-close {
@@ -5291,7 +5717,7 @@ body.saiyan-mode .prank-hint-sub {
 .shenron-cinematic.balls-active .altar-ground-blast {
   opacity: 1;
   transform: scale(1.2);
-  animation: altar-blast-pulse 0.6s infinite alternate ease-in-out;
+  animation: altar-blast-pulse 1.2s infinite alternate ease-in-out;
 }
 
 @keyframes altar-blast-pulse {
@@ -5364,214 +5790,540 @@ body.saiyan-mode .prank-hint-sub {
   100% { width: 180px; filter: brightness(1.45) blur(2.5px); }
 }
 
-/* Shenron Dragon: Physically Emerges, Uncoils and Ascends from the Dragon Balls */
+/* Shenron Dragon: Cinematic scale, volumetric aura, breathing */
 .shenron-dragon-wrapper {
   position: absolute;
-  bottom: 0;
+  bottom: 14px;
   left: 50%;
   width: 100%;
-  height: 100%;
-  max-width: 1300px;
+  height: 82%;
+  max-width: 980px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9;
   pointer-events: none;
   opacity: 0;
-  transform: translate3d(-50%, 75%, 0) scale(0.35);
+  transform: translate3d(-50%, 58%, 0) scale(0.38);
   transform-origin: bottom center;
-  transition: transform 2.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+  transition: transform 1.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
 }
-
 .shenron-cinematic.dragon-active .shenron-dragon-wrapper {
   opacity: 1;
   transform: translate3d(-50%, 0%, 0) scale(1);
-  animation: dragon-sway-float 6s 2.4s infinite alternate ease-in-out;
+  animation: dragon-sway-float 5s 2s infinite alternate ease-in-out;
 }
 
 .shenron-dragon-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 32%;
-  opacity: 0.98;
-  filter: drop-shadow(0 0 45px rgba(16, 185, 129, 0.6)) contrast(1.1) brightness(1.06);
-}
-
-/* Shenron greenscreen video - hidden source, canvas does chroma key */
-.shenron-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   object-fit: contain;
-  object-position: center 45%;
+  object-position: center 36%;
   opacity: 0;
-  pointer-events: none;
-  /* Fallback blend if canvas fails - keep video hidden but blendable */
+  transition: opacity 0.65s ease;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.5));
 }
-
-.shenron-chroma-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
-  object-position: center 45%;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  /* Blend well with dark storm: soft glow and feathered edges */
-  filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.35)) drop-shadow(0 0 60px rgba(251, 191, 36, 0.25)) brightness(1.05) contrast(1.05);
-  -webkit-mask-image: radial-gradient(ellipse 85% 78% at 50% 38%, black 72%, transparent 92%);
-  mask-image: radial-gradient(ellipse 85% 78% at 50% 38%, black 72%, transparent 92%);
-}
-
-.shenron-cinematic.dragon-active .shenron-chroma-canvas {
-  opacity: 1;
-}
-
-/* Hide fallback image when video canvas is active */
-.shenron-cinematic.dragon-active .shenron-dragon-img.fallback-img {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.shenron-cinematic:not(.dragon-active) .shenron-chroma-canvas {
-  opacity: 0;
-}
-
-/* Video fallback visible if canvas not supported */
-.shenron-video.fallback-visible {
-  opacity: 0.98;
-  mix-blend-mode: screen;
-  filter: contrast(1.08) brightness(1.08) drop-shadow(0 0 30px rgba(16,185,129,0.4));
-  -webkit-mask-image: radial-gradient(ellipse 85% 78% at 50% 38%, black 68%, transparent 92%);
-  mask-image: radial-gradient(ellipse 85% 78% at 50% 38%, black 68%, transparent 92%);
-}
+.shenron-cinematic.dragon-active .shenron-dragon-img { opacity: 1; }
 
 @media (max-width: 768px) {
-  .shenron-chroma-canvas,
-  .shenron-video.fallback-visible {
-    object-position: center 42%;
-    filter: drop-shadow(0 0 20px rgba(16,185,129,0.3)) brightness(1.03);
-  }
+  .shenron-dragon-wrapper { height: 84%; max-width: 92vw; }
+  .shenron-dragon-img { object-position: center 32%; }
 }
 
 @keyframes dragon-sway-float {
-  0%   { transform: translate3d(-50%, 0%, 0) scale(1); filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.5)) brightness(1.05); }
-  100% { transform: translate3d(-50%, -16px, 0) scale(1.02); filter: drop-shadow(0 0 65px rgba(251, 191, 36, 0.65)) brightness(1.15); }
+  0%   { transform: translate3d(-50%, 0%, 0) scale(1); }
+  100% { transform: translate3d(-50%, -7px, 0) scale(1.01); }
 }
+.shenron-dragon-aura { display: none; }
 
 /* ==========================================================================
-   Simple, Clean Wish Grant Screen (Minimal & Focused)
+   Premium Wish Console — glass, gold rim, dragon scale texture
    ========================================================================== */
 .shenron-simple-wish-panel {
   position: absolute;
-  bottom: 24px;
+  bottom: max(14px, env(safe-area-inset-bottom));
   left: 50%;
-  transform: translateX(-50%) translateY(30px);
-  width: 92%;
-  max-width: 880px;
-  background: rgba(4, 14, 10, 0.92);
-  border: 2px solid rgba(16, 185, 129, 0.65);
-  border-radius: var(--radius-xl);
+  transform: translateX(-50%) translateY(18px) scale(0.98);
+  width: min(880px, calc(100vw - 20px));
+  max-width: calc(100vw - 20px);
+  background:
+    radial-gradient(120% 140% at 12% 0%, rgba(16,185,129,0.12) 0%, transparent 42%),
+    radial-gradient(120% 120% at 88% 100%, rgba(251,191,36,0.10) 0%, transparent 46%),
+    linear-gradient(180deg, rgba(18,24,32,0.96) 0%, rgba(8,12,18,0.98) 100%);
+  border: 1.5px solid rgba(16,185,129,0.38);
+  border-top-color: rgba(251,191,36,0.55);
+  border-radius: 22px;
   box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.9),
-    0 0 30px rgba(16, 185, 129, 0.35),
-    0 0 50px rgba(245, 158, 11, 0.20);
-  padding: 1.15rem 1.6rem;
+    0 18px 48px rgba(0,0,0,0.78),
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 0 36px rgba(16,185,129,0.14),
+    0 0 64px rgba(251,191,36,0.10);
+  padding: 14px 16px 12px;
   z-index: 30;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  backdrop-filter: blur(20px);
+  gap: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.45s ease, transform 0.45s ease;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .shenron-cinematic.decree-active .shenron-simple-wish-panel {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) scale(1);
   pointer-events: auto;
 }
 
-/* When wish panel appears, minimize bottom balls cluster slightly so wish bar sits cleanly */
 .shenron-cinematic.decree-active .shenron-altar-balls {
-  transform: translateX(-50%) translateY(20px) scale(0.85);
-  opacity: 0.75;
+  transform: translateX(-50%) translateY(18px) scale(0.82);
+  opacity: 0.6;
+  filter: blur(0.5px);
 }
 
 .shenron-wish-speech {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 14px;
   text-align: left;
   min-width: 0;
-  flex-shrink: 0;
+  flex: 1 1 auto;
 }
 
 .shenron-speech-avatar {
-  font-size: 2.2rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.45rem;
   line-height: 1;
-  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8));
+  background: #059669;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  flex-shrink: 0;
 }
 
 .shenron-title-tag {
   font-family: var(--font-heading);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 900;
-  letter-spacing: 0.12em;
-  color: #10B981;
+  letter-spacing: 0.16em;
+  color: #34D399;
   text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shenron-title-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34D399;
 }
 
 .shenron-dialogue-line {
   color: #F8FAFC;
   font-family: var(--font-heading);
-  font-size: 1.05rem;
+  font-size: clamp(0.92rem, 1.8vw, 1.06rem);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
   margin: 0;
-  white-space: nowrap;
+  text-wrap: balance;
+  max-width: 28ch;
 }
 
 .shenron-simple-actions {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 8px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
+/* Buttons — premium pill, distinct hierarchy */
 .shenron-wish-btn {
-  padding: 0.55rem 1.05rem !important;
-  font-size: 0.86rem !important;
-  font-weight: 800 !important;
-  border-radius: var(--radius-full) !important;
+  padding: 0.68rem 1.05rem !important;
+  font-size: 0.84rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em;
+  border-radius: 9999px !important;
   white-space: nowrap;
-  transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+  line-height: 1;
+  border-width: 1.8px !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.18) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+.shenron-wish-btn:hover { transform: translateY(-1px) !important; box-shadow: 0 6px 14px rgba(0,0,0,0.22) !important; }
+.shenron-wish-btn:active { transform: translateY(0) !important; }
+
+/* Primary: Hire — golden, hero */
+.shenron-simple-actions .btn-primary.shenron-wish-btn {
+  background: linear-gradient(180deg, #FDE68A 0%, #FBBF24 54%, #F59E0B 100%) !important;
+  color: #1A1300 !important;
+  border-color: rgba(146,64,14,0.22) !important;
+  box-shadow: 0 6px 18px rgba(245,158,11,0.38), 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.52) !important;
 }
 
-.shenron-wish-btn:hover {
-  transform: translateY(-2px) scale(1.04) !important;
+/* Super Saiyan — teal */
+.shenron-simple-actions .btn-secondary.shenron-wish-btn {
+  background: linear-gradient(180deg, #2DD4BF 0%, #14B8A6 58%, #0D9488 100%) !important;
+  color: #042F2E !important;
+  border-color: rgba(4,47,46,0.14) !important;
+}
+
+/* Dragon Blast — amber */
+.shenron-simple-actions .btn-tertiary.shenron-wish-btn {
+  background: linear-gradient(180deg, #FDE68A 0%, #FBBF24 100%) !important;
+  color: #431407 !important;
+  border-color: rgba(124,45,18,0.14) !important;
 }
 
 .shenron-scatter-btn {
-  background: rgba(15, 23, 42, 0.8) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  color: #F8FAFC !important;
+  background: rgba(15,23,42,0.72) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: #E2E8F0 !important;
+  backdrop-filter: blur(8px);
+}
+.shenron-scatter-btn:hover {
+  border-color: rgba(52,211,153,0.55) !important;
+  color: #6EE7B7 !important;
+  background: rgba(15,23,42,0.88) !important;
+}
+.shenron-scatter-btn:disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.25);
 }
 
-.shenron-scatter-btn:hover {
-  border-color: #10B981 !important;
-  color: #6EE7B7 !important;
-  background: rgba(30, 41, 59, 0.95) !important;
+/* Mobile: premium stacked cards like screenshot 1 but refined */
+@media (max-width: 860px) {
+  .shenron-simple-wish-panel {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 14px;
+    padding: 14px 14px 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .shenron-wish-speech { justify-content: center; text-align: center; }
+  .shenron-speech-avatar { width: 40px; height: 40px; font-size: 1.35rem; }
+  .shenron-title-tag { justify-content: center; }
+  .shenron-dialogue-line { max-width: none; text-align: center; }
+  .shenron-simple-actions { justify-content: stretch; gap: 8px; }
+  /* First button full width, next two split, last full width — premium stack */
+  .shenron-simple-actions .btn-primary { width: 100%; justify-content: center; }
+  .shenron-simple-actions .btn-secondary,
+  .shenron-simple-actions .btn-tertiary { flex: 1 1 calc(50% - 4px); justify-content: center; min-width: 0; font-size: 0.80rem !important; padding: 0.62rem 0.6rem !important; }
+  .shenron-scatter-btn { width: 100%; justify-content: center; }
+}
+@media (max-width: 380px) {
+  .shenron-simple-actions .btn-secondary,
+  .shenron-simple-actions .btn-tertiary { flex-basis: 100%; }
+}
+
+/* ==========================================================================
+   Dragon Ball Scatter Animation — Anime-Accurate Dispersal
+   Triggered by "Scatter Balls" after a wish: 7 altar balls shoot into the
+   sky in 7 directions with golden beams, then page balls pop in.
+   ========================================================================== */
+
+/* Scattering state — locks modal interaction, hides altar cluster */
+.shenron-cinematic.scattering {
+  pointer-events: none !important;
+}
+.shenron-cinematic.scattering .shenron-simple-wish-panel {
+  opacity: 0 !important;
+  transform: translateX(-50%) translateY(16px) scale(0.98) !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+.shenron-cinematic.scattering .shenron-altar-balls {
+  pointer-events: none;
+}
+.shenron-cinematic.scattering .altar-balls-cluster {
+  opacity: 0 !important;
+  transform: translateY(8px) scale(0.92);
+  filter: blur(2px);
+  transition: opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease;
+}
+.shenron-cinematic.scattering .shenron-vortex-beam {
+  opacity: 0 !important;
+  transform: translateX(-50%) scaleY(0.25) !important;
+  transition: opacity 0.25s ease, transform 0.25s ease !important;
+}
+
+/* Full-screen golden dispersal flash — HIGH VISIBILITY, smooth */
+.shenron-scatter-flash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 68%, rgba(255,255,255,1) 0%, rgba(255,250,205,0.98) 12%, rgba(254,240,138,0.96) 24%, rgba(251,191,36,0.88) 42%, rgba(245,158,11,0.62) 68%, transparent 84%),
+    radial-gradient(ellipse at 50% 88%, rgba(251,191,36,0.55) 0%, rgba(245,158,11,0.22) 46%, transparent 74%),
+    radial-gradient(ellipse at 50% 100%, rgba(251,191,36,0.35) 0%, transparent 68%);
+  z-index: 24;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, transform;
+  transform: scale(0.92);
+  filter: blur(0px);
+}
+.shenron-cinematic.scattering .shenron-scatter-flash {
+  animation: scatter-flash-burst 3s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes scatter-flash-burst {
+  0% { opacity: 0; transform: scale(0.88); filter: blur(2px) brightness(1); }
+  14% { opacity: 1; transform: scale(1); filter: blur(0px) brightness(1.22); }
+  38% { opacity: 1; transform: scale(1.015); filter: blur(0px) brightness(1.14); }
+  68% { opacity: 0.9; transform: scale(1.03); filter: blur(0px) brightness(1.04); }
+  100% { opacity: 0; transform: scale(1.08); filter: blur(6px) brightness(1); }
+}
+
+/* Central ki eruption rings — double pulse for visibility */
+.shenron-scatter-ring {
+  position: absolute;
+  left: 50%;
+  bottom: 78px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 4px solid #FFF7B2;
+  box-shadow: 0 0 22px #FEF08A, 0 0 44px #FBBF24, 0 0 72px rgba(245,158,11,0.55), inset 0 0 14px rgba(255,255,255,0.95);
+  transform: translateX(-50%) scale(0.18);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 23;
+}
+.shenron-scatter-ring::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(251,191,36,0.85);
+  box-shadow: 0 0 18px rgba(251,191,36,0.6);
+  opacity: 0.9;
+}
+.shenron-cinematic.scattering .shenron-scatter-ring {
+  animation: scatter-ring-expand 2.85s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.shenron-cinematic.scattering .shenron-scatter-ring::before {
+  animation: scatter-ring-expand-inner 2.85s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
+}
+@keyframes scatter-ring-expand {
+  0% { transform: translateX(-50%) scale(0.18); opacity: 1; border-width: 5px; filter: brightness(1.4); }
+  28% { opacity: 1; border-width: 4px; }
+  100% { transform: translateX(-50%) scale(26); opacity: 0; border-width: 1px; filter: brightness(1); }
+}
+@keyframes scatter-ring-expand-inner {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* Central formation glow — appears when 7 balls form the circle */
+.db-circle-central-glow {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  height: 180px;
+  transform: translate(-50%, -50%) scale(0.35);
+  background: radial-gradient(circle, rgba(255,255,255,0.96) 0%, rgba(254,240,138,0.88) 36%, rgba(251,191,36,0.42) 62%, transparent 76%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99995;
+  opacity: 0;
+  /* filter removed for performance */
+  will-change: transform, opacity;
+  animation: circle-formation-glow 5s ease-out forwards;
+}
+@keyframes circle-formation-glow {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.32); }
+  28% { opacity: 0; transform: translate(-50%, -50%) scale(0.45); }
+  36% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.08); }
+  48% { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
+  58% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  78% { opacity: 0.72; transform: translate(-50%, -50%) scale(1.08); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
+}
+@keyframes circle-glow-ring {
+  0% { transform: scale(0.85); opacity: 0.95; border-width: 2px; }
+  100% { transform: scale(1.55); opacity: 0; border-width: 1px; }
+}
+@media (max-width: 768px) {
+  .db-circle-central-glow { width: 180px; height: 180px; }
+}
+@media (max-width: 480px) {
+  .db-circle-central-glow { width: 140px; height: 140px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-circle-central-glow { animation-duration: 0.9s !important; }
+}
+
+/* Flying clones — each altar ball spawns a fixed clone that streaks to the heavens */
+/* SMOOTH: 1.55s, GPU 3D, larger + brighter for visibility */
+.db-scatter-clone {
+  position: fixed;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  z-index: 99996;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  filter: none;
+  box-shadow: 0 0 16px rgba(251,191,36,0.55);
+  --scatter-x: 0px;
+  --scatter-y: -700px;
+  --scatter-rot: 720deg;
+  --scatter-delay: 0ms;
+  --circle-x: 0px;
+  --circle-y: 0px;
+  animation: scatter-gather-fly 4.2s ease-out var(--scatter-delay) forwards;
+}
+.db-scatter-clone::before {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.78) 0%, rgba(255,247,178,0.72) 18%, rgba(254,240,138,0.48) 34%, rgba(251,191,36,0.32) 56%, transparent 78%);
+  z-index: -2;
+  pointer-events: none;
+  opacity: 1;
+  filter: blur(1px);
+  animation: none !important; /* halo disabled for performance */
+}
+@keyframes scatter-halo-pulse {
+  0% { transform: scale(0.55); opacity: 0.9; }
+  22% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(0.72); opacity: 0; }
+}
+.db-scatter-clone::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 180px;
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 8%, rgba(255,247,178,1) 18%, rgba(254,240,138,0.98) 32%, rgba(251,191,36,0.92) 52%, rgba(245,158,11,0.82) 74%, transparent 100%);
+  transform: translate(-50%, 14px);
+  border-radius: 9999px;
+  opacity: 0;
+  filter: none;
+  z-index: -1;
+  pointer-events: none;
+  animation: scatter-trail-in 1.53s ease-out forwards;
+  animation-delay: 2.12s;
+}
+@keyframes scatter-trail-in {
+  0% { opacity: 0; }
+  100% { opacity: 0.95; }
+}
+.db-scatter-clone .db-scatter-clone-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  animation: none !important; /* spin disabled for performance */
+}
+@keyframes scatter-gather-fly {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.88) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+    transform: translate3d(calc(var(--circle-x) * 0.18), calc(var(--circle-y) * 0.18), 0) scale(1.02) rotate(calc(var(--scatter-rot) * 0.08));
+  }
+  32% {
+    transform: translate3d(var(--circle-x), var(--circle-y), 0) scale(1.08) rotate(calc(var(--scatter-rot) * 0.22));
+    opacity: 1;
+  }
+  44% {
+    transform: translate3d(var(--circle-x), var(--circle-y), 0) scale(1.28) rotate(calc(var(--scatter-rot) * 0.28));
+    opacity: 1;
+  }
+  58% {
+    transform: translate3d(var(--circle-x), var(--circle-y), 0) scale(1.18) rotate(calc(var(--scatter-rot) * 0.34));
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--scatter-x), var(--scatter-y), 0) scale(0.16) rotate(var(--scatter-rot));
+    opacity: 0;
+  }
+}
+@keyframes scatter-clone-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  32% { transform: rotate(180deg) scale(1.08); }
+  100% { transform: rotate(640deg) scale(0.9); }
+}
+
+/* Page balls re-scattered entrance — smoother, more visible golden ki */
+.dragon-ball.scattered-entrance,
+.fake-dragon-ball.scattered-entrance {
+  animation: scattered-pop 2s cubic-bezier(0.34,1.56,0.64,1) both !important;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+@keyframes scattered-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.22) rotate(-16deg);
+    filter: brightness(1.9) blur(1px) drop-shadow(0 0 0 rgba(251,191,36,0));
+  }
+  42% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.28) rotate(5deg);
+    filter: brightness(1.42) drop-shadow(0 0 24px rgba(251,191,36,0.82)) drop-shadow(0 0 48px rgba(245,158,11,0.62)) drop-shadow(0 8px 18px rgba(0,0,0,0.22));
+  }
+  72% {
+    transform: translateY(2px) scale(0.98) rotate(-1deg);
+    filter: brightness(1.1) drop-shadow(0 0 14px rgba(251,191,36,0.45));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+    filter: brightness(1) drop-shadow(0 0 10px rgba(251,191,36,0.38)) drop-shadow(0 2px 8px rgba(0,0,0,0.12));
+  }
+}
+
+/* Respect reduced motion — still scatter but faster & no spin */
+@media (prefers-reduced-motion: reduce) {
+  .shenron-cinematic.scattering .shenron-scatter-flash { animation-duration: 0.52s !important; }
+  .shenron-cinematic.scattering .shenron-scatter-ring { animation-duration: 0.52s !important; }
+  .db-scatter-clone { animation-duration: 0.82s !important; }
+  .db-scatter-clone::before { animation-duration: 0.62s !important; }
+  .db-scatter-clone::after { animation-delay: 0.48s !important; animation-duration: 0.34s !important; }
+  .db-scatter-clone .db-scatter-clone-inner { animation: none !important; }
+  .dragon-ball.scattered-entrance, .fake-dragon-ball.scattered-entrance { animation-duration: 0.48s !important; }
+}
+
+/* Mobile: balanced visibility — still prominent but viewport-aware */
+@media (max-width: 768px) {
+  .db-scatter-clone { width: 56px; height: 56px; }
+  .db-scatter-clone::before { inset: -10px; }
+  .db-scatter-clone::after { height: 180px; width: 14px; }
+  .shenron-scatter-ring { bottom: 62px; width: 24px; height: 24px; }
+}
+@media (max-width: 480px) {
+  .db-scatter-clone { width: 50px; height: 50px; }
+  .db-scatter-clone::after { height: 150px; width: 12px; }
+  .shenron-scatter-ring { bottom: 54px; }
+  .dragon-ball.scattered-entrance, .fake-dragon-ball.scattered-entrance { animation-duration: 0.85s !important; }
 }
 
 /* Mobile Layout for Shenron UI */
@@ -5763,9 +6515,9 @@ body.saiyan-mode .sticker-card:hover,
 body.saiyan-mode .project-card:hover,
 body.saiyan-mode .experience-card:hover,
 body.saiyan-mode .achievement-card:hover {
-  transform: translateY(-5px) scale(1.015) !important;
-  border-color: #FBBF24 !important;
-  box-shadow: 8px 8px 0px 0px #38BDF8, 0 0 30px rgba(251, 191, 36, 0.4), 0 0 50px rgba(56, 189, 248, 0.25) !important;
+  transform: translate(-3px, -3px) rotate(-0.5deg) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
 body.saiyan-mode .section-heading h2 {
@@ -7579,7 +8331,20 @@ p {
 .scouter-terminal-panel {
   max-width: 100%;
   box-sizing: border-box;
+}
+.stat-card,
+.skill-category-card,
+.project-card,
+.edu-card,
+.cert-card,
+.scouter-lens-body,
+.scouter-terminal-panel {
   overflow: hidden;
+}
+.sticker-card,
+.experience-card,
+.achievement-card {
+  overflow: visible;
 }
 
 /* Remove rotate on ticker for very small to avoid clipping */
@@ -7704,3 +8469,9 @@ p {
 }
 
 
+
+/* === Scatter entrance override — must stay after mobile-ball-pulse to win cascade === */
+.dragon-ball.scattered-entrance,
+.fake-dragon-ball.scattered-entrance {
+  animation: scattered-pop 0.62s cubic-bezier(0.34,1.56,0.64,1) both !important;
+}

@@ -414,7 +414,7 @@ body.saiyan-mode .dragon-radar-widget {
   height: 80px;
   z-index: 9990;
   pointer-events: auto;
-  cursor: pointer;
+  cursor: grab;
   transition: filter 0.3s ease, opacity 0.4s ease;
   filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
   touch-action: manipulation;
@@ -424,6 +424,13 @@ body.saiyan-mode .dragon-radar-widget {
 
 .flying-nimbus:hover {
   filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.95)) drop-shadow(4px 4px 0px #1E293B);
+}
+.flying-nimbus.nimbus-dragging {
+  cursor: grabbing;
+  z-index: 99999;
+  filter: drop-shadow(0 0 22px rgba(251, 191, 36, 1)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.7)) drop-shadow(4px 4px 0px #000000) !important;
+  transition: filter 0.15s ease;
+  animation-play-state: paused !important;
 }
 
 /* Left-to-Right Cruising & Turbo */
