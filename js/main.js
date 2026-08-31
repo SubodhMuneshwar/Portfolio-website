@@ -1180,15 +1180,30 @@ function renderDragonBallSVGs() {
   });
 
   // ── Random scatter: floating decoys jump to new random spots each load ──
+  // Mobile-optimized: keep real 7 balls in safe, tappable zone away from header/footer/radar
+  const isMobileScatter = window.innerWidth < 768;
   document.querySelectorAll('.floating-decoy-ball').forEach(el => {
-    const top = (4 + Math.random() * 72).toFixed(2);
-    const left = (3 + Math.random() * 82).toFixed(2);
+    const isReal = el.hasAttribute('data-ball');
+    const topMin = isMobileScatter ? (isReal ? 18 : 10) : 4;
+    const topRange = isMobileScatter ? (isReal ? 56 : 64) : 72;
+    const leftMin = isMobileScatter ? 5 : 3;
+    const leftRange = isMobileScatter ? (isReal ? 66 : 74) : 82;
+    let top = (topMin + Math.random() * topRange).toFixed(2);
+    let left = (leftMin + Math.random() * leftRange).toFixed(2);
+    // Nudge real balls away from Dragon Radar corner on mobile (bottom-right)
+    if (isMobileScatter && isReal) {
+      const t = parseFloat(top), l = parseFloat(left);
+      if (t > 74 && l > 66) {
+        top = (62 + Math.random() * 6).toFixed(2);
+        left = (38 + Math.random() * 20).toFixed(2);
+      }
+    }
     el.style.top = top + '%';
     el.style.left = left + '%';
     el.style.right = 'auto';
     el.style.bottom = 'auto';
     const rot = (Math.random() * 26 - 13).toFixed(1);
-    const sc = (0.90 + Math.random() * 0.22).toFixed(2);
+    const sc = isMobileScatter ? (isReal ? (1.04 + Math.random() * 0.08).toFixed(2) : (0.86 + Math.random() * 0.12).toFixed(2)) : (0.90 + Math.random() * 0.22).toFixed(2);
     el.style.transform = `rotate(${rot}deg) scale(${sc})`;
   });
   // Inline balls: subtle random offset so even fixed-in-header balls don't sit identically each reload
@@ -1352,12 +1367,12 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
       sourceBall.setAttribute('tabindex', '-1');
       sourceBall.style.pointerEvents = 'none';
     }, 380);
-    // After poof, remove from layout so it truly disappears from webpage
+    // After poof, remove from layout so it truly disappears from webpage (use !important to override mobile CSS)
     setTimeout(() => {
       if (sourceBall.classList.contains('ball-disappeared')) {
-        sourceBall.style.display = 'none';
-        sourceBall.style.visibility = 'hidden';
-        sourceBall.style.opacity = '0';
+        sourceBall.style.setProperty('display', 'none', 'important');
+        sourceBall.style.setProperty('visibility', 'hidden', 'important');
+        sourceBall.style.setProperty('opacity', '0', 'important');
       }
     }, 1050);
   }
@@ -1585,13 +1600,14 @@ function initDragonBallsCollector() {
     });
   }
 
-  // Real 7 Dragon Balls Click / Touch / Keyboard Handler
+  // Real 7 Dragon Balls Click / Touch / Keyboard Handler — perfect mobile touch
   interactiveBalls.forEach(ball => {
     const handleBallCollect = (e) => {
       e.stopPropagation();
       const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
-      const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : (e.clientY || window.innerHeight / 2);
+      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
+      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
       
       if (ballNumber >= 1 && ballNumber <= 7) {
         if (!collectedBalls.has(ballNumber)) {
@@ -1621,13 +1637,14 @@ function initDragonBallsCollector() {
     });
   });
 
-  // Fake Decoy Dragon Balls Click / Touch / Keyboard Handler (Kid Goku Prank)
+  // Fake Decoy Dragon Balls Click / Touch / Keyboard Handler (Kid Goku Prank) — mobile perfect
   fakeBalls.forEach(fakeBall => {
     const handleFakeClick = (e) => {
       e.stopPropagation();
       const fakeType = fakeBall.getAttribute('data-fake-ball');
-      const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : (e.clientY || window.innerHeight / 2);
+      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
+      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
       triggerKidGokuPrank(fakeType, clientX, clientY);
     };
 
@@ -1648,6 +1665,20 @@ function initDragonBallsCollector() {
       }
     });
   });
+
+  // Perfect mobile: pause ticker on touch for easier collection (moving target)
+  const tickerTrack = document.querySelector('.ticker-track');
+  const tickerBalls = document.querySelectorAll('.ticker-container .dragon-ball, .ticker-container .fake-dragon-ball');
+  if (tickerTrack && tickerBalls.length) {
+    tickerBalls.forEach(b => {
+      b.addEventListener('touchstart', () => tickerTrack.classList.add('ticker-paused'), {passive: true});
+      b.addEventListener('touchend', () => setTimeout(() => tickerTrack.classList.remove('ticker-paused'), 900), {passive: true});
+      b.addEventListener('mousedown', () => tickerTrack.classList.add('ticker-paused'));
+      b.addEventListener('mouseleave', () => tickerTrack.classList.remove('ticker-paused'));
+      b.addEventListener('focus', () => tickerTrack.classList.add('ticker-paused'));
+      b.addEventListener('blur', () => tickerTrack.classList.remove('ticker-paused'));
+    });
+  }
 }
 
 /* --- Ki Spark Click Effect --- */
@@ -2163,10 +2194,10 @@ window.scatterDragonBallsAgain = function() {
   // Re-enable and reshuffle all dragon balls across the webpage
   document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
     ball.classList.remove('collected', 'ball-disappeared');
-    ball.style.display = '';
-    ball.style.visibility = '';
-    ball.style.opacity = '';
-    ball.style.pointerEvents = '';
+    ball.style.removeProperty('display');
+    ball.style.removeProperty('visibility');
+    ball.style.removeProperty('opacity');
+    ball.style.removeProperty('pointer-events');
     ball.setAttribute('aria-hidden', 'false');
     ball.setAttribute('tabindex', '0');
   });

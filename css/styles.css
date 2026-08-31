@@ -1511,7 +1511,16 @@ body.saiyan-mode .hero-clean-badge {
   animation: marquee-scroll 25s linear infinite;
   will-change: transform;
 }
-.ticker-container:hover .ticker-track{animation-play-state:paused}
+.ticker-container:hover .ticker-track,
+.ticker-container:active .ticker-track,
+.ticker-container:focus-within .ticker-track,
+.ticker-container:has(.dragon-ball:active) .ticker-track,
+.ticker-container:has(.dragon-ball:focus-visible) .ticker-track {
+  animation-play-state: paused;
+}
+.ticker-track.ticker-paused {
+  animation-play-state: paused !important;
+}
 
 .ticker-item {
   font-family: var(--font-heading);
@@ -7188,20 +7197,69 @@ section, .container, .hero-section, .stats-section, .ticker-container {
 }
 
 @media (max-width: 768px) {
-  .floating-decoy-ball {
-    opacity: 0.85;
-    transform: scale(0.85);
+  .floating-decoy-ball.fake-dragon-ball {
+    opacity: 0.78;
+    transform: scale(0.82);
   }
-  /* Prevent decoys from overlapping critical text on small screens */
-  .section-header .floating-decoy-ball,
-  .stats-section .floating-decoy-ball {
+  .floating-decoy-ball[data-ball] {
+    /* Real balls MUST stay visible and tappable on mobile — never hide via CSS */
+    opacity: 1;
+    visibility: visible;
+    display: inline-flex;
+    z-index: 25;
+  }
+  /* Only hide FAKE decoys that overlap critical text */
+  .section-header .floating-decoy-ball.fake-dragon-ball,
+  .stats-section .floating-decoy-ball.fake-dragon-ball {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .floating-decoy-ball {
+  .floating-decoy-ball.fake-dragon-ball {
     display: none !important;
+  }
+  .floating-decoy-ball[data-ball] {
+    display: inline-flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+/* --- Dragon Ball collection: perfect mobile responsiveness (touch targets, visibility, pulse) --- */
+@media (max-width: 768px) {
+  .dragon-ball,
+  .fake-dragon-ball,
+  .shenron-star-ball {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px;
+    min-height: 42px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(255,46,151,0.15);
+  }
+  /* Real balls pulse subtly on mobile to guide collection */
+  .dragon-ball[data-ball] {
+    box-shadow: 0 0 14px rgba(245,158,11,0.5), 0 3px 10px rgba(0,0,0,0.22);
+    animation: mobile-ball-pulse 2.1s ease-in-out infinite;
+  }
+  .dragon-ball[data-ball]:active {
+    transform: scale(0.94) !important;
+  }
+}
+@keyframes mobile-ball-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(245,158,11,0.45), 0 3px 8px rgba(0,0,0,0.22); transform: scale(1); }
+  50% { box-shadow: 0 0 18px rgba(245,158,11,0.65), 0 0 26px rgba(255,126,0,0.38), 0 4px 12px rgba(0,0,0,0.25); transform: scale(1.05); }
+}
+/* Ensure ball hit-area is at least 44px even if visual is 34px on desktop */
+@media (max-width: 480px) {
+  .dragon-ball,
+  .fake-dragon-ball {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 
