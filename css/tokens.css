@@ -352,9 +352,15 @@ body.saiyan-mode .site-header {
 body.saiyan-mode .nav-link {
   color: #F8FAFC !important;
   font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1;
+  padding: 0.38rem 0.7rem;
+  border-radius: var(--radius-full);
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 0.42rem !important;
+  margin: 0;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 

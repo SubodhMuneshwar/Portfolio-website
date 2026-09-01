@@ -786,17 +786,12 @@ function initSaiyanMode() {
 
   function setSaiyanState(enableSaiyan, opts={}) {
     const silent=!!opts.silent, noPersist=!!opts.noPersist;
-    const iconEl = saiyanBtn.querySelector('.saiyan-btn-icon');
     
     if (enableSaiyan) {
       const applySaiyan = () => {
         document.body.classList.add('saiyan-mode');
         document.documentElement.classList.add('saiyan-mode');
         saiyanBtn.setAttribute('aria-pressed', 'true');
-        if (iconEl) {
-          iconEl.setAttribute('data-lucide', 'sparkles');
-          if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
-        }
         if (saiyanBtnText) saiyanBtnText.textContent = 'Rosé';
         saiyanBtn.title = 'Switch to Rosé Mode';
         syncMeta(true);
@@ -813,12 +808,8 @@ function initSaiyanMode() {
       document.body.classList.remove('saiyan-mode');
       document.documentElement.classList.remove('saiyan-mode');
       saiyanBtn.setAttribute('aria-pressed', 'false');
-      if (iconEl) {
-        iconEl.setAttribute('data-lucide', 'zap');
-        if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
-      }
-      if (saiyanBtnText) saiyanBtnText.textContent = 'Go Super';
-      saiyanBtn.title = 'Go Super Saiyan';
+      if (saiyanBtnText) saiyanBtnText.textContent = 'Saiyan';
+      saiyanBtn.title = 'Switch to Super Saiyan Mode';
       syncMeta(false);
       if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
       if(!silent) showToast('Rosé Mode ON');
