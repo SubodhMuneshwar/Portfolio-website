@@ -216,6 +216,87 @@ body.saiyan-mode .btn-secondary:hover {
   box-shadow: 0 0 28px rgba(16, 185, 129, 0.6) !important;
 }
 
+/* Universal High Contrast for Yellow / Golden Background Elements */
+.btn-tertiary,
+.btn-outline:hover,
+.filter-btn:hover,
+body.saiyan-mode .btn-primary,
+body.saiyan-mode .btn-tertiary,
+body.saiyan-mode .filter-btn.active,
+body.saiyan-mode .filter-btn:hover,
+body.saiyan-mode .btn-outline:hover,
+.tech-pill:hover,
+.card-floating-badge,
+.section-tag,
+.edu-score-pill,
+.scouter-hud-tag,
+.skill-icon-box,
+.cert-icon-box {
+  color: #0A1410 !important;
+}
+
+.btn-tertiary :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.btn-outline:hover :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.filter-btn:hover :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+body.saiyan-mode .btn-primary :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+body.saiyan-mode .btn-tertiary :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+body.saiyan-mode .filter-btn.active :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+body.saiyan-mode .filter-btn:hover :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+body.saiyan-mode .btn-outline:hover :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.tech-pill:hover :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.card-floating-badge :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.section-tag :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.edu-score-pill :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.scouter-hud-tag :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.skill-icon-box :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]),
+.cert-icon-box :not(.dragon-ball):not(.fake-dragon-ball):not([data-ball]):not([data-fake-ball]) {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+}
+
+.btn-tertiary svg,
+.btn-outline:hover svg,
+.filter-btn:hover svg,
+body.saiyan-mode .btn-primary svg,
+body.saiyan-mode .btn-tertiary svg,
+body.saiyan-mode .filter-btn.active svg,
+body.saiyan-mode .filter-btn:hover svg,
+body.saiyan-mode .btn-outline:hover svg,
+.card-floating-badge svg,
+.section-tag svg,
+.skill-icon-box svg,
+.cert-icon-box svg {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  fill: currentColor !important;
+}
+
+.btn-tertiary svg path,
+.btn-outline:hover svg path,
+.filter-btn:hover svg path,
+body.saiyan-mode .btn-primary svg path,
+body.saiyan-mode .btn-tertiary svg path,
+body.saiyan-mode .filter-btn.active svg path,
+body.saiyan-mode .filter-btn:hover svg path,
+body.saiyan-mode .btn-outline:hover svg path,
+.card-floating-badge svg path,
+.section-tag svg path,
+.skill-icon-box svg path,
+.cert-icon-box svg path {
+  fill: #0A1410 !important;
+}
+
+.card-floating-badge i,
+.section-tag i,
+.skill-icon-box i,
+.cert-icon-box i,
+.btn-outline:hover i,
+.filter-btn:hover i {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  stroke-width: 2.2px !important;
+}
+
 body.saiyan-mode .ticker-container {
   background: #040A07 !important;
   border-top: 2.5px solid #F59E0B !important;

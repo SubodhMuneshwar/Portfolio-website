@@ -546,24 +546,38 @@ function initMobileMenu() {
   const navMenu = document.getElementById('navMenu');
   
   if (toggleBtn && navMenu) {
+    let isClosing = false;
+    let closeTimer = null;
+
     function setDrawerState(isOpen) {
       if (isOpen) {
+        if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+        isClosing = false;
+        navMenu.classList.remove('closing');
         navMenu.classList.add('open');
         document.body.classList.add('mobile-drawer-open');
         toggleBtn.setAttribute('aria-expanded', 'true');
         toggleBtn.innerHTML = '<i data-lucide="x" style="width: 22px; height: 22px;"></i>';
       } else {
-        navMenu.classList.remove('open');
-        document.body.classList.remove('mobile-drawer-open');
+        if (!navMenu.classList.contains('open') || isClosing) return;
+        isClosing = true;
+        navMenu.classList.add('closing');
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
+        
+        closeTimer = setTimeout(() => {
+          navMenu.classList.remove('open', 'closing');
+          document.body.classList.remove('mobile-drawer-open');
+          isClosing = false;
+          closeTimer = null;
+        }, 520);
       }
       initLucideIcons();
     }
 
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isOpen = navMenu.classList.contains('open');
+      const isOpen = navMenu.classList.contains('open') && !isClosing;
       setDrawerState(!isOpen);
     });
 

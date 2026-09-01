@@ -302,12 +302,32 @@ body.saiyan-mode .marker-highlight {
   border-radius: var(--radius-full);
   border: var(--border-width) solid var(--border);
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: 700;
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 1rem;
   box-shadow: var(--shadow-sm);
+  color: #0A1410 !important;
+}
+
+.section-tag i,
+.section-tag svg {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  stroke-width: 2.2px !important;
+}
+
+body.saiyan-mode .section-tag {
+  color: #0A1410 !important;
+  font-weight: 800 !important;
+}
+
+body.saiyan-mode .section-tag i,
+body.saiyan-mode .section-tag svg {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  stroke-width: 2.5px !important;
 }
 
 .section-title {
@@ -398,10 +418,50 @@ body.saiyan-mode .marker-highlight {
 .btn-outline {
   background-color: var(--card);
   color: var(--fg);
+  border: var(--border-width) solid var(--border);
+  transition: var(--transition-fast);
 }
 
 .btn-outline:hover {
-  background-color: var(--tertiary);
+  background-color: var(--tertiary) !important;
+  color: #0A1410 !important;
+  border-color: var(--border) !important;
+}
+
+.btn-outline:hover span,
+.btn-outline:hover i,
+.btn-outline:hover svg {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  fill: currentColor !important;
+}
+
+body.saiyan-mode .btn-outline {
+  background-color: #0A1611 !important;
+  color: #F8FAFC !important;
+  border: 1.5px solid #F59E0B !important;
+}
+
+body.saiyan-mode .btn-outline svg,
+body.saiyan-mode .btn-outline i,
+body.saiyan-mode .btn-outline span {
+  color: #F8FAFC !important;
+  fill: currentColor !important;
+}
+
+body.saiyan-mode .btn-outline:hover {
+  background-color: #FBBF24 !important;
+  color: #0A1410 !important;
+  border-color: #FEF08A !important;
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.5) !important;
+}
+
+body.saiyan-mode .btn-outline:hover span,
+body.saiyan-mode .btn-outline:hover svg,
+body.saiyan-mode .btn-outline:hover i {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  fill: #0A1410 !important;
 }
 
 .btn-sm {
@@ -506,6 +566,14 @@ body.saiyan-mode .sticker-card.card-mint:hover {
   align-items: center;
   gap: 0.4rem;
   z-index: 2;
+  color: #0A1410 !important;
+}
+
+.card-floating-badge i,
+.card-floating-badge svg {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  stroke-width: 2.2px !important;
 }
 
 /* --- Header & Navigation Bar — ultra glassy transparent --- */
@@ -2052,6 +2120,14 @@ body.saiyan-mode .hero-clean-badge:hover {
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-sm);
+  color: #0A1410 !important;
+}
+
+.skill-icon-box i,
+.skill-icon-box svg {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  stroke-width: 2.2px !important;
 }
 
 .skill-card-title {
