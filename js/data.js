@@ -135,7 +135,7 @@ const portfolioData = {
       badge: "AI / Healthcare",
       badgeColor: "secondary",
       github: "https://github.com/Nihar0001/dr_hybrid_project",
-      image: "assets/project-dr.svg",
+      image: "assets/dr.png",
       description: "An automated retinal image analysis and clinical diagnostic tool built to detect and classify stages of Diabetic Retinopathy from fundus photography.",
       bullets: [
         "Developed a robust Python-based image analysis pipeline utilizing OpenCV and NumPy for noise reduction, CLAHE contrast enhancement, and feature extraction across 10,000+ images.",
@@ -153,7 +153,7 @@ const portfolioData = {
       badge: "Computer Vision",
       badgeColor: "accent",
       github: "https://github.com/Nihar0001/Final_face_recognition.git",
-      image: "assets/project-face.svg",
+      image: "assets/face recog.jpg",
       description: "An intelligent, contactless attendance monitoring system utilizing high-speed face detection and biometric feature matching.",
       bullets: [
         "Built a real-time Python/Flask backend and pipeline for webcam-driven face detection, landmark alignment, and facial encoding.",
@@ -171,7 +171,7 @@ const portfolioData = {
       badge: "Full-Stack Web",
       badgeColor: "tertiary",
       github: "https://github.com/SubodhMuneshwar/FoodiesGoodies",
-      image: "assets/project-foodies.svg",
+      image: "assets/fg.png",
       description: "A comprehensive health and nutrition web platform offering interactive meal planning, calorie tracking, and dynamic recipe filtering.",
       bullets: [
         "Crafted a responsive full-stack platform featuring 100+ categorized recipes, bookmarking, and dynamic search workflows.",
@@ -179,24 +179,6 @@ const portfolioData = {
         "Implemented personalized BMI-based meal suggestions and database-backed user management using PHP and MySQL."
       ],
       techStack: ["HTML5", "CSS3", "JavaScript", "PHP", "MySQL", "Edamam REST API"]
-    },
-    {
-      id: "naac-portal",
-      title: "NAAC Accreditation Management Portal",
-      tagline: "Streamlined criterion-wise institutional compliance & documentation system",
-      category: "backend",
-      period: "September 2024 (Hackcelestial 1.0)",
-      badge: "Enterprise Hackathon",
-      badgeColor: "quaternary",
-      github: "https://github.com/SubodhMuneshwar",
-      image: "assets/project-naac.svg",
-      description: "Built during Hackcelestial 1.0, this role-based portal simplifies complex collegiate accreditation reporting and audit trails.",
-      bullets: [
-        "Architected role-based dashboards for faculty, department heads, and admin reviewers to submit and approve NAAC documentation.",
-        "Automated criterion-wise progress metrics and report compilation, reducing manual record processing overhead by 60%.",
-        "Ensured secure document storage, hierarchical approval workflows, and audit-ready data extraction."
-      ],
-      techStack: ["HTML5", "CSS3", "JavaScript", "PHP", "MySQL", "Role-Based Access"]
     }
   ],
 

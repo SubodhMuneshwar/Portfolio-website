@@ -196,10 +196,21 @@ function renderProjects(filterCategory = 'all') {
     ? portfolioData.projects
     : portfolioData.projects.filter(p => p.category === filterCategory);
 
+  if (!filtered.length) {
+    container.innerHTML = `
+      <div class="project-empty-state" style="grid-column:1/-1; text-align:center; padding:2.5rem 1rem; background:var(--card); border:2px dashed var(--border-light); border-radius:24px; color:var(--muted-fg);">
+        <p style="font-family:var(--font-heading); font-weight:800; color:var(--fg); margin-bottom:0.4rem;">No projects in this category yet</p>
+        <p style="font-size:var(--text-sm);">Try “All Projects” — 3 builds are live.</p>
+      </div>`;
+    initLucideIcons();
+    if (window.refreshScrollReveal) window.refreshScrollReveal();
+    return;
+  }
+
   container.innerHTML = filtered.map(proj => `
     <div class="project-card project-card-enter">
       <div class="project-card-image-wrap">
-        <img src="${proj.image}" alt="${proj.title}" class="project-card-image" loading="lazy" />
+        <img src="${encodeURI(proj.image)}" alt="${proj.title}" class="project-card-image" loading="lazy" onerror="this.style.display='none'" />
       </div>
       <div class="project-card-body">
         <div class="project-meta-row">
@@ -215,11 +226,11 @@ function renderProjects(filterCategory = 'all') {
           ${proj.techStack.length > 4 ? `<span class="project-chip">+${proj.techStack.length - 4}</span>` : ''}
         </div>
         <div class="project-actions">
-          <button type="button" class="btn btn-outline btn-sm" onclick="openProjectModal('${proj.id}')">
+          <button type="button" class="btn btn-outline btn-sm project-details-btn" data-project-id="${proj.id}">
             <span>Explore Details</span>
             <div class="btn-icon-circle"><i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></div>
           </button>
-          <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" title="View Source Code on GitHub">
+          <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm project-github-link" title="View Source Code on GitHub">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
             </svg>
@@ -229,6 +240,23 @@ function renderProjects(filterCategory = 'all') {
       </div>
     </div>
   `).join('');
+
+  // Robust delegated handling — works even if inline onclick blocked / CSP; also fixes image with space
+  container.querySelectorAll('.project-details-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const pid = btn.getAttribute('data-project-id');
+      if (pid) window.openProjectModal(pid);
+    });
+  });
+
+  // Ensure GitHub links always fire (prevent card tilt / overlay capturing)
+  container.querySelectorAll('.project-github-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  });
 
   initLucideIcons();
   if (window.refreshScrollReveal) window.refreshScrollReveal();
@@ -266,7 +294,7 @@ window.openProjectModal = function(projectId) {
     </div>
 
     <div style="border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--border); margin-bottom: 1.5rem; background: var(--muted);">
-      <img src="${proj.image}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" />
+      <img src="${encodeURI(proj.image)}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" onerror="this.style.display='none'" />
     </div>
 
     <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Key Architecture & Deliverables:</h4>
@@ -2111,33 +2139,33 @@ window.openShenronModal = function() {
   startShenronLightningStorm();
   playShenronThunderSynth();
 
-  // Phase 2 (0.2s): The 7 Dragon Balls at the base surge with pulsating golden Ki
+  // Phase 2 (0.3s): The 7 Dragon Balls surge with golden Ki
   const t1 = setTimeout(() => {
     modal.classList.add('balls-active');
     playDragonBallCollectChime();
-  }, 200);
+  }, 300);
 
-  // Phase 3 (1.0s): Golden Energy Vortex erupts upward from the 7 balls
+  // Phase 3 (0.85s): Golden Energy Vortex rises smoothly from the balls
   const t2 = setTimeout(() => {
     modal.classList.add('beam-active');
     playSuperSaiyanAuraSound();
     drawLightningStrike();
-  }, 1000);
+  }, 850);
 
-  // Phase 4 (1.1s): Shenron Dragon emerges — faster for snappier summon
+  // Phase 4 (1.45s): Shenron rises slowly & majestically from the Dragon Balls
   const t3 = setTimeout(() => {
     modal.classList.add('dragon-active');
     playShenronRoarSound();
     drawLightningStrike();
     triggerLightningStorm(2);
     startShenronChromaLoop();
-  }, 1100);
+  }, 1450);
 
-  // Phase 5 (1.9s): Wish console appears
+  // Phase 5 (4.05s): Wish console appears after slow rise completes
   const t4 = setTimeout(() => {
     modal.classList.add('decree-active');
     playDragonBallCollectChime();
-  }, 1900);
+  }, 4050);
 
   shenronTimelineTimers.push(t1, t2, t3, t4);
 };
@@ -2899,14 +2927,7 @@ function initFlashcardDecks() {
     buildDots();
 
     function updateState() {
-      const max = grid.scrollWidth - grid.clientWidth;
-      const atStart = grid.scrollLeft <= 4;
-      const atEnd = grid.scrollLeft >= max - 4;
-      wrap.classList.toggle('at-start', atStart);
-      wrap.classList.toggle('at-end', atEnd);
-      if (prevBtn) prevBtn.disabled = atStart;
-      if (nextBtn) nextBtn.disabled = atEnd;
-      // active dot = closest to center
+      // active dot = closest to center (most reliable on mobile)
       const gridRect = grid.getBoundingClientRect();
       const mid = gridRect.left + gridRect.width / 2;
       let best = 0; let bestDist = Infinity;
@@ -2916,21 +2937,50 @@ function initFlashcardDecks() {
         if (d < bestDist) { bestDist = d; best = idx; }
       });
       dots.forEach((d, idx) => d.classList.toggle('is-active', idx === best));
+      const atStart = best === 0;
+      const atEnd = best === dots.length - 1;
+      wrap.classList.toggle('at-start', atStart);
+      wrap.classList.toggle('at-end', atEnd);
+      if (prevBtn) prevBtn.disabled = atStart;
+      if (nextBtn) nextBtn.disabled = atEnd;
+      // keep fallback scroll metrics for edge fades
+      const max = grid.scrollWidth - grid.clientWidth;
+      const atStartScroll = grid.scrollLeft <= 4;
+      const atEndScroll = grid.scrollLeft >= max - 4;
+      if (grid.children.length <= 2) {
+        // for 2-3 cards, prefer dot-based, but keep scroll-based as fallback
+        wrap.classList.toggle('at-start', atStart);
+        wrap.classList.toggle('at-end', atEnd);
+      }
     }
 
-    const cardWidth = () => {
-      const first = grid.children[0];
-      if (!first) return 380;
-      const style = getComputedStyle(first);
-      const gap = parseFloat(getComputedStyle(grid).gap) || 24;
-      return first.getBoundingClientRect().width + gap;
+    const scrollToCard = (idx) => {
+      const card = grid.children[idx];
+      if (!card) return;
+      // Center card: offsetLeft - (viewport - cardWidth)/2, accounts for padding/gap
+      const gap = parseFloat(getComputedStyle(grid).gap) || 0;
+      const left = Math.max(0, card.offsetLeft - (grid.clientWidth - card.offsetWidth) / 2 - 8);
+      grid.scrollTo({ left, behavior: 'smooth' });
+      // Fallback if scrollIntoView ignored due to snap
+      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }), 30);
+      setTimeout(updateState, 400);
+      setTimeout(updateState, 800);
     };
-
-    prevBtn.addEventListener('click', () => {
-      grid.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const best = dots.findIndex(d => d.classList.contains('is-active'));
+      const cur = best >= 0 ? best : 0;
+      const target = Math.max(0, cur - 1);
+      scrollToCard(target);
     });
-    nextBtn.addEventListener('click', () => {
-      grid.scrollBy({ left: cardWidth(), behavior: 'smooth' });
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const best = dots.findIndex(d => d.classList.contains('is-active'));
+      const cur = best >= 0 ? best : 0;
+      const target = Math.min(grid.children.length - 1, cur + 1);
+      scrollToCard(target);
     });
 
     let ticking = false;
@@ -2984,9 +3034,16 @@ function initFlashcardDecks() {
     const mo = new MutationObserver(() => { buildDots(); requestAnimationFrame(updateState); });
     mo.observe(grid, { childList: true });
 
-    // Initial state + on resize
+    // Initial state + on resize — delayed for mobile layout + images
     requestAnimationFrame(updateState);
+    setTimeout(updateState, 400);
+    setTimeout(updateState, 900);
     window.addEventListener('resize', updateState, { passive: true });
+    // also update after images load (project thumbnails)
+    grid.querySelectorAll('img').forEach(img => {
+      if (img.complete) return;
+      img.addEventListener('load', () => requestAnimationFrame(updateState), { once: true });
+    });
 
     // Re-trigger scroll-reveal for new layout
     if (window.refreshScrollReveal) window.refreshScrollReveal();

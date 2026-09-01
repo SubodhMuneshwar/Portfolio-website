@@ -33,8 +33,8 @@
   <!-- Preload Shenron for instant summon -->
   <link rel="preload" as="image" href="assets/shenron.png" fetchpriority="high">
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260831_scatterFinal27">
-  <link rel="stylesheet" href="css/styles.css?v=20260831_scatterFinal27">
+  <link rel="stylesheet" href="css/tokens.css?v=20260901_fixProjectOriginal7">
+  <link rel="stylesheet" href="css/styles.css?v=20260901_fixProjectOriginal7">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -177,13 +177,23 @@
             <div class="hero-visual-wrapper">
               <!-- Ambient Dual-Mode Ki Aura Glow Behind Photo -->
               <div class="hero-ambient-aura"></div>
+              <!-- Light-only Goku Black ROSE petals -->
+              <div class="rose-petal-field" aria-hidden="true">
+                <span class="rose-petal p1"></span>
+                <span class="rose-petal p2"></span>
+                <span class="rose-petal p3"></span>
+                <span class="rose-petal p4"></span>
+                <span class="rose-petal p5"></span>
+                <span class="rose-petal p6"></span>
+              </div>
 
-              <!-- High-Tech / Saiyan HUD Card Frame -->
+              <!-- High-Tech / ROSE HUD Card Frame -->
               <div class="hero-hud-frame">
                 <span class="hud-corner hud-top-left"></span>
                 <span class="hud-corner hud-top-right"></span>
                 <span class="hud-corner hud-bottom-left"></span>
                 <span class="hud-corner hud-bottom-right"></span>
+                <span class="rose-divine-tag" aria-hidden="true">✦ ROSE</span>
 
                 <!-- Top Telemetry Decal Bar -->
                 <div class="hero-card-header-bar">
@@ -208,13 +218,13 @@
                 </div>
               </div>
 
-              <!-- Clean Floating Status Telemetry Badge -->
+              <!-- Professional Location Badge -->
               <div class="hero-clean-badge">
-                <span class="status-pulse-dot"></span>
+                <i data-lucide="map-pin" style="width: 14px; height: 14px; opacity: 0.7;"></i>
                 <span class="hero-clean-badge-text">
-                  <strong class="badge-text-light">⭐ 9.14 CGPI</strong>
-                  <strong class="badge-text-dark">⚡ 9.14 CGPI</strong>
-                  <span>· Open to Full-Time Roles</span>
+                  <strong class="badge-text-light">Mumbai, India</strong>
+                  <strong class="badge-text-dark">Mumbai, India</strong>
+                  <span>· Software Engineer</span>
                 </span>
               </div>
             </div>
@@ -363,11 +373,10 @@
             platforms.</p>
         </div>
 
-        <!-- Filter Buttons -->
+        <!-- Filter Buttons — centered, wrap, no empty category -->
         <div class="project-filters">
           <button class="filter-btn active" data-filter="all">All Projects</button>
           <button class="filter-btn" data-filter="ai-ml">AI & Computer Vision</button>
-          <button class="filter-btn" data-filter="backend">Backend & Enterprise</button>
           <button class="filter-btn" data-filter="fullstack">Full-Stack Web</button>
           <span class="dragon-ball fake-dragon-ball" data-fake-ball="8" title="🎁 Bonus Project Dragon Ball?! Click!"></span>
         </div>
@@ -935,8 +944,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260831_scatterFinal27"></script>
-  <script src="js/main.js?v=20260831_scatterFinal27"></script>
+  <script src="js/data.js?v=20260901_fixProjectOriginal7"></script>
+  <script src="js/main.js?v=20260901_fixProjectOriginal7"></script>
 </body>
 
 </html>

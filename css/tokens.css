@@ -35,6 +35,11 @@
   --cyan-pop: #06B6D4;          /* Cyan — tech accent */
   --rose-void: #070510;
   --rose-glow: rgba(255,46,151,0.22);
+  --rose-ink: #4A0A1F;            /* Rose Black — godly ink */
+  --rose-deep: #9D174D;            /* Deep Rose */
+  --rose-petal: #F472B6;           /* Soft petal */
+  --rose-aura-light: rgba(255,46,151,0.16);
+  --rose-aura-mid: rgba(244,114,182,0.12);
 
   /* Typography — Space Grotesk (headings/labels) + Inter (body) — user choice */
   --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -168,21 +173,22 @@ body.saiyan-mode {
   }
 }
 
-/* Super Saiyan Golden Ki Photo Aura & Cyan Lightning Arcs */
+/* Profile Photo Card — Unified Aura (similar in light & dark; only palette differs) */
 body.saiyan-mode .hero-photo-frame {
-  border-color: #FBBF24 !important;
-  box-shadow: 0 0 35px rgba(251, 191, 36, 0.8), 0 0 60px rgba(56, 189, 248, 0.4), 8px 8px 0px 0px #000000 !important;
-  animation: ssj-ki-aura-pulse 2s ease-in-out infinite !important;
+  border-color: rgba(245, 158, 11, 0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+  animation: float-gentle 5s ease-in-out infinite !important;
+  transition: var(--transition-bounce) !important;
 }
 
 @keyframes ssj-ki-aura-pulse {
   0%, 100% {
-    box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 45px rgba(56, 189, 248, 0.3), 8px 8px 0px 0px #000000;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 28px rgba(0, 0, 0, 0.45);
     transform: translateY(0) scale(1);
   }
   50% {
-    box-shadow: 0 0 45px rgba(251, 191, 36, 0.95), 0 0 75px rgba(56, 189, 248, 0.6), 0 0 15px #EF4444, 8px 8px 0px 0px #000000;
-    transform: translateY(-5px) scale(1.02);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 14px 34px rgba(0, 0, 0, 0.55);
+    transform: translateY(-4px) scale(1.01);
   }
 }
 
@@ -202,7 +208,7 @@ body.saiyan-mode .hero-photo-frame {
   opacity: 1;
 }
 
-/* Cards in Saiyan Mode */
+/* Cards in Saiyan Mode — Unified with Light Mode (same offsets, only palette differs; no extra glows) */
 body.saiyan-mode .sticker-card,
 body.saiyan-mode .stat-card,
 body.saiyan-mode .skill-category-card,
@@ -214,14 +220,39 @@ body.saiyan-mode .cert-card,
 body.saiyan-mode .contact-wrapper {
   background-color: #0F1E17 !important;
   border-color: #F59E0B !important;
-  box-shadow: 5px 5px 0px 0px #000000, 0 0 15px rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 4px 4px 0px 0px #000000 !important;
 }
 
 body.saiyan-mode .sticker-card:hover,
-body.saiyan-mode .project-card:hover,
-body.saiyan-mode .experience-card:hover {
-  box-shadow: 6px 6px 0px 0px #38BDF8, 0 0 25px rgba(56, 189, 248, 0.35) !important;
-  border-color: #38BDF8 !important;
+body.saiyan-mode .stat-card:hover,
+body.saiyan-mode .skill-category-card:hover,
+body.saiyan-mode .experience-card:hover,
+body.saiyan-mode .achievement-card:hover,
+body.saiyan-mode .edu-card:hover,
+body.saiyan-mode .cert-card:hover {
+  transform: translate(-3px, -3px) rotate(-0.5deg) !important;
+  box-shadow: 6px 6px 0px 0px #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+body.saiyan-mode .project-card:hover {
+  transform: translate(-4px, -4px) rotate(-0.5deg) !important;
+  box-shadow: 8px 8px 0px 0px #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+/* Preserve per-card color accents in dark mode — same structure as light, palette differs */
+body.saiyan-mode .sticker-card.card-pink:hover {
+  box-shadow: 6px 6px 0px 0px var(--secondary) !important;
+}
+body.saiyan-mode .sticker-card.card-violet:hover {
+  box-shadow: 6px 6px 0px 0px var(--accent) !important;
+}
+body.saiyan-mode .sticker-card.card-yellow:hover {
+  box-shadow: 6px 6px 0px 0px var(--tertiary) !important;
+}
+body.saiyan-mode .sticker-card.card-mint:hover {
+  box-shadow: 6px 6px 0px 0px var(--quaternary) !important;
 }
 
 body.saiyan-mode .site-header {
@@ -419,7 +450,7 @@ body.saiyan-mode .dragon-radar-widget {
   filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  will-change: transform, top;
+  will-change: transform, top, bottom;
 }
 
 .flying-nimbus:hover {
