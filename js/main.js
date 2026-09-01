@@ -659,14 +659,25 @@ function initScrollSpy() {
    Staggered element transformation, lightning storm, and earthquake rumble
    ========================================================================== */
 
-/* --- Super Saiyan Theme Toggle — persistent + system-aware (Claude-inspired) --- */
+/* --- Super Saiyan Theme Toggle — persistent + system-aware with interactive slider --- */
 function initSaiyanMode() {
   const saiyanBtn = document.getElementById('saiyanModeBtn');
-  const saiyanBtnText = document.getElementById('saiyanBtnText');
+  const themeSlider = document.getElementById('themeSliderToggle');
+  const optRose = document.getElementById('sliderOptRose');
+  const optSaiyan = document.getElementById('sliderOptSaiyan');
   const themeMeta = document.querySelector('meta[name="theme-color"]');
-  if (!saiyanBtn) return;
 
-  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan?'#060E0A':'#0C0A14'); }
+  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan ? '#050D09' : '#FFFDF5'); }
+
+  function syncSliderUI(isSaiyan) {
+    if (themeSlider) {
+      themeSlider.setAttribute('aria-checked', isSaiyan ? 'true' : 'false');
+      themeSlider.title = isSaiyan ? 'Current: Super Saiyan Mode (Slide to switch to Rosé)' : 'Current: Rosé Mode (Slide to switch to Super Saiyan)';
+    }
+    if (optRose) optRose.classList.toggle('active', !isSaiyan);
+    if (optSaiyan) optSaiyan.classList.toggle('active', isSaiyan);
+    if (saiyanBtn) saiyanBtn.setAttribute('aria-pressed', isSaiyan ? 'true' : 'false');
+  }
 
   function playSaiyanTransformationCutscene(onTransition) {
     const overlay = document.getElementById('saiyanVideoOverlay');
@@ -805,9 +816,7 @@ function initSaiyanMode() {
       const applySaiyan = () => {
         document.body.classList.add('saiyan-mode');
         document.documentElement.classList.add('saiyan-mode');
-        saiyanBtn.setAttribute('aria-pressed', 'true');
-        if (saiyanBtnText) saiyanBtnText.textContent = 'Rosé';
-        saiyanBtn.title = 'Switch to Rosé Mode';
+        syncSliderUI(true);
         syncMeta(true);
         if(!noPersist) try{localStorage.setItem('portfolio-theme','saiyan');}catch(e){}
         if(!silent){ showToast('Super Saiyan Mode ON'); runPlanetNamekTransformation(); }
@@ -821,9 +830,7 @@ function initSaiyanMode() {
     } else {
       document.body.classList.remove('saiyan-mode');
       document.documentElement.classList.remove('saiyan-mode');
-      saiyanBtn.setAttribute('aria-pressed', 'false');
-      if (saiyanBtnText) saiyanBtnText.textContent = 'Saiyan';
-      saiyanBtn.title = 'Switch to Super Saiyan Mode';
+      syncSliderUI(false);
       syncMeta(false);
       if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
       if(!silent) showToast('Rosé Mode ON');
@@ -838,13 +845,47 @@ function initSaiyanMode() {
     // Ensure light mode is fully applied on first visit (no stored preference → light)
     document.documentElement.classList.remove('saiyan-mode');
     document.body.classList.remove('saiyan-mode');
+    syncSliderUI(false);
     syncMeta(false);
   }
 
-  saiyanBtn.addEventListener('click', () => {
-    const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
-    setSaiyanState(!isCurrentlySaiyan);
-  });
+  if (themeSlider) {
+    themeSlider.addEventListener('click', (e) => {
+      const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
+      const targetOpt = e.target.closest('.theme-slider-btn');
+      if (targetOpt) {
+        if (targetOpt.id === 'sliderOptRose' && isCurrentlySaiyan) {
+          setSaiyanState(false);
+        } else if (targetOpt.id === 'sliderOptSaiyan' && !isCurrentlySaiyan) {
+          setSaiyanState(true);
+        }
+      } else {
+        setSaiyanState(!isCurrentlySaiyan);
+      }
+    });
+
+    themeSlider.addEventListener('keydown', (e) => {
+      const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        setSaiyanState(!isCurrentlySaiyan);
+      } else if (e.key === 'ArrowRight' && !isCurrentlySaiyan) {
+        e.preventDefault();
+        setSaiyanState(true);
+      } else if (e.key === 'ArrowLeft' && isCurrentlySaiyan) {
+        e.preventDefault();
+        setSaiyanState(false);
+      }
+    });
+  }
+
+  if (saiyanBtn) {
+    saiyanBtn.addEventListener('click', () => {
+      const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
+      setSaiyanState(!isCurrentlySaiyan);
+    });
+  }
+
   window.setSaiyanState=setSaiyanState;
 }
 

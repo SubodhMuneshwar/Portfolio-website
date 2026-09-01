@@ -33,8 +33,8 @@
   <!-- Preload Shenron for instant summon -->
   <link rel="preload" as="image" href="assets/shenron.png" fetchpriority="high">
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260901_originalLightThemeRestored">
-  <link rel="stylesheet" href="css/styles.css?v=20260901_originalLightThemeRestored">
+  <link rel="stylesheet" href="css/tokens.css?v=20260901_slidingToggleSaiyanSparks">
+  <link rel="stylesheet" href="css/styles.css?v=20260901_slidingToggleSaiyanSparks">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -104,9 +104,22 @@
 
         <!-- Right Quick Action Controls -->
         <div class="nav-actions">
-          <button type="button" class="nav-ctrl-btn nav-btn-saiyan" id="saiyanModeBtn" title="Switch to Super Saiyan Mode" aria-pressed="false">
-            <span id="saiyanBtnText">Saiyan</span>
-          </button>
+          <!-- Interactive Sliding Theme Switch (Rosé ⟷ Saiyan) -->
+          <div class="theme-slider-toggle" id="themeSliderToggle" role="switch" aria-checked="false" aria-label="Toggle between Rosé Mode and Super Saiyan Mode" tabindex="0" title="Slide to switch between Rosé and Saiyan Mode">
+            <div class="theme-slider-track">
+              <div class="theme-slider-bg-glider" aria-hidden="true"></div>
+              <button type="button" class="theme-slider-btn btn-opt-rose active" id="sliderOptRose" tabindex="-1" aria-label="Rosé Mode">
+                <span class="slider-btn-icon">🌸</span>
+                <span class="slider-btn-text">Rosé</span>
+              </button>
+              <button type="button" class="theme-slider-btn btn-opt-saiyan" id="sliderOptSaiyan" tabindex="-1" aria-label="Saiyan Mode">
+                <span class="slider-btn-icon">⚡</span>
+                <span class="slider-btn-text">Saiyan</span>
+              </button>
+            </div>
+          </div>
+          <!-- Hidden fallback hook for any external scripts -->
+          <button type="button" id="saiyanModeBtn" style="display:none;" aria-hidden="true"></button>
           <a href="#contact" class="btn btn-primary btn-sm nav-btn-connect">
             <span>Connect</span>
             <i data-lucide="send" style="width: 13px; height: 13px;"></i>
@@ -186,13 +199,26 @@
                 <span class="rose-petal p6"></span>
               </div>
 
-              <!-- High-Tech / ROSE HUD Card Frame -->
+              <!-- Dark-only Super Saiyan Bio-Electricity & Golden Ki Embers -->
+              <div class="saiyan-sparks-field" aria-hidden="true">
+                <span class="saiyan-spark s1"></span>
+                <span class="saiyan-spark s2"></span>
+                <span class="saiyan-spark s3"></span>
+                <span class="saiyan-spark s4"></span>
+                <span class="saiyan-spark s5"></span>
+                <span class="saiyan-spark s6"></span>
+                <span class="saiyan-lightning-arc l1"></span>
+                <span class="saiyan-lightning-arc l2"></span>
+              </div>
+
+              <!-- High-Tech / ROSE & SAIYAN HUD Card Frame -->
               <div class="hero-hud-frame">
                 <span class="hud-corner hud-top-left"></span>
                 <span class="hud-corner hud-top-right"></span>
                 <span class="hud-corner hud-bottom-left"></span>
                 <span class="hud-corner hud-bottom-right"></span>
                 <span class="rose-divine-tag" aria-hidden="true">✦ ROSE</span>
+                <span class="saiyan-divine-tag" aria-hidden="true">⚡ SAIYAN</span>
 
                 <!-- Top Telemetry Decal Bar -->
                 <div class="hero-card-header-bar">
@@ -943,8 +969,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260901_originalLightThemeRestored"></script>
-  <script src="js/main.js?v=20260901_originalLightThemeRestored"></script>
+  <script src="js/data.js?v=20260901_slidingToggleSaiyanSparks"></script>
+  <script src="js/main.js?v=20260901_slidingToggleSaiyanSparks"></script>
 </body>
 
 </html>
