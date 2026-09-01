@@ -567,12 +567,13 @@ function initMobileMenu() {
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
         
+        if (closeTimer) clearTimeout(closeTimer);
         closeTimer = setTimeout(() => {
           navMenu.classList.remove('open', 'closing');
           document.body.classList.remove('mobile-drawer-open', 'mobile-drawer-closing');
           isClosing = false;
           closeTimer = null;
-        }, 280);
+        }, 300);
       }
       initLucideIcons();
     }

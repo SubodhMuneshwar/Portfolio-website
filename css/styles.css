@@ -4273,11 +4273,12 @@ body.saiyan-mode .footer-float-top:hover {
     max-height: calc(100dvh - var(--header-height));
     overflow-y: auto;
     overflow-x: hidden;
+    transform-origin: top center;
     box-sizing: border-box;
   }
 
   .nav-menu.open:not(.closing) {
-    animation: slide-down-menu 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slide-down-menu 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   body.saiyan-mode .nav-menu.open {
@@ -4288,36 +4289,46 @@ body.saiyan-mode .footer-float-top:hover {
 
   .nav-menu.closing {
     display: flex !important;
-    animation: slide-up-menu 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    animation: slide-up-menu 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
     pointer-events: none !important;
   }
 
   @keyframes slide-down-menu {
-    from {
+    0% {
       opacity: 0;
-      transform: translateY(-16px) scale(0.98);
+      transform: translateY(-30px) scaleY(0.92);
+      clip-path: inset(0 0 100% 0);
     }
-    to {
+    50% {
+      opacity: 0.9;
+    }
+    100% {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0) scaleY(1);
+      clip-path: inset(0 0 0 0);
     }
   }
 
   @keyframes slide-up-menu {
-    from {
+    0% {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0) scaleY(1);
+      clip-path: inset(0 0 0 0);
     }
-    to {
+    60% {
+      opacity: 0.7;
+    }
+    100% {
       opacity: 0;
-      transform: translateY(-18px) scale(0.97);
+      transform: translateY(-40px) scaleY(0.88);
+      clip-path: inset(0 0 100% 0);
     }
   }
 
   @keyframes navItemPopIn {
     0% {
       opacity: 0;
-      transform: translateY(18px) scale(0.95);
+      transform: translateY(22px) scale(0.94);
     }
     100% {
       opacity: 1;
@@ -4332,12 +4343,12 @@ body.saiyan-mode .footer-float-top:hover {
     }
     100% {
       opacity: 0;
-      transform: translateY(-14px) scale(0.94);
+      transform: translateY(-20px) scale(0.94);
     }
   }
 
   body.mobile-drawer-closing::after {
-    animation: fadeOutBackdrop 0.26s ease forwards !important;
+    animation: fadeOutBackdrop 0.3s ease forwards !important;
   }
 
   @keyframes fadeOutBackdrop {
@@ -4352,7 +4363,7 @@ body.saiyan-mode .footer-float-top:hover {
 
   .nav-menu.open:not(.closing) li {
     opacity: 0;
-    animation: navItemPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: navItemPopIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .nav-menu.open:not(.closing) li:nth-child(1) { animation-delay: 0.03s; }
@@ -4364,7 +4375,7 @@ body.saiyan-mode .footer-float-top:hover {
   .nav-menu.open:not(.closing) li:nth-child(7) { animation-delay: 0.21s; }
 
   .nav-menu.closing li {
-    animation: navItemPopOut 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    animation: navItemPopOut 0.24s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
   }
 
   .nav-menu.closing li:nth-child(7) { animation-delay: 0s; }
