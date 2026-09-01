@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagneticButtons();
   initStatCountUp();
   initFlashcardDecks();
-  initScrollFlashDrift();
 });
 
 function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
@@ -787,19 +786,22 @@ function initSaiyanMode() {
 
   function setSaiyanState(enableSaiyan, opts={}) {
     const silent=!!opts.silent, noPersist=!!opts.noPersist;
-    const iconSpan = saiyanBtn.querySelector('.saiyan-btn-icon');
+    const iconEl = saiyanBtn.querySelector('.saiyan-btn-icon');
     
     if (enableSaiyan) {
       const applySaiyan = () => {
         document.body.classList.add('saiyan-mode');
         document.documentElement.classList.add('saiyan-mode');
         saiyanBtn.setAttribute('aria-pressed', 'true');
-        if (iconSpan) iconSpan.textContent = '✨';
-        if (saiyanBtnText) saiyanBtnText.textContent = 'Base';
-        saiyanBtn.title = 'Switch to Light (Base) Mode';
+        if (iconEl) {
+          iconEl.setAttribute('data-lucide', 'sparkles');
+          if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
+        }
+        if (saiyanBtnText) saiyanBtnText.textContent = 'Rosé';
+        saiyanBtn.title = 'Switch to Rosé Mode';
         syncMeta(true);
         if(!noPersist) try{localStorage.setItem('portfolio-theme','saiyan');}catch(e){}
-        if(!silent){ showToast('⚡ Super Saiyan Mode ON'); runPlanetNamekTransformation(); }
+        if(!silent){ showToast('Super Saiyan Mode ON'); runPlanetNamekTransformation(); }
       };
 
       if (!silent) {
@@ -811,12 +813,15 @@ function initSaiyanMode() {
       document.body.classList.remove('saiyan-mode');
       document.documentElement.classList.remove('saiyan-mode');
       saiyanBtn.setAttribute('aria-pressed', 'false');
-      if (iconSpan) iconSpan.textContent = '⚡';
-      if (saiyanBtnText) saiyanBtnText.textContent = 'Saiyan';
-      saiyanBtn.title = 'Toggle Super Saiyan (Dark) Mode';
+      if (iconEl) {
+        iconEl.setAttribute('data-lucide', 'zap');
+        if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
+      }
+      if (saiyanBtnText) saiyanBtnText.textContent = 'Go Super';
+      saiyanBtn.title = 'Go Super Saiyan';
       syncMeta(false);
       if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
-      if(!silent) showToast('✨ Base Mode ON');
+      if(!silent) showToast('Rosé Mode ON');
     }
   }
 
@@ -1293,7 +1298,7 @@ function renderRadarHUD() {
       return `
         <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusDragonBall(${ball.num})" style="cursor: pointer;" title="${isCollected ? 'Already secured' : 'Click to jump to exact Dragon Ball location'}">
           <div class="radar-signal-card-ball">
-            ${window.getBallSVGString(ball.num, 24)}
+            ${window.getBallSVGString(ball.num, 18)}
           </div>
           <div class="radar-signal-card-info">
             <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '✅' : '📡'}</span>
@@ -2875,13 +2880,15 @@ function initStatCountUp() {
   vals.forEach(v => io.observe(v));
 }
 
-/* --- Dynamic: Flashcard Decks (Skills / Projects / Achievements) --- */
+/* --- Dynamic: 3D Flashcard Carousel Decks (Skills / Projects / Achievements) --- */
 function initFlashcardDecks() {
   const deckSelectors = ['#skillsGrid', '#projectsGrid', '#achievementsGrid'];
+
   deckSelectors.forEach(sel => {
     const grid = document.querySelector(sel);
     if (!grid) return;
-    if (grid.classList.contains('flashcard-track')) return;
+    if (grid.dataset.flashcardDeckInit === '1') return;
+    grid.dataset.flashcardDeckInit = '1';
 
     grid.classList.add('flashcard-track');
 
@@ -2891,120 +2898,163 @@ function initFlashcardDecks() {
     grid.parentNode.insertBefore(wrap, grid);
     wrap.appendChild(grid);
 
-    // Nav
+    // Side Navigation Arrows
     const nav = document.createElement('div');
     nav.className = 'flashcard-nav';
     nav.innerHTML = `
-      <button type="button" class="flashcard-arrow flashcard-prev" aria-label="Previous cards"><i data-lucide="chevron-left" style="width:18px;height:18px;"></i></button>
-      <div class="flashcard-dots" role="tablist"></div>
-      <button type="button" class="flashcard-arrow flashcard-next" aria-label="Next cards"><i data-lucide="chevron-right" style="width:18px;height:18px;"></i></button>
+      <button type="button" class="flashcard-arrow flashcard-prev" aria-label="Previous card"><i data-lucide="chevron-left" style="width:20px;height:20px;"></i></button>
+      <button type="button" class="flashcard-arrow flashcard-next" aria-label="Next card"><i data-lucide="chevron-right" style="width:20px;height:20px;"></i></button>
     `;
     wrap.appendChild(nav);
+
+    // Bottom Navigation Dots Wrap (positioned below cards)
+    const dotsOuter = document.createElement('div');
+    dotsOuter.className = 'flashcard-dots-wrap';
+    dotsOuter.innerHTML = `<div class="flashcard-dots" role="tablist"></div>`;
+    wrap.appendChild(dotsOuter);
+
     if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
 
     const prevBtn = nav.querySelector('.flashcard-prev');
     const nextBtn = nav.querySelector('.flashcard-next');
-    const dotsWrap = nav.querySelector('.flashcard-dots');
+    const dotsWrap = dotsOuter.querySelector('.flashcard-dots');
 
     let dots = [];
+
     function buildDots() {
       dotsWrap.innerHTML = '';
       dots = [];
-      const cards = grid.children;
-      for (let i = 0; i < cards.length; i++) {
+      const cards = Array.from(grid.children);
+      cards.forEach((card, i) => {
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.className = 'flashcard-dot';
         dot.setAttribute('aria-label', `Go to card ${i+1}`);
         dot.setAttribute('role', 'tab');
-        dot.addEventListener('click', () => {
-          cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
+          scrollToCard(i);
         });
         dotsWrap.appendChild(dot);
         dots.push(dot);
-      }
+
+        // Click on side card to center it
+        card.addEventListener('click', () => {
+          if (grid.dataset.dragging === '1') return;
+          const gridCenter = grid.getBoundingClientRect().left + grid.clientWidth / 2;
+          const cardCenter = card.getBoundingClientRect().left + card.offsetWidth / 2;
+          if (Math.abs(cardCenter - gridCenter) > 40) {
+            scrollToCard(i);
+          }
+        });
+      });
     }
-    buildDots();
 
     function updateState() {
-      // active dot = closest to center (most reliable on mobile)
+      const cards = Array.from(grid.children);
+      if (!cards.length) return;
+
       const gridRect = grid.getBoundingClientRect();
       const mid = gridRect.left + gridRect.width / 2;
-      let best = 0; let bestDist = Infinity;
-      Array.from(grid.children).forEach((c, idx) => {
-        const r = c.getBoundingClientRect();
-        const d = Math.abs((r.left + r.right)/2 - mid);
-        if (d < bestDist) { bestDist = d; best = idx; }
+
+      let bestIdx = 0;
+      let minDiff = Infinity;
+      cards.forEach((card, idx) => {
+        const r = card.getBoundingClientRect();
+        const cardCenter = (r.left + r.right) / 2;
+        const diff = Math.abs(cardCenter - mid);
+        if (diff < minDiff) {
+          minDiff = diff;
+          bestIdx = idx;
+        }
       });
-      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === best));
-      const atStart = best === 0;
-      const atEnd = best === dots.length - 1;
-      wrap.classList.toggle('at-start', atStart);
-      wrap.classList.toggle('at-end', atEnd);
+
+      // Update dots
+      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === bestIdx));
+
+      // Update 3D card classes
+      cards.forEach((card, idx) => {
+        card.classList.remove('is-active-card', 'is-prev-card', 'is-next-card', 'is-far-card');
+        if (idx === bestIdx) {
+          card.classList.add('is-active-card');
+        } else if (idx === bestIdx - 1) {
+          card.classList.add('is-prev-card');
+        } else if (idx === bestIdx + 1) {
+          card.classList.add('is-next-card');
+        } else {
+          card.classList.add('is-far-card');
+        }
+      });
+
+      // Update nav arrows
+      const atStart = bestIdx === 0;
+      const atEnd = bestIdx === cards.length - 1;
       if (prevBtn) prevBtn.disabled = atStart;
       if (nextBtn) nextBtn.disabled = atEnd;
-      // keep fallback scroll metrics for edge fades
-      const max = grid.scrollWidth - grid.clientWidth;
-      const atStartScroll = grid.scrollLeft <= 4;
-      const atEndScroll = grid.scrollLeft >= max - 4;
-      if (grid.children.length <= 2) {
-        // for 2-3 cards, prefer dot-based, but keep scroll-based as fallback
-        wrap.classList.toggle('at-start', atStart);
-        wrap.classList.toggle('at-end', atEnd);
-      }
+      wrap.classList.toggle('at-start', atStart);
+      wrap.classList.toggle('at-end', atEnd);
     }
 
-    const scrollToCard = (idx) => {
-      const card = grid.children[idx];
+    function scrollToCard(idx) {
+      const cards = Array.from(grid.children);
+      if (idx < 0 || idx >= cards.length) return;
+      const card = cards[idx];
       if (!card) return;
-      // Center card: offsetLeft - (viewport - cardWidth)/2, accounts for padding/gap
-      const gap = parseFloat(getComputedStyle(grid).gap) || 0;
-      const left = Math.max(0, card.offsetLeft - (grid.clientWidth - card.offsetWidth) / 2 - 8);
-      grid.scrollTo({ left, behavior: 'smooth' });
-      // Fallback if scrollIntoView ignored due to snap
-      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }), 30);
-      setTimeout(updateState, 400);
-      setTimeout(updateState, 800);
-    };
+      const targetLeft = card.offsetLeft - (grid.clientWidth - card.offsetWidth) / 2;
+      grid.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: 'smooth'
+      });
+    }
+
     prevBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      const best = dots.findIndex(d => d.classList.contains('is-active'));
-      const cur = best >= 0 ? best : 0;
-      const target = Math.max(0, cur - 1);
+      const cards = Array.from(grid.children);
+      const curIdx = dots.findIndex(d => d.classList.contains('is-active'));
+      const target = Math.max(0, (curIdx >= 0 ? curIdx : 0) - 1);
       scrollToCard(target);
     });
+
     nextBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      const best = dots.findIndex(d => d.classList.contains('is-active'));
-      const cur = best >= 0 ? best : 0;
-      const target = Math.min(grid.children.length - 1, cur + 1);
+      const cards = Array.from(grid.children);
+      const curIdx = dots.findIndex(d => d.classList.contains('is-active'));
+      const target = Math.min(cards.length - 1, (curIdx >= 0 ? curIdx : 0) + 1);
       scrollToCard(target);
     });
 
     let ticking = false;
     grid.addEventListener('scroll', () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(() => { updateState(); ticking = false; }); }
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateState();
+          ticking = false;
+        });
+      }
     }, { passive: true });
 
-    // Drag to scroll
+    // Drag / Swipe handling
     let isDown = false, startX = 0, startLeft = 0, hasDragged = false;
     grid.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
-      isDown = true; hasDragged = false;
+      isDown = true;
+      hasDragged = false;
       grid.dataset.dragging = '1';
-      startX = e.clientX; startLeft = grid.scrollLeft;
+      startX = e.clientX;
+      startLeft = grid.scrollLeft;
       grid.setPointerCapture(e.pointerId);
       grid.style.scrollSnapType = 'none';
       grid.style.scrollBehavior = 'auto';
     });
+
     grid.addEventListener('pointermove', (e) => {
       if (!isDown) return;
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 4) hasDragged = true;
       grid.scrollLeft = startLeft - dx;
     });
+
     function endDrag(e) {
       if (!isDown) return;
       isDown = false;
@@ -3012,89 +3062,42 @@ function initFlashcardDecks() {
       grid.style.scrollSnapType = '';
       grid.style.scrollBehavior = '';
       try { grid.releasePointerCapture(e.pointerId); } catch(err){}
-      // prevent click on cards if dragged
       if (hasDragged) {
         const handler = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
         grid.addEventListener('click', handler, { capture: true, once: true });
-        setTimeout(() => hasDragged = false, 50);
+        setTimeout(() => { hasDragged = false; }, 50);
       }
+      setTimeout(updateState, 150);
     }
+
     grid.addEventListener('pointerup', endDrag);
     grid.addEventListener('pointercancel', endDrag);
-    grid.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); prevBtn.click(); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); nextBtn.click(); }
+
+    // Initial setup
+    buildDots();
+    requestAnimationFrame(() => {
+      updateState();
+      // Center first card nicely
+      setTimeout(updateState, 200);
     });
 
-    // Keyboard focusable track
-    grid.setAttribute('tabindex', '0');
-    grid.setAttribute('aria-label', 'Flashcard deck — drag or use arrows to navigate');
-
-    // Observe card count changes (e.g., project filter)
-    const mo = new MutationObserver(() => { buildDots(); requestAnimationFrame(updateState); });
+    // Rebuild dots on DOM mutation (e.g. project filter)
+    const mo = new MutationObserver(() => {
+      buildDots();
+      requestAnimationFrame(updateState);
+    });
     mo.observe(grid, { childList: true });
 
-    // Initial state + on resize — delayed for mobile layout + images
-    requestAnimationFrame(updateState);
-    setTimeout(updateState, 400);
-    setTimeout(updateState, 900);
     window.addEventListener('resize', updateState, { passive: true });
-    // also update after images load (project thumbnails)
-    grid.querySelectorAll('img').forEach(img => {
-      if (img.complete) return;
-      img.addEventListener('load', () => requestAnimationFrame(updateState), { once: true });
-    });
-
-    // Re-trigger scroll-reveal for new layout
-    if (window.refreshScrollReveal) window.refreshScrollReveal();
   });
 }
 
-/* --- Scroll Flash: vertical scroll nudges flashcard decks (deck drifts) --- */
-function initScrollFlashDrift() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.matchMedia('(pointer: coarse)').matches) return; // keep touch clean
-  const decks = () => document.querySelectorAll('.flashcard-track');
-  let lastY = window.scrollY;
-  let ticking = false;
-  let visible = new Set();
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) visible.add(e.target);
-      else visible.delete(e.target);
-    });
-  }, { rootMargin: '-18% 0px -18% 0px', threshold: 0 });
-  decks().forEach(d => io.observe(d));
-  // also observe future decks
-  const mo = new MutationObserver(() => decks().forEach(d => { if (!d._flashObserved) { io.observe(d); d._flashObserved = true; }}));
-  mo.observe(document.body, { childList: true, subtree: true });
-
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const curY = window.scrollY;
-      const delta = curY - lastY;
-      lastY = curY;
-      if (Math.abs(delta) < 1 || visible.size === 0) { ticking = false; return; }
-      // only drift when scrolling at moderate speed (avoid micro-jitters)
-      const nudge = delta * 0.24;
-      visible.forEach(deck => {
-        if (deck.dataset.dragging === '1') return;
-        if (deck._scrollLock) return;
-        const max = deck.scrollWidth - deck.clientWidth;
-        if (max <= 4) return;
-        let next = deck.scrollLeft + nudge;
-        next = Math.max(0, Math.min(max, next));
-        // ease with lerp to avoid jank
-        deck.scrollLeft = next;
-        deck._scrollLock = true;
-        setTimeout(() => { deck._scrollLock = false; }, 60);
-      });
-      ticking = false;
-    });
-  }, { passive: true });
-}
+window.refreshFlashcardDecks = function() {
+  const tracks = document.querySelectorAll('.flashcard-track');
+  tracks.forEach(track => {
+    track.dispatchEvent(new Event('scroll'));
+  });
+};
 
 /* ==========================================================================
    Dragon Ball Inside Joke Placeholder Cycler & Prompt Generator

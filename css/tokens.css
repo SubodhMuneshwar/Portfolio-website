@@ -128,13 +128,94 @@ body.saiyan-mode {
 
   background-color: #060E0A;
   background-image: 
-    radial-gradient(ellipse at 15% 10%, rgba(16, 185, 129, 0.09) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 12% 8%, rgba(251,191,36,0.16) 0%, rgba(245,158,11,0.08) 22%, transparent 48%),
+    radial-gradient(ellipse at 88% 88%, rgba(16,185,129,0.13) 0%, transparent 46%),
+    radial-gradient(ellipse at 50% 35%, rgba(56,189,248,0.07) 0%, transparent 62%),
+    radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.04) 0%, transparent 72%),
     radial-gradient(#142A20 1.5px, transparent 1.5px);
-  background-size: 100% 100%, 100% 100%, 24px 24px;
-  background-attachment: fixed, fixed, scroll;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed, fixed, fixed, fixed, scroll;
   color: #F8FAFC;
   transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+}
+
+/* ——— Super Saiyan God Ki — extra golden electric veil (dark only) ——— */
+body.saiyan-mode::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 42% 28% at 18% 14%, rgba(251,191,36,0.07) 0%, transparent 62%),
+    radial-gradient(ellipse 36% 32% at 84% 78%, rgba(56,189,248,0.05) 0%, transparent 62%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.9;
+}
+
+body.saiyan-mode .section-title,
+body.saiyan-mode .hero-name {
+  filter: drop-shadow(0 0 10px rgba(251,191,36,0.18));
+}
+
+body.saiyan-mode .btn-primary {
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 55%, #D97706 100%) !important;
+  border-color: #000000 !important;
+  box-shadow: 4px 4px 0px #000000, 0 0 18px rgba(251,191,36,0.45) !important;
+  color: #060E0A !important;
+}
+
+body.saiyan-mode .btn-primary:hover {
+  box-shadow: 6px 6px 0px #000000, 0 0 28px rgba(251,191,36,0.65), 0 0 45px rgba(245,158,11,0.35) !important;
+  transform: translate(-2px, -2px);
+}
+
+body.saiyan-mode .ticker-container {
+  background: #050B08 !important;
+  border-top: 2.5px solid #F59E0B !important;
+  border-bottom: 2.5px solid #F59E0B !important;
+  box-shadow: 0 0 22px rgba(245,158,11,0.18);
+}
+
+body.saiyan-mode .site-header {
+  box-shadow: 0 2px 0 rgba(245,158,11,0.22), 0 8px 28px rgba(0,0,0,0.55) !important;
+}
+
+body.saiyan-mode .hero-section::after {
+  content: '超';
+  position: absolute;
+  right: 1.5%;
+  top: 6%;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(5rem, 12vw, 9rem);
+  line-height: 1;
+  color: rgba(251,191,36,0.045);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  filter: drop-shadow(0 0 12px rgba(251,191,36,0.12));
+}
+
+@media (max-width: 768px) {
+  body.saiyan-mode .hero-section::after { font-size: clamp(3.5rem, 16vw, 6rem); opacity: 0.7; right: 0; }
+}
+
+body.saiyan-mode .project-card::before,
+body.saiyan-mode .skill-category-card::before,
+body.saiyan-mode .achievement-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #FBBF24 0%, #F59E0B 42%, #38BDF8 100%);
+  opacity: 0.9;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 24px 24px 0 0;
 }
 
 /* Screen Earthquake Rumble on Power-Up */
@@ -173,17 +254,22 @@ body.saiyan-mode {
   }
 }
 
-/* Profile Photo Card — Unified Aura (similar in light & dark; only palette differs) */
+/* Profile Photo Card — Super Saiyan Golden Aura (dark only, more Saiyan) */
 body.saiyan-mode .hero-photo-frame {
-  border-color: rgba(245, 158, 11, 0.18) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 28px rgba(0, 0, 0, 0.45) !important;
-  animation: float-gentle 5s ease-in-out infinite !important;
+  border-color: #FBBF24 !important;
+  box-shadow: 0 0 22px rgba(251,191,36,0.65), 0 0 48px rgba(245,158,11,0.38), 0 0 72px rgba(56,189,248,0.18), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  animation: ssj-ki-aura-pulse 2.4s ease-in-out infinite !important;
   transition: var(--transition-bounce) !important;
+}
+
+body.saiyan-mode .hero-ambient-aura {
+  background: radial-gradient(circle at 32% 28%, rgba(251,191,36,0.32) 0%, rgba(245,158,11,0.18) 38%, rgba(56,189,248,0.12) 62%, transparent 74%) !important;
+  filter: blur(36px) saturate(1.15) !important;
 }
 
 @keyframes ssj-ki-aura-pulse {
   0%, 100% {
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 28px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 18px rgba(251,191,36,0.55), 0 0 42px rgba(245,158,11,0.32), 0 0 62px rgba(56,189,248,0.14), inset 0 1px 0 rgba(255,255,255,0.07);
     transform: translateY(0) scale(1);
   }
   50% {
@@ -256,20 +342,76 @@ body.saiyan-mode .sticker-card.card-mint:hover {
 }
 
 body.saiyan-mode .site-header {
-  background-color: rgba(10, 20, 16, 0.78) !important;
-  border-bottom-color: rgba(245, 158, 11, 0.35) !important;
-  backdrop-filter: blur(24px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  background: rgba(8, 18, 14, 0.58) !important;
+  border-bottom: 2px solid #F59E0B !important;
+  backdrop-filter: blur(22px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
+  box-shadow: 0 2px 0 #F59E0B, 0 8px 32px rgba(0,0,0,0.42), 0 0 24px rgba(251,191,36,0.18) !important;
 }
 
 body.saiyan-mode .nav-link {
   color: #F8FAFC !important;
+  font-weight: 700;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.42rem !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+body.saiyan-mode .nav-link .nav-link-icon,
+body.saiyan-mode .nav-link i,
+body.saiyan-mode .nav-link svg,
+body.saiyan-mode .nav-link .lucide {
+  color: #FBBF24 !important;
+  stroke: #FBBF24 !important;
+  fill: none !important;
+  stroke-width: 2.2px !important;
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.35));
+  transition: all 0.2s ease;
 }
 
 body.saiyan-mode .nav-link:hover,
 body.saiyan-mode .nav-link.active {
   color: #0A1410 !important;
-  background-color: #FBBF24 !important;
+  background: linear-gradient(135deg, #FDE047 0%, #FBBF24 55%, #F59E0B 100%) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+body.saiyan-mode .nav-link:hover .nav-link-icon,
+body.saiyan-mode .nav-link.active .nav-link-icon,
+body.saiyan-mode .nav-link:hover i,
+body.saiyan-mode .nav-link.active i,
+body.saiyan-mode .nav-link:hover svg,
+body.saiyan-mode .nav-link.active svg,
+body.saiyan-mode .nav-link:hover .lucide,
+body.saiyan-mode .nav-link.active .lucide {
+  color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  fill: none !important;
+  stroke-width: 2.3px !important;
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  transform: scale(1.06);
 }
 
 body.saiyan-mode p,
