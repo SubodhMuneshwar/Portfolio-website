@@ -2787,25 +2787,29 @@ function initCardSpotlight() {
 function initCardTilt() {
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cardSelector = '.stat-card, .sticker-card, .skill-category-card, .project-card, .achievement-card, .experience-card, .edu-card, .cert-card, .contact-card';
+  
   function markTiltCards() {
-    document.querySelectorAll('.stat-card, .skill-category-card, .project-card, .achievement-card').forEach(c => c.classList.add('tilt-card'));
+    document.querySelectorAll(cardSelector).forEach(c => c.classList.add('tilt-card'));
   }
   markTiltCards();
   const mo = new MutationObserver(markTiltCards);
   mo.observe(document.body, { childList: true, subtree: true });
+  
   document.addEventListener('pointermove', (e) => {
-    const card = e.target.closest('.stat-card, .skill-category-card, .project-card, .achievement-card');
+    const card = e.target.closest(cardSelector);
     if (!card) return;
     const r = card.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
-    const rx = (px * 6).toFixed(2) + 'deg';
-    const ry = (-py * 6).toFixed(2) + 'deg';
+    const rx = (px * 8).toFixed(2) + 'deg';
+    const ry = (-py * 8).toFixed(2) + 'deg';
     card.style.setProperty('--tilt-x', rx);
     card.style.setProperty('--tilt-y', ry);
   }, { passive: true });
+  
   document.addEventListener('pointerleave', (e) => {
-    const card = e.target.closest('.stat-card, .skill-category-card, .project-card, .achievement-card');
+    const card = e.target.closest(cardSelector);
     if (!card) return;
     card.style.setProperty('--tilt-x', '0deg');
     card.style.setProperty('--tilt-y', '0deg');

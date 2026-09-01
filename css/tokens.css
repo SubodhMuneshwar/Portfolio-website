@@ -4,42 +4,42 @@
    ========================================================================== */
 
 :root {
-  /* Color Palette (Light Mode - Warm Paper & Pop Accents) */
-  --bg: #FFFDF5;                /* Warm Cream/Off-White Paper */
-  --fg: #1E293B;                /* Slate 800 (Deep, high contrast) */
-  --muted: #F1F5F9;             /* Slate 100 */
-  --muted-fg: #64748B;          /* Slate 500 */
+  /* Color Palette (Light Mode - Goku Black Super Saiyan Rosé Divine Theme) */
+  --bg: #FFFDF8;                /* Divine Porcelain / Sacred Warm Paper */
+  --fg: #1E0818;                /* Deep Rosé Noir (High Contrast Dark Plum-Slate) */
+  --muted: #FAF0F4;             /* Soft Petal Tint */
+  --muted-fg: #6B4F5F;          /* Muted Rosé Plum */
   --card: #FFFFFF;              /* Pure White for sticker cards */
-  --card-alt: #FFF9E6;          /* Soft yellow tinted card */
+  --card-alt: #FFF5F9;          /* Soft Divine Rose tinted card */
   --input: #FFFFFF;             /* White */
-  --border: #1E293B;            /* Chunky 2.5px dark border */
-  --border-light: #E2E8F0;      /* Light border for inner dividers */
+  --border: #1E0818;            /* Chunky 2.5px dark plum-noir border */
+  --border-light: #F3D5E2;      /* Light border for inner dividers */
 
-  /* Refined Rosé + Space Grotesk — balanced indigo/amber (better harmony with geometric headings) */
-  --accent: #FF2E97;            /* Rosé Pink — primary (kept) */
+  /* Super Saiyan Rosé Divine Color Palette */
+  --accent: #FF2E97;            /* Divine Super Saiyan Rosé Magenta */
   --accent-fg: #FFFFFF;
   --accent-hover: #E0116B;
   
-  --secondary: #4F46E5;         /* Modern Indigo — cleaner complement to Rosé + Space Grotesk */
+  --secondary: #7209B7;         /* Sacred God of Destruction Amethyst / Deep Violet */
   --secondary-fg: #FFFFFF;
-  --secondary-hover: #4338CA;
+  --secondary-hover: #5B0692;
 
-  --tertiary: #FDE68A;          /* Warm Amber — softer highlight, pairs with Inter body */
-  --tertiary-fg: #1E293B;
+  --tertiary: #FDE68A;          /* Time Ring Platinum / Supreme Kai Gold */
+  --tertiary-fg: #1E0818;
   --tertiary-hover: #FCD34D;
 
-  --quaternary: #0EA5E9;        /* Sky Tech — pairs with Inter/Space Grotesk */
+  --quaternary: #10B981;        /* Supreme Kai Potara Emerald Glow */
   --quaternary-fg: #FFFFFF;
-  --quaternary-hover: #0284C7;
+  --quaternary-hover: #059669;
 
   --cyan-pop: #06B6D4;          /* Cyan — tech accent */
-  --rose-void: #070510;
-  --rose-glow: rgba(255,46,151,0.22);
-  --rose-ink: #4A0A1F;            /* Rose Black — godly ink */
-  --rose-deep: #9D174D;            /* Deep Rose */
-  --rose-petal: #F472B6;           /* Soft petal */
-  --rose-aura-light: rgba(255,46,151,0.16);
-  --rose-aura-mid: rgba(244,114,182,0.12);
+  --rose-void: #0D040A;         /* Goku Black Dark Void */
+  --rose-glow: rgba(255, 46, 151, 0.35);
+  --rose-ink: #3B0720;          /* Rose Black — godly ink */
+  --rose-deep: #9D174D;         /* Deep Rose Crimson */
+  --rose-petal: #F472B6;        /* Soft petal blossom */
+  --rose-aura-light: rgba(255, 46, 151, 0.18);
+  --rose-aura-mid: rgba(114, 9, 183, 0.14);
 
   /* Typography — Space Grotesk (headings/labels) + Inter (body) — user choice */
   --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -93,19 +93,19 @@
    Dark stormy green-black sky, crackling electric lightning, and Super Saiyan Golden Ki
    ========================================================================== */
 body.saiyan-mode {
-  --bg: #060E0A;                /* Deep Obsidian Namek Base */
+  --bg: #050D09;                /* Deep Obsidian Namek Void */
   --fg: #F8FAFC;                /* Ultra-crisp high contrast text */
-  --muted: #0D1A14;             /* Sleek dark surface */
+  --muted: #0A1812;             /* Sleek dark surface */
   --muted-fg: #94A3B8;          /* Slate 400 */
   --card: #0A1611;              /* Rich Obsidian Card */
-  --card-alt: #10241B;          /* Elevated surface */
+  --card-alt: #0E2218;          /* Elevated surface */
   --input: #0D1C15;             /* Input background */
   --border: #F59E0B;            /* Glowing Golden Ki border */
-  --border-light: #163326;      /* Subtle dark border */
+  --border-light: #143022;      /* Subtle dark border */
 
-  /* Saiyan Ki & Namek Lightning Colors */
-  --accent: #FBBF24;            /* Super Saiyan Golden Ki */
-  --accent-fg: #060E0A;         /* Dark text on golden buttons */
+  /* Goku Super Saiyan Ki, Aura & Bio-Electricity Palette */
+  --accent: #FBBF24;            /* Super Saiyan Radiant Golden Ki */
+  --accent-fg: #0A1410;         /* Bold dark text on golden buttons */
   --accent-hover: #F59E0B;
   
   --secondary: #10B981;         /* Emerald Dragon Aura */
@@ -113,11 +113,11 @@ body.saiyan-mode {
   --secondary-hover: #059669;
 
   --tertiary: #FDE047;          /* Pure SSJ Golden Light */
-  --tertiary-fg: #060E0A;
+  --tertiary-fg: #0A1410;
   --tertiary-hover: #FBBF24;
 
   --quaternary: #38BDF8;        /* Super Saiyan Electric Blue / Cyan Lightning */
-  --quaternary-fg: #060E0A;
+  --quaternary-fg: #0A1410;
   --quaternary-hover: #0EA5E9;
 
   --shadow-color: #000000;
@@ -126,58 +126,105 @@ body.saiyan-mode {
   --shadow-lg: 6px 6px 0px 0px #F59E0B;
   --shadow-xl: 8px 8px 0px 0px #F59E0B;
 
-  background-color: #060E0A;
+  background-color: #050D09;
   background-image: 
-    radial-gradient(ellipse at 12% 8%, rgba(251,191,36,0.16) 0%, rgba(245,158,11,0.08) 22%, transparent 48%),
-    radial-gradient(ellipse at 88% 88%, rgba(16,185,129,0.13) 0%, transparent 46%),
-    radial-gradient(ellipse at 50% 35%, rgba(56,189,248,0.07) 0%, transparent 62%),
-    radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.04) 0%, transparent 72%),
-    radial-gradient(#142A20 1.5px, transparent 1.5px);
+    radial-gradient(ellipse at 12% 8%, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.10) 25%, transparent 50%),
+    radial-gradient(ellipse at 88% 88%, rgba(16, 185, 129, 0.15) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 30%, rgba(56, 189, 248, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse at 75% 15%, rgba(234, 88, 12, 0.12) 0%, transparent 45%),
+    radial-gradient(#163224 1.5px, transparent 1.5px);
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
   background-attachment: fixed, fixed, fixed, fixed, scroll;
   color: #F8FAFC;
   transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
 }
 
-/* ——— Super Saiyan God Ki — extra golden electric veil (dark only) ——— */
+/* ——— Super Saiyan God Ki — Golden Electric Veil ——— */
 body.saiyan-mode::before {
   content: '';
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 42% 28% at 18% 14%, rgba(251,191,36,0.07) 0%, transparent 62%),
-    radial-gradient(ellipse 36% 32% at 84% 78%, rgba(56,189,248,0.05) 0%, transparent 62%);
+    radial-gradient(ellipse 45% 30% at 18% 14%, rgba(251, 191, 36, 0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 84% 78%, rgba(56, 189, 248, 0.07) 0%, transparent 65%),
+    radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 70%);
   pointer-events: none;
   z-index: -1;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-body.saiyan-mode .section-title,
+body.saiyan-mode .section-title {
+  color: #F8FAFC !important;
+  text-shadow: 0 0 16px rgba(251, 191, 36, 0.28) !important;
+}
+
 body.saiyan-mode .hero-name {
-  filter: drop-shadow(0 0 10px rgba(251,191,36,0.18));
+  background: linear-gradient(135deg, #FFFFFF 0%, #FEF08A 25%, #FBBF24 55%, #F59E0B 85%, #EA580C 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.5)) drop-shadow(0 0 32px rgba(245, 158, 11, 0.25)) !important;
+}
+
+body.saiyan-mode .hero-rotating-word {
+  background: linear-gradient(135deg, #FDE047 0%, #FBBF24 50%, #EA580C 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 0 14px rgba(251, 191, 36, 0.6)) !important;
+}
+
+body.saiyan-mode .hero-kicker {
+  color: #38BDF8 !important;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
+}
+
+body.saiyan-mode .badge-pill,
+body.saiyan-mode .badge-status {
+  background: rgba(10, 24, 18, 0.88) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FEF08A !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(254, 240, 138, 0.2) !important;
+}
+
+body.saiyan-mode .badge-status .status-dot {
+  background: #FBBF24 !important;
+  box-shadow: 0 0 10px #FBBF24, 0 0 20px #38BDF8 !important;
 }
 
 body.saiyan-mode .btn-primary {
-  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 55%, #D97706 100%) !important;
-  border-color: #000000 !important;
-  box-shadow: 4px 4px 0px #000000, 0 0 18px rgba(251,191,36,0.45) !important;
-  color: #060E0A !important;
+  background: linear-gradient(135deg, #FDE047 0%, #FBBF24 50%, #EA580C 100%) !important;
+  border: 2px solid #FEF08A !important;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5), 0 0 35px rgba(245, 158, 11, 0.3) !important;
+  color: #0A1410 !important;
+  font-weight: 800 !important;
 }
 
 body.saiyan-mode .btn-primary:hover {
-  box-shadow: 6px 6px 0px #000000, 0 0 28px rgba(251,191,36,0.65), 0 0 45px rgba(245,158,11,0.35) !important;
-  transform: translate(-2px, -2px);
+  box-shadow: 0 8px 30px rgba(251, 191, 36, 0.75), 0 0 50px rgba(245, 158, 11, 0.45), 0 0 70px rgba(56, 189, 248, 0.35) !important;
+  transform: translateY(-2px) scale(1.02);
+}
+
+body.saiyan-mode .btn-secondary {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.35) 100%) !important;
+  border: 2px solid #34D399 !important;
+  color: #A7F3D0 !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.35) !important;
+}
+
+body.saiyan-mode .btn-secondary:hover {
+  background: #10B981 !important;
+  color: #0A1410 !important;
+  box-shadow: 0 0 28px rgba(16, 185, 129, 0.6) !important;
 }
 
 body.saiyan-mode .ticker-container {
-  background: #050B08 !important;
+  background: #040A07 !important;
   border-top: 2.5px solid #F59E0B !important;
   border-bottom: 2.5px solid #F59E0B !important;
-  box-shadow: 0 0 22px rgba(245,158,11,0.18);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.25) !important;
 }
 
 body.saiyan-mode .site-header {
-  box-shadow: 0 2px 0 rgba(245,158,11,0.22), 0 8px 28px rgba(0,0,0,0.55) !important;
+  box-shadow: 0 2px 0 rgba(245, 158, 11, 0.25), 0 8px 32px rgba(0, 0, 0, 0.65) !important;
 }
 
 body.saiyan-mode .hero-section::after {
@@ -189,13 +236,13 @@ body.saiyan-mode .hero-section::after {
   font-weight: 900;
   font-size: clamp(5rem, 12vw, 9rem);
   line-height: 1;
-  color: rgba(251,191,36,0.045);
+  color: rgba(251, 191, 36, 0.06);
   writing-mode: vertical-rl;
   letter-spacing: 0.06em;
   pointer-events: none;
   z-index: 0;
   user-select: none;
-  filter: drop-shadow(0 0 12px rgba(251,191,36,0.12));
+  filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.2));
 }
 
 @media (max-width: 768px) {
@@ -210,9 +257,9 @@ body.saiyan-mode .achievement-card::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 2.5px;
-  background: linear-gradient(90deg, #FBBF24 0%, #F59E0B 42%, #38BDF8 100%);
-  opacity: 0.9;
+  height: 3px;
+  background: linear-gradient(90deg, #FDE047 0%, #FBBF24 35%, #F59E0B 70%, #38BDF8 100%);
+  opacity: 0.95;
   z-index: 3;
   pointer-events: none;
   border-radius: 24px 24px 0 0;
@@ -254,27 +301,27 @@ body.saiyan-mode .achievement-card::before {
   }
 }
 
-/* Profile Photo Card — Super Saiyan Golden Aura (dark only, more Saiyan) */
+/* Profile Photo Card — Super Saiyan Golden Aura */
 body.saiyan-mode .hero-photo-frame {
   border-color: #FBBF24 !important;
-  box-shadow: 0 0 22px rgba(251,191,36,0.65), 0 0 48px rgba(245,158,11,0.38), 0 0 72px rgba(56,189,248,0.18), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 55px rgba(245, 158, 11, 0.42), 0 0 85px rgba(56, 189, 248, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
   animation: ssj-ki-aura-pulse 2.4s ease-in-out infinite !important;
   transition: var(--transition-bounce) !important;
 }
 
 body.saiyan-mode .hero-ambient-aura {
-  background: radial-gradient(circle at 32% 28%, rgba(251,191,36,0.32) 0%, rgba(245,158,11,0.18) 38%, rgba(56,189,248,0.12) 62%, transparent 74%) !important;
-  filter: blur(36px) saturate(1.15) !important;
+  background: radial-gradient(circle at 32% 28%, rgba(251, 191, 36, 0.38) 0%, rgba(245, 158, 11, 0.22) 38%, rgba(56, 189, 248, 0.16) 62%, transparent 76%) !important;
+  filter: blur(36px) saturate(1.2) !important;
 }
 
 @keyframes ssj-ki-aura-pulse {
   0%, 100% {
-    box-shadow: 0 0 18px rgba(251,191,36,0.55), 0 0 42px rgba(245,158,11,0.32), 0 0 62px rgba(56,189,248,0.14), inset 0 1px 0 rgba(255,255,255,0.07);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 45px rgba(245, 158, 11, 0.35), 0 0 70px rgba(56, 189, 248, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transform: translateY(0) scale(1);
   }
   50% {
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 14px 34px rgba(0, 0, 0, 0.55);
-    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 0 32px rgba(251, 191, 36, 0.85), 0 0 65px rgba(245, 158, 11, 0.55), 0 0 100px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px) scale(1.015);
   }
 }
 
@@ -294,7 +341,7 @@ body.saiyan-mode .hero-ambient-aura {
   opacity: 1;
 }
 
-/* Cards in Saiyan Mode — Unified with Light Mode (same offsets, only palette differs; no extra glows) */
+/* Cards in Saiyan Mode — Super Saiyan Obsidian + Golden Ki Borders */
 body.saiyan-mode .sticker-card,
 body.saiyan-mode .stat-card,
 body.saiyan-mode .skill-category-card,
@@ -304,9 +351,9 @@ body.saiyan-mode .achievement-card,
 body.saiyan-mode .edu-card,
 body.saiyan-mode .cert-card,
 body.saiyan-mode .contact-wrapper {
-  background-color: #0F1E17 !important;
-  border-color: #F59E0B !important;
-  box-shadow: 4px 4px 0px 0px #000000 !important;
+  background-color: #0A1611 !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 18px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(254, 240, 138, 0.14) !important;
 }
 
 body.saiyan-mode .sticker-card:hover,
@@ -317,36 +364,36 @@ body.saiyan-mode .achievement-card:hover,
 body.saiyan-mode .edu-card:hover,
 body.saiyan-mode .cert-card:hover {
   transform: translate(-3px, -3px) rotate(-0.5deg) !important;
-  box-shadow: 6px 6px 0px 0px #F59E0B !important;
-  border-color: #F59E0B !important;
+  box-shadow: 0 20px 50px -5px rgba(0, 0, 0, 0.95), 0 0 32px rgba(251, 191, 36, 0.45), 0 0 60px rgba(245, 158, 11, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border-color: #FBBF24 !important;
 }
 
 body.saiyan-mode .project-card:hover {
   transform: translate(-4px, -4px) rotate(-0.5deg) !important;
-  box-shadow: 8px 8px 0px 0px #F59E0B !important;
-  border-color: #F59E0B !important;
+  box-shadow: 0 24px 60px -5px rgba(0, 0, 0, 0.95), 0 0 38px rgba(251, 191, 36, 0.5), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  border-color: #FBBF24 !important;
 }
 
-/* Preserve per-card color accents in dark mode — same structure as light, palette differs */
+/* Preserve per-card color accents in dark mode */
 body.saiyan-mode .sticker-card.card-pink:hover {
-  box-shadow: 6px 6px 0px 0px var(--secondary) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(245, 158, 11, 0.4) !important;
 }
 body.saiyan-mode .sticker-card.card-violet:hover {
-  box-shadow: 6px 6px 0px 0px var(--accent) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(251, 191, 36, 0.4) !important;
 }
 body.saiyan-mode .sticker-card.card-yellow:hover {
-  box-shadow: 6px 6px 0px 0px var(--tertiary) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(253, 224, 71, 0.5) !important;
 }
 body.saiyan-mode .sticker-card.card-mint:hover {
-  box-shadow: 6px 6px 0px 0px var(--quaternary) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.45) !important;
 }
 
 body.saiyan-mode .site-header {
-  background: rgba(8, 18, 14, 0.58) !important;
+  background: rgba(8, 18, 14, 0.65) !important;
   border-bottom: 2px solid #F59E0B !important;
   backdrop-filter: blur(22px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
-  box-shadow: 0 2px 0 #F59E0B, 0 8px 32px rgba(0,0,0,0.42), 0 0 24px rgba(251,191,36,0.18) !important;
+  box-shadow: 0 2px 0 #F59E0B, 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(251, 191, 36, 0.22) !important;
 }
 
 body.saiyan-mode .nav-link {
