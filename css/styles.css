@@ -1181,12 +1181,11 @@ body.saiyan-mode .hero-badge {
   font-size: clamp(2.7rem, 6vw, 4.35rem);
   line-height: 0.92;
   letter-spacing: -0.04em;
-  background: linear-gradient(135deg, #1E0818 0%, #7209B7 35%, #FF2E97 68%, #E11D48 100%);
+  background: linear-gradient(90deg, #0F172A 0%, #1E293B 42%, #4F46E5 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 16px rgba(255, 46, 151, 0.35)) drop-shadow(0 0 28px rgba(114, 9, 183, 0.18));
 }
 body.saiyan-mode .hero-name {
   background: linear-gradient(135deg, #FFFFFF 0%, #FEF08A 25%, #FBBF24 55%, #F59E0B 85%, #EA580C 100%) !important;
@@ -1209,16 +1208,16 @@ body.saiyan-mode .hero-name {
   gap: 0.35rem;
 }
 
-/* Rotating scouter word — Super Saiyan Rose Divine Ki */
+/* Rotating scouter word */
 .hero-rotating-word {
   display: inline-block;
   min-width: 8.5ch;
-  background: linear-gradient(135deg, #FF2E97 0%, #E11D48 50%, #7209B7 100%);
+  background: linear-gradient(90deg, #FF2E97 0%, #4F46E5 58%, #06B6D4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 12px rgba(255, 46, 151, 0.45));
+  filter: drop-shadow(0 0 10px rgba(79,70,229,0.28));
   transition: opacity 0.32s cubic-bezier(0.16,1,0.3,1), transform 0.32s cubic-bezier(0.16,1,0.3,1), filter 0.32s ease;
   will-change: opacity, transform;
   vertical-align: baseline;
