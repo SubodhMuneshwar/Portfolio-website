@@ -554,6 +554,7 @@ function initMobileMenu() {
         if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
         isClosing = false;
         navMenu.classList.remove('closing');
+        document.body.classList.remove('mobile-drawer-closing');
         navMenu.classList.add('open');
         document.body.classList.add('mobile-drawer-open');
         toggleBtn.setAttribute('aria-expanded', 'true');
@@ -562,15 +563,16 @@ function initMobileMenu() {
         if (!navMenu.classList.contains('open') || isClosing) return;
         isClosing = true;
         navMenu.classList.add('closing');
+        document.body.classList.add('mobile-drawer-closing');
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
         
         closeTimer = setTimeout(() => {
           navMenu.classList.remove('open', 'closing');
-          document.body.classList.remove('mobile-drawer-open');
+          document.body.classList.remove('mobile-drawer-open', 'mobile-drawer-closing');
           isClosing = false;
           closeTimer = null;
-        }, 520);
+        }, 260);
       }
       initLucideIcons();
     }
