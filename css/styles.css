@@ -956,12 +956,15 @@ body.saiyan-mode .nav-link.active .lucide {
 /* ==========================================================================
    Sliding Theme Toggle Switch (Rosé ⟷ Saiyan Mode)
    ========================================================================== */
+/* ==========================================================================
+   Sliding Theme Toggle Switch (Rosé ⟷ Saiyan Mode)
+   ========================================================================== */
 .theme-slider-toggle {
   position: relative;
   display: inline-flex;
   align-items: center;
   height: 38px;
-  width: 148px;
+  width: 142px;
   border-radius: var(--radius-full);
   background: rgba(241, 245, 249, 0.95);
   border: 2px solid var(--border);
@@ -1037,24 +1040,15 @@ body.saiyan-mode .theme-slider-bg-glider,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.32rem;
   font-family: var(--font-heading);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   cursor: pointer;
-  padding: 0 0.4rem;
+  padding: 0 0.5rem;
   color: var(--muted-fg);
   transition: color 0.25s ease, transform 0.25s ease;
-}
-
-.theme-slider-btn .slider-btn-icon {
-  font-size: 0.85rem;
-  line-height: 1;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.theme-slider-btn:hover .slider-btn-icon {
-  transform: scale(1.18) rotate(-6deg);
 }
 
 /* Light / Rosé Mode active label */
