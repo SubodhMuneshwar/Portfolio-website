@@ -2797,7 +2797,7 @@ function initCardSpotlight() {
   }, { passive: true });
 }
 
-/* --- Dynamic: Card Tilt (subtle 3D) — delegated + auto-class --- */
+/* --- Dynamic: Enhanced 3D Card Tilt with Dynamic Specular Glare --- */
 function initCardTilt() {
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -2816,10 +2816,13 @@ function initCardTilt() {
     const r = card.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
-    const rx = (px * 8).toFixed(2) + 'deg';
-    const ry = (-py * 8).toFixed(2) + 'deg';
+    const rx = (px * 12).toFixed(2) + 'deg';
+    const ry = (-py * 12).toFixed(2) + 'deg';
     card.style.setProperty('--tilt-x', rx);
     card.style.setProperty('--tilt-y', ry);
+    card.style.setProperty('--glare-x', ((px + 0.5) * 100).toFixed(1) + '%');
+    card.style.setProperty('--glare-y', ((py + 0.5) * 100).toFixed(1) + '%');
+    card.style.setProperty('--glare-opacity', '1');
   }, { passive: true });
   
   document.addEventListener('pointerleave', (e) => {
@@ -2827,6 +2830,7 @@ function initCardTilt() {
     if (!card) return;
     card.style.setProperty('--tilt-x', '0deg');
     card.style.setProperty('--tilt-y', '0deg');
+    card.style.setProperty('--glare-opacity', '0');
   }, true);
 }
 

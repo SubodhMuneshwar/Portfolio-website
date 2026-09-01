@@ -5837,42 +5837,160 @@ body.saiyan-mode .scroll-progress-bar {
 }
 
 /* Spotlight — subtle cursor follow glow inside cards */
-.sticker-card, .stat-card, .skill-category-card, .experience-card, .achievement-card, .edu-card, .cert-card, .project-card {
+/* ==========================================================================
+   Hyper-Tactile 3D Card Engine, Multi-Plane Parallax & Specular Light System
+   ========================================================================== */
+
+.sticker-card,
+.stat-card,
+.skill-category-card,
+.experience-card,
+.achievement-card,
+.edu-card,
+.cert-card,
+.project-card,
+.scouter-lens-body {
   --mx: 50%;
   --my: 50%;
+  --glare-x: 50%;
+  --glare-y: 50%;
+  --glare-opacity: 0;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 12px 24px -6px rgba(15, 23, 42, 0.08),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.75),
+    5px 5px 0px 0px var(--border);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
 }
-.sticker-card::after, .stat-card::after, .skill-category-card::after, .experience-card::after, .achievement-card::after, .edu-card::after, .cert-card::after, .project-card::after {
+
+body.saiyan-mode .sticker-card,
+body.saiyan-mode .stat-card,
+body.saiyan-mode .skill-category-card,
+body.saiyan-mode .experience-card,
+body.saiyan-mode .achievement-card,
+body.saiyan-mode .edu-card,
+body.saiyan-mode .cert-card,
+body.saiyan-mode .project-card,
+body.saiyan-mode .scouter-lens-body {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.7),
+    0 0 0 1.5px rgba(245, 158, 11, 0.35),
+    inset 0 1.5px 0 rgba(254, 240, 138, 0.2),
+    5px 5px 0px 0px #000000;
+}
+
+/* 3D Specular Light & Dynamic Spotlight reflection */
+.tilt-card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(420px circle at var(--mx) var(--my), rgba(79,70,229,0.10), transparent 62%);
-  opacity: 0;
-  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    420px circle at var(--glare-x, var(--mx, 50%)) var(--glare-y, var(--my, 50%)),
+    rgba(255, 255, 255, 0.35),
+    transparent 65%
+  );
+  opacity: var(--glare-opacity, 0);
   pointer-events: none;
-  z-index: 0;
-}
-.sticker-card:hover::after, .stat-card:hover::after, .skill-category-card:hover::after, .experience-card:hover::after, .achievement-card:hover::after, .edu-card:hover::after, .cert-card:hover::after, .project-card:hover::after {
-  opacity: 1;
-}
-body.saiyan-mode .sticker-card::after, body.saiyan-mode .stat-card::after, body.saiyan-mode .skill-category-card::after, body.saiyan-mode .experience-card::after, body.saiyan-mode .achievement-card::after, body.saiyan-mode .edu-card::after, body.saiyan-mode .cert-card::after, body.saiyan-mode .project-card::after {
-  background: radial-gradient(420px circle at var(--mx) var(--my), rgba(251,191,36,0.14), transparent 62%);
+  z-index: 15;
+  transition: opacity 0.35s ease;
+  mix-blend-mode: overlay;
 }
 
-/* Ensure card content sits above spotlight */
-.sticker-card > *, .stat-card > *, .skill-category-card > *, .experience-card > *, .achievement-card > *, .edu-card > *, .cert-card > *, .project-card .project-card-body {
+body.saiyan-mode .tilt-card::before {
+  background: radial-gradient(
+    440px circle at var(--glare-x, var(--mx, 50%)) var(--glare-y, var(--my, 50%)),
+    rgba(254, 240, 138, 0.30),
+    transparent 62%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Ensure card content sits above spotlight in 3D space */
+.sticker-card > *,
+.stat-card > *,
+.skill-category-card > *,
+.experience-card > *,
+.achievement-card > *,
+.edu-card > *,
+.cert-card > *,
+.project-card .project-card-body {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  transform-style: preserve-3d;
 }
 
-/* Tilt — JS sets --tilt-x / --tilt-y */
-.tilt-card {
-  transform-style: preserve-3d;
-  will-change: transform;
-}
+/* 3D Parallax Tilt Hover State — lifts card and responds dynamically to mouse */
 @media (hover: hover) and (pointer: fine) {
   .tilt-card:hover {
-    transform: perspective(900px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateZ(0);
+    transform: perspective(1100px) translateY(-10px) scale(1.025) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateZ(12px) !important;
+    z-index: 10;
+    box-shadow:
+      0 8px 16px rgba(0, 0, 0, 0.06),
+      0 26px 52px -12px rgba(255, 46, 151, 0.24),
+      inset 0 2px 0 rgba(255, 255, 255, 0.95),
+      8px 8px 0px 0px var(--border) !important;
+  }
+
+  body.saiyan-mode .tilt-card:hover {
+    box-shadow:
+      0 12px 36px rgba(0, 0, 0, 0.85),
+      0 0 35px rgba(251, 191, 36, 0.45),
+      0 0 0 2px #FBBF24,
+      inset 0 2px 0 rgba(254, 240, 138, 0.45),
+      9px 9px 0px 0px #000000 !important;
+  }
+
+  /* Multi-Plane 3D Extrusion — Elements physically float above the card surface */
+  .tilt-card .card-floating-badge,
+  .tilt-card .project-badge,
+  .tilt-card .ach-icon-circle,
+  .tilt-card .skill-icon-box,
+  .tilt-card .cert-icon-box {
+    transform: translateZ(32px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tilt-card .skill-card-title,
+  .tilt-card .project-title,
+  .tilt-card .ach-title,
+  .tilt-card .exp-role,
+  .tilt-card .edu-degree,
+  .tilt-card .cert-name {
+    transform: translateZ(24px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tilt-card .skill-chip,
+  .tilt-card .project-chip,
+  .tilt-card .exp-tag,
+  .tilt-card .exp-bullet-item,
+  .tilt-card .project-tagline {
+    transform: translateZ(16px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tilt-card .project-actions,
+  .tilt-card .btn {
+    transform: translateZ(28px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tilt-card .project-card-image-wrap {
+    transform: translateZ(14px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tilt-card .skill-chip:hover,
+  .tilt-card .project-chip:hover {
+    transform: translateZ(34px) scale(1.08) !important;
   }
 }
 
