@@ -311,8 +311,8 @@ body.saiyan-mode .marker-highlight {
   color: #0A1410 !important;
 }
 
-.section-tag i,
-.section-tag svg {
+.section-tag > i,
+.section-tag > svg:not(.dragon-ball svg) {
   color: #0A1410 !important;
   stroke: #0A1410 !important;
   stroke-width: 2.2px !important;
@@ -323,8 +323,8 @@ body.saiyan-mode .section-tag {
   font-weight: 800 !important;
 }
 
-body.saiyan-mode .section-tag i,
-body.saiyan-mode .section-tag svg {
+body.saiyan-mode .section-tag > i,
+body.saiyan-mode .section-tag > svg:not(.dragon-ball svg) {
   color: #0A1410 !important;
   stroke: #0A1410 !important;
   stroke-width: 2.5px !important;
@@ -569,8 +569,8 @@ body.saiyan-mode .sticker-card.card-mint:hover {
   color: #0A1410 !important;
 }
 
-.card-floating-badge i,
-.card-floating-badge svg {
+.card-floating-badge > i,
+.card-floating-badge > svg:not(.dragon-ball svg) {
   color: #0A1410 !important;
   stroke: #0A1410 !important;
   stroke-width: 2.2px !important;

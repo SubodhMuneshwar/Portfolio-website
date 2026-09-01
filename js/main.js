@@ -1143,7 +1143,7 @@ function renderDragonBallSVGs() {
     // radial gradients, same gloss ellipse, same rim & stroke.
     // Only the stars (innerContent / LAYOUTS) remain dynamic.
     return `
-      <svg viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none;" aria-hidden="true">
+      <svg class="dragon-ball-svg" viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none; stroke: none !important; fill: none !important;" aria-hidden="true">
         <defs>
           <radialGradient id="db-body-${uid}" cx="34%" cy="28%" r="78%">
             <stop offset="0%" stop-color="#FFF3C4" />
@@ -1160,13 +1160,13 @@ function renderDragonBallSVGs() {
             <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0" />
           </radialGradient>
         </defs>
-        <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" />
-        <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" />
+        <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" stroke="none" style="stroke: none !important;" />
+        <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" stroke="none" style="stroke: none !important;" />
         <g opacity="0.98">
           ${innerContent}
         </g>
-        <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#db-gloss-${uid})" transform="rotate(-28 33 27)" />
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" />
+        <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#db-gloss-${uid})" stroke="none" style="stroke: none !important;" transform="rotate(-28 33 27)" />
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" style="stroke: #7C3A06 !important; stroke-width: 1.5px !important;" />
       </svg>
     `;
   };
