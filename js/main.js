@@ -572,7 +572,7 @@ function initMobileMenu() {
           document.body.classList.remove('mobile-drawer-open', 'mobile-drawer-closing');
           isClosing = false;
           closeTimer = null;
-        }, 260);
+        }, 280);
       }
       initLucideIcons();
     }
