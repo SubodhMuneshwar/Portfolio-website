@@ -79,9 +79,9 @@
   /* Animation & Motion */
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-bounce: all 0.3s var(--ease-bounce);
-  --transition-fast: all 0.15s ease;
-  --transition-normal: all 0.25s ease;
+  --transition-bounce: transform 0.3s var(--ease-bounce), opacity 0.3s var(--ease-bounce), background-color 0.3s var(--ease-bounce), color 0.3s var(--ease-bounce), box-shadow 0.3s var(--ease-bounce), border-color 0.3s var(--ease-bounce);
+  --transition-fast: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  --transition-normal: transform 0.25s ease, opacity 0.25s ease, background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 
   /* Layout */
   --container-max: 1200px;

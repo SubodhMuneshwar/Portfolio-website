@@ -294,7 +294,7 @@ window.openProjectModal = function(projectId) {
     </div>
 
     <div style="border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--border); margin-bottom: 1.5rem; background: var(--muted);">
-      <img src="${encodeURI(proj.image)}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" onerror="this.style.display='none'" />
+      <img src="${encodeURI(proj.image)}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" loading="lazy" onerror="this.style.display='none'" />
     </div>
 
     <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Key Architecture & Deliverables:</h4>
