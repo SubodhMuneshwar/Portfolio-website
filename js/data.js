@@ -6,7 +6,7 @@
 const portfolioData = {
   personal: {
     name: "Subodh Uttam Muneshwar",
-    badge: "Open for Opportunities 🚀",
+    badge: "Open for Opportunities",
     role: "Software Engineer & Backend / AI/ML Developer",
     location: "Mumbai - 400104, India",
     phone: "+91 9029920228",

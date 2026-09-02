@@ -19,7 +19,7 @@ html {
   font-size: 16px;
   color-scheme: light;
   scrollbar-width: thin;
-  scrollbar-color: #94A3B8 #FFFDF5;
+  scrollbar-color: #475569 #FFFDF5;
   background-color: #FFFDF5;
   overflow-x: hidden;
   max-width: 100%;
@@ -75,7 +75,7 @@ body::-webkit-scrollbar-track {
 ::-webkit-scrollbar-thumb,
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb {
-  background: #94A3B8;
+  background: #475569;
   border-radius: 9999px;
   border: 3px solid #FFFDF5;
   transition: background-color 0.2s ease;
@@ -972,7 +972,7 @@ body.saiyan-mode .nav-link.active .lucide {
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: manipulation;
+  touch-action: pan-y;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
@@ -1337,12 +1337,12 @@ body.saiyan-mode .hero-name {
 .hero-rotating-word {
   display: inline-block;
   min-width: 8.5ch;
-  background: linear-gradient(90deg, #FF2E97 0%, #4F46E5 58%, #06B6D4 100%);
+  background: linear-gradient(135deg, #FF2E97 0%, #D946EF 45%, #7C3AED 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 10px rgba(79,70,229,0.28));
+  filter: drop-shadow(0 0 10px rgba(255, 46, 151, 0.35));
   transition: opacity 0.32s cubic-bezier(0.16,1,0.3,1), transform 0.32s cubic-bezier(0.16,1,0.3,1), filter 0.32s ease;
   will-change: opacity, transform;
   vertical-align: baseline;
@@ -4003,7 +4003,7 @@ body.saiyan-mode .footer-float-top:hover {
   background-color: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 1000;
+  z-index: 999999 !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4028,6 +4028,7 @@ body.saiyan-mode .footer-float-top:hover {
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  z-index: 1000000;
   transform: scale(0.9) translateY(20px);
   transition: transform 0.3s var(--ease-bounce);
   padding: 2.5rem;
@@ -4187,8 +4188,9 @@ body.saiyan-mode .footer-float-top:hover {
     display: none !important;
   }
 
-  .nav-actions .nav-btn-connect {
-    display: none;
+  .nav-actions .nav-btn-connect,
+  .nav-btn-connect {
+    display: none !important;
   }
 
   .mobile-toggle {
@@ -4808,6 +4810,47 @@ body.saiyan-mode .footer-float-top:hover {
     font-size: 0.82rem;
     padding: 0.55rem 1.1rem;
     text-align: center;
+  }
+
+  /* Hero: ensure fully responsive on small phones */
+  .hero-hud-frame {
+    padding: 12px 12px 16px;
+    max-width: 92vw;
+    margin: 0 auto;
+  }
+  .hero-description {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .marker-highlight {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .nav-center-island {
+    gap: 0.4rem;
+    padding: 0.3rem 0.4rem;
+    max-width: 92vw;
+  }
+  .nav-ctrl-btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  /* Flashcard dots: ensure below track, not overlapping cards */
+  .flashcard-dots-wrap {
+    margin-top: 1rem;
+    padding-bottom: 0.75rem;
+  }
+  .flashcard-dots {
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .flashcard-nav {
+    left: 6px;
+    right: 6px;
   }
 }
 
@@ -6486,10 +6529,15 @@ body.saiyan-mode .flashcard-track > *.is-next-card {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 1.25rem;
-  padding-bottom: 0.5rem;
+  margin-top: 1.6rem;
+  padding-bottom: 0.75rem;
   position: relative;
   z-index: 20;
+  clear: both;
+}
+.flashcard-scroller-wrap {
+  padding-bottom: 0.5rem;
+  overflow: visible;
 }
 
 .flashcard-dots {
@@ -7766,42 +7814,121 @@ section, .container, .hero-section, .stats-section, .ticker-container {
 }
 
 .brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 0;
-  flex-shrink: 1;
+  flex-shrink: 0;
+}
+
+.brand-badge-box.brand-db-orb {
+  flex-shrink: 0;
 }
 
 .brand-text-wrapper {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.brand-name,
-.brand-sub {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+.brand-name {
+  white-space: nowrap;
 }
 
 .nav-actions {
   flex-shrink: 0;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 /* Ensure header doesn't push viewport on small screens */
 @media (max-width: 1024px) {
   .navbar {
     gap: 0.5rem;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    justify-content: space-between;
   }
   .nav-actions {
-    gap: 0.4rem;
+    gap: 0.45rem;
+    display: flex;
+    align-items: center;
+  }
+  .nav-actions .nav-btn-connect,
+  .nav-btn-connect {
+    display: none !important;
   }
   .nav-ctrl-btn,
-  .nav-btn-connect,
   .mobile-toggle {
-    min-height: 42px;
+    min-height: 38px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@media (max-width: 768px) {
+  .theme-slider-toggle {
+    height: 32px !important;
+    width: 116px !important;
+    border-width: 1.5px !important;
+  }
+  .theme-slider-track {
+    padding: 2px !important;
+  }
+  .theme-slider-bg-glider {
+    top: 2px !important;
+    left: 2px !important;
+    width: calc(50% - 2px) !important;
+    height: calc(100% - 4px) !important;
+  }
+  .theme-slider-btn {
+    font-size: 0.72rem !important;
+    padding: 0 0.35rem !important;
+  }
+  .brand-sub {
+    display: none !important;
+  }
+  .brand-name {
+    font-size: 1.15rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.04em !important;
+    white-space: nowrap !important;
+  }
+  .brand-badge-box.brand-db-orb {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .brand-db-svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .theme-slider-toggle {
+    height: 30px !important;
+    width: 104px !important;
+  }
+  .theme-slider-btn {
+    font-size: 0.68rem !important;
+    padding: 0 0.25rem !important;
+  }
+  .brand-name {
+    font-size: 1.05rem !important;
+  }
+  .brand-badge-box.brand-db-orb {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .brand-db-svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  .mobile-toggle {
+    width: 34px !important;
+    height: 34px !important;
   }
 }
 
@@ -7884,133 +8011,189 @@ section, .container, .hero-section, .stats-section, .ticker-container {
 
 @media (max-width: 1024px) {
   .hero-section {
-    padding-top: 2.2rem;
+    padding-top: 2rem;
     padding-bottom: 2.75rem;
   }
   .hero-grid {
-    gap: 2.25rem;
+    gap: 2rem;
   }
 }
 
 @media (max-width: 768px) {
   .hero-section {
-    padding-top: 1.75rem;
-    padding-bottom: 3.5rem;
+    padding-top: 1.25rem;
+    padding-bottom: 4rem;
   }
-  /* Nimbus: stay at bottom on mobile to avoid crossing hero title */
+  /* Nimbus: stay at bottom on mobile with low opacity to avoid crossing hero title */
   .flying-nimbus {
     top: auto !important;
-    bottom: var(--nimbus-bottom, clamp(70px, 12vh, 110px)) !important;
+    bottom: var(--nimbus-bottom, clamp(64px, 10vh, 90px)) !important;
+    width: 85px !important;
+    height: 48px !important;
+    opacity: 0.8 !important;
+    z-index: 10 !important;
   }
-  /* Give hero breathing room for fixed Radar widget */
-  .hero-pills {
-    padding-bottom: 1rem;
-  }
-  .hero-kicker {
-    font-size: 0.72rem !important;
-    letter-spacing: 0.12em;
-  }
-  .hero-name {
-    font-size: clamp(2.1rem, 8.5vw, 3rem) !important;
-    line-height: 0.95;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-  .hero-role {
-    font-size: clamp(1.05rem, 4.2vw, 1.45rem) !important;
+  /* Hero visual photo card: compact, sleek & proportional */
+  .hero-visual {
+    order: -1 !important;
+    display: flex;
     justify-content: center;
-    text-align: center;
-  }
-  .hero-rotating-word {
-    min-width: 7ch;
-    font-size: 1em;
-  }
-  .hero-description {
-    font-size: 0.98rem !important;
-    line-height: 1.65;
-    padding: 0 0.25rem;
-  }
-  .hero-ctas {
-    gap: 0.75rem;
-    padding: 0 0.25rem;
-  }
-  .hero-ctas .btn {
-    font-size: 0.92rem;
-    padding: 0.65rem 1.15rem;
-  }
-  .hero-pills {
-    padding: 0 0.5rem;
-    justify-content: center;
+    width: 100%;
+    margin-bottom: 1rem;
   }
   .hero-visual-wrapper {
-    max-width: min(300px, 80vw);
+    max-width: clamp(200px, 58vw, 240px) !important;
+    margin: 0 auto;
+  }
+  .hero-hud-frame {
+    padding: 10px 10px 14px !important;
+    border-radius: 18px !important;
+  }
+  .hero-photo-frame {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-height: 220px;
+    border-radius: 14px !important;
+    overflow: hidden;
+  }
+  .hero-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .hero-clean-badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.95rem;
+    margin-top: -12px !important;
+    font-size: 0.72rem !important;
+    padding: 0.35rem 0.85rem !important;
     max-width: calc(100vw - 32px);
     box-sizing: border-box;
     white-space: normal;
     text-align: center;
     line-height: 1.3;
   }
+  .hero-card-header-bar {
+    font-size: 0.68rem !important;
+    padding: 0 2px 6px !important;
+  }
+  .rose-divine-tag,
+  .saiyan-divine-tag {
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.6rem !important;
+  }
+
+  /* Hero Content typography */
+  .hero-content {
+    order: 1 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  .hero-kicker {
+    font-size: 0.75rem !important;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+  .hero-name {
+    font-size: clamp(2rem, 7.5vw, 2.7rem) !important;
+    line-height: 1.05;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    margin-bottom: 0.35rem;
+  }
+  .hero-role {
+    font-size: clamp(1rem, 3.8vw, 1.25rem) !important;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 0.85rem;
+  }
+  .hero-rotating-word {
+    min-width: 7ch;
+    font-size: 1em;
+  }
+  .hero-description {
+    font-size: 0.94rem !important;
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto 1.25rem auto;
+    padding: 0 0.5rem;
+  }
+  .hero-ctas {
+    gap: 0.65rem;
+    padding: 0 0.25rem;
+    justify-content: center;
+    max-width: 480px;
+    margin: 0 auto 1.25rem auto;
+  }
+  .hero-ctas .btn {
+    font-size: 0.86rem;
+    padding: 0.55rem 1rem;
+    min-height: 42px;
+  }
+  .hero-pills {
+    padding: 0 0.5rem 1rem 0.5rem;
+    justify-content: center;
+    gap: 0.4rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
   .hero-ambient-aura {
-    inset: -16px;
-    filter: blur(24px);
+    inset: -14px;
+    filter: blur(20px);
   }
 }
 
 @media (max-width: 480px) {
   .hero-section {
-    padding-top: 1.25rem;
-    padding-bottom: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 3.5rem;
+  }
+  .hero-visual-wrapper {
+    max-width: clamp(190px, 54vw, 220px) !important;
   }
   .hero-name {
-    font-size: clamp(1.9rem, 9vw, 2.45rem) !important;
+    font-size: clamp(1.85rem, 8.5vw, 2.35rem) !important;
   }
   .hero-role {
-    font-size: clamp(1rem, 4.5vw, 1.25rem) !important;
+    font-size: clamp(0.95rem, 4.2vw, 1.15rem) !important;
     flex-direction: column;
     align-items: center;
     gap: 0.15rem;
   }
   .hero-description {
-    font-size: 0.92rem !important;
-    line-height: 1.6;
-  }
-  .hero-visual-wrapper {
-    max-width: min(260px, 75vw);
+    font-size: 0.9rem !important;
+    line-height: 1.55;
   }
   .hero-hud-frame {
-    padding: 12px 12px 16px;
-    border-radius: 20px;
-  }
-  .hero-card-header-bar {
-    font-size: 0.68rem;
-    padding: 0 2px 8px;
+    padding: 8px 8px 12px !important;
+    border-radius: 16px !important;
   }
   .hero-clean-badge {
-    margin-top: -10px;
-    font-size: 0.7rem;
-    padding: 0.35rem 0.85rem;
+    margin-top: -10px !important;
+    font-size: 0.68rem !important;
+    padding: 0.3rem 0.75rem !important;
   }
   .tech-pill {
-    font-size: 0.68rem;
-    padding: 0.28rem 0.6rem;
+    font-size: 0.66rem;
+    padding: 0.25rem 0.55rem;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 375px) {
   .hero-name {
-    font-size: 1.75rem !important;
-  }
-  .hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .hero-ctas .btn {
-    width: 100%;
-    justify-content: center;
+    font-size: 1.7rem !important;
   }
 }
 

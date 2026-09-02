@@ -55,22 +55,7 @@ function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
   } catch(e) {}
 }
 
-/* --- 1-Click Copy Contact Info --- */
-window.copyContactEmail = function() {
-  const email = 'muneshwarsubodh1@gmail.com';
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(email).then(() => {
-      showToast('📋 Copied email (muneshwarsubodh1@gmail.com) to clipboard!');
-      playWebAudioTone(587, 'triangle', 0.12, 0.1);
-    }).catch(() => {
-      prompt('Copy Subodh\'s email:', email);
-    });
-  } else {
-    prompt('Copy Subodh\'s email:', email);
-  }
-};
-
-// Escape key to close modal
+/* --- Keyboard Shortcuts --- */
 function initKeyboardShortcuts() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -272,6 +257,22 @@ function initProjectFilters() {
       renderProjects(category);
     });
   });
+
+  // Global delegated click listener for project buttons
+  document.addEventListener('click', (e) => {
+    const detailsBtn = e.target.closest('.project-details-btn');
+    if (detailsBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const pid = detailsBtn.getAttribute('data-project-id');
+      if (pid) window.openProjectModal(pid);
+      return;
+    }
+    const ghLink = e.target.closest('.project-github-link');
+    if (ghLink) {
+      e.stopPropagation();
+    }
+  });
 }
 
 /* --- Project Modal Deep Dive --- */
@@ -336,6 +337,22 @@ window.closeProjectModal = function() {
     document.body.style.overflow = '';
   }
 };
+
+// Global delegated handler for project cards — robust fallback for dynamically rendered cards
+document.addEventListener('click', (e) => {
+  const detailsBtn = e.target.closest('.project-details-btn');
+  if (detailsBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    const pid = detailsBtn.getAttribute('data-project-id') || detailsBtn.dataset.projectId;
+    if (pid && window.openProjectModal) window.openProjectModal(pid);
+    return;
+  }
+  const ghLink = e.target.closest('.project-github-link');
+  if (ghLink) {
+    e.stopPropagation();
+  }
+});
 
 /* --- Render Achievements --- */
 function renderAchievements() {
@@ -446,9 +463,9 @@ function initContactInteractions() {
   if (copyEmailBtn) {
     copyEmailBtn.addEventListener('click', () => {
       navigator.clipboard.writeText('subodhum1603@gmail.com').then(() => {
-        showToast('📋 Copied email: subodhum1603@gmail.com');
+        showToast('Copied email: subodhum1603@gmail.com');
       }).catch(() => {
-        showToast('📧 subodhum1603@gmail.com');
+        showToast('subodhum1603@gmail.com');
       });
     });
   }
@@ -457,9 +474,9 @@ function initContactInteractions() {
   if (copyPhoneBtn) {
     copyPhoneBtn.addEventListener('click', () => {
       navigator.clipboard.writeText('+91 9029920228').then(() => {
-        showToast('📋 Copied phone: +91 9029920228');
+        showToast('Copied phone: +91 9029920228');
       }).catch(() => {
-        showToast('📱 +91 9029920228');
+        showToast('+91 9029920228');
       });
     });
   }
@@ -481,7 +498,7 @@ function initContactInteractions() {
 
       if (!name || !email || !message) {
         e.preventDefault();
-        showToast('⚠️ Please fill in all fields before sending.');
+        showToast('Please fill in all fields before sending.');
         return;
       }
 
@@ -490,7 +507,7 @@ function initContactInteractions() {
 
       const originalBtnHtml = submitBtn.innerHTML;
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>Sending Message... ⏳</span>';
+      submitBtn.innerHTML = '<span>Sending Message...</span>';
 
       try {
         const response = await fetch('https://formsubmit.co/ajax/subodhum1603@gmail.com', {
@@ -503,7 +520,7 @@ function initContactInteractions() {
             name: name,
             email: email,
             message: message,
-            _subject: `⚡ New Portfolio Inquiry from ${name}`,
+            _subject: `New Portfolio Inquiry from ${name}`,
             _template: 'table',
             _captcha: 'false'
           })
@@ -513,10 +530,10 @@ function initContactInteractions() {
 
         if (data.success === 'true' || data.success === true) {
           contactForm.reset();
-          submitBtn.innerHTML = '<span>Message Sent Successfully! ✅</span>';
+          submitBtn.innerHTML = '<span>Message Sent Successfully!</span>';
           submitBtn.style.backgroundColor = '#10B981';
           submitBtn.style.color = '#FFFFFF';
-          showToast('🚀 Message sent directly to Subodh at subodhum1603@gmail.com!');
+          showToast('Message sent directly to Subodh at subodhum1603@gmail.com!');
 
           setTimeout(() => {
             submitBtn.disabled = false;
@@ -533,7 +550,7 @@ function initContactInteractions() {
         // Re-enable button and submit the form natively (standard POST to FormSubmit)
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnHtml;
-        showToast('📨 Redirecting to send your message...');
+        showToast('Redirecting to send your message...');
         contactForm.submit(); // Native HTML form POST — triggers FormSubmit activation email
       }
     });
@@ -544,34 +561,44 @@ function initContactInteractions() {
 function initMobileMenu() {
   const toggleBtn = document.getElementById('mobileMenuToggle');
   const navMenu = document.getElementById('navMenu');
-  
+
   if (toggleBtn && navMenu) {
-    let isClosing = false;
+    // State machine: 'closed' | 'opening' | 'open' | 'closing'
+    let drawerState = 'closed';
     let closeTimer = null;
 
     function setDrawerState(isOpen) {
+      // Guard against rapid/invalid transitions
       if (isOpen) {
-        if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-        isClosing = false;
+        if (drawerState === 'open' || drawerState === 'opening') return;
+        if (drawerState === 'closing') {
+          // Cancel pending close
+          if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+        }
+        drawerState = 'opening';
         navMenu.classList.remove('closing');
         document.body.classList.remove('mobile-drawer-closing');
         navMenu.classList.add('open');
         document.body.classList.add('mobile-drawer-open');
         toggleBtn.setAttribute('aria-expanded', 'true');
         toggleBtn.innerHTML = '<i data-lucide="x" style="width: 22px; height: 22px;"></i>';
+        // Transition to 'open' after animation starts
+        requestAnimationFrame(() => {
+          if (drawerState === 'opening') drawerState = 'open';
+        });
       } else {
-        if (!navMenu.classList.contains('open') || isClosing) return;
-        isClosing = true;
+        if (drawerState === 'closed' || drawerState === 'closing') return;
+        drawerState = 'closing';
         navMenu.classList.add('closing');
         document.body.classList.add('mobile-drawer-closing');
         toggleBtn.setAttribute('aria-expanded', 'false');
         toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
-        
+
         if (closeTimer) clearTimeout(closeTimer);
         closeTimer = setTimeout(() => {
           navMenu.classList.remove('open', 'closing');
           document.body.classList.remove('mobile-drawer-open', 'mobile-drawer-closing');
-          isClosing = false;
+          drawerState = 'closed';
           closeTimer = null;
         }, 300);
       }
@@ -580,7 +607,7 @@ function initMobileMenu() {
 
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isOpen = navMenu.classList.contains('open') && !isClosing;
+      const isOpen = drawerState === 'open' || drawerState === 'opening';
       setDrawerState(!isOpen);
     });
 
@@ -601,7 +628,7 @@ function initMobileMenu() {
 
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && navMenu.classList.contains('open')) {
+      if (e.key === 'Escape' && (drawerState === 'open' || drawerState === 'opening')) {
         setDrawerState(false);
       }
     });
@@ -853,16 +880,84 @@ function initSaiyanMode() {
   }
 
   if (themeSlider) {
+    let isDragging = false;
+    let startX = 0;
+    let dragDistance = 0;
+    let initialSaiyan = false;
+    const glider = themeSlider.querySelector('.theme-slider-bg-glider');
+
+    themeSlider.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      isDragging = true;
+      startX = e.clientX;
+      dragDistance = 0;
+      initialSaiyan = document.body.classList.contains('saiyan-mode');
+      try { themeSlider.setPointerCapture(e.pointerId); } catch(err){}
+    });
+
+    themeSlider.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      dragDistance = e.clientX - startX;
+      
+      // If user drags (> 3px), animate the glider in real-time
+      if (Math.abs(dragDistance) > 3 && glider) {
+        glider.style.transition = 'none';
+        const sliderWidth = themeSlider.offsetWidth;
+        const maxSlide = (sliderWidth / 2) - 3;
+        
+        let currentPos = initialSaiyan ? maxSlide : 0;
+        let newPos = Math.max(0, Math.min(maxSlide, currentPos + dragDistance));
+        glider.style.transform = `translateX(${newPos}px)`;
+      }
+    });
+
+    const finishDrag = (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      try { themeSlider.releasePointerCapture(e.pointerId); } catch(err){}
+      
+      if (glider) {
+        glider.style.transition = '';
+        glider.style.transform = '';
+      }
+
+      // If dragged past threshold (> 10px), trigger state change
+      if (Math.abs(dragDistance) > 10) {
+        if (dragDistance > 10 && !initialSaiyan) {
+          // Dragged right from Rosé -> switch to Saiyan
+          setSaiyanState(true);
+        } else if (dragDistance < -10 && initialSaiyan) {
+          // Dragged left from Saiyan -> switch to Rosé
+          setSaiyanState(false);
+        } else {
+          // Snap back
+          syncSliderUI(initialSaiyan);
+        }
+      }
+    };
+
+    themeSlider.addEventListener('pointerup', finishDrag);
+    themeSlider.addEventListener('pointercancel', finishDrag);
+
     themeSlider.addEventListener('click', (e) => {
+      // If this was a drag gesture, do not treat as a static click
+      if (Math.abs(dragDistance) > 10) return;
+
       const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
       const targetOpt = e.target.closest('.theme-slider-btn');
+
       if (targetOpt) {
+        // Click on a button: only switch if clicking the INACTIVE option
         if (targetOpt.id === 'sliderOptRose' && isCurrentlySaiyan) {
+          e.stopPropagation();
           setSaiyanState(false);
         } else if (targetOpt.id === 'sliderOptSaiyan' && !isCurrentlySaiyan) {
+          e.stopPropagation();
           setSaiyanState(true);
         }
+        // Clicking the already-active button does nothing (no toggle)
       } else {
+        // Click on track (not a button): toggle
         setSaiyanState(!isCurrentlySaiyan);
       }
     });
@@ -1034,6 +1129,7 @@ function drawSingleBolt(ctx, w, h) {
 
 /* --- 7 Dragon Balls Collector & Realistic Dragon Radar Engine --- */
 const collectedBalls = new Set();
+let dragonBallsInitialized = false;
 
 const dragonBallLocations = [
   { num: 1, name: "1-Star Dragon Ball", sector: "Skills Matrix", hint: "Hidden in Skills Category", x: 30, y: 35, selector: "#skills" },
@@ -1098,151 +1194,40 @@ function playDragonBallCollectChime() {
 }
 
 function renderDragonBallSVGs() {
-  // ── Anime-canonical star layouts (100×100 viewBox) ───────────────────────
-  // Verified against Toriyama's manga + Toei anime cel references.
-  // Each ball's stars must match the exact screen arrangement.
-  const LAYOUTS = {
-    // 1-Star: single centered (Bulma's first discovery)
-    1: [[50, 50]],
-    // 2-Star: horizontal pair (seen in Pilaf arc)
-    2: [[35, 50], [65, 50]],
-    // 3-Star: upright triangle (turtle hermit)
-    3: [[50, 32], [34, 63], [66, 63]],
-    // 4-Star: diamond / cross (Gohan's hat jewel — most iconic)
-    4: [[50, 27], [27, 50], [73, 50], [50, 73]],
-    // 5-Star: quincunx — 4 corners + center
-    5: [[50, 50], [33, 33], [67, 33], [33, 67], [67, 67]],
-    // 6-Star: two neat columns of three
-    6: [[36, 30], [64, 30], [36, 50], [64, 50], [36, 70], [64, 70]],
-    // 7-Star: center + hexagon ring (Shenron's final ball)
-    7: [[50, 50], [50, 26], [70, 38], [70, 62], [50, 74], [30, 62], [30, 38]],
-    // Decoy variants (fake balls — keep for prank system)
-    8: [[36, 26], [64, 26], [24, 50], [50, 50], [76, 50], [36, 74], [64, 74], [50, 26]],
-    9: [[30, 30], [50, 30], [70, 30], [30, 50], [50, 50], [70, 50], [30, 70], [50, 70], [70, 70]]
-  };
+  // Use global DRAGON_BALL_LAYOUTS, createDragonBallStarPolygon, buildDragonBallStars, and window.getBallSVGString
 
-  // Perfect anime star: sharp 5-point, inner radius 0.38 — matches Toriyama's
-  // hand-drawn proportion exactly (not the bloated 0.40 pinched look).
-  function createStarPolygon(cx, cy, r) {
-    let pts = [];
-    for (let i = 0; i < 10; i++) {
-      const radius = i % 2 === 0 ? r : r * 0.38;
-      const angle = (Math.PI / 5) * i - Math.PI / 2;
-      pts.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
+  // Only shuffle and assign positions on first initialization
+  if (!dragonBallsInitialized) {
+    // ── TRUE RANDOM: shuffle which 7 of the 22 slots hold the REAL balls — no fixed pattern ──
+    const pool = Array.from(document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]'));
+    // Fisher-Yates shuffle pool
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-    return pts.join(' ');
-  }
-
-  // Anime stars are FLAT solid crimson — no multi-layer highlight.
-  // A single crisp polygon + one subtle soft shadow is the Toriyama look.
-  function buildStars(starCoords, r) {
-    return starCoords.map(([sx, sy]) => {
-      const pts = createStarPolygon(sx, sy, r);
-      // Soft drop shadow (the star is BEHIND the glass)
-      const shadow = `<polygon points="${createStarPolygon(sx + 0.7, sy + 0.9, r)}" fill="#4A0A00" opacity="0.55" />`;
-      // Solid anime red star — THE canonical #E30613 / #CC0000 family
-      const body = `<polygon points="${pts}" fill="#D90000" stroke="#7A0000" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round" />`;
-      return shadow + body;
-    }).join('');
-  }
-
-  window.getBallSVGString = function(starNum, size = 34) {
-    const num = starNum ? starNum.toString() : '4';
-    const uid = `db-${num}-${size}-${Math.random().toString(36).slice(2, 7)}`;
-    const parsedNum = parseInt(num, 10);
-    const hasCanonicalLayout = !isNaN(parsedNum) && LAYOUTS[parsedNum];
-    
-    // Tuned star radii — anime stars leave breathing room, never kiss the edge.
-    // Smaller = more elegant, lets the orange sphere dominate like in the show.
-    let starR;
-    if (parsedNum === 1) starR = 10.5;
-    else if (parsedNum === 2) starR = 9.0;
-    else if (parsedNum === 3) starR = 8.6;
-    else if (parsedNum === 4) starR = 8.4;
-    else if (parsedNum === 5) starR = 7.6;
-    else if (parsedNum === 6) starR = 7.2;
-    else if (parsedNum === 7) starR = 6.8;
-    else starR = 7.5;
-
-    let innerContent = '';
-
-    if (hasCanonicalLayout) {
-      innerContent = buildStars(LAYOUTS[parsedNum], starR);
-    } else {
-      // Prank balls now MIMIC normal balls — random 1-7 so you can't tell by look
-      const rnd = 1 + Math.floor(Math.random() * 7);
-      let rndR;
-      if (rnd === 1) rndR = 10.5;
-      else if (rnd === 2) rndR = 9.0;
-      else if (rnd === 3) rndR = 8.6;
-      else if (rnd === 4) rndR = 8.4;
-      else if (rnd === 5) rndR = 7.6;
-      else if (rnd === 6) rndR = 7.2;
-      else rndR = 6.8;
-      innerContent = buildStars(LAYOUTS[rnd], rndR);
+    const starPool = [1,2,3,4,5,6,7];
+    for (let i = starPool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [starPool[i], starPool[j]] = [starPool[j], starPool[i]];
     }
-
-    // ── UNIFIED SPHERE SHELL ──────────────────────────────────────────
-    // Now identical to the brand header orb (index.html:82) — same 3
-    // radial gradients, same gloss ellipse, same rim & stroke.
-    // Only the stars (innerContent / LAYOUTS) remain dynamic.
-    return `
-      <svg class="dragon-ball-svg" viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none; stroke: none !important; fill: none !important;" aria-hidden="true">
-        <defs>
-          <radialGradient id="db-body-${uid}" cx="34%" cy="28%" r="78%">
-            <stop offset="0%" stop-color="#FFF3C4" />
-            <stop offset="26%" stop-color="#FFD54A" />
-            <stop offset="62%" stop-color="#FFA51F" />
-            <stop offset="100%" stop-color="#C2610A" />
-          </radialGradient>
-          <radialGradient id="db-gloss-${uid}" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
-            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
-          </radialGradient>
-          <radialGradient id="db-rim-${uid}" cx="50%" cy="82%" r="52%">
-            <stop offset="0%" stop-color="#FF8A3D" stop-opacity="0.75" />
-            <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" stroke="none" style="stroke: none !important;" />
-        <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" stroke="none" style="stroke: none !important;" />
-        <g opacity="0.98">
-          ${innerContent}
-        </g>
-        <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#db-gloss-${uid})" stroke="none" style="stroke: none !important;" transform="rotate(-28 33 27)" />
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" style="stroke: #7C3A06 !important; stroke-width: 1.5px !important;" />
-      </svg>
-    `;
-  };
-
-  // ── TRUE RANDOM: shuffle which 7 of the 22 slots hold the REAL balls — no fixed pattern ──
-  const pool = Array.from(document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]'));
-  // Fisher-Yates shuffle pool
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
+    pool.forEach((el, idx) => {
+      if (idx < 7) {
+        // This slot becomes a REAL Dragon Ball (goes to radar)
+        el.classList.add('dragon-ball');
+        el.classList.remove('fake-dragon-ball');
+        el.removeAttribute('data-fake-ball');
+        el.setAttribute('data-ball', String(starPool[idx]));
+      } else {
+        // Remaining slots become PRANK balls — but will LOOK identical to real
+        el.classList.add('dragon-ball', 'fake-dragon-ball');
+        el.removeAttribute('data-ball');
+        el.setAttribute('data-fake-ball', String(1 + Math.floor(Math.random() * 7)));
+      }
+    });
+    dragonBallsInitialized = true;
   }
-  const starPool = [1,2,3,4,5,6,7];
-  for (let i = starPool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [starPool[i], starPool[j]] = [starPool[j], starPool[i]];
-  }
-  pool.forEach((el, idx) => {
-    if (idx < 7) {
-      // This slot becomes a REAL Dragon Ball (goes to radar)
-      el.classList.add('dragon-ball');
-      el.classList.remove('fake-dragon-ball');
-      el.removeAttribute('data-fake-ball');
-      el.setAttribute('data-ball', String(starPool[idx]));
-    } else {
-      // Remaining slots become PRANK balls — but will LOOK identical to real
-      el.classList.add('dragon-ball', 'fake-dragon-ball');
-      el.removeAttribute('data-ball');
-      el.setAttribute('data-fake-ball', String(1 + Math.floor(Math.random() * 7)));
-    }
-  });
 
-  // Render SVG inside real section dragon balls (now shuffled)
+  // Render SVG inside real section dragon balls
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
     ball.innerHTML = window.getBallSVGString(ballNum, 34);
@@ -1254,13 +1239,14 @@ function renderDragonBallSVGs() {
 
   // Render SVG inside fake decoy dragon balls — now VISUALLY IDENTICAL to real (random 1-7)
   document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
-    const rnd = 1 + Math.floor(Math.random() * 7);
-    ball.innerHTML = window.getBallSVGString(String(rnd), 34);
+    // Use the stored visual stars for consistency
+    const visualStars = ball.dataset.visualStars || (1 + Math.floor(Math.random() * 7));
+    ball.innerHTML = window.getBallSVGString(String(visualStars), 34);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `${rnd}-Star Dragon Ball`);
-    ball.title = `Collect the ${rnd}-Star Dragon Ball!`;
-    ball.dataset.visualStars = String(rnd);
+    ball.setAttribute('aria-label', `${visualStars}-Star Dragon Ball`);
+    ball.title = `Collect the ${visualStars}-Star Dragon Ball!`;
+    ball.dataset.visualStars = String(visualStars);
   });
 
   // Render SVG inside Shenron modal celebration balls
@@ -1350,7 +1336,7 @@ function renderRadarHUD() {
             ${window.getBallSVGString(ball.num, 18)}
           </div>
           <div class="radar-signal-card-info">
-            <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '✅' : '📡'}</span>
+            <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '[Secured]' : '[Active]'}</span>
             <span class="radar-signal-card-sector">${isCollected ? 'Secured in Radar' : ball.sector}</span>
           </div>
         </div>
@@ -1373,7 +1359,7 @@ window.focusDragonBall = function(num) {
   const isCollected = collectedBalls.has(num);
   closeDragonRadarModal();
   if (isCollected) {
-    showToast(`⭐ ${num}-Star Ball already secured! (${collectedBalls.size}/7) — keep hunting the rest!`);
+    showToast(`${num}-Star Ball already secured! (${collectedBalls.size}/7) - keep hunting the rest!`);
     return;
   }
   // Find the EXACT orb element that currently holds this star (after pool shuffle it could be anywhere on page)
@@ -1390,7 +1376,7 @@ window.focusDragonBall = function(num) {
       createKiSparks(cx, cy);
       setTimeout(() => createKiSparks(cx, cy), 180);
       ball.style.filter = 'drop-shadow(0 0 18px #FF2E97) drop-shadow(0 0 32px #FF7E00) brightness(1.18)';
-      showToast(`📡 Tracking ${num}-Star Ball — look for the pulsing orb!`);
+      showToast(`Tracking ${num}-Star Ball - look for the pulsing orb!`);
       setTimeout(() => {
         ball.classList.remove('radar-target-highlight');
         ball.classList.remove('saiyan-charging');
@@ -1401,7 +1387,7 @@ window.focusDragonBall = function(num) {
     // Fallback: go to sector
     const info = dragonBallLocations.find(b => b.num === num);
     if (info) window.focusSector(info.selector);
-    else showToast(`📡 Scanning for ${num}-Star Ball...`);
+    else showToast(`Scanning for ${num}-Star Ball...`);
   }
 };
 
@@ -1428,9 +1414,9 @@ window.pingRadarScan = function() {
   renderRadarHUD();
   const remaining = 7 - collectedBalls.size;
   if (remaining === 0) {
-    showToast('🐉 All 7 Dragon Balls are in your Radar! Shenron awaits!');
+    showToast('All 7 Dragon Balls are in your Radar! Shenron awaits!');
   } else {
-    showToast(`📡 Radar Ping: ${remaining} Dragon Ball signals active across sectors!`);
+    showToast(`Radar Ping: ${remaining} Dragon Ball signals active across sectors!`);
   }
 };
 
@@ -1570,16 +1556,16 @@ function playPrankBoingSound() {
 }
 
 const kidGokuPrankQuotes = [
-  "Bleh! 😝 That's not a real Dragon Ball! That's just an ordinary orange rock I found in the woods!",
-  "Hehehe! 😜 You got tricked! That ball has 8 stars! Shenron only has 7!",
-  "Bwahaha! 😋 Grandpa Gohan taught me that trick! Keep searching, silly!",
-  "Aww man! 🤣 You fell for Master Roshi's painted decoy ball!",
-  "Bleeeh! 👅 You can't summon Shenron with a painted sphere! Check your Dragon Radar!",
-  "Pfft! 🤪 That ball is made of sugar candy! Master Roshi ate the other half!",
-  "Oopsie! 😆 That's a Capsule Corp prototype ball from Bulma's workshop!",
-  "Bleeeh! 👅 Master Roshi said fake Dragon Balls don't grant wishes!",
-  "Bleeeh! 😜 You tapped a 100-star ball! You can't summon 14 Shenrons at once!",
-  "Gotcha! 😋 Bulma told me only authentic Dragon Balls emit 7.5 micro-wave radar pings!"
+  "Bleh! That's not a real Dragon Ball! That's just an ordinary orange rock I found in the woods!",
+  "Hehehe! You got tricked! That ball has 8 stars! Shenron only has 7!",
+  "Bwahaha! Grandpa Gohan taught me that trick! Keep searching, silly!",
+  "Aww man! You fell for Master Roshi's painted decoy ball!",
+  "Bleeeh! You can't summon Shenron with a painted sphere! Check your Dragon Radar!",
+  "Pfft! That ball is made of sugar candy! Master Roshi ate the other half!",
+  "Oopsie! That's a Capsule Corp prototype ball from Bulma's workshop!",
+  "Bleeeh! Master Roshi said fake Dragon Balls don't grant wishes!",
+  "Bleeeh! You tapped a 100-star ball! You can't summon 14 Shenrons at once!",
+  "Gotcha! Bulma told me only authentic Dragon Balls emit 7.5 micro-wave radar pings!"
 ];
 
 let kidGokuPrankTimer = null;
@@ -1642,7 +1628,7 @@ window.triggerKidGokuPrank = function(fakeType, clickX, clickY) {
     }, 5000);
   }
 
-  showToast("🤪 BLEH! Fooled ya! That's a FAKE Dragon Ball!");
+  showToast("BLEH! Fooled ya! That's a FAKE Dragon Ball!");
 };
 
 window.closeKidGokuPrankModal = function() {
@@ -1704,7 +1690,7 @@ function initDragonBallsCollector() {
           triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
         } else {
           createKiSparks(clientX, clientY);
-          showToast(`✨ ${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
+          showToast(`${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
         }
       }
     };
@@ -1795,7 +1781,7 @@ function rebindDragonBallHandlers() {
           triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
         } else {
           createKiSparks(clientX, clientY);
-          showToast(`✨ ${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
+          showToast(`${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
         }
       }
     };
@@ -2063,6 +2049,126 @@ function initGlobalClickAnimation() {
 }
 
 /* ==========================================================================
+   Dragon Ball SVG Generation (Global Scope - used by multiple functions)
+   ========================================================================== */
+// Anime-canonical star layouts (100×100 viewBox)
+// Verified against Toriyama's manga + Toei anime cel references.
+// Each ball's stars must match the exact screen arrangement.
+const DRAGON_BALL_LAYOUTS = {
+  // 1-Star: single centered (Bulma's first discovery)
+  1: [[50, 50]],
+  // 2-Star: horizontal pair (seen in Pilaf arc)
+  2: [[35, 50], [65, 50]],
+  // 3-Star: upright triangle (turtle hermit)
+  3: [[50, 32], [34, 63], [66, 63]],
+  // 4-Star: diamond / cross (Gohan's hat jewel — most iconic)
+  4: [[50, 27], [27, 50], [73, 50], [50, 73]],
+  // 5-Star: quincunx — 4 corners + center
+  5: [[50, 50], [33, 33], [67, 33], [33, 67], [67, 67]],
+  // 6-Star: two neat columns of three
+  6: [[36, 30], [64, 30], [36, 50], [64, 50], [36, 70], [64, 70]],
+  // 7-Star: center + hexagon ring (Shenron's final ball)
+  7: [[50, 50], [50, 26], [70, 38], [70, 62], [50, 74], [30, 62], [30, 38]],
+  // Decoy variants (fake balls — keep for prank system)
+  8: [[36, 26], [64, 26], [24, 50], [50, 50], [76, 50], [36, 74], [64, 74], [50, 26]],
+  9: [[30, 30], [50, 30], [70, 30], [30, 50], [50, 50], [70, 50], [30, 70], [50, 70], [70, 70]]
+};
+
+// Perfect anime star: sharp 5-point, inner radius 0.38 — matches Toriyama's
+// hand-drawn proportion exactly (not the bloated 0.40 pinched look).
+function createDragonBallStarPolygon(cx, cy, r) {
+  let pts = [];
+  for (let i = 0; i < 10; i++) {
+    const radius = i % 2 === 0 ? r : r * 0.38;
+    const angle = (Math.PI / 5) * i - Math.PI / 2;
+    pts.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
+  }
+  return pts.join(' ');
+}
+
+// Anime stars are FLAT solid crimson — no multi-layer highlight.
+// A single crisp polygon + one subtle soft shadow is the Toriyama look.
+function buildDragonBallStars(starCoords, r) {
+  return starCoords.map(([sx, sy]) => {
+    const pts = createDragonBallStarPolygon(sx, sy, r);
+    // Soft drop shadow (the star is BEHIND the glass)
+    const shadow = `<polygon points="${createDragonBallStarPolygon(sx + 0.7, sy + 0.9, r)}" fill="#4A0A00" opacity="0.55" />`;
+    // Solid anime red star — THE canonical #E30613 / #CC0000 family
+    const body = `<polygon points="${pts}" fill="#D90000" stroke="#7A0000" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round" />`;
+    return shadow + body;
+  }).join('');
+}
+
+window.getBallSVGString = function(starNum, size = 34) {
+  const num = starNum ? starNum.toString() : '4';
+  const uid = `db-${num}-${size}-${Math.random().toString(36).slice(2, 7)}`;
+  const parsedNum = parseInt(num, 10);
+  const hasCanonicalLayout = !isNaN(parsedNum) && DRAGON_BALL_LAYOUTS[parsedNum];
+
+  // Tuned star radii — anime stars leave breathing room, never kiss the edge.
+  // Smaller = more elegant, lets the orange sphere dominate like in the show.
+  let starR;
+  if (parsedNum === 1) starR = 10.5;
+  else if (parsedNum === 2) starR = 9.0;
+  else if (parsedNum === 3) starR = 8.6;
+  else if (parsedNum === 4) starR = 8.4;
+  else if (parsedNum === 5) starR = 7.6;
+  else if (parsedNum === 6) starR = 7.2;
+  else if (parsedNum === 7) starR = 6.8;
+  else starR = 7.5;
+
+  let innerContent = '';
+
+  if (hasCanonicalLayout) {
+    innerContent = buildDragonBallStars(DRAGON_BALL_LAYOUTS[parsedNum], starR);
+  } else {
+    // Prank balls now MIMIC normal balls — random 1-7 so you can't tell by look
+    const rnd = 1 + Math.floor(Math.random() * 7);
+    let rndR;
+    if (rnd === 1) rndR = 10.5;
+    else if (rnd === 2) rndR = 9.0;
+    else if (rnd === 3) rndR = 8.6;
+    else if (rnd === 4) rndR = 8.4;
+    else if (rnd === 5) rndR = 7.6;
+    else if (rnd === 6) rndR = 7.2;
+    else rndR = 6.8;
+    innerContent = buildDragonBallStars(DRAGON_BALL_LAYOUTS[rnd], rndR);
+  }
+
+  // ── UNIFIED SPHERE SHELL ──────────────────────────────────────────
+  // Now identical to the brand header orb (index.html:82) — same 3
+  // radial gradients, same gloss ellipse, same rim & stroke.
+  // Only the stars (innerContent / LAYOUTS) remain dynamic.
+  return `
+    <svg class="dragon-ball-svg" viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none; stroke: none !important; fill: none !important;" aria-hidden="true">
+      <defs>
+        <radialGradient id="db-body-${uid}" cx="34%" cy="28%" r="78%">
+          <stop offset="0%" stop-color="#FFF3C4" />
+          <stop offset="26%" stop-color="#FFD54A" />
+          <stop offset="62%" stop-color="#FFA51F" />
+          <stop offset="100%" stop-color="#C2610A" />
+        </radialGradient>
+        <radialGradient id="db-gloss-${uid}" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+          <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="db-rim-${uid}" cx="50%" cy="82%" r="52%">
+          <stop offset="0%" stop-color="#FF8A3D" stop-opacity="0.75" />
+          <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" stroke="none" style="stroke: none !important;" />
+      <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" stroke="none" style="stroke: none !important;" />
+      <g opacity="0.98">
+        ${innerContent}
+      </g>
+      <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#db-gloss-${uid})" stroke="none" style="stroke: none !important;" transform="rotate(-28 33 27)" />
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" style="stroke: #7C3A06 !important; stroke-width: 1.5px !important;" />
+    </svg>
+  `;
+};
+
+/* ==========================================================================
    Realistic Cinematic Shenron Emergence from Dragon Balls & Wish Engine
    ========================================================================== */
 let shenronTimelineTimers = [];
@@ -2245,7 +2351,7 @@ window.grantShenronWish = function(type) {
   drawLightningStrike();
 
   if (type === 'hire') {
-    showToast("🐉 'YOUR WISH HAS BEEN GRANTED! CONNECTING WITH SUBODH!'");
+    showToast("'YOUR WISH HAS BEEN GRANTED! CONNECTING WITH SUBODH!'");
     setTimeout(() => {
       closeShenronModal();
       const contactSection = document.getElementById('contact');
@@ -2259,7 +2365,7 @@ window.grantShenronWish = function(type) {
       }
     }, 650);
   } else if (type === 'resume') {
-    showToast("🐉 'YOUR WISH HAS BEEN GRANTED! OPENING RESUME!'");
+    showToast("'YOUR WISH HAS BEEN GRANTED! OPENING RESUME!'");
     setTimeout(() => {
       closeShenronModal();
       const link = document.createElement('a');
@@ -2274,7 +2380,7 @@ window.grantShenronWish = function(type) {
       setTimeout(() => { window.open('assets/Subodh_Muneshwar_ATS_Resume.pdf', '_blank', 'noopener'); }, 400);
     }, 500);
   } else if (type === 'projects') {
-    showToast("🐉 'YOUR WISH HAS BEEN GRANTED! SHOWING PROJECTS!'");
+    showToast("'YOUR WISH HAS BEEN GRANTED! SHOWING PROJECTS!'");
     setTimeout(() => {
       closeShenronModal();
       const proj = document.getElementById('projects');
@@ -2292,6 +2398,7 @@ window.scatterDragonBallsAgain = function() {
   if (!isModalActive) {
     closeShenronModal();
     collectedBalls.clear();
+    dragonBallsInitialized = false; // Allow reshuffle on next render
     document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
       ball.classList.remove('collected', 'ball-disappeared');
       ball.style.removeProperty('display');
@@ -2308,7 +2415,7 @@ window.scatterDragonBallsAgain = function() {
     if (radarCount) radarCount.textContent = '0';
     drawLightningStrike();
     playDragonBallCollectChime();
-    showToast("🐉 The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
+    showToast("The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
     // Staggered pop entrance for the newly scattered page balls
     const fallbackBalls = document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]');
     fallbackBalls.forEach((ball, idx) => {
@@ -2441,6 +2548,7 @@ window.scatterDragonBallsAgain = function() {
     if (modal) modal.classList.remove('scattering');
     closeShenronModal();
     collectedBalls.clear();
+    dragonBallsInitialized = false; // Allow reshuffle on next render
 
     document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
       ball.classList.remove('collected', 'ball-disappeared', 'scattered-entrance', 'collected');
@@ -2489,7 +2597,7 @@ window.scatterDragonBallsAgain = function() {
     try { drawLightningStrike(); } catch(e) {}
     if (!prefersReduced) try { triggerLightningStorm(3); } catch(e) {}
     try { playDragonBallCollectChime(); } catch(e) {}
-    showToast("🐉 The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
+    showToast("The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
     if (scatterBtn) scatterBtn.disabled = false;
   }, flightMs);
 };
@@ -3095,6 +3203,7 @@ function initFlashcardDecks() {
     let isDown = false, startX = 0, startLeft = 0, hasDragged = false;
     grid.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
+      if (e.target.closest('button, a, .btn, .project-details-btn, .project-github-link, .project-actions, .modal-close-btn')) return;
       isDown = true;
       hasDragged = false;
       grid.dataset.dragging = '1';
@@ -3185,7 +3294,7 @@ function initDbzJokePlaceholders() {
     {
       name: "Captain Ginyu (Ginyu Special Force Leader)",
       email: "ginyu.force.pose@friezaforce.com",
-      msg: "Captain Ginyu: *Strikes dynamic pose* 🕺 We need a 10x Saiyan Engineer to lead the Ginyu backend squad!"
+      msg: "Captain Ginyu: *Strikes dynamic pose* We need a 10x Saiyan Engineer to lead the Ginyu backend squad!"
     },
     {
       name: "Piccolo (Senior Systems Architect & Mentor)",
@@ -3247,7 +3356,7 @@ function initDbzJokePlaceholders() {
       setTimeout(() => { rollBtn.style.transform = ''; }, 200);
       
       if (typeof showToast === 'function') {
-        showToast(`✨ Loaded DBZ Meme Prompt from ${joke.name.split(' ')[0]}!`);
+        showToast(`Loaded DBZ Meme Prompt from ${joke.name.split(' ')[0]}!`);
       }
     });
   }
