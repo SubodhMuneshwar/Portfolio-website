@@ -2008,11 +2008,13 @@ function initNimbusDrag() {
 
 /* --- Global Click Animation Engine (Shockwave Ripple Rings) --- */
 function initGlobalClickAnimation() {
+  // On mobile/touch devices, skip continuous shockwave DOM creation to eliminate touch/scroll lag
+  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches) return;
   let lastAnimTime = 0;
 
   function spawnClickAnimation(x, y) {
     const now = Date.now();
-    if (now - lastAnimTime < 50) return;
+    if (now - lastAnimTime < 80) return;
     lastAnimTime = now;
 
     const isSaiyan = document.body.classList.contains('saiyan-mode');
@@ -2027,25 +2029,13 @@ function initGlobalClickAnimation() {
     ring.style.height = isSaiyan ? '50px' : '40px';
     document.body.appendChild(ring);
 
-    setTimeout(() => ring.remove(), 500);
+    setTimeout(() => ring.remove(), 450);
   }
-
-  document.addEventListener('pointerdown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
-    spawnClickAnimation(e.clientX, e.clientY);
-  });
-
-  document.addEventListener('touchstart', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
-    if (e.touches && e.touches.length > 0) {
-      spawnClickAnimation(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }, { passive: true });
 
   document.addEventListener('click', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
     spawnClickAnimation(e.clientX, e.clientY);
-  });
+  }, { passive: true });
 }
 
 /* ==========================================================================
@@ -2903,7 +2893,8 @@ function initScrollProgress() {
     const h = document.documentElement;
     const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
     const v = isFinite(scrolled) ? Math.max(0, Math.min(1, scrolled)) : 0;
-    document.documentElement.style.setProperty('--scroll-progress', String(v));
+    // Directly scale the bar element via GPU compositor to avoid style invalidation across document tree
+    bar.style.transform = `scaleX(${v})`;
     ticking = false;
   }
   window.addEventListener('scroll', () => {
@@ -2913,9 +2904,9 @@ function initScrollProgress() {
   update();
 }
 
-/* --- Dynamic: Hero Parallax (rAF, respects reduced-motion) --- */
+/* --- Dynamic: Hero Parallax (rAF, respects reduced-motion & desktop only) --- */
 function initHeroParallax() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const hero = document.querySelector('.hero-section');
   if (!hero) return;
   let ticking = false;
@@ -2937,7 +2928,7 @@ function initHeroParallax() {
 
 /* --- Dynamic: Card Spotlight (cursor follow) — delegated for dynamic cards --- */
 function initCardSpotlight() {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches) return;
   document.addEventListener('pointermove', (e) => {
     const card = e.target.closest('.sticker-card, .stat-card, .skill-category-card, .experience-card, .project-card, .achievement-card, .edu-card, .cert-card');
     if (!card) return;
@@ -2951,8 +2942,7 @@ function initCardSpotlight() {
 
 /* --- Dynamic: Enhanced 3D Card Tilt with Dynamic Specular Glare --- */
 function initCardTilt() {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const cardSelector = '.stat-card, .sticker-card, .skill-category-card, .project-card, .achievement-card, .experience-card, .edu-card, .cert-card, .contact-card';
   
   function markTiltCards() {
@@ -2988,7 +2978,7 @@ function initCardTilt() {
 
 /* --- Dynamic: Magnetic Buttons — delegated --- */
 function initMagneticButtons() {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches) return;
   document.querySelectorAll('.btn, .nav-ctrl-btn, .filter-btn').forEach(b => b.classList.add('magnetic'));
   const mo = new MutationObserver(() => {
     document.querySelectorAll('.btn, .nav-ctrl-btn, .filter-btn').forEach(b => b.classList.add('magnetic'));
@@ -3372,21 +3362,35 @@ function initHeroRotatingWord() {
   if (!el) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const words = ['Backend Builder', 'Full-Stack Builder', 'AI/ML Engineer'];
-  // Ensure starting index matches current text; fallback to 0
   let idx = words.indexOf(el.textContent.trim());
   if (idx < 0) idx = 0;
+
+  // Only animate if hero is currently intersecting with viewport
+  let isHeroVisible = true;
+  if ('IntersectionObserver' in window) {
+    const hero = document.getElementById('hero');
+    if (hero) {
+      const io = new IntersectionObserver((entries) => {
+        isHeroVisible = entries[0].isIntersecting;
+      }, { threshold: 0.1 });
+      io.observe(hero);
+    }
+  }
+
   setInterval(() => {
+    if (!isHeroVisible) return;
     idx = (idx + 1) % words.length;
     el.classList.remove('is-entering');
     el.classList.add('is-exiting');
     setTimeout(() => {
       el.textContent = words[idx];
       el.classList.remove('is-exiting');
-      void el.offsetWidth;
-      el.classList.add('is-entering');
-      setTimeout(() => el.classList.remove('is-entering'), 520);
-    }, 320);
-  }, 1800);
+      requestAnimationFrame(() => {
+        el.classList.add('is-entering');
+        setTimeout(() => el.classList.remove('is-entering'), 400);
+      });
+    }, 280);
+  }, 3200);
 }
 
 /* ── Cursor-following face-aligned photo reveal (light: rose2.jpg, dark: goku.webp) ── */

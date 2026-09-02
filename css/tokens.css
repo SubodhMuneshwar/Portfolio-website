@@ -767,6 +767,13 @@ body.saiyan-mode .dragon-radar-widget {
   filter: drop-shadow(0 0 25px #FBBF24) drop-shadow(0 0 40px #38BDF8) drop-shadow(4px 4px 0px #000000) !important;
 }
 
+@media (max-width: 768px) {
+  .flying-nimbus.nimbus-flying-ltr,
+  .flying-nimbus.nimbus-flying-rtl {
+    animation: none !important;
+  }
+}
+
 .nimbus-img {
   width: 100%;
   height: 100%;

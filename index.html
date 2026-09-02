@@ -30,11 +30,9 @@
   <script>
     (function(){try{var s=localStorage.getItem('portfolio-theme');if(s==='saiyan'){document.documentElement.classList.add('saiyan-mode');var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#0A1410';}}catch(e){}})();
   </script>
-  <!-- Preload Shenron for instant summon -->
-  <link rel="preload" as="image" href="assets/shenron.png" fetchpriority="high">
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260902_deepAuditFix">
-  <link rel="stylesheet" href="css/styles.css?v=20260902_deepAuditFix">
+  <link rel="stylesheet" href="css/tokens.css?v=20260902_mobilePerfBoost">
+  <link rel="stylesheet" href="css/styles.css?v=20260902_mobilePerfBoost">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -822,7 +820,7 @@
        Super Saiyan Mode Transformation Cutscene Video Overlay
        ========================================================================= -->
   <div id="saiyanVideoOverlay" class="saiyan-cutscene-overlay" aria-hidden="true">
-    <video id="saiyanCutsceneVideo" class="saiyan-cutscene-video" playsinline preload="auto" muted>
+    <video id="saiyanCutsceneVideo" class="saiyan-cutscene-video" playsinline preload="none" muted>
       <source src="assets/saiyan.mp4" type="video/mp4">
     </video>
     <div class="saiyan-cutscene-flash" id="saiyanCutsceneFlash"></div>
@@ -967,8 +965,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260902_deepAuditFix"></script>
-  <script src="js/main.js?v=20260902_deepAuditFix"></script>
+  <script src="js/data.js?v=20260902_mobilePerfBoost"></script>
+  <script src="js/main.js?v=20260902_mobilePerfBoost"></script>
 </body>
 
 </html>

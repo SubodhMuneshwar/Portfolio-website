@@ -6138,6 +6138,24 @@ body.saiyan-mode .scroll-reveal::after {
   }
 }
 
+/* Mobile Performance Boost: Eliminate GPU layer exhaustion and blur overhead on mobile screens */
+@media (max-width: 768px) {
+  .scroll-reveal {
+    transform: translate3d(0, 14px, 0) !important;
+    filter: none !important;
+    transition: opacity 0.32s ease, transform 0.32s ease !important;
+    will-change: auto !important;
+  }
+  .scroll-reveal.is-revealed {
+    transform: translate3d(0, 0, 0) !important;
+    filter: none !important;
+  }
+  .scroll-reveal::after {
+    display: none !important;
+    animation: none !important;
+  }
+}
+
 /* ==========================================================================
    Dynamic Polish — Scroll Progress, Card Spotlight, Tilt, Badge Float
    ========================================================================== */
@@ -6334,6 +6352,37 @@ body.saiyan-mode .tilt-card::before {
 }
 @media (prefers-reduced-motion: reduce) {
   .card-floating-badge { animation: none !important; }
+}
+
+/* Mobile Performance Guard: Collapse heavy 3D multi-plane extrusions into lightweight 2D rendering */
+@media (max-width: 768px) {
+  .card-floating-badge {
+    animation: none !important;
+  }
+  .tilt-card .card-floating-badge,
+  .tilt-card .project-badge,
+  .tilt-card .exp-period-badge,
+  .tilt-card .ach-icon-circle,
+  .tilt-card .skill-icon-box,
+  .tilt-card .cert-icon-box,
+  .tilt-card .skill-card-title,
+  .tilt-card .project-title,
+  .tilt-card .ach-title,
+  .tilt-card .exp-role,
+  .tilt-card .exp-company,
+  .tilt-card .edu-degree,
+  .tilt-card .cert-name,
+  .tilt-card .skill-chip,
+  .tilt-card .project-chip,
+  .tilt-card .exp-tag,
+  .tilt-card .exp-bullet-item,
+  .tilt-card .project-tagline,
+  .tilt-card .project-actions,
+  .tilt-card .btn,
+  .tilt-card .project-card-image-wrap {
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* Magnetic button helper */
@@ -8024,15 +8073,47 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     padding-top: 1.25rem;
     padding-bottom: 4rem;
   }
-  /* Nimbus: stay at bottom on mobile with low opacity to avoid crossing hero title */
+  /* Nimbus: parked on mobile with low opacity to avoid crossing hero title or thrashing compositor */
   .flying-nimbus {
     top: auto !important;
     bottom: var(--nimbus-bottom, clamp(64px, 10vh, 90px)) !important;
+    left: auto !important;
+    right: 14px !important;
     width: 85px !important;
     height: 48px !important;
     opacity: 0.8 !important;
     z-index: 10 !important;
+    animation: none !important;
+    transform: translate3d(0, 0, 0) !important;
+    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.35)) !important;
   }
+  .flying-nimbus.nimbus-flying-ltr,
+  .flying-nimbus.nimbus-flying-rtl {
+    animation: none !important;
+  }
+
+  /* Hide continuous ambient spark & arc keyframes on mobile to free GPU */
+  .saiyan-spark,
+  .saiyan-lightning-arc {
+    display: none !important;
+    animation: none !important;
+  }
+
+  /* Mobile Backdrop Filter Optimization: Fallback to high-opacity solid backgrounds */
+  .site-header,
+  .navbar,
+  .nav-center-island,
+  .sticker-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .site-header {
+    background: rgba(255, 255, 255, 0.97) !important;
+  }
+  body.saiyan-mode .site-header {
+    background: rgba(10, 20, 16, 0.97) !important;
+  }
+
   /* Hero visual photo card: compact, sleek & proportional */
   .hero-visual {
     order: -1 !important;
@@ -8142,7 +8223,9 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   }
   .hero-ambient-aura {
     inset: -14px;
-    filter: blur(20px);
+    filter: blur(14px) !important;
+    animation: none !important;
+    transform: none !important;
   }
 }
 
