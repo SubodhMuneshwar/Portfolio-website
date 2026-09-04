@@ -4,6 +4,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initSmoothScroll();
   initPageIntroAnimation();
   initHeroStats();
   renderSkills();
@@ -665,6 +666,9 @@ function initScrollSpy() {
   }
 
   window.addEventListener('scroll', updateActiveLink, { passive: true });
+  if (window.lenis) {
+    window.lenis.on('scroll', updateActiveLink);
+  }
   updateActiveLink();
 
   // Clicking brand logo or back-to-top scrolls completely to absolute top (0, 0)
@@ -697,7 +701,7 @@ function initSaiyanMode() {
   const optSaiyan = document.getElementById('sliderOptSaiyan');
   const themeMeta = document.querySelector('meta[name="theme-color"]');
 
-  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan ? '#050D09' : '#FFFDF5'); }
+  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan ? '#050D09' : '#FFF8FA'); }
 
   function syncSliderUI(isSaiyan) {
     if (themeSlider) {
@@ -1018,20 +1022,26 @@ function runPlanetNamekTransformation() {
   document.body.classList.add('saiyan-mode');
   document.documentElement.classList.add('saiyan-mode');
   
-  // 2. Trigger Planet Namek earthquake ground rumble
-  document.body.classList.add('namek-earthquake');
-  setTimeout(() => {
-    document.body.classList.remove('namek-earthquake');
-  }, 2400);
+  // 2. Trigger Planet Namek earthquake ground rumble on main content (never on document.body)
+  const mainContent = document.getElementById('main-content');
+  if (mainContent) {
+    mainContent.classList.remove('namek-earthquake');
+    void mainContent.offsetWidth;
+    mainContent.classList.add('namek-earthquake');
+    setTimeout(() => {
+      mainContent.classList.remove('namek-earthquake');
+    }, 2400);
+  }
+  document.body.classList.remove('namek-earthquake');
 
   // 3. Trigger Electric Cyan & Golden Lightning Storm across screen
   triggerLightningStorm(12);
 
-  // 4. Sequential list of elements to power up one at a time
+  // 4. Sequential list of elements to power up one at a time (individual components)
   const elementsToTransform = [
     document.querySelector('.hero-photo-frame'),
     document.querySelector('.hero-title'),
-    document.querySelector('#statsGrid'),
+    ...document.querySelectorAll('#statsGrid .stat-card'),
     document.querySelector('#about .sticker-card'),
     document.querySelector('#skillsGrid'),
     document.querySelector('#experienceTimeline'),
@@ -2632,10 +2642,12 @@ function initPageIntroAnimation() {
   const video = document.getElementById('introVideo');
 
   if (!overlay || !video) {
-    // Intro removed — ensure landing is immediately visible (no veil lock)
+    // Intro removed — ensure landing is immediately visible with buttery smooth entrance
     document.documentElement.classList.remove('page-intro-running');
     document.body.classList.remove('page-intro-running');
-    document.body.classList.add('page-intro-revealed');
+    requestAnimationFrame(() => {
+      document.body.classList.add('page-intro-revealed');
+    });
     return;
   }
 
@@ -2851,7 +2863,89 @@ function replayIntroAnimation() {
 }
 
 /* ==========================================================================
-   Scroll-Triggered Reveal Engine (IntersectionObserver with Staggered Cascades)
+   Smooth Inertia Momentum Scrolling Engine (Lenis - Zunedaalim style)
+   ========================================================================== */
+function initSmoothScroll() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  if (typeof Lenis === 'undefined') return;
+
+  const lenis = new Lenis({
+    duration: 1.15,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    gestureOrientation: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 0.95,
+    touchMultiplier: 1.5,
+    infinite: false,
+  });
+
+  window.lenis = lenis;
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Sync floating header scrolled state on scroll
+  const siteHeader = document.querySelector('.site-header');
+  lenis.on('scroll', (e) => {
+    if (siteHeader) {
+      if (e.scroll > 60) {
+        siteHeader.classList.add('is-scrolled');
+      } else {
+        siteHeader.classList.remove('is-scrolled');
+      }
+    }
+  });
+
+  // Automatically pause/resume Lenis during full-screen modals or cutscenes
+  if ('MutationObserver' in window) {
+    const bodyScrollObserver = new MutationObserver(() => {
+      if (document.body.style.overflow === 'hidden') {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    });
+    bodyScrollObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+  }
+
+  // Smooth programmatic anchor navigation with header offset compensation
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (!href || href === '#' || href === '#!') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const headerOffset = 70;
+        lenis.scrollTo(target, { offset: -headerOffset, duration: 1.15 });
+        if (history.pushState) {
+          history.pushState(null, null, href);
+        }
+      }
+    });
+  });
+
+  // Also support back-to-top buttons
+  document.querySelectorAll('.brand-logo, #footerBackToTop, .footer-float-top').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      lenis.scrollTo(0, { duration: 1.15 });
+      if (history.pushState) {
+        history.pushState(null, null, window.location.pathname);
+      }
+    });
+  });
+}
+
+/* ==========================================================================
+   Scroll-Triggered Reveal Engine (IntersectionObserver with One-by-One Cascades)
    ========================================================================== */
 function initScrollReveal() {
   if (!('IntersectionObserver' in window)) {
@@ -2861,39 +2955,93 @@ function initScrollReveal() {
 
   const observerOptions = {
     threshold: 0.08,
-    rootMargin: '0px 0px -30px 0px'
+    rootMargin: '0px 0px -40px 0px'
   };
 
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-revealed');
+        // Clean up will-change after transition completes to preserve memory
+        setTimeout(() => {
+          if (entry.target.classList.contains('is-revealed')) {
+            entry.target.style.willChange = 'auto';
+          }
+        }, 1100);
         observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
   function attachElements() {
-    const targets = document.querySelectorAll(
-      '.section-header, .stat-card, .skill-category-card, .sticker-card, .experience-card, .project-card, .achievement-card, .edu-card, .cert-card, .scouter-card-wrapper, .hero-content, .hero-visual'
-    );
+    // 1. Section Header elements - individual sequential stagger: tag (0ms), title (90ms), subtitle (180ms)
+    document.querySelectorAll('.section-header').forEach(header => {
+      const tag = header.querySelector('.section-tag, .section-badge');
+      const title = header.querySelector('.section-title');
+      const subtitle = header.querySelector('.section-subtitle, .section-desc');
 
-    targets.forEach(el => {
-      if (!el.classList.contains('scroll-reveal')) {
-        el.classList.add('scroll-reveal');
-
-        // Apply natural staggered delays to sibling cards
-        const parentGrid = el.closest('.skills-grid, .projects-grid, .achievements-grid, .stats-grid, .edu-cert-grid, .experience-timeline');
-        if (parentGrid) {
-          const siblingIndex = Array.from(parentGrid.children).indexOf(el);
-          if (siblingIndex >= 0) {
-            const delayClass = `reveal-delay-${(siblingIndex % 6) + 1}`;
-            el.classList.add(delayClass);
-          }
-        }
-
-        revealObserver.observe(el);
+      if (tag && !tag.classList.contains('scroll-reveal')) {
+        tag.classList.add('scroll-reveal');
+        tag.style.setProperty('--reveal-delay', '0ms');
+        revealObserver.observe(tag);
       }
+      if (title && !title.classList.contains('scroll-reveal')) {
+        title.classList.add('scroll-reveal');
+        title.style.setProperty('--reveal-delay', '90ms');
+        revealObserver.observe(title);
+      }
+      if (subtitle && !subtitle.classList.contains('scroll-reveal')) {
+        subtitle.classList.add('scroll-reveal');
+        subtitle.style.setProperty('--reveal-delay', '180ms');
+        revealObserver.observe(subtitle);
+      }
+    });
+
+    // 2. Grids and structured collections with one-by-one sequential item cascades
+    const groupConfigs = [
+      { container: '.skills-grid', items: '.skill-category-card', step: 95, bloom: true },
+      { container: '.projects-grid', items: '.project-card', step: 110, bloom: true },
+      { container: '.project-filters', items: '.filter-btn', step: 60, bloom: false },
+      { container: '.achievements-grid', items: '.achievement-card', step: 100, bloom: true },
+      { container: '.experience-timeline', items: '.experience-card', step: 120, bloom: true },
+      { container: '.edu-cert-grid', items: '.edu-card, .cert-card, .flashcard-deck', step: 110, bloom: true },
+      { container: '.contact-cards-grid', items: '.contact-card', step: 95, bloom: true },
+      { container: '.contact-form-container form', items: '.contact-form-group, .btn', step: 80, bloom: false },
+      { container: '.footer-grid', items: '.footer-brand, .footer-nav, .footer-connect', step: 100, bloom: false }
+    ];
+
+    groupConfigs.forEach(group => {
+      const containers = document.querySelectorAll(group.container);
+      containers.forEach(cont => {
+        const items = cont.querySelectorAll(group.items);
+        items.forEach((item, idx) => {
+          if (!item.classList.contains('scroll-reveal')) {
+            item.classList.add('scroll-reveal');
+            if (group.bloom) item.classList.add('card-bloom');
+            item.style.setProperty('--reveal-delay', `${idx * group.step}ms`);
+            revealObserver.observe(item);
+          }
+        });
+      });
+    });
+
+    // 3. Standalone high-impact elements
+    const standaloneSelectors = [
+      '#about .sticker-card',
+      '.scouter-card-wrapper',
+      '.ticker-container',
+      '.footer-bottom'
+    ];
+
+    standaloneSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (!el.classList.contains('scroll-reveal')) {
+          el.classList.add('scroll-reveal');
+          el.classList.add('card-bloom');
+          el.style.setProperty('--reveal-delay', '60ms');
+          revealObserver.observe(el);
+        }
+      });
     });
   }
 
@@ -2902,7 +3050,7 @@ function initScrollReveal() {
 
   // Expose global refresh for dynamic cards (e.g. project filter clicks)
   window.refreshScrollReveal = function() {
-    setTimeout(attachElements, 50);
+    setTimeout(attachElements, 60);
   };
 }
 
@@ -2926,6 +3074,9 @@ function initScrollProgress() {
     if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
   window.addEventListener('resize', update, { passive: true });
+  if (window.lenis) {
+    window.lenis.on('scroll', update);
+  }
   update();
 }
 
@@ -2948,6 +3099,9 @@ function initHeroParallax() {
   window.addEventListener('scroll', () => {
     if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
   }, { passive: true });
+  if (window.lenis) {
+    window.lenis.on('scroll', onScroll);
+  }
   onScroll();
 }
 
@@ -2978,6 +3132,7 @@ function initCardTilt() {
   mo.observe(document.body, { childList: true, subtree: true });
   
   document.addEventListener('pointermove', (e) => {
+    if (!e.target || typeof e.target.closest !== 'function') return;
     const card = e.target.closest(cardSelector);
     if (!card) return;
     const r = card.getBoundingClientRect();
@@ -2993,6 +3148,7 @@ function initCardTilt() {
   }, { passive: true });
   
   document.addEventListener('pointerleave', (e) => {
+    if (!e.target || typeof e.target.closest !== 'function') return;
     const card = e.target.closest(cardSelector);
     if (!card) return;
     card.style.setProperty('--tilt-x', '0deg');
@@ -3010,6 +3166,7 @@ function initMagneticButtons() {
   });
   mo.observe(document.body, { childList: true, subtree: true });
   document.addEventListener('pointermove', (e) => {
+    if (!e.target || typeof e.target.closest !== 'function') return;
     const btn = e.target.closest('.btn.magnetic, .nav-ctrl-btn.magnetic, .filter-btn.magnetic');
     if (!btn) return;
     const r = btn.getBoundingClientRect();
@@ -3018,6 +3175,7 @@ function initMagneticButtons() {
     btn.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
   }, { passive: true });
   document.addEventListener('pointerleave', (e) => {
+    if (!e.target || typeof e.target.closest !== 'function') return;
     const btn = e.target.closest('.btn.magnetic, .nav-ctrl-btn.magnetic, .filter-btn.magnetic');
     if (!btn) return;
     btn.style.transform = '';

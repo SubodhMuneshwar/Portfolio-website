@@ -4,16 +4,16 @@
    ========================================================================== */
 
 :root {
-  /* Color Palette (Light Mode - Warm Paper & Pop Accents) */
-  --bg: #FFFDF5;                /* Warm Cream/Off-White Paper */
+  /* Color Palette (Light Mode - Goku Rosé Divine White & God Ki Accents) */
+  --bg: #FFF8FA;                /* Luminous Rosé Divine White Paper */
   --fg: #1E293B;                /* Slate 800 (Deep, high contrast) */
-  --muted: #F1F5F9;             /* Slate 100 */
+  --muted: #FFF1F6;             /* Rosé soft surface */
   --muted-fg: #64748B;          /* Slate 500 */
   --card: #FFFFFF;              /* Pure White for sticker cards */
-  --card-alt: #FFF9E6;          /* Soft yellow tinted card */
+  --card-alt: #FFF0F5;          /* Soft LavenderBlush Rosé tinted card */
   --input: #FFFFFF;             /* White */
   --border: #1E293B;            /* Chunky 2.5px dark border */
-  --border-light: #E2E8F0;      /* Light border for inner dividers */
+  --border-light: rgba(244, 114, 182, 0.28); /* Soft Rosé divider */
 
   /* Refined Rosé + Space Grotesk — balanced indigo/amber (better harmony with geometric headings) */
   --accent: #FF2E97;            /* Rosé Pink — primary */
@@ -136,7 +136,7 @@ body.saiyan-mode {
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
   background-attachment: fixed, fixed, fixed, fixed, scroll;
   color: #F8FAFC;
-  transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+  transition: color 0.3s ease;
 }
 
 /* ——— Super Saiyan God Ki — Golden Electric Veil ——— */
@@ -365,24 +365,22 @@ body.saiyan-mode .achievement-card::before {
 /* Staggered Element Power-Up Flash & Glow */
 .saiyan-charging {
   position: relative;
-  transition: all 0.6s var(--ease-bounce) !important;
+  transition: transform 0.5s var(--ease-bounce), box-shadow 0.5s ease !important;
   animation: element-power-surge 0.6s ease-out forwards;
 }
 
 @keyframes element-power-surge {
   0% {
-    transform: scale(0.97);
-    filter: brightness(2) drop-shadow(0 0 25px #FBBF24);
-    box-shadow: 0 0 30px #38BDF8, 0 0 60px #F59E0B;
+    transform: scale(0.98);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), 0 0 35px rgba(245, 158, 11, 0.25);
   }
   50% {
-    transform: scale(1.03);
-    filter: brightness(1.5) drop-shadow(0 0 35px #38BDF8);
-    box-shadow: 0 0 45px #FBBF24, 0 0 70px #38BDF8;
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.5), 0 0 50px rgba(56, 189, 248, 0.35);
   }
   100% {
     transform: scale(1);
-    filter: brightness(1);
+    box-shadow: none;
   }
 }
 

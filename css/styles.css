@@ -19,8 +19,8 @@ html {
   font-size: 16px;
   color-scheme: light;
   scrollbar-width: thin;
-  scrollbar-color: #475569 #FFFDF5;
-  background-color: #FFFDF5;
+  scrollbar-color: #9D174D #FFF8FA;
+  background-color: #FFF8FA;
   overflow-x: hidden;
   max-width: 100%;
   scroll-padding-top: calc(var(--header-height) + 12px);
@@ -53,6 +53,7 @@ body.saiyan-mode {
     radial-gradient(#163224 1.5px, transparent 1.5px) !important;
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px !important;
   background-attachment: fixed, fixed, fixed, fixed, scroll !important;
+  transition: color 0.3s ease !important;
 }
 
 /* ==========================================================================
@@ -68,16 +69,16 @@ body::-webkit-scrollbar {
 ::-webkit-scrollbar-track,
 html::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track {
-  background: #FFFDF5;
-  border-left: 1px solid rgba(226, 232, 240, 0.9);
+  background: #FFF8FA;
+  border-left: 1px solid rgba(244, 114, 182, 0.25);
 }
 
 ::-webkit-scrollbar-thumb,
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #9D174D;
   border-radius: 9999px;
-  border: 3px solid #FFFDF5;
+  border: 3px solid #FFF8FA;
   transition: background-color 0.2s ease;
 }
 
@@ -117,8 +118,15 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--bg);
-  background-image: radial-gradient(#CBD5E1 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+  background-image:
+    radial-gradient(ellipse 75% 50% at 50% 0%, rgba(255, 46, 151, 0.12) 0%, rgba(255, 46, 151, 0.035) 40%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 92% 18%, rgba(168, 85, 247, 0.075) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 45% at 8% 42%, rgba(225, 29, 72, 0.065) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 45% at 92% 68%, rgba(255, 46, 151, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(244, 114, 182, 0.09) 0%, transparent 65%),
+    radial-gradient(rgba(244, 63, 94, 0.14) 1.5px, transparent 1.5px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, scroll;
   color: var(--fg);
   font-family: var(--font-body);
   font-weight: 500;
@@ -130,6 +138,20 @@ body {
   text-size-adjust: 100%;
   overflow-wrap: break-word;
   word-break: break-word;
+  transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+}
+
+/* Goku Rose Divine Ki Veil - Light Mode */
+body:not(.saiyan-mode)::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 45% 35% at 16% 14%, rgba(255, 46, 151, 0.045) 0%, transparent 65%),
+    radial-gradient(ellipse 42% 40% at 86% 78%, rgba(168, 85, 247, 0.035) 0%, transparent 65%),
+    radial-gradient(circle at 50% 50%, rgba(251, 113, 133, 0.025) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* --- Accessibility & Focus States --- */
@@ -259,9 +281,9 @@ a {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23FFB3C6' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-/* Marker Highlight — refined indigo→amber for Space Grotesk + Inter */
+/* Marker Highlight - Goku Rose Divine Gradient */
 .marker-highlight {
-  background: linear-gradient(120deg, rgba(79,70,229,0.14) 0%, rgba(253,230,138,0.42) 100%);
+  background: linear-gradient(120deg, rgba(255, 46, 151, 0.16) 0%, rgba(244, 114, 182, 0.26) 100%);
   padding: 0 6px;
   border-radius: 4px;
   display: inline;
@@ -527,6 +549,24 @@ body.saiyan-mode .project-card:hover {
     8px 8px 0px 0px #000000 !important;
 }
 
+/* Goku Rose Divine Ki Hover Glow - Light Mode */
+body:not(.saiyan-mode) .sticker-card:hover,
+body:not(.saiyan-mode) .stat-card:hover,
+body:not(.saiyan-mode) .skill-category-card:hover,
+body:not(.saiyan-mode) .experience-card:hover,
+body:not(.saiyan-mode) .achievement-card:hover,
+body:not(.saiyan-mode) .edu-card:hover,
+body:not(.saiyan-mode) .cert-card:hover,
+body:not(.saiyan-mode) .project-card:hover {
+  border-color: #FF2E97 !important;
+  box-shadow:
+    0 12px 30px rgba(255, 46, 151, 0.16),
+    0 0 22px rgba(244, 63, 94, 0.14),
+    0 0 0 2px #FF2E97,
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    6px 6px 0px 0px var(--border) !important;
+}
+
 .sticker-card.card-pink:hover {
   box-shadow: 6px 6px 0px 0px var(--secondary);
 }
@@ -590,11 +630,11 @@ body.saiyan-mode .sticker-card.card-mint:hover {
   z-index: 100;
   background:
     linear-gradient(180deg, rgba(255,46,151,0.06) 0%, transparent 100%),
-    rgba(255, 253, 245, 0.88);
+    rgba(255, 248, 250, 0.88);
   backdrop-filter: blur(16px) saturate(1.15);
   -webkit-backdrop-filter: blur(16px) saturate(1.15);
   border-bottom: 2.5px solid var(--border);
-  box-shadow: 0 1px 0 rgba(255,46,151,0.10), 0 8px 24px rgba(15,10,28,0.06);
+  box-shadow: 0 1px 0 rgba(255,46,151,0.12), 0 8px 24px rgba(157,23,77,0.06);
   transition: var(--transition-normal);
 }
 
@@ -1184,13 +1224,13 @@ body.saiyan-mode .nav-btn-connect {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 72% 58% at 50% 0%, rgba(255,46,151,0.18) 0%, rgba(255,46,151,0.06) 34%, transparent 66%),
-    radial-gradient(ellipse 52% 46% at 92% 14%, rgba(157,23,77,0.13) 0%, transparent 58%),
-    radial-gradient(ellipse 42% 32% at 12% 28%, rgba(244,114,182,0.11) 0%, transparent 62%),
-    radial-gradient(ellipse 36% 30% at 18% 82%, rgba(7,5,16,0.04) 0%, transparent 58%),
-    radial-gradient(ellipse 88% 16% at 50% 100%, rgba(253,230,138,0.14) 0%, transparent 64%),
+    radial-gradient(ellipse 72% 58% at 50% 0%, rgba(255,46,151,0.15) 0%, rgba(255,46,151,0.05) 34%, transparent 66%),
+    radial-gradient(ellipse 52% 46% at 92% 14%, rgba(157,23,77,0.10) 0%, transparent 58%),
+    radial-gradient(ellipse 42% 32% at 12% 28%, rgba(244,114,182,0.09) 0%, transparent 62%),
+    radial-gradient(ellipse 36% 30% at 18% 82%, rgba(7,5,16,0.03) 0%, transparent 58%),
+    radial-gradient(ellipse 88% 16% at 50% 100%, rgba(244,114,182,0.08) 0%, transparent 64%),
     transparent;
-  border-bottom: 1px solid rgba(157,23,77,0.08);
+  border-bottom: 1px solid rgba(255, 46, 151, 0.12);
 }
 
 /* Goku Black ROSE — divine energy field (light only) — pink/black god ki */
@@ -1770,10 +1810,16 @@ body.saiyan-mode .saiyan-sparks-field {
 }
 
 body:not(.saiyan-mode) {
+  background-color: var(--bg) !important;
   background-image:
-    radial-gradient(ellipse at 12% 8%, rgba(255,46,151,0.04) 0%, transparent 42%),
-    radial-gradient(ellipse at 88% 92%, rgba(244,114,182,0.035) 0%, transparent 42%),
-    radial-gradient(#CBD5E1 1.5px, transparent 1.5px) !important;
+    radial-gradient(ellipse 75% 50% at 50% 0%, rgba(255, 46, 151, 0.12) 0%, rgba(255, 46, 151, 0.035) 40%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 92% 18%, rgba(168, 85, 247, 0.075) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 45% at 8% 42%, rgba(225, 29, 72, 0.065) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 45% at 92% 68%, rgba(255, 46, 151, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(244, 114, 182, 0.09) 0%, transparent 65%),
+    radial-gradient(rgba(244, 63, 94, 0.14) 1.5px, transparent 1.5px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px !important;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, scroll !important;
 }
 
 body:not(.saiyan-mode) .site-header {
@@ -3050,16 +3096,21 @@ body.saiyan-mode .scouter-earpiece-hinge {
 .scouter-earpiece-vent span {
   display: block;
   height: 3.5px;
-  background: #22C55E;
+  background: #FF2E97;
   border-radius: 2px;
-  box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+  box-shadow: 0 0 6px rgba(255, 46, 151, 0.6);
+}
+
+body.saiyan-mode .scouter-earpiece-vent span {
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
 }
 
 /* Right Scouter Visor / HUD Lens Body */
 .scouter-lens-body {
   flex: 1;
   min-width: 0;
-  background: linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F8 50%, #FFE4E6 100%);
   border: 3px solid var(--border);
   border-radius: 0px 36px 120px 24px;
   box-shadow: 8px 8px 0px var(--border);
@@ -3082,7 +3133,7 @@ body.saiyan-mode .scouter-lens-body {
   align-items: center;
   padding-bottom: 1.25rem;
   margin-bottom: 2rem;
-  border-bottom: 2px dashed #CBD5E1;
+  border-bottom: 2px dashed rgba(244, 114, 182, 0.45);
   flex-wrap: wrap;
   gap: 0.75rem;
 }
@@ -3603,16 +3654,16 @@ body.saiyan-mode .form-textarea:focus {
   }
 }
 
-/* --- Footer — Playful Premium (own touch: bichromatic + geometric) --- */
-/* Light mode: warm paper with playful accents — Dark mode: Namek storm with Saiyan glow */
+/* --- Footer — Playful Premium (Goku Rose Theme in Light Mode) --- */
+/* Light mode: Goku Rose Divine White & Ki Glow — Dark mode: Namek storm with Saiyan glow */
 .site-footer.footer-premium {
   position: relative;
-  background: #FFFDF5;
+  background: var(--bg);
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(203,213,225,0.55) 1px, transparent 0),
-    radial-gradient(ellipse 78% 45% at 18% 0%, rgba(255,46,151,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 52% 38% at 92% 8%, rgba(79,70,229,0.05) 0%, transparent 55%),
-    radial-gradient(ellipse 68% 28% at 50% 100%, rgba(253,230,138,0.22) 0%, transparent 62%);
+    radial-gradient(circle at 1px 1px, rgba(244,63,94,0.14) 1.5px, transparent 0),
+    radial-gradient(ellipse 78% 45% at 18% 0%, rgba(255,46,151,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 52% 38% at 92% 8%, rgba(168,85,247,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 68% 28% at 50% 100%, rgba(244,114,182,0.10) 0%, transparent 62%);
   background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
   border-top: 2.5px solid #1E293B;
   padding: 3rem 0 1.6rem;
@@ -3622,7 +3673,7 @@ body.saiyan-mode .form-textarea:focus {
   transition: background-color 0.45s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Playful top accent bar — tri-color like site's candy buttons (own touch) */
+/* Goku Rose Divine Ki Beam Top Accent Bar */
 .site-footer.footer-premium::before {
   content: '';
   position: absolute;
@@ -3630,19 +3681,19 @@ body.saiyan-mode .form-textarea:focus {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #FF2E97 0%, #FF2E97 33.3%, #4F46E5 33.3%, #4F46E5 66.6%, #FDE68A 66.6%, #FDE68A 100%);
+  background: linear-gradient(90deg, #FF2E97 0%, #FDA4AF 35%, #E11D48 65%, #FF2E97 100%);
   pointer-events: none;
 }
 
-/* Subtle playful floating orbs — own touch, not in reference */
+/* Goku Rose Ethereal God Ki Orbs */
 .site-footer.footer-premium::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle 120px at 12% 22%, rgba(255,46,151,0.07) 0%, transparent 70%),
-    radial-gradient(circle 140px at 88% 85%, rgba(79,70,229,0.06) 0%, transparent 70%),
-    radial-gradient(circle 90px at 92% 18%, rgba(253,230,138,0.18) 0%, transparent 70%);
+    radial-gradient(circle 120px at 12% 22%, rgba(255,46,151,0.08) 0%, transparent 70%),
+    radial-gradient(circle 140px at 88% 85%, rgba(168,85,247,0.06) 0%, transparent 70%),
+    radial-gradient(circle 90px at 92% 18%, rgba(244,114,182,0.10) 0%, transparent 70%);
   pointer-events: none;
   opacity: 1;
 }
@@ -3877,7 +3928,7 @@ body.saiyan-mode .form-textarea:focus {
 .footer-social-btn:focus-visible {
   outline: none;
   border-color: #FF2E97;
-  box-shadow: 0 0 0 2px #FFFDF5, 0 0 0 4px #FF2E97;
+  box-shadow: 0 0 0 2px #FFF8FA, 0 0 0 4px #FF2E97;
 }
 
 .footer-back-top {
@@ -3909,7 +3960,7 @@ body.saiyan-mode .form-textarea:focus {
 
 .footer-back-top:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #FFFDF5, 0 0 0 4px #FF2E97;
+  box-shadow: 0 0 0 2px #FFF8FA, 0 0 0 4px #FF2E97;
 }
 
 /* Divider — playful dashed like site */
@@ -3989,7 +4040,7 @@ body.saiyan-mode .form-textarea:focus {
 
 .footer-float-top:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #FFFDF5, 0 0 0 4px #FF2E97;
+  box-shadow: 0 0 0 2px #FFF8FA, 0 0 0 4px #FF2E97;
 }
 
 /* ========== DARK MODE — Saiyan / Premium Dark (own touch, not just copy) ========== */
@@ -4430,7 +4481,7 @@ body.saiyan-mode .footer-float-top:hover {
     right: 0;
     width: 100%;
     max-width: 100%;
-    background: #FFFDF5 !important;
+    background: #FFF8FA !important;
     border-bottom: 2.5px solid var(--border) !important;
     box-shadow: 0 30px 60px rgba(15, 10, 28, 0.25) !important;
     padding: 1.25rem 1rem 1.8rem 1rem;
@@ -5256,7 +5307,7 @@ body.page-intro-revealed main,
 body.page-intro-revealed .site-footer {
   visibility: visible !important;
   opacity: 1 !important;
-  transition: opacity 0.45s ease;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Rosé landing veil — smooth hardware-accelerated ambient glow */
@@ -5269,71 +5320,86 @@ body.page-intro-revealed .hero-section::before {
   position: absolute;
   inset: -40px -20px -20px -20px;
   background:
-    radial-gradient(ellipse 75% 65% at 50% 10%, rgba(255,46,151,0.25) 0%, rgba(224,17,107,0.15) 30%, transparent 65%),
-    radial-gradient(ellipse 50% 45% at 85% 25%, rgba(114,9,183,0.18) 0%, transparent 60%);
+    radial-gradient(ellipse 75% 65% at 50% 10%, rgba(255,46,151,0.22) 0%, rgba(224,17,107,0.12) 30%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 85% 25%, rgba(114,9,183,0.15) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  animation: rose-hero-veil-settle 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: rose-hero-veil-settle 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: opacity, transform;
 }
 
 @keyframes rose-hero-veil-settle {
-  0%   { opacity: 1; transform: scale(1.06) translateZ(0); }
+  0%   { opacity: 0; transform: scale(1.08) translateZ(0); }
+  40%  { opacity: 1; }
   100% { opacity: 0.65; transform: scale(1) translateZ(0); }
 }
 
-/* Hero elements staggered kinetic rise (transform/opacity only for 60/120fps) */
-body.page-intro-revealed .hero-content,
-body.page-intro-revealed .hero-visual {
-  animation: rose-hero-content-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: transform, opacity;
-}
-
-body.page-intro-revealed .hero-visual { animation-delay: 0.08s; }
-
-@keyframes rose-hero-content-rise {
-  0% { opacity: 0; transform: translate3d(0, 18px, 0); }
-  100% { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
-/* Header blooms smoothly into position */
+/* Header floats down gracefully into position */
 body.page-intro-revealed .site-header {
-  animation: rose-header-bloom 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both;
+  animation: rose-header-bloom 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
   will-change: transform, opacity;
 }
 
 @keyframes rose-header-bloom {
-  0% { opacity: 0; transform: translate3d(0, -12px, 0); }
+  0% { opacity: 0; transform: translate3d(0, -24px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Hero visual & HUD frame smooth kinetic lift */
+body.page-intro-revealed .hero-hud-frame {
+  animation: rose-hud-rise 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
+  will-change: transform, opacity;
+}
+
+@keyframes rose-hud-rise {
+  0% { opacity: 0; transform: translate3d(0, 36px, 0) scale(0.96); }
   100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 /* Photo frame kinetic entry */
 body.page-intro-revealed .hero-photo-frame {
-  animation: rose-photo-halo 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  animation: rose-photo-halo 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
   will-change: transform, box-shadow;
 }
 
 @keyframes rose-photo-halo {
   0% { box-shadow: 0 0 0 0 rgba(255,46,151,0), 8px 8px 0px var(--border); }
-  50% { box-shadow: 0 0 0 4px rgba(255,46,151,0.35), 0 0 35px rgba(255,46,151,0.5), 8px 8px 0px var(--border); }
+  45% { box-shadow: 0 0 0 4px rgba(255,46,151,0.35), 0 0 32px rgba(255,46,151,0.45), 8px 8px 0px var(--border); }
   100% { box-shadow: 8px 8px 0px var(--border); }
 }
 
-/* Staggered text & CTA kinetic cascades */
-body.page-intro-revealed .hero-badge   { animation: rose-el-rise 0.60s cubic-bezier(0.16,1,0.3,1) 0.15s both; will-change: transform, opacity; }
-body.page-intro-revealed .hero-title   { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.22s both; will-change: transform, opacity; }
-body.page-intro-revealed .hero-description { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.30s both; will-change: transform, opacity; }
-body.page-intro-revealed .hero-ctas    { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.36s both; will-change: transform, opacity; }
-body.page-intro-revealed .hero-pills   { animation: rose-el-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.42s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-clean-badge {
+  animation: rose-el-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both;
+  will-change: transform, opacity;
+}
+
+/* Staggered text & CTA kinetic cascades — orchestrated line by line */
+body.page-intro-revealed .hero-kicker      { animation: rose-el-rise 0.82s cubic-bezier(0.16,1,0.3,1) 0.12s both; will-change: transform, opacity; display: inline-block; }
+body.page-intro-revealed .hero-name        { animation: rose-el-rise 0.85s cubic-bezier(0.16,1,0.3,1) 0.20s both; will-change: transform, opacity; display: block; }
+body.page-intro-revealed .hero-role        { animation: rose-el-rise 0.85s cubic-bezier(0.16,1,0.3,1) 0.28s both; will-change: transform, opacity; display: block; }
+body.page-intro-revealed .hero-description { animation: rose-el-rise 0.85s cubic-bezier(0.16,1,0.3,1) 0.36s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-ctas        { animation: rose-el-rise 0.85s cubic-bezier(0.16,1,0.3,1) 0.46s both; will-change: transform, opacity; }
+body.page-intro-revealed .hero-pills       { animation: rose-el-rise 0.85s cubic-bezier(0.16,1,0.3,1) 0.56s both; will-change: transform, opacity; }
 
 @keyframes rose-el-rise {
-  0% { opacity: 0; transform: translate3d(0, 14px, 0); }
+  0% { opacity: 0; transform: translate3d(0, 30px, 0) scale(0.975); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Stat cards sequential ripple on page unveil */
+body.page-intro-revealed .stats-grid .stat-card:nth-child(1) { animation: rose-stat-rise 0.88s cubic-bezier(0.16,1,0.3,1) 0.62s both; will-change: transform, opacity; }
+body.page-intro-revealed .stats-grid .stat-card:nth-child(2) { animation: rose-stat-rise 0.88s cubic-bezier(0.16,1,0.3,1) 0.71s both; will-change: transform, opacity; }
+body.page-intro-revealed .stats-grid .stat-card:nth-child(3) { animation: rose-stat-rise 0.88s cubic-bezier(0.16,1,0.3,1) 0.80s both; will-change: transform, opacity; }
+body.page-intro-revealed .stats-grid .stat-card:nth-child(4) { animation: rose-stat-rise 0.88s cubic-bezier(0.16,1,0.3,1) 0.89s both; will-change: transform, opacity; }
+
+@keyframes rose-stat-rise {
+  0% { opacity: 0; transform: translate3d(0, 32px, 0) scale(0.965); }
   100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 /* Smooth veil: body background crossfade */
-body { transition: background-color 0.8s cubic-bezier(0.16,1,0.3,1); }
+body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0.3,1); }
 
 /* Mobile tuning for Rosé veil — keep blend without overflow */
 @media (max-width: 768px) {
@@ -5993,7 +6059,7 @@ body { transition: background-color 0.8s cubic-bezier(0.16,1,0.3,1); }
 .prank-modal-window {
   max-width: 390px;
   text-align: center;
-  background: #FFFDF5;
+  background: #FFF8FA;
   border: 3px solid #1E293B;
   box-shadow: 8px 8px 0px #F59E0B, 0 10px 30px rgba(0, 0, 0, 0.25);
   padding: 1.25rem 1.15rem 1rem 1.15rem;
@@ -6231,110 +6297,131 @@ body.saiyan-mode .prank-hint-sub {
 }
 
 /* ==========================================================================
-   Hyper-Smooth 3D Spatial Card Loading & Scroll-Triggered Reveal Engine
+   Lenis Smooth Momentum Scrolling Engine Support
+   ========================================================================== */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Hyper-Smooth Kinetic Scroll-Triggered Reveal Engine (Zunedaalim style)
+   Clean 60/120fps GPU transitions with zero blur filters or 3D rasterization thrashing
    ========================================================================== */
 
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(32px) scale(0.92) perspective(1200px) rotateX(6deg);
-  filter: blur(6px);
+  transform: translate3d(0, 44px, 0) scale(0.965);
   transition:
-    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.72s cubic-bezier(0.34, 1.45, 0.64, 1),
-    filter 0.55s ease;
-  will-change: opacity, transform, filter;
+    opacity 0.88s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.88s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.88s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
   position: relative;
 }
 
 .scroll-reveal.reveal-scale {
-  transform: scale(0.88) translateY(24px) perspective(1200px) rotateX(8deg);
+  transform: translate3d(0, 32px, 0) scale(0.94);
 }
 
 .scroll-reveal.is-revealed {
   opacity: 1 !important;
-  transform: translateY(0) scale(1) perspective(1200px) rotateX(0deg) !important;
-  filter: blur(0px) !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
 }
 
-/* Luminous Prism Ki Sheen Sweep upon Card Reveal */
-.scroll-reveal::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.45) 50%, transparent 75%);
-  transform: translateX(-100%);
-  pointer-events: none;
-  z-index: 5;
-  opacity: 0;
+/* Dynamic ambient luminous bloom on card reveal */
+.scroll-reveal.card-bloom.is-revealed {
+  animation: rose-reveal-bloom 0.95s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s) both;
 }
 
-body.saiyan-mode .scroll-reveal::after {
-  background: linear-gradient(115deg, transparent 25%, rgba(254, 240, 138, 0.35) 48%, rgba(245, 158, 11, 0.25) 52%, transparent 75%);
-}
-
-.scroll-reveal.is-revealed::after {
-  animation: card-reveal-sheen 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes card-reveal-sheen {
+@keyframes rose-reveal-bloom {
   0% {
-    transform: translateX(-100%) rotate(4deg);
-    opacity: 0;
+    box-shadow: 0 0 0 0 rgba(255, 46, 151, 0);
   }
   35% {
-    opacity: 1;
+    box-shadow: 0 16px 36px -6px rgba(255, 46, 151, 0.28), 0 0 20px rgba(255, 46, 151, 0.18);
   }
   100% {
-    transform: translateX(125%) rotate(4deg);
-    opacity: 0;
+    box-shadow: var(--shadow-sm, 0 4px 14px rgba(0,0,0,0.06));
+  }
+}
+
+body.saiyan-mode .scroll-reveal.card-bloom.is-revealed {
+  animation: saiyan-reveal-bloom 0.95s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s) both;
+}
+
+@keyframes saiyan-reveal-bloom {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+  35% {
+    box-shadow: 0 16px 36px -6px rgba(245, 158, 11, 0.35), 0 0 22px rgba(251, 191, 36, 0.22);
+  }
+  100% {
+    box-shadow: var(--shadow-sm, 0 4px 14px rgba(0,0,0,0.4));
   }
 }
 
 /* Stagger delay utility classes for grid cards */
-.reveal-delay-1 { transition-delay: 0.04s; }
+.reveal-delay-1 { transition-delay: 0.06s; }
 .reveal-delay-2 { transition-delay: 0.12s; }
-.reveal-delay-3 { transition-delay: 0.20s; }
-.reveal-delay-4 { transition-delay: 0.28s; }
-.reveal-delay-5 { transition-delay: 0.36s; }
-.reveal-delay-6 { transition-delay: 0.44s; }
-.reveal-delay-7 { transition-delay: 0.52s; }
-.reveal-delay-8 { transition-delay: 0.60s; }
+.reveal-delay-3 { transition-delay: 0.18s; }
+.reveal-delay-4 { transition-delay: 0.24s; }
+.reveal-delay-5 { transition-delay: 0.30s; }
+.reveal-delay-6 { transition-delay: 0.36s; }
+.reveal-delay-7 { transition-delay: 0.42s; }
+.reveal-delay-8 { transition-delay: 0.48s; }
 
-.scroll-reveal.is-revealed.reveal-delay-1::after { animation-delay: 0.15s; }
-.scroll-reveal.is-revealed.reveal-delay-2::after { animation-delay: 0.23s; }
-.scroll-reveal.is-revealed.reveal-delay-3::after { animation-delay: 0.31s; }
-.scroll-reveal.is-revealed.reveal-delay-4::after { animation-delay: 0.39s; }
-.scroll-reveal.is-revealed.reveal-delay-5::after { animation-delay: 0.47s; }
-.scroll-reveal.is-revealed.reveal-delay-6::after { animation-delay: 0.55s; }
+/* Adaptive Header state on scroll */
+.site-header {
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.site-header.is-scrolled {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(244, 114, 182, 0.25);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+}
+
+body.saiyan-mode .site-header.is-scrolled {
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(245, 158, 11, 0.35);
+  background: rgba(5, 13, 9, 0.92) !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal {
     opacity: 1 !important;
     transform: none !important;
-    filter: none !important;
     transition: none !important;
-  }
-  .scroll-reveal::after {
-    display: none !important;
+    animation: none !important;
   }
 }
 
-/* Mobile Performance Boost: Eliminate GPU layer exhaustion and blur overhead on mobile screens */
+/* Mobile Performance: clean and lightweight translation */
 @media (max-width: 768px) {
   .scroll-reveal {
-    transform: translate3d(0, 14px, 0) !important;
-    filter: none !important;
-    transition: opacity 0.32s ease, transform 0.32s ease !important;
-    will-change: auto !important;
+    transform: translate3d(0, 22px, 0) scale(0.98) !important;
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
   .scroll-reveal.is-revealed {
-    transform: translate3d(0, 0, 0) !important;
-    filter: none !important;
-  }
-  .scroll-reveal::after {
-    display: none !important;
-    animation: none !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
   }
 }
 
@@ -7696,14 +7783,14 @@ body.saiyan-mode .flashcard-dot.is-active {
   width: 100vw !important;
   height: 100vh !important;
   z-index: 99998 !important;
-  background: radial-gradient(circle at center, #0B1912 0%, #040A07 100%) !important;
+  background: #050D09 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
   overflow: hidden;
   will-change: opacity;
 }
@@ -7746,7 +7833,7 @@ body.saiyan-mode .flashcard-dot.is-active {
   content: '';
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 100px 30px rgba(4, 10, 7, 0.85);
+  box-shadow: inset 0 0 100px 30px rgba(5, 13, 9, 0.95);
   pointer-events: none;
   z-index: 3;
 }
@@ -7754,11 +7841,11 @@ body.saiyan-mode .flashcard-dot.is-active {
 .saiyan-cutscene-flash {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(254, 240, 138, 0.85) 30%, rgba(245, 158, 11, 0.6) 70%, transparent 100%);
+  background: radial-gradient(circle at center, rgba(254, 240, 138, 0.25) 0%, rgba(245, 158, 11, 0.1) 60%, transparent 100%);
   z-index: 5;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   mix-blend-mode: screen;
 }
 
@@ -7801,12 +7888,12 @@ body.saiyan-mode .flashcard-dot.is-active {
 
 @keyframes saiyan-reveal-burst {
   0% {
-    opacity: 0.7;
-    transform: translate3d(0, 14px, 0) scale(0.985);
+    opacity: 1;
+    transform: translate3d(0, 8px, 0) scale(0.992);
   }
   50% {
     opacity: 1;
-    transform: translate3d(0, -2px, 0) scale(1.006);
+    transform: translate3d(0, -2px, 0) scale(1.004);
   }
   100% {
     opacity: 1;
