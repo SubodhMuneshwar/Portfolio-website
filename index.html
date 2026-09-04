@@ -42,8 +42,8 @@
     })();
   </script>
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260904_gokuRoseTheme">
-  <link rel="stylesheet" href="css/styles.css?v=20260904_smoothScrollReveal">
+  <link rel="stylesheet" href="css/tokens.css?v=20260904_highContrastBadges">
+  <link rel="stylesheet" href="css/styles.css?v=20260904_highContrastBadges">
 
   <!-- External Libraries (Lucide Icons, Canvas Confetti & Lenis Smooth Scroll) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -747,6 +747,86 @@
   </footer>
 
   <!-- =========================================================================
+       Capsule Corp Interactive Quest & Site Guide Modal Dialog
+       ========================================================================= -->
+  <div class="modal-backdrop quest-briefing-backdrop" id="questBriefingModal" role="dialog" aria-modal="true" aria-labelledby="questBriefingTitle" onclick="if(event.target===this) closeQuestBriefingModal()">
+    <div class="modal-window quest-briefing-window">
+      <button type="button" class="modal-close-btn" onclick="closeQuestBriefingModal()" aria-label="Close Briefing">✕</button>
+
+      <div class="quest-hud-header">
+        <div class="quest-corp-badge">
+          <span class="quest-pulse-dot"></span>
+          <span>CAPSULE CORP</span>
+        </div>
+        <h2 class="quest-hud-title" id="questBriefingTitle">How It Works</h2>
+      </div>
+
+      <div class="quest-grid">
+        <!-- Card 1: Dragon Balls -->
+        <div class="quest-card">
+          <div class="quest-visual-thumb thumb-dragonball">
+            <img src="assets/fav.png" alt="Dragon Ball" class="quest-thumb-img" width="44" height="44" loading="eager" />
+            <span class="quest-thumb-chip">x7</span>
+          </div>
+          <div class="quest-card-body">
+            <h3 class="quest-card-title">1. Find 7 Balls</h3>
+          </div>
+        </div>
+
+        <!-- Card 2: Dragon Radar -->
+        <div class="quest-card">
+          <div class="quest-visual-thumb thumb-radar">
+            <img src="assets/dragon_radar.png" alt="Dragon Radar" class="quest-thumb-img radar-thumb-img" width="44" height="44" loading="eager" />
+            <span class="quest-radar-live-blip"></span>
+          </div>
+          <div class="quest-card-body">
+            <h3 class="quest-card-title">2. Use Radar</h3>
+          </div>
+        </div>
+
+        <!-- Card 3: Shenron -->
+        <div class="quest-card">
+          <div class="quest-visual-thumb thumb-shenron">
+            <img src="assets/shenron.png" alt="Shenron Dragon" class="quest-thumb-img shenron-thumb-img" width="46" height="46" loading="eager" />
+            <span class="quest-thumb-sparkle">★</span>
+          </div>
+          <div class="quest-card-body">
+            <h3 class="quest-card-title">3. Summon Shenron</h3>
+          </div>
+        </div>
+
+        <!-- Card 4: Dual Themes -->
+        <div class="quest-card">
+          <div class="quest-visual-thumb thumb-themes">
+            <div class="quest-dual-avatars">
+              <img src="assets/rose2.jpg" alt="Rose Mode" class="quest-avatar-img avatar-rose" width="28" height="28" loading="eager" />
+              <img src="assets/goku.webp" alt="Saiyan Mode" class="quest-avatar-img avatar-saiyan" width="28" height="28" loading="eager" />
+            </div>
+            <span class="quest-theme-pill">2 MODES</span>
+          </div>
+          <div class="quest-card-body">
+            <h3 class="quest-card-title">4. Switch Theme</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="quest-footer">
+        <label class="quest-checkbox-label">
+          <input type="checkbox" id="questDoNotShowCheckbox" class="quest-checkbox">
+          <span>Don't show again</span>
+        </label>
+
+        <div class="quest-actions">
+          <button type="button" class="btn btn-primary btn-sm quest-btn-primary" onclick="closeQuestBriefingModal()">
+            <span>Got it</span>
+            <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
        Project Detail Modal Dialog
        ========================================================================= -->
   <div class="modal-backdrop" id="projectModal" onclick="if(event.target===this) closeProjectModal()">
@@ -770,6 +850,7 @@
        ========================================================================= -->
   <div class="dragon-radar-widget" id="dragonRadarWidget"
     title="Capsule Corp Dragon Radar: Click to Scan & Track Dragon Balls!" role="button" tabindex="0">
+    <button type="button" class="radar-guide-badge" id="radarGuideBadge" onclick="openQuestBriefingModal(event)" title="View Quest Guide & Site Info" aria-label="Open Quest Guide">?</button>
     <div class="radar-device-thumb">
       <img src="assets/dragon_radar.png" alt="Dragon Radar" class="radar-device-img" loading="lazy" width="80" height="80" />
       <div class="radar-live-glow"></div>
@@ -978,7 +1059,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260902_mobilePerfBoost"></script>
-  <script src="js/main.js?v=20260904_smoothScrollReveal"></script>
+  <script src="js/main.js?v=20260904_highContrastBadges"></script>
 </body>
 
 </html>

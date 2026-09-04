@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagneticButtons();
   initStatCountUp();
   initFlashcardDecks();
+  initStartupQuestBriefing();
 });
 
 function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
@@ -64,6 +65,9 @@ function initKeyboardShortcuts() {
       closeShenronModal();
       closeDragonRadarModal();
       closeKidGokuPrankModal();
+      closeQuestBriefingModal();
+    } else if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      openQuestBriefingModal();
     }
   });
 }
@@ -139,7 +143,7 @@ function renderExperience() {
 
   container.innerHTML = portfolioData.experience.map(exp => `
     <div class="experience-card">
-      <div class="card-floating-badge" style="background-color: var(--${exp.badgeColor}); color: #FFFFFF;">
+      <div class="card-floating-badge badge-${exp.badgeColor}" style="background-color: var(--${exp.badgeColor});">
         <i data-lucide="briefcase" style="width: 14px; height: 14px;"></i>
         ${exp.type}
       </div>
@@ -199,7 +203,7 @@ function renderProjects(filterCategory = 'all') {
       </div>
       <div class="project-card-body">
         <div class="project-meta-row">
-          <span class="project-badge" style="background-color: var(--${proj.badgeColor}); color: ${proj.badgeColor === 'accent' || proj.badgeColor === 'secondary' ? '#FFFFFF' : '#1E293B'};">
+          <span class="project-badge badge-${proj.badgeColor}" style="background-color: var(--${proj.badgeColor});">
             ${proj.badge}
           </span>
           <span class="project-period">${proj.period}</span>
@@ -287,7 +291,7 @@ window.openProjectModal = function(projectId) {
 
   modalContent.innerHTML = `
     <div style="margin-bottom: 1.5rem;">
-      <span class="project-badge" style="background-color: var(--${proj.badgeColor}); color: ${proj.badgeColor === 'accent' || proj.badgeColor === 'secondary' ? '#FFFFFF' : '#1E293B'}; margin-bottom: 0.75rem; display: inline-block;">
+      <span class="project-badge badge-${proj.badgeColor}" style="background-color: var(--${proj.badgeColor}); margin-bottom: 0.75rem; display: inline-block;">
         ${proj.badge}
       </span>
       <h2 style="font-size: 1.75rem; font-weight: 900; margin-bottom: 0.5rem;">${proj.title}</h2>
@@ -365,7 +369,7 @@ function renderAchievements() {
       <div class="ach-icon-circle" style="background-color: var(--${ach.color});">
         <i data-lucide="${ach.icon}" style="width: 24px; height: 24px; stroke-width: 2.5;"></i>
       </div>
-      <div class="card-floating-badge" style="background-color: var(--${ach.color}); color: ${ach.color === 'accent' || ach.color === 'secondary' ? '#FFFFFF' : '#1E293B'};">
+      <div class="card-floating-badge badge-${ach.color}" style="background-color: var(--${ach.color});">
         ${ach.badge}
       </div>
       <h3 class="ach-title">${ach.title}</h3>
@@ -1425,6 +1429,62 @@ window.focusDragonBall = function(num) {
     else showToast(`Scanning for ${num}-Star Ball...`);
   }
 };
+
+/* ==========================================================================
+   Capsule Corp Mission Briefing & Interactive Quest Disclaimer Controller
+   ========================================================================== */
+window.openQuestBriefingModal = function(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  const modal = document.getElementById('questBriefingModal');
+  if (modal) {
+    playWebAudioTone(680, 'sine', 0.22, 0.12);
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    initLucideIcons();
+  }
+};
+
+window.closeQuestBriefingModal = function() {
+  const modal = document.getElementById('questBriefingModal');
+  const checkbox = document.getElementById('questDoNotShowCheckbox');
+  if (checkbox && checkbox.checked) {
+    try {
+      localStorage.setItem('portfolio-quest-brief-seen', 'true');
+    } catch (e) {}
+  }
+  if (modal) {
+    playWebAudioTone(520, 'sine', 0.16, 0.1);
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Draw visual attention to the Dragon Radar widget in bottom right
+  const radar = document.getElementById('dragonRadarWidget');
+  if (radar) {
+    radar.classList.remove('radar-attention-pulse');
+    void radar.offsetWidth;
+    radar.classList.add('radar-attention-pulse');
+    setTimeout(() => {
+      radar.classList.remove('radar-attention-pulse');
+    }, 2800);
+  }
+};
+
+function initStartupQuestBriefing() {
+  try {
+    const isDismissed = localStorage.getItem('portfolio-quest-brief-seen');
+    if (isDismissed === 'true') return;
+  } catch (e) {}
+
+  // Pop up smoothly ~1.3s after start once hero elements have finished entering
+  setTimeout(() => {
+    const modal = document.getElementById('questBriefingModal');
+    const hasActiveModal = document.querySelector('.modal-backdrop.active');
+    if (modal && !hasActiveModal) {
+      window.openQuestBriefingModal();
+    }
+  }, 1350);
+}
 
 window.openDragonRadarModal = function() {
   const modal = document.getElementById('dragonRadarModal');

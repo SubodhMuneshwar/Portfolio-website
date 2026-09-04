@@ -217,6 +217,7 @@ body.saiyan-mode .btn-secondary:hover {
 }
 
 /* Universal High Contrast for Yellow / Golden Background Elements */
+.exp-period-badge,
 .btn-tertiary,
 .btn-outline:hover,
 .filter-btn:hover,
@@ -231,11 +232,17 @@ body.saiyan-mode .btn-outline:hover,
 .edu-score-pill,
 .scouter-hud-tag,
 .skill-icon-box,
-.cert-icon-box {
+.cert-icon-box,
+body.saiyan-mode .project-badge,
+body.saiyan-mode .stat-icon-wrapper,
+body.saiyan-mode .ach-icon-circle {
   color: #0A1410 !important;
 }
 
 /* Button text & Lucide icons inside yellow elements */
+.exp-period-badge > span,
+.exp-period-badge > i,
+.exp-period-badge > svg:not(.dragon-ball svg),
 .btn-tertiary > span,
 .btn-tertiary > i,
 .btn-outline:hover > span,
@@ -251,8 +258,23 @@ body.saiyan-mode .btn-outline:hover > span,
 body.saiyan-mode .btn-outline:hover > i,
 .tech-pill:hover,
 .edu-score-pill,
-.scouter-hud-tag {
+.scouter-hud-tag,
+body.saiyan-mode .project-badge,
+body.saiyan-mode .project-badge > span,
+body.saiyan-mode .project-badge > i,
+body.saiyan-mode .project-badge > svg:not(.dragon-ball svg),
+body.saiyan-mode .card-floating-badge,
+body.saiyan-mode .card-floating-badge > i,
+body.saiyan-mode .card-floating-badge > svg:not(.dragon-ball svg),
+body.saiyan-mode .stat-icon-wrapper,
+body.saiyan-mode .stat-icon-wrapper > i,
+body.saiyan-mode .stat-icon-wrapper > svg:not(.dragon-ball svg),
+body.saiyan-mode .ach-icon-circle,
+body.saiyan-mode .ach-icon-circle > i,
+body.saiyan-mode .ach-icon-circle > svg:not(.dragon-ball svg) {
   color: #0A1410 !important;
+  stroke: #0A1410 !important;
+  stroke-width: 2.4px !important;
 }
 
 /* Specific button SVG icons (GitHub, LinkedIn) */
@@ -275,11 +297,19 @@ body.saiyan-mode .btn-primary > svg path {
 /* Category icon boxes */
 .skill-icon-box i,
 .cert-icon-box i,
+.stat-icon-wrapper i,
+.ach-icon-circle i,
 .skill-icon-box svg:not(.dragon-ball svg),
-.cert-icon-box svg:not(.dragon-ball svg) {
+.cert-icon-box svg:not(.dragon-ball svg),
+.stat-icon-wrapper svg:not(.dragon-ball svg),
+.ach-icon-circle svg:not(.dragon-ball svg),
+body.saiyan-mode .stat-icon-wrapper i,
+body.saiyan-mode .stat-icon-wrapper svg:not(.dragon-ball svg),
+body.saiyan-mode .ach-icon-circle i,
+body.saiyan-mode .ach-icon-circle svg:not(.dragon-ball svg) {
   color: #0A1410 !important;
   stroke: #0A1410 !important;
-  stroke-width: 2.2px !important;
+  stroke-width: 2.4px !important;
 }
 
 /* Explicit Dragon Ball SVG Immunity — Never allow parent badges to distort dragon balls */
