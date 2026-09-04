@@ -1280,40 +1280,46 @@ function renderDragonBallSVGs() {
     }
     pool.forEach((el, idx) => {
       if (idx < 7) {
-        // This slot becomes a REAL Dragon Ball (goes to radar)
-        el.classList.add('dragon-ball');
+        // This slot becomes a REAL Dragon Ball (glows intensely with golden ki)
+        el.classList.add('dragon-ball', 'real-dragon-ball');
         el.classList.remove('fake-dragon-ball');
         el.removeAttribute('data-fake-ball');
         el.setAttribute('data-ball', String(starPool[idx]));
+        el.dataset.isReal = "true";
       } else {
-        // Remaining slots become PRANK balls — but will LOOK identical to real
+        // Remaining slots become PRANK decoy balls (visibly flat/dull, no glowing aura)
         el.classList.add('dragon-ball', 'fake-dragon-ball');
+        el.classList.remove('real-dragon-ball');
         el.removeAttribute('data-ball');
         el.setAttribute('data-fake-ball', String(1 + Math.floor(Math.random() * 7)));
+        el.dataset.isReal = "false";
       }
     });
     dragonBallsInitialized = true;
   }
 
-  // Render SVG inside real section dragon balls
+  // Render SVG inside real section dragon balls — glowing authentic ki
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
+    ball.classList.add('real-dragon-ball');
+    ball.classList.remove('fake-dragon-ball');
     ball.innerHTML = window.getBallSVGString(ballNum, 48);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `${ballNum}-Star Dragon Ball`);
-    ball.title = `Collect the ${ballNum}-Star Dragon Ball!`;
+    ball.setAttribute('aria-label', `${ballNum}-Star Authentic Dragon Ball`);
+    ball.title = `Authentic ${ballNum}-Star Dragon Ball (Glowing Ki Aura)`;
   });
 
-  // Render SVG inside fake decoy dragon balls — now VISUALLY IDENTICAL to real (random 1-7)
+  // Render SVG inside fake decoy dragon balls — flat, dull, prank decoy
   document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
-    // Use the stored visual stars for consistency
     const visualStars = ball.dataset.visualStars || (1 + Math.floor(Math.random() * 7));
+    ball.classList.add('fake-dragon-ball');
+    ball.classList.remove('real-dragon-ball');
     ball.innerHTML = window.getBallSVGString(String(visualStars), 48);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `${visualStars}-Star Dragon Ball`);
-    ball.title = `Collect the ${visualStars}-Star Dragon Ball!`;
+    ball.setAttribute('aria-label', `${visualStars}-Star Decoy Ball`);
+    ball.title = `Suspicious ${visualStars}-Star Orb (Dull Ki)... Is it authentic?`;
     ball.dataset.visualStars = String(visualStars);
   });
 
@@ -1323,41 +1329,13 @@ function renderDragonBallSVGs() {
     ball.innerHTML = window.getBallSVGString(ballNum, 52);
   });
 
-  // ── Random scatter: floating decoys jump to new random spots each load ──
-  // Mobile-optimized: keep real 7 balls in safe, tappable zone away from header/footer/radar
-  const isMobileScatter = window.innerWidth < 768;
+  // ── Ambient floating: stagger bobbing animations so balls feel organically alive ──
   document.querySelectorAll('.floating-decoy-ball').forEach(el => {
-    const isReal = el.hasAttribute('data-ball');
-    const topMin = isMobileScatter ? (isReal ? 18 : 10) : 4;
-    const topRange = isMobileScatter ? (isReal ? 56 : 64) : 72;
-    const leftMin = isMobileScatter ? 5 : 3;
-    const leftRange = isMobileScatter ? (isReal ? 66 : 74) : 82;
-    let top = (topMin + Math.random() * topRange).toFixed(2);
-    let left = (leftMin + Math.random() * leftRange).toFixed(2);
-    // Nudge real balls away from Dragon Radar corner on mobile (bottom-right)
-    if (isMobileScatter && isReal) {
-      const t = parseFloat(top), l = parseFloat(left);
-      if (t > 74 && l > 66) {
-        top = (62 + Math.random() * 6).toFixed(2);
-        left = (38 + Math.random() * 20).toFixed(2);
-      }
-    }
-    el.style.top = top + '%';
-    el.style.left = left + '%';
-    el.style.right = 'auto';
-    el.style.bottom = 'auto';
-    const rot = (Math.random() * 26 - 13).toFixed(1);
-    const sc = isMobileScatter ? (isReal ? (1.04 + Math.random() * 0.08).toFixed(2) : (0.86 + Math.random() * 0.12).toFixed(2)) : (0.90 + Math.random() * 0.22).toFixed(2);
+    const isReal = el.hasAttribute('data-ball') || el.classList.contains('real-dragon-ball');
+    const rot = (Math.random() * 16 - 8).toFixed(1);
+    const sc = isReal ? (1.04 + Math.random() * 0.08).toFixed(2) : (0.94 + Math.random() * 0.06).toFixed(2);
     el.style.transform = `rotate(${rot}deg) scale(${sc})`;
-  });
-  // Inline balls: subtle random offset so even fixed-in-header balls don't sit identically each reload
-  document.querySelectorAll('.dragon-ball:not(.floating-decoy-ball), .fake-dragon-ball:not(.floating-decoy-ball)').forEach(el => {
-    if (el.classList.contains('shenron-star-ball')) return;
-    const dx = (Math.random() * 12 - 6).toFixed(1);
-    const dy = (Math.random() * 8 - 4).toFixed(1);
-    el.style.position = 'relative';
-    el.style.left = dx + 'px';
-    el.style.top = dy + 'px';
+    el.style.animationDelay = `${(Math.random() * 2.5).toFixed(2)}s`;
   });
 }
 
