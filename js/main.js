@@ -866,12 +866,41 @@ function initSaiyanMode() {
         applySaiyan();
       }
     } else {
-      document.body.classList.remove('saiyan-mode');
-      document.documentElement.classList.remove('saiyan-mode');
-      syncSliderUI(false);
-      syncMeta(false);
-      if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
-      if(!silent) showToast('Rosé Mode ON');
+      const applyRose = () => {
+        document.body.classList.remove('saiyan-mode');
+        document.documentElement.classList.remove('saiyan-mode');
+        syncSliderUI(false);
+        syncMeta(false);
+        if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
+        if(!silent) showToast('Rosé Mode ON');
+      };
+
+      if (!silent) {
+        // Clear any active lightning canvas
+        try {
+          const lightningCanvas = document.getElementById('lightningOverlay');
+          if (lightningCanvas) {
+            const ctx = lightningCanvas.getContext('2d');
+            if (ctx) ctx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+            lightningCanvas.classList.remove('active');
+          }
+        } catch(e) {}
+
+        // Clean, minimal, and professional cross-fade transition
+        if (document.startViewTransition) {
+          document.startViewTransition(() => {
+            applyRose();
+          });
+        } else {
+          document.documentElement.classList.add('theme-transitioning');
+          applyRose();
+          setTimeout(() => {
+            document.documentElement.classList.remove('theme-transitioning');
+          }, 350);
+        }
+      } else {
+        applyRose();
+      }
     }
   }
 
@@ -1269,7 +1298,7 @@ function renderDragonBallSVGs() {
   // Render SVG inside real section dragon balls
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-ball');
-    ball.innerHTML = window.getBallSVGString(ballNum, 34);
+    ball.innerHTML = window.getBallSVGString(ballNum, 48);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
     ball.setAttribute('aria-label', `${ballNum}-Star Dragon Ball`);
@@ -1280,7 +1309,7 @@ function renderDragonBallSVGs() {
   document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
     // Use the stored visual stars for consistency
     const visualStars = ball.dataset.visualStars || (1 + Math.floor(Math.random() * 7));
-    ball.innerHTML = window.getBallSVGString(String(visualStars), 34);
+    ball.innerHTML = window.getBallSVGString(String(visualStars), 48);
     ball.setAttribute('role', 'button');
     ball.setAttribute('tabindex', '0');
     ball.setAttribute('aria-label', `${visualStars}-Star Dragon Ball`);
@@ -1291,7 +1320,7 @@ function renderDragonBallSVGs() {
   // Render SVG inside Shenron modal celebration balls
   document.querySelectorAll('.shenron-star-ball[data-shenron-ball]').forEach(ball => {
     const ballNum = ball.getAttribute('data-shenron-ball');
-    ball.innerHTML = window.getBallSVGString(ballNum, 34);
+    ball.innerHTML = window.getBallSVGString(ballNum, 52);
   });
 
   // ── Random scatter: floating decoys jump to new random spots each load ──
@@ -1372,7 +1401,7 @@ function renderRadarHUD() {
       return `
         <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusDragonBall(${ball.num})" style="cursor: pointer;" title="${isCollected ? 'Already secured' : 'Click to jump to exact Dragon Ball location'}">
           <div class="radar-signal-card-ball">
-            ${window.getBallSVGString(ball.num, 18)}
+            ${window.getBallSVGString(ball.num, 28)}
           </div>
           <div class="radar-signal-card-info">
             <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '[Secured]' : '[Active]'}</span>
@@ -2184,7 +2213,7 @@ function buildDragonBallStars(starCoords, r) {
   }).join('');
 }
 
-window.getBallSVGString = function(starNum, size = 34) {
+window.getBallSVGString = function(starNum, size = 48) {
   const num = starNum ? starNum.toString() : '4';
   const uid = `db-${num}-${size}-${Math.random().toString(36).slice(2, 7)}`;
   const parsedNum = parseInt(num, 10);

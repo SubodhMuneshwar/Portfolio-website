@@ -324,6 +324,9 @@ body.saiyan-mode .ach-icon-circle svg:not(.dragon-ball svg) {
 .shenron-star-ball svg {
   stroke: none !important;
   fill: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
 }
 
 .dragon-ball svg ellipse,
@@ -932,11 +935,11 @@ body.saiyan-mode .dragon-radar-widget {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   /* Single subtle contact shadow — let the SVG gradients do the sphere shading */
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.32);
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
   user-select: none;
@@ -949,9 +952,9 @@ body.saiyan-mode .dragon-radar-widget {
 }
 
 .dragon-ball:hover, .shenron-star-ball:hover {
-  transform: translateY(-3px) scale(1.20);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.32), 0 0 22px rgba(255, 126, 0, 0.45);
-  filter: brightness(1.05);
+  transform: translateY(-4px) scale(1.16);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35), 0 0 28px rgba(255, 126, 0, 0.55);
+  filter: brightness(1.08);
   z-index: 10;
 }
 

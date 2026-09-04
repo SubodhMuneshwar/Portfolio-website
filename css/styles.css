@@ -53,7 +53,7 @@ body.saiyan-mode {
     radial-gradient(#163224 1.5px, transparent 1.5px) !important;
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px !important;
   background-attachment: fixed, fixed, fixed, fixed, scroll !important;
-  transition: color 0.3s ease !important;
+  transition: background-color 0.35s ease, color 0.3s ease !important;
 }
 
 /* ==========================================================================
@@ -138,11 +138,11 @@ body {
   text-size-adjust: 100%;
   overflow-wrap: break-word;
   word-break: break-word;
-  transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+  transition: background-color 0.35s ease, color 0.3s ease;
 }
 
 /* Goku Rose Divine Ki Veil - Light Mode */
-body:not(.saiyan-mode)::before {
+body::before {
   content: '';
   position: fixed;
   inset: 0;
@@ -152,6 +152,12 @@ body:not(.saiyan-mode)::before {
     radial-gradient(circle at 50% 50%, rgba(251, 113, 133, 0.025) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+body.saiyan-mode::before {
+  opacity: 0;
 }
 
 /* --- Accessibility & Focus States --- */
@@ -667,8 +673,8 @@ body.saiyan-mode .sticker-card.card-mint:hover {
 }
 
 .brand-badge-box.brand-db-orb {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: transparent;
   border: none;
@@ -682,8 +688,8 @@ body.saiyan-mode .sticker-card.card-mint:hover {
 }
 
 .brand-db-svg {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   display: block;
 }
 
@@ -5774,9 +5780,9 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
 
 .radar-signal-dot {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  font-size: 0.65rem;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
   font-weight: 800;
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -5859,8 +5865,8 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
 }
 
 .radar-signal-card-ball {
-  width: 18px;
-  height: 18px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -7223,16 +7229,16 @@ body.saiyan-mode .flashcard-dot.is-active {
 }
 
 .altar-balls-cluster .shenron-star-ball {
-  width: 38px;
-  height: 38px;
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.9), 0 0 35px rgba(245, 158, 11, 0.6);
+  width: 52px;
+  height: 52px;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.95), 0 0 45px rgba(245, 158, 11, 0.65);
   animation: altar-ball-surge 1.2s infinite alternate ease-in-out;
 }
 
 .altar-balls-cluster .shenron-star-ball:nth-child(4) {
-  transform: translateY(-8px) scale(1.18); /* 4-Star ball prominent in center */
+  transform: translateY(-10px) scale(1.22); /* 4-Star ball prominent in center */
   z-index: 2;
-  box-shadow: 0 0 30px #FBBF24, 0 0 50px #F59E0B;
+  box-shadow: 0 0 35px #FBBF24, 0 0 60px #F59E0B;
 }
 
 @keyframes altar-ball-surge {
@@ -7838,11 +7844,11 @@ body.saiyan-mode .flashcard-dot.is-active {
   }
   .altar-balls-cluster {
     padding: 0.4rem 0.8rem;
-    gap: 0.25rem;
+    gap: 0.35rem;
   }
   .altar-balls-cluster .shenron-star-ball {
-    width: 28px;
-    height: 28px;
+    width: 38px;
+    height: 38px;
   }
 }
 
@@ -7972,6 +7978,49 @@ body.saiyan-mode .flashcard-dot.is-active {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
+}
+
+/* ==========================================================================
+   Minimal & Professional Theme Transition (Dark to Light & Light to Dark)
+   ========================================================================== */
+
+/* Clean, subtle CSS property interpolation when toggling themes */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: 
+    background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 0.25s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* Professional Native View Transitions Cross-Fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.32s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: theme-fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: theme-fade-in;
+}
+
+@keyframes theme-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes theme-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ==========================================================================
@@ -9680,8 +9729,8 @@ section, .container, .hero-section, .stats-section, .ticker-container {
 }
 
 .floating-decoy-ball {
-  max-width: 34px;
-  max-height: 34px;
+  max-width: 48px;
+  max-height: 48px;
 }
 
 @media (max-width: 768px) {
@@ -9720,10 +9769,10 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   .dragon-ball,
   .fake-dragon-ball,
   .shenron-star-ball {
-    width: 42px !important;
-    height: 42px !important;
-    min-width: 42px;
-    min-height: 42px;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px;
+    min-height: 48px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: rgba(255,46,151,0.15);
   }
@@ -9740,14 +9789,14 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   0%, 100% { box-shadow: 0 0 10px rgba(245,158,11,0.45), 0 3px 8px rgba(0,0,0,0.22); transform: scale(1); }
   50% { box-shadow: 0 0 18px rgba(245,158,11,0.65), 0 0 26px rgba(255,126,0,0.38), 0 4px 12px rgba(0,0,0,0.25); transform: scale(1.05); }
 }
-/* Ensure ball hit-area is at least 44px even if visual is 34px on desktop */
+/* Ensure ball hit-area is at least 48px on mobile */
 @media (max-width: 480px) {
   .dragon-ball,
   .fake-dragon-ball {
-    width: 44px !important;
-    height: 44px !important;
-    min-width: 44px;
-    min-height: 44px;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px;
+    min-height: 48px;
   }
 }
 
@@ -9950,11 +9999,11 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   }
   .altar-balls-cluster {
     padding: 0.35rem 0.65rem;
-    gap: 0.2rem;
+    gap: 0.25rem;
   }
   .altar-balls-cluster .shenron-star-ball {
-    width: 26px !important;
-    height: 26px !important;
+    width: 34px !important;
+    height: 34px !important;
   }
   .shenron-simple-wish-panel {
     width: calc(100vw - 16px);
