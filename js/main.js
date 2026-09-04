@@ -867,16 +867,41 @@ function initSaiyanMode() {
     }
   }
 
-  // Sync body with html anti-FOUC state without re-triggering animation — light is default
-  if(document.documentElement.classList.contains('saiyan-mode')){
+  // Sync body with html anti-FOUC state or system setting without re-triggering cutscene
+  const storedTheme = (() => {
+    try { return localStorage.getItem('portfolio-theme'); } catch(e) { return null; }
+  })();
+  const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const shouldBeSaiyan = storedTheme ? (storedTheme === 'saiyan') : (document.documentElement.classList.contains('saiyan-mode') || systemPrefersDark);
+
+  if (shouldBeSaiyan) {
     document.body.classList.add('saiyan-mode');
-    setSaiyanState(true,{silent:true,noPersist:true});
+    document.documentElement.classList.add('saiyan-mode');
+    setSaiyanState(true, { silent: true, noPersist: true });
   } else {
-    // Ensure light mode is fully applied on first visit (no stored preference → light)
     document.documentElement.classList.remove('saiyan-mode');
     document.body.classList.remove('saiyan-mode');
     syncSliderUI(false);
     syncMeta(false);
+  }
+
+  // Listen for real-time system color scheme changes if user has not explicitly set a manual preference
+  if (window.matchMedia) {
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = (e) => {
+      try {
+        const manualPref = localStorage.getItem('portfolio-theme');
+        if (!manualPref) {
+          setSaiyanState(e.matches, { silent: true, noPersist: true });
+        }
+      } catch(err) {}
+    };
+
+    if (darkQuery.addEventListener) {
+      darkQuery.addEventListener('change', handleSystemThemeChange);
+    } else if (darkQuery.addListener) {
+      darkQuery.addListener(handleSystemThemeChange);
+    }
   }
 
   if (themeSlider) {

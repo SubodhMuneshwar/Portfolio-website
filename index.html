@@ -26,13 +26,24 @@
 
   <!-- Favicon — fav.png -->
 
-  <!-- Anti-FOUC: restore theme before first paint — light is default, dark only if user explicitly chose Saiyan -->
+  <!-- Anti-FOUC: restore theme before first paint — respects user preference if set, otherwise matches system color scheme -->
   <script>
-    (function(){try{var s=localStorage.getItem('portfolio-theme');if(s==='saiyan'){document.documentElement.classList.add('saiyan-mode');var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#0A1410';}}catch(e){}})();
+    (function(){
+      try {
+        var s = localStorage.getItem('portfolio-theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var isDark = s ? (s === 'saiyan') : prefersDark;
+        if (isDark) {
+          document.documentElement.classList.add('saiyan-mode');
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.content = '#0A1410';
+        }
+      } catch(e) {}
+    })();
   </script>
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260902_navbarOverlapFix">
-  <link rel="stylesheet" href="css/styles.css?v=20260902_navbarOverlapFix">
+  <link rel="stylesheet" href="css/tokens.css?v=20260904_kamehamehaWave">
+  <link rel="stylesheet" href="css/styles.css?v=20260904_kamehamehaWave">
 
   <!-- External Libraries (Lucide Icons & Canvas Confetti) -->
   <script src="https://unpkg.com/lucide@latest"></script>
