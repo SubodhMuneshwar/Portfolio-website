@@ -361,31 +361,17 @@ a {
   transition: var(--transition-fast);
 }
 
-/* Squiggle underline for emphasized words */
+/* Squiggle underline for emphasized words - disabled per user request */
 .highlight-squiggle {
   position: relative;
   display: inline-block;
-  white-space: nowrap;
 }
 
-.highlight-squiggle::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 100%;
-  height: 8px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23FF2E97' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-size: 16px 6px;
-}
-
-.highlight-pink::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%234F46E5' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
-}
-
+.highlight-squiggle::after,
+.highlight-pink::after,
 .highlight-yellow::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath d='M0,2 Q5,0 10,2 T20,2' fill='none' stroke='%23FFB3C6' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  display: none !important;
+  content: none !important;
 }
 
 /* Marker Highlight - Goku Rose Divine Gradient */
@@ -10543,29 +10529,10 @@ p {
   }
 }
 
-/* Highlight squiggle: allow wrapping on mobile to prevent overflow */
-@media (max-width: 768px) {
-  .highlight-squiggle {
-    white-space: normal !important;
-    word-break: break-word;
-  }
-  .highlight-squiggle::after {
-    bottom: -4px;
-    height: 6px;
-    background-size: 12px 5px;
-  }
-  .hero-name.highlight-squiggle::after {
-    display: block;
-  }
+/* Highlight squiggle: completely disabled */
+.highlight-squiggle::after {
+  display: none !important;
 }
-
-@media (max-width: 375px) {
-  .highlight-squiggle::after {
-    display: none;
-  }
-}
-
-
 
 /* === Scatter entrance override — must stay after mobile-ball-pulse to win cascade === */
 .dragon-ball.scattered-entrance,
