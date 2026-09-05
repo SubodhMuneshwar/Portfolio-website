@@ -815,6 +815,13 @@ body.saiyan-mode .dragon-radar-widget {
 }
 
 @media (max-width: 768px) {
+  html,
+  body,
+  body:not(.saiyan-mode),
+  html.saiyan-mode,
+  body.saiyan-mode {
+    background-attachment: scroll, scroll, scroll, scroll, scroll, scroll !important;
+  }
   .flying-nimbus {
     width: 108px;
     height: 62px;

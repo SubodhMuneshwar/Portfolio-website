@@ -5212,6 +5212,7 @@ body.saiyan-mode .footer-float-top:hover {
 .intro-overlay.hidden {
   opacity: 0 !important;
   visibility: hidden !important;
+  display: none !important;
   pointer-events: none !important;
 }
 
@@ -8595,6 +8596,60 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     animation: none !important;
   }
 
+  /* Mobile Background Performance: Prevent full-viewport radial gradient repainting on scroll */
+  html,
+  body,
+  body:not(.saiyan-mode),
+  html.saiyan-mode,
+  body.saiyan-mode {
+    background-attachment: scroll, scroll, scroll, scroll, scroll, scroll !important;
+  }
+
+  /* Mobile GPU Layer Pruning: Free VRAM textures on static/scrolling cards */
+  .sticker-card,
+  .stat-card,
+  .skill-category-card,
+  .project-card,
+  .achievement-card,
+  .edu-card,
+  .cert-card,
+  .hero-kicker,
+  .hero-name,
+  .hero-role,
+  .hero-description,
+  .hero-ctas,
+  .hero-pills {
+    will-change: auto !important;
+  }
+
+  /* Mobile Flashcard Optimization: Flatten 3D matrices, disable blur filters, hardware-smooth scroll */
+  .flashcard-track {
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .flashcard-track > .skill-category-card,
+  .flashcard-track > .project-card,
+  .flashcard-track > .achievement-card {
+    filter: none !important;
+    transform: none !important;
+    transform-style: flat !important;
+    will-change: auto !important;
+  }
+  .flashcard-track > *.is-active-card,
+  .flashcard-track > *.is-prev-card,
+  .flashcard-track > *.is-next-card,
+  .flashcard-track > *.is-far-card {
+    transform: none !important;
+    filter: none !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1) !important;
+  }
+  body.saiyan-mode .flashcard-track > *.is-active-card,
+  body.saiyan-mode .flashcard-track > *.is-prev-card,
+  body.saiyan-mode .flashcard-track > *.is-next-card,
+  body.saiyan-mode .flashcard-track > *.is-far-card {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+  }
+
   /* Mobile Backdrop Filter Optimization: Fallback to high-opacity solid backgrounds */
   .site-header,
   .navbar,
@@ -9934,9 +9989,9 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     touch-action: manipulation;
     -webkit-tap-highlight-color: rgba(255,46,151,0.15);
   }
-  /* Real balls pulse subtly on mobile to guide collection */
+  /* Real balls pulse subtly on mobile to guide collection (compositor-only scale) */
   .dragon-ball[data-ball] {
-    box-shadow: 0 0 14px rgba(245,158,11,0.5), 0 3px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 0 16px rgba(245,158,11,0.65), 0 3px 10px rgba(0,0,0,0.25);
     animation: mobile-ball-pulse 2.1s ease-in-out infinite;
   }
   .dragon-ball[data-ball]:active {
@@ -9944,8 +9999,8 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   }
 }
 @keyframes mobile-ball-pulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(245,158,11,0.45), 0 3px 8px rgba(0,0,0,0.22); transform: scale(1); }
-  50% { box-shadow: 0 0 18px rgba(245,158,11,0.65), 0 0 26px rgba(255,126,0,0.38), 0 4px 12px rgba(0,0,0,0.25); transform: scale(1.05); }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
 }
 /* Ensure ball hit-area is at least 48px on mobile */
 @media (max-width: 480px) {

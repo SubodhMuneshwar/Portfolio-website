@@ -669,9 +669,20 @@ function initScrollSpy() {
     }
   }
 
-  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  let scrollSpyTicking = false;
+  function handleScrollSpy() {
+    if (!scrollSpyTicking) {
+      scrollSpyTicking = true;
+      requestAnimationFrame(() => {
+        updateActiveLink();
+        scrollSpyTicking = false;
+      });
+    }
+  }
+
+  window.addEventListener('scroll', handleScrollSpy, { passive: true });
   if (window.lenis) {
-    window.lenis.on('scroll', updateActiveLink);
+    window.lenis.on('scroll', handleScrollSpy);
   }
   updateActiveLink();
 
@@ -2937,7 +2948,21 @@ function initSmoothScroll() {
     return;
   }
 
-  if (typeof Lenis === 'undefined') return;
+  // On touch/mobile devices, use native hardware-accelerated momentum scrolling directly
+  const isTouchDevice = window.innerWidth <= 768 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  if (isTouchDevice || typeof Lenis === 'undefined') {
+    const siteHeader = document.querySelector('.site-header');
+    if (siteHeader) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+          siteHeader.classList.add('is-scrolled');
+        } else {
+          siteHeader.classList.remove('is-scrolled');
+        }
+      }, { passive: true });
+    }
+    return;
+  }
 
   const lenis = new Lenis({
     duration: 1.15,
@@ -2946,7 +2971,7 @@ function initSmoothScroll() {
     gestureOrientation: 'vertical',
     smoothWheel: true,
     wheelMultiplier: 0.95,
-    touchMultiplier: 1.5,
+    touchMultiplier: 1.0,
     infinite: false,
   });
 
@@ -3439,9 +3464,10 @@ function initFlashcardDecks() {
       }
     }, { passive: true });
 
-    // Drag / Swipe handling
+    // Drag / Swipe handling (desktop mouse only - mobile uses native touch scroll)
     let isDown = false, startX = 0, startLeft = 0, hasDragged = false;
     grid.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
       if (e.button !== 0) return;
       if (e.target.closest('button, a, .btn, .project-details-btn, .project-github-link, .project-actions, .modal-close-btn')) return;
       isDown = true;
