@@ -5107,7 +5107,6 @@ body.saiyan-mode .footer-float-top:hover {
   .flying-nimbus {
     width: 120px;
     height: 70px;
-    bottom: var(--nimbus-bottom, clamp(70px, 14vh, 120px));
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
@@ -8579,23 +8578,14 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     padding-top: 1.25rem;
     padding-bottom: 4rem;
   }
-  /* Nimbus: parked on mobile with low opacity to avoid crossing hero title or thrashing compositor */
+  /* Nimbus: Smooth responsive flight across screen */
   .flying-nimbus {
-    top: auto !important;
-    bottom: var(--nimbus-bottom, clamp(64px, 10vh, 90px)) !important;
-    left: auto !important;
-    right: 14px !important;
-    width: 85px !important;
-    height: 48px !important;
-    opacity: 0.8 !important;
-    z-index: 10 !important;
-    animation: none !important;
-    transform: translate3d(0, 0, 0) !important;
-    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.35)) !important;
-  }
-  .flying-nimbus.nimbus-flying-ltr,
-  .flying-nimbus.nimbus-flying-rtl {
-    animation: none !important;
+    width: 108px;
+    height: 62px;
+    top: clamp(68px, var(--nimbus-top, 65%), calc(100vh - 110px));
+    left: 0;
+    z-index: 9990;
+    pointer-events: auto;
   }
 
   /* Hide continuous ambient spark & arc keyframes on mobile to free GPU */
@@ -8864,7 +8854,7 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   padding-left: max(0px, env(safe-area-inset-left));
   padding-right: max(0px, env(safe-area-inset-right));
 }
@@ -9848,34 +9838,87 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   max-height: 48px;
 }
 
+/* --- Floating Dragon Balls (Real & Fake Decoys): Full mobile responsiveness & visibility --- */
 @media (max-width: 768px) {
+  .floating-decoy-ball {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
   .floating-decoy-ball.fake-dragon-ball {
-    opacity: 0.78;
-    transform: scale(0.82);
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 0.9 !important;
+    z-index: 22 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(245, 158, 11, 0.2);
   }
   .floating-decoy-ball[data-ball] {
-    /* Real balls MUST stay visible and tappable on mobile — never hide via CSS */
-    opacity: 1;
-    visibility: visible;
-    display: inline-flex;
-    z-index: 25;
+    display: inline-flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 25 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation;
   }
-  /* Only hide FAKE decoys that overlap critical text */
-  .section-header .floating-decoy-ball.fake-dragon-ball,
+
+  /* Safe positioning for floating balls in section headers so they never collide with tags or titles */
+  .section-header .floating-decoy-ball.float-right-ball {
+    right: 8px !important;
+    left: auto !important;
+    top: -14px !important;
+  }
+  .section-header .floating-decoy-ball.float-left-ball {
+    left: 8px !important;
+    right: auto !important;
+    top: -14px !important;
+  }
   .stats-section .floating-decoy-ball.fake-dragon-ball {
-    display: none;
+    top: -14px !important;
+    right: 20px !important;
+    left: auto !important;
+  }
+  .hero-visual .floating-decoy-ball.fake-dragon-ball {
+    top: -12px !important;
+    right: clamp(14px, 10vw, 36px) !important;
+    left: auto !important;
   }
 }
 
 @media (max-width: 480px) {
+  .floating-decoy-ball {
+    display: inline-flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
   .floating-decoy-ball.fake-dragon-ball {
-    display: none !important;
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 0.9 !important;
+    pointer-events: auto !important;
+    z-index: 22 !important;
   }
   .floating-decoy-ball[data-ball] {
-    display: inline-flex;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+    display: inline-flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 25 !important;
+  }
+  .section-header .floating-decoy-ball.float-right-ball {
+    right: 4px !important;
+    left: auto !important;
+    top: -12px !important;
+  }
+  .section-header .floating-decoy-ball.float-left-ball {
+    left: 4px !important;
+    right: auto !important;
+    top: -12px !important;
+  }
+  .stats-section .floating-decoy-ball.fake-dragon-ball {
+    top: -12px !important;
+    right: 14px !important;
   }
 }
 
@@ -9949,9 +9992,8 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     font-size: 0.82rem;
   }
   .flying-nimbus {
-    width: 110px;
-    height: 64px;
-    bottom: var(--nimbus-bottom, clamp(64px, 12vh, 100px));
+    width: 108px;
+    height: 62px;
   }
 }
 
@@ -9964,9 +10006,8 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     font-size: 10px;
   }
   .flying-nimbus {
-    width: 96px;
-    height: 56px;
-    bottom: var(--nimbus-bottom, clamp(60px, 11vh, 90px));
+    width: 92px;
+    height: 52px;
     opacity: 0.92;
   }
 }

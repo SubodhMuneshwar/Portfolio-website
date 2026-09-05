@@ -765,7 +765,7 @@ body.saiyan-mode .dragon-radar-widget {
 /* Realistic Flying Nimbus (Kinto'un) - Randomized Trajectory Engine */
 .flying-nimbus {
   position: fixed;
-  top: var(--nimbus-top, 72%);
+  top: clamp(68px, var(--nimbus-top, 72%), calc(100vh - 120px));
   left: 0;
   width: 140px;
   height: 80px;
@@ -815,9 +815,18 @@ body.saiyan-mode .dragon-radar-widget {
 }
 
 @media (max-width: 768px) {
-  .flying-nimbus.nimbus-flying-ltr,
-  .flying-nimbus.nimbus-flying-rtl {
-    animation: none !important;
+  .flying-nimbus {
+    width: 108px;
+    height: 62px;
+    top: clamp(68px, var(--nimbus-top, 65%), calc(100vh - 110px));
+  }
+}
+
+@media (max-width: 480px) {
+  .flying-nimbus {
+    width: 92px;
+    height: 52px;
+    top: clamp(64px, var(--nimbus-top, 65%), calc(100vh - 100px));
   }
 }
 
