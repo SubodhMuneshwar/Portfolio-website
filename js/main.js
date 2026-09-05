@@ -1449,7 +1449,7 @@ window.focusDragonBall = function(num) {
 };
 
 /* ==========================================================================
-   Kid Goku Floating Chat Guide Controller (Bottom-Left Corner)
+   Kid Goku Right-Hand Unread Chat Message Controller
    ========================================================================== */
 window.toggleGokuChatWidget = function(expand) {
   const widget = document.getElementById('gokuChatWidget');
@@ -1459,15 +1459,20 @@ window.toggleGokuChatWidget = function(expand) {
 
   if (shouldExpand) {
     widget.classList.add('expanded');
-    // Cheerful high chime
-    playWebAudioTone(784, 'sine', 0.1, 0.08);
-    setTimeout(() => playWebAudioTone(1046, 'sine', 0.16, 0.09), 110);
+    // Simple, gentle soft chime for message open
+    playWebAudioTone(880, 'sine', 0.1, 0.06);
+    
+    // Mark the unread message counter as read
+    const unread = document.getElementById('gokuUnreadCount');
+    if (unread) unread.classList.add('read');
+    
     initLucideIcons();
   } else {
     widget.classList.remove('expanded');
-    playWebAudioTone(523, 'sine', 0.14, 0.08);
+    // Simple, gentle soft low pop for message close
+    playWebAudioTone(440, 'sine', 0.08, 0.05);
 
-    // Briefly highlight the Dragon Radar in bottom right to guide user
+    // Briefly highlight the Dragon Radar below to guide user
     const radar = document.getElementById('dragonRadarWidget');
     if (radar) {
       radar.classList.remove('radar-attention-pulse');
@@ -1475,7 +1480,7 @@ window.toggleGokuChatWidget = function(expand) {
       radar.classList.add('radar-attention-pulse');
       setTimeout(() => {
         radar.classList.remove('radar-attention-pulse');
-      }, 2800);
+      }, 2600);
     }
   }
 };
@@ -1490,7 +1495,7 @@ window.dismissGokuChatWidget = function() {
   window.toggleGokuChatWidget(false);
 };
 
-// Aliases for backward compatibility (Escape key, radar badge, and any external calls)
+// Aliases for backward compatibility (Escape key and any external calls)
 window.openQuestBriefingModal = function(e) {
   if (e && e.stopPropagation) e.stopPropagation();
   window.toggleGokuChatWidget(true);
@@ -1504,7 +1509,7 @@ function initStartupQuestBriefing() {
   const widget = document.getElementById('gokuChatWidget');
   if (!widget) return;
 
-  // Explicitly bind click listener to badge and radar guide buttons
+  // Explicitly bind click listener to Goku chat badge button
   const badge = document.getElementById('gokuChatBadge');
   if (badge && !badge._gokuBound) {
     badge._gokuBound = true;
@@ -1515,15 +1520,8 @@ function initStartupQuestBriefing() {
     });
   }
 
-  const radarBadge = document.getElementById('radarGuideBadge');
-  if (radarBadge && !radarBadge._gokuBound) {
-    radarBadge._gokuBound = true;
-    radarBadge.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      window.toggleGokuChatWidget(true);
-    });
-  }
+  // Ensure message starts collapsed / closed — opens ONLY on user click!
+  widget.classList.remove('expanded');
 
   let isDismissed = false;
   try {
@@ -1531,18 +1529,21 @@ function initStartupQuestBriefing() {
   } catch (e) {}
 
   if (isDismissed) {
-    // Keep widget minimized in the bottom-left corner
-    widget.classList.remove('expanded');
+    const unread = document.getElementById('gokuUnreadCount');
+    if (unread) unread.classList.add('read');
     return;
   }
 
-  // Pop up smoothly like a chat message ~1.3s after load without blocking screen
+  // Play a simple soft notification tone ~1.4s after load to signal unread message from Goku without auto-opening
   setTimeout(() => {
-    const hasActiveModal = document.querySelector('.modal-backdrop.active');
-    if (!hasActiveModal) {
-      window.toggleGokuChatWidget(true);
-    }
-  }, 1300);
+    try {
+      playWebAudioTone(880, 'sine', 0.1, 0.06);
+      if (badge) {
+        badge.classList.add('goku-badge-incoming');
+        setTimeout(() => badge.classList.remove('goku-badge-incoming'), 2200);
+      }
+    } catch(e) {}
+  }, 1400);
 }
 
 window.openDragonRadarModal = function() {

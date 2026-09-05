@@ -42,8 +42,8 @@
     })();
   </script>
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260905_gokuChatGuide">
-  <link rel="stylesheet" href="css/styles.css?v=20260905_gokuChatGuide">
+  <link rel="stylesheet" href="css/tokens.css?v=20260905_gokuOnlineGreenDot">
+  <link rel="stylesheet" href="css/styles.css?v=20260905_gokuOnlineGreenDot">
 
   <!-- External Libraries (Lucide Icons, Canvas Confetti & Lenis Smooth Scroll) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -759,8 +759,13 @@
       var w = document.getElementById('gokuChatWidget');
       if (!w) return;
       var s = (typeof expand === 'boolean') ? expand : !w.classList.contains('expanded');
-      if (s) w.classList.add('expanded');
-      else w.classList.remove('expanded');
+      if (s) {
+        w.classList.add('expanded');
+        var unread = document.getElementById('gokuUnreadCount');
+        if (unread) unread.classList.add('read');
+      } else {
+        w.classList.remove('expanded');
+      }
     };
     window.dismissGokuChatWidget = window.dismissGokuChatWidget || function() {
       var cb = document.getElementById('gokuDoNotShowCheckbox');
@@ -770,95 +775,70 @@
     window.openQuestBriefingModal = function(e) { if(e && e.stopPropagation) e.stopPropagation(); window.toggleGokuChatWidget(true); };
     window.closeQuestBriefingModal = function() { window.toggleGokuChatWidget(false); };
   </script>
-  <aside class="goku-chat-widget" id="gokuChatWidget" role="complementary" aria-label="Kid Goku Site Guide">
-    <!-- Minimized Floating Avatar Badge Trigger -->
-    <button type="button" class="goku-chat-badge" id="gokuChatBadge" onclick="toggleGokuChatWidget(true)" title="Chat with Kid Goku (Site Guide)" aria-label="Open Kid Goku Guide">
+
+  <!-- =========================================================================
+       Kid Goku Right-Hand Unread Chat Message & Guide Widget
+       ========================================================================= -->
+  <aside class="goku-chat-widget goku-chat-right" id="gokuChatWidget" role="complementary" aria-label="Kid Goku Chat Message">
+    <!-- Minimized Floating Avatar Badge with '1' Unread Indicator -->
+    <button type="button" class="goku-chat-badge" id="gokuChatBadge" onclick="toggleGokuChatWidget(true)" title="Goku sent you a message" aria-label="Goku 1 Unread Message">
       <div class="goku-badge-avatar-wrap">
-        <img src="assets/goku_chat_avatar.jpg" alt="Kid Goku Guide" class="goku-chat-badge-avatar" width="48" height="48" loading="eager" />
-        <span class="goku-badge-online-dot" aria-hidden="true"></span>
+        <img src="assets/goku_profile.webp" alt="Kid Goku" class="goku-chat-badge-avatar" width="44" height="44" loading="eager" />
+        <span class="goku-unread-counter" id="gokuUnreadCount" aria-label="1 unread message">1</span>
+        <span class="goku-online-dot" title="Goku is online" aria-label="Online"></span>
       </div>
-      <span class="goku-badge-pill" aria-hidden="true">Goku Guide</span>
+      <div class="goku-badge-text-wrap">
+        <span class="goku-badge-name">Goku</span>
+        <span class="goku-badge-msg-cue">1 message</span>
+      </div>
     </button>
 
-    <!-- Expanded Floating Chat Message Card -->
-    <div class="goku-chat-card" id="gokuChatCard" role="dialog" aria-labelledby="gokuChatTitle">
-      <!-- Chat Header -->
+    <!-- Compact Floating DM Notification Card -->
+    <div class="goku-chat-card goku-compact-card" id="gokuChatCard" role="dialog" aria-labelledby="gokuChatTitle">
+      <!-- DM Header -->
       <div class="goku-chat-header">
         <div class="goku-chat-profile">
           <div class="goku-chat-avatar-frame">
-            <img src="assets/goku_chat_avatar.jpg" alt="Kid Goku" class="goku-chat-avatar-img" width="46" height="46" loading="eager" />
-            <span class="goku-chat-status-dot" title="Online Guide"></span>
+            <img src="assets/goku_profile.webp" alt="Kid Goku" class="goku-chat-avatar-img" width="38" height="38" loading="eager" />
+            <span class="goku-chat-status-dot" title="Online"></span>
           </div>
           <div class="goku-chat-title-group">
             <div class="goku-chat-name-row">
               <span class="goku-chat-name" id="gokuChatTitle">Kid Goku</span>
-              <span class="goku-role-chip">CAPSULE CORP</span>
+              <span class="goku-unread-chip">1 UNREAD</span>
             </div>
-            <span class="goku-chat-subtitle">Your Adventure Guide</span>
+            <span class="goku-chat-subtitle">Direct Message • Just now</span>
           </div>
         </div>
-        <button type="button" class="goku-chat-close-btn" onclick="toggleGokuChatWidget(false)" aria-label="Close Chat" title="Minimize">✕</button>
+        <button type="button" class="goku-chat-close-btn" onclick="toggleGokuChatWidget(false)" aria-label="Close message" title="Minimize">✕</button>
       </div>
 
-      <!-- Goku's Chat Speech Bubble -->
+      <!-- Compact Message Bubble -->
       <div class="goku-chat-body">
         <div class="goku-chat-bubble">
           <p class="goku-bubble-text">
-            Yo! I'm Goku! Welcome to Subodh's realm. Let me show you what you can explore around here:
+            Yo! Bulma told me there are <strong>7 real Dragon Balls</strong> scattered across Subodh's site. Use the radar below to hunt 'em down and summon Shenron! But watch out—I hid some trick ones around too, hehe! <em>Beware of the fakes!</em>
           </p>
         </div>
 
-        <!-- Interactive Quick Feature Steps -->
-        <div class="goku-chat-steps">
-          <div class="goku-step-row" onclick="if(window.openDragonRadarModal) window.openDragonRadarModal()">
-            <div class="goku-step-badge badge-dragonball">
-              <img src="assets/fav.png" alt="Dragon Ball" width="24" height="24" loading="eager" />
-              <span class="goku-step-num">x7</span>
-            </div>
-            <div class="goku-step-info">
-              <span class="goku-step-title">1. Find 7 Dragon Balls</span>
-              <span class="goku-step-desc">Hidden across this site. Can you spot them all?</span>
-            </div>
-          </div>
-
-          <div class="goku-step-row" onclick="if(window.openDragonRadarModal) window.openDragonRadarModal()">
-            <div class="goku-step-badge badge-radar">
-              <img src="assets/dragon_radar.png" alt="Dragon Radar" width="22" height="22" loading="eager" />
-              <span class="goku-step-blip"></span>
-            </div>
-            <div class="goku-step-info">
-              <span class="goku-step-title">2. Use Dragon Radar</span>
-              <span class="goku-step-desc">Click the bottom-right radar to track coordinates.</span>
-            </div>
-          </div>
-
-          <div class="goku-step-row" onclick="if(window.summonShenron) window.summonShenron()">
-            <div class="goku-step-badge badge-shenron">
-              <img src="assets/shenron.png" alt="Shenron" width="24" height="24" loading="eager" />
-              <span class="goku-step-spark">★</span>
-            </div>
-            <div class="goku-step-info">
-              <span class="goku-step-title">3. Summon Shenron</span>
-              <span class="goku-step-desc">Gather all 7 balls and summon the eternal dragon!</span>
-            </div>
-          </div>
-
-          <div class="goku-step-row" onclick="if(window.toggleTheme) window.toggleTheme()">
-            <div class="goku-step-badge badge-themes">
-              <div class="goku-mini-themes">
-                <img src="assets/rose2.jpg" alt="Rose Theme" class="goku-avatar-thumb thumb-rose" width="18" height="18" loading="eager" />
-                <img src="assets/goku.webp" alt="Saiyan Theme" class="goku-avatar-thumb thumb-saiyan" width="18" height="18" loading="eager" />
-              </div>
-            </div>
-            <div class="goku-step-info">
-              <span class="goku-step-title">4. Switch Themes</span>
-              <span class="goku-step-desc">Toggle between Rosé and Super Saiyan modes.</span>
-            </div>
-          </div>
+        <!-- Sleek Mini Action Chips -->
+        <div class="goku-mini-actions">
+          <button type="button" class="goku-chip-btn" onclick="if(window.openDragonRadarModal) window.openDragonRadarModal()" title="Track with radar">
+            <img src="assets/dragon_radar.png" alt="Radar" width="15" height="15" />
+            <span>Radar</span>
+          </button>
+          <button type="button" class="goku-chip-btn" onclick="if(window.summonShenron) window.summonShenron()" title="Summon Shenron">
+            <img src="assets/shenron.png" alt="Shenron" width="15" height="15" />
+            <span>Shenron</span>
+          </button>
+          <button type="button" class="goku-chip-btn" onclick="if(window.toggleTheme) window.toggleTheme()" title="Switch modes">
+            <span class="goku-chip-mode-dot"></span>
+            <span>Theme</span>
+          </button>
         </div>
       </div>
 
-      <!-- Chat Footer -->
+      <!-- Compact Footer -->
       <div class="goku-chat-footer">
         <label class="goku-checkbox-label">
           <input type="checkbox" id="gokuDoNotShowCheckbox" class="goku-checkbox">
@@ -866,7 +846,7 @@
         </label>
         <button type="button" class="btn btn-primary btn-sm goku-gotit-btn" onclick="dismissGokuChatWidget()">
           <span>Got it!</span>
-          <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+          <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
         </button>
       </div>
     </div>
@@ -896,7 +876,6 @@
        ========================================================================= -->
   <div class="dragon-radar-widget" id="dragonRadarWidget"
     title="Capsule Corp Dragon Radar: Click to Scan & Track Dragon Balls!" role="button" tabindex="0">
-    <button type="button" class="radar-guide-badge" id="radarGuideBadge" onclick="openQuestBriefingModal(event)" title="View Quest Guide & Site Info" aria-label="Open Quest Guide">?</button>
     <div class="radar-device-thumb">
       <img src="assets/dragon_radar.png" alt="Dragon Radar" class="radar-device-img" loading="lazy" width="80" height="80" />
       <div class="radar-live-glow"></div>
@@ -1105,7 +1084,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260902_mobilePerfBoost"></script>
-  <script src="js/main.js?v=20260905_gokuChatGuide"></script>
+  <script src="js/main.js?v=20260905_gokuOnlineGreenDot"></script>
 </body>
 
 </html>
