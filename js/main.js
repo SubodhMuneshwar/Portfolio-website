@@ -1449,59 +1449,100 @@ window.focusDragonBall = function(num) {
 };
 
 /* ==========================================================================
-   Capsule Corp Mission Briefing & Interactive Quest Disclaimer Controller
+   Kid Goku Floating Chat Guide Controller (Bottom-Left Corner)
    ========================================================================== */
-window.openQuestBriefingModal = function(e) {
-  if (e && e.stopPropagation) e.stopPropagation();
-  const modal = document.getElementById('questBriefingModal');
-  if (modal) {
-    playWebAudioTone(680, 'sine', 0.22, 0.12);
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+window.toggleGokuChatWidget = function(expand) {
+  const widget = document.getElementById('gokuChatWidget');
+  if (!widget) return;
+
+  const shouldExpand = (typeof expand === 'boolean') ? expand : !widget.classList.contains('expanded');
+
+  if (shouldExpand) {
+    widget.classList.add('expanded');
+    // Cheerful high chime
+    playWebAudioTone(784, 'sine', 0.1, 0.08);
+    setTimeout(() => playWebAudioTone(1046, 'sine', 0.16, 0.09), 110);
     initLucideIcons();
+  } else {
+    widget.classList.remove('expanded');
+    playWebAudioTone(523, 'sine', 0.14, 0.08);
+
+    // Briefly highlight the Dragon Radar in bottom right to guide user
+    const radar = document.getElementById('dragonRadarWidget');
+    if (radar) {
+      radar.classList.remove('radar-attention-pulse');
+      void radar.offsetWidth;
+      radar.classList.add('radar-attention-pulse');
+      setTimeout(() => {
+        radar.classList.remove('radar-attention-pulse');
+      }, 2800);
+    }
   }
 };
 
-window.closeQuestBriefingModal = function() {
-  const modal = document.getElementById('questBriefingModal');
-  const checkbox = document.getElementById('questDoNotShowCheckbox');
+window.dismissGokuChatWidget = function() {
+  const checkbox = document.getElementById('gokuDoNotShowCheckbox');
   if (checkbox && checkbox.checked) {
     try {
       localStorage.setItem('portfolio-quest-brief-seen', 'true');
     } catch (e) {}
   }
-  if (modal) {
-    playWebAudioTone(520, 'sine', 0.16, 0.1);
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
+  window.toggleGokuChatWidget(false);
+};
 
-  // Draw visual attention to the Dragon Radar widget in bottom right
-  const radar = document.getElementById('dragonRadarWidget');
-  if (radar) {
-    radar.classList.remove('radar-attention-pulse');
-    void radar.offsetWidth;
-    radar.classList.add('radar-attention-pulse');
-    setTimeout(() => {
-      radar.classList.remove('radar-attention-pulse');
-    }, 2800);
-  }
+// Aliases for backward compatibility (Escape key, radar badge, and any external calls)
+window.openQuestBriefingModal = function(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  window.toggleGokuChatWidget(true);
+};
+
+window.closeQuestBriefingModal = function() {
+  window.toggleGokuChatWidget(false);
 };
 
 function initStartupQuestBriefing() {
+  const widget = document.getElementById('gokuChatWidget');
+  if (!widget) return;
+
+  // Explicitly bind click listener to badge and radar guide buttons
+  const badge = document.getElementById('gokuChatBadge');
+  if (badge && !badge._gokuBound) {
+    badge._gokuBound = true;
+    badge.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.toggleGokuChatWidget(true);
+    });
+  }
+
+  const radarBadge = document.getElementById('radarGuideBadge');
+  if (radarBadge && !radarBadge._gokuBound) {
+    radarBadge._gokuBound = true;
+    radarBadge.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.toggleGokuChatWidget(true);
+    });
+  }
+
+  let isDismissed = false;
   try {
-    const isDismissed = localStorage.getItem('portfolio-quest-brief-seen');
-    if (isDismissed === 'true') return;
+    isDismissed = localStorage.getItem('portfolio-quest-brief-seen') === 'true';
   } catch (e) {}
 
-  // Pop up smoothly ~1.3s after start once hero elements have finished entering
+  if (isDismissed) {
+    // Keep widget minimized in the bottom-left corner
+    widget.classList.remove('expanded');
+    return;
+  }
+
+  // Pop up smoothly like a chat message ~1.3s after load without blocking screen
   setTimeout(() => {
-    const modal = document.getElementById('questBriefingModal');
     const hasActiveModal = document.querySelector('.modal-backdrop.active');
-    if (modal && !hasActiveModal) {
-      window.openQuestBriefingModal();
+    if (!hasActiveModal) {
+      window.toggleGokuChatWidget(true);
     }
-  }, 1350);
+  }, 1300);
 }
 
 window.openDragonRadarModal = function() {

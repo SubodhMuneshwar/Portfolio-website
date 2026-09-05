@@ -10577,412 +10577,542 @@ p {
    Capsule Corp Interactive Quest Briefing & Site Guide Modal Styles
    ========================================================================== */
 
-.quest-briefing-backdrop {
-  z-index: 10000000 !important;
-  background: rgba(10, 16, 26, 0.65) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+/* ==========================================================================
+   Kid Goku Floating Chat Guide Widget (Bottom-Left Corner)
+   ========================================================================== */
+.goku-chat-widget {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1250;
+  pointer-events: none;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 }
 
-body.saiyan-mode .quest-briefing-backdrop {
-  background: rgba(4, 10, 7, 0.82) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
+/* Floating Avatar Badge (Minimized Mode) */
+.goku-chat-badge {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px 4px 4px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px var(--border), 0 8px 24px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, opacity 0.25s ease, visibility 0.25s ease;
+  user-select: none;
 }
 
-.quest-briefing-window {
-  max-width: 540px !important;
-  width: 100% !important;
-  padding: 1.65rem 1.65rem 1.35rem !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 2px solid var(--border) !important;
-  border-radius: 20px !important;
-  box-shadow: 10px 10px 0px var(--border), 0 24px 60px rgba(0, 0, 0, 0.15) !important;
+.goku-chat-badge:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 6px 6px 0px var(--border), 0 12px 28px rgba(224, 17, 107, 0.2);
+  border-color: var(--accent);
+}
+
+body.saiyan-mode .goku-chat-badge {
+  background: rgba(10, 20, 15, 0.95);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+body.saiyan-mode .goku-chat-badge:hover {
+  border-color: #F59E0B;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.9), 0 0 26px rgba(245, 158, 11, 0.35);
+}
+
+.goku-badge-avatar-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.goku-chat-badge-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: block;
+}
+
+body.saiyan-mode .goku-chat-badge-avatar {
+  border-color: #F59E0B;
+}
+
+.goku-badge-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 8px #10B981;
+  animation: goku-pulse-dot 1.5s ease-in-out infinite;
+}
+
+body.saiyan-mode .goku-badge-online-dot {
+  border-color: #0A1410;
+}
+
+.goku-badge-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+body.saiyan-mode .goku-badge-pill {
+  color: #F8FAFC;
+}
+
+/* Hide badge when card is expanded */
+.goku-chat-widget.expanded .goku-chat-badge {
+  opacity: 0;
+  transform: scale(0.6) translateY(20px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Expanded Floating Chat Message Card */
+.goku-chat-card {
+  pointer-events: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 8px 8px 0px var(--border), 0 20px 48px rgba(0, 0, 0, 0.16);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  position: relative;
-  transform: scale(0.94) translateY(24px);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  padding: 1.15rem 1.15rem 0.95rem;
+  opacity: 0;
+  transform: translateY(32px) scale(0.92);
+  pointer-events: none;
+  visibility: hidden;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease, visibility 0.28s ease;
+  transform-origin: bottom left;
 }
 
-body.saiyan-mode .quest-briefing-window {
-  background: rgba(10, 20, 15, 0.96) !important;
-  border-color: rgba(245, 158, 11, 0.5) !important;
-  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.85), 0 0 35px rgba(245, 158, 11, 0.22) !important;
-  color: #F8FAFC !important;
+body.saiyan-mode .goku-chat-card {
+  background: rgba(10, 20, 15, 0.97);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.85), 0 0 36px rgba(245, 158, 11, 0.2);
+  color: #F8FAFC;
 }
 
-.quest-briefing-backdrop.active .quest-briefing-window {
-  transform: scale(1) translateY(0) !important;
+.goku-chat-widget.expanded .goku-chat-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  visibility: visible;
 }
 
-.quest-hud-header {
-  margin-bottom: 1.1rem;
-  padding-right: 2rem;
-}
-
-.quest-corp-badge {
-  display: inline-flex;
+/* Chat Header */
+.goku-chat-header {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(224, 17, 107, 0.08);
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(226, 217, 226, 0.8);
+  margin-bottom: 0.85rem;
+}
+
+body.saiyan-mode .goku-chat-header {
+  border-bottom-color: rgba(245, 158, 11, 0.2);
+}
+
+.goku-chat-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.goku-chat-avatar-frame {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.goku-chat-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  display: block;
+}
+
+body.saiyan-mode .goku-chat-avatar-img {
+  border-color: #F59E0B;
+}
+
+.goku-chat-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 6px #10B981;
+  animation: goku-pulse-dot 1.5s ease-in-out infinite;
+}
+
+body.saiyan-mode .goku-chat-status-dot {
+  border-color: #0A1410;
+}
+
+@keyframes goku-pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.85); opacity: 0.5; }
+}
+
+.goku-chat-title-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.goku-chat-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.goku-chat-name {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+}
+
+body.saiyan-mode .goku-chat-name {
+  color: #FFFFFF;
+}
+
+.goku-role-chip {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.58rem;
+  font-weight: 800;
+  background: rgba(224, 17, 107, 0.1);
   color: var(--accent);
   border: 1px solid rgba(224, 17, 107, 0.25);
-  padding: 0.3rem 0.8rem;
-  border-radius: 9999px;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.6rem;
+  padding: 1px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
 }
 
-body.saiyan-mode .quest-corp-badge {
-  background: rgba(245, 158, 11, 0.12);
+body.saiyan-mode .goku-role-chip {
+  background: rgba(245, 158, 11, 0.15);
   color: #FBBF24;
   border-color: rgba(245, 158, 11, 0.35);
 }
 
-.quest-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-  animation: quest-dot-blink 1.4s ease-in-out infinite;
+.goku-chat-subtitle {
+  font-size: 0.74rem;
+  color: var(--muted-fg);
+  font-weight: 500;
 }
 
-body.saiyan-mode .quest-pulse-dot {
-  background: #F59E0B;
-  box-shadow: 0 0 8px #F59E0B;
+body.saiyan-mode .goku-chat-subtitle {
+  color: #94A3B8;
 }
 
-@keyframes quest-dot-blink {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-
-.quest-hud-title {
-  font-size: 1.55rem;
-  font-weight: 800;
-  color: var(--fg);
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  margin-bottom: 0;
-}
-
-body.saiyan-mode .quest-hud-title {
-  color: #FFFFFF !important;
-}
-
-.quest-hud-subtitle {
+.goku-chat-close-btn {
+  background: none;
+  border: none;
   font-size: 0.92rem;
   color: var(--muted-fg);
-  line-height: 1.5;
-}
-
-body.saiyan-mode .quest-hud-subtitle {
-  color: #94A3B8 !important;
-}
-
-.quest-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.85rem;
-  margin-bottom: 1.25rem;
-}
-
-.quest-card {
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  background: rgba(255, 255, 255, 0.85);
+  justify-content: center;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.goku-chat-close-btn:hover {
+  color: var(--accent);
+  background: rgba(224, 17, 107, 0.08);
+  transform: scale(1.15);
+}
+
+body.saiyan-mode .goku-chat-close-btn:hover {
+  color: #F59E0B;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+/* Goku Chat Bubble */
+.goku-chat-bubble {
+  position: relative;
+  background: rgba(244, 241, 246, 0.95);
   border: 1.5px solid rgba(226, 217, 226, 0.95);
-  border-radius: 14px;
-  padding: 0.72rem 0.9rem;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
+  border-radius: 12px 14px 14px 4px;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.75rem;
 }
 
-.quest-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-  box-shadow: 0 8px 22px rgba(224, 17, 107, 0.14);
-}
-
-body.saiyan-mode .quest-card {
-  background: rgba(15, 30, 23, 0.88);
+body.saiyan-mode .goku-chat-bubble {
+  background: rgba(16, 32, 24, 0.9);
   border-color: rgba(245, 158, 11, 0.25);
 }
 
-body.saiyan-mode .quest-card:hover {
-  border-color: #F59E0B;
-  box-shadow: 0 8px 22px rgba(245, 158, 11, 0.22);
+.goku-bubble-text {
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--fg);
+  margin: 0;
+  font-weight: 500;
 }
 
-/* Visual Media Thumbnails */
-.quest-visual-thumb {
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+body.saiyan-mode .goku-bubble-text {
+  color: #F1F5F9;
+}
+
+/* Steps List */
+.goku-chat-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.goku-step-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.6rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(226, 217, 226, 0.75);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.goku-step-row:hover {
+  transform: translateX(4px);
+  background: #FFFFFF;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(224, 17, 107, 0.12);
+}
+
+body.saiyan-mode .goku-step-row {
+  background: rgba(14, 26, 20, 0.7);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+body.saiyan-mode .goku-step-row:hover {
+  background: rgba(20, 38, 28, 0.95);
+  border-color: #F59E0B;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.18);
+}
+
+.goku-step-badge {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  transition: transform 0.22s ease;
+  flex-shrink: 0;
 }
 
-.quest-card:hover .quest-visual-thumb {
-  transform: scale(1.06);
-}
-
-.quest-thumb-img {
-  max-width: 44px;
-  max-height: 44px;
+.goku-step-badge img {
+  max-width: 22px;
+  max-height: 22px;
   object-fit: contain;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
-  transition: transform 0.22s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
-.quest-card:hover .quest-thumb-img {
-  transform: scale(1.08);
+.badge-dragonball {
+  background: linear-gradient(135deg, rgba(255, 183, 3, 0.25), rgba(251, 133, 0, 0.15));
+  border: 1px solid rgba(251, 133, 0, 0.45);
 }
 
-.thumb-dragonball {
-  background: linear-gradient(135deg, rgba(255, 183, 3, 0.22), rgba(251, 133, 0, 0.1));
-  border: 1.5px solid rgba(251, 133, 0, 0.4);
-  box-shadow: 0 0 14px rgba(251, 133, 0, 0.25);
-}
-
-.quest-thumb-chip {
+.goku-step-num {
   position: absolute;
-  bottom: -4px;
-  right: -4px;
+  bottom: -3px;
+  right: -3px;
   background: #FB8500;
   color: #FFFFFF;
   font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
+  font-size: 0.52rem;
   font-weight: 900;
-  padding: 1px 5px;
+  padding: 0 4px;
   border-radius: 999px;
-  border: 1.5px solid #FFFFFF;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  border: 1px solid #FFFFFF;
   line-height: 1.2;
 }
 
-.thumb-radar {
-  background: linear-gradient(135deg, rgba(6, 214, 160, 0.2), rgba(11, 82, 91, 0.14));
-  border: 1.5px solid rgba(6, 214, 160, 0.4);
-  box-shadow: 0 0 14px rgba(6, 214, 160, 0.25);
+.badge-radar {
+  background: linear-gradient(135deg, rgba(6, 214, 160, 0.25), rgba(11, 82, 91, 0.15));
+  border: 1px solid rgba(6, 214, 160, 0.45);
 }
 
-.radar-thumb-img {
-  max-width: 40px;
-  max-height: 44px;
-}
-
-.quest-radar-live-blip {
+.goku-step-blip {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 7px;
-  height: 7px;
+  top: 2px;
+  right: 2px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: #06D6A0;
-  box-shadow: 0 0 8px #06D6A0;
-  animation: quest-dot-blink 1.2s ease-in-out infinite;
+  box-shadow: 0 0 6px #06D6A0;
+  animation: goku-pulse-dot 1.2s infinite;
 }
 
-.thumb-shenron {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.12));
-  border: 1.5px solid rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+.badge-shenron {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15));
+  border: 1px solid rgba(16, 185, 129, 0.45);
 }
 
-.shenron-thumb-img {
-  max-width: 44px;
-  max-height: 44px;
-}
-
-.quest-thumb-sparkle {
+.goku-step-spark {
   position: absolute;
-  top: -3px;
-  right: -3px;
+  top: -2px;
+  right: -2px;
   color: #10B981;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 900;
-  text-shadow: 0 0 8px #10B981;
 }
 
-.thumb-themes {
-  background: linear-gradient(135deg, rgba(224, 17, 107, 0.14), rgba(245, 158, 11, 0.14));
-  border: 1.5px solid rgba(224, 17, 107, 0.35);
-  box-shadow: 0 0 14px rgba(224, 17, 107, 0.2);
+.badge-themes {
+  background: linear-gradient(135deg, rgba(224, 17, 107, 0.18), rgba(245, 158, 11, 0.18));
+  border: 1px solid rgba(224, 17, 107, 0.35);
 }
 
-.quest-dual-avatars {
+.goku-mini-themes {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
-.quest-avatar-img {
-  width: 27px;
-  height: 27px;
+.goku-avatar-thumb {
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center 20%;
-  border: 2px solid #FFFFFF;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s ease;
+  border: 1.5px solid #FFFFFF;
 }
 
-.avatar-rose {
+.thumb-rose {
   border-color: #FF2E97;
   z-index: 2;
 }
 
-.avatar-saiyan {
+.thumb-saiyan {
   border-color: #F59E0B;
-  margin-left: -9px;
+  margin-left: -6px;
   z-index: 1;
 }
 
-.quest-card:hover .avatar-rose {
-  transform: translateX(-2px);
-}
-
-.quest-card:hover .avatar-saiyan {
-  transform: translateX(2px);
-}
-
-.quest-theme-pill {
-  position: absolute;
-  bottom: -5px;
-  background: #0F172A;
-  color: #FBBF24;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.54rem;
-  font-weight: 800;
-  padding: 1px 5px;
-  border-radius: 999px;
-  border: 1px solid rgba(251, 191, 36, 0.5);
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-
-body.saiyan-mode .thumb-dragonball {
-  border-color: rgba(251, 133, 0, 0.55);
-  box-shadow: 0 0 18px rgba(251, 133, 0, 0.35);
-}
-
-body.saiyan-mode .thumb-radar {
-  border-color: rgba(6, 214, 160, 0.55);
-  box-shadow: 0 0 18px rgba(6, 214, 160, 0.35);
-}
-
-body.saiyan-mode .thumb-shenron {
-  border-color: rgba(16, 185, 129, 0.55);
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.35);
-}
-
-body.saiyan-mode .thumb-themes {
-  border-color: rgba(245, 158, 11, 0.55);
-  box-shadow: 0 0 18px rgba(245, 158, 11, 0.35);
-}
-
-.quest-card-body {
-  flex: 1;
+.goku-step-info {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
-.quest-step-tag {
-  display: block;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.63rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  margin-bottom: 0.15rem;
-  text-transform: uppercase;
-}
-
-body.saiyan-mode .quest-step-tag {
-  color: #FBBF24 !important;
-}
-
-.quest-card-title {
-  font-size: 1.02rem;
-  font-weight: 800;
+.goku-step-title {
+  font-size: 0.83rem;
+  font-weight: 700;
   color: var(--fg);
-  margin: 0;
-  letter-spacing: -0.01em;
   line-height: 1.25;
 }
 
-body.saiyan-mode .quest-card-title {
-  color: #F1F5F9 !important;
+body.saiyan-mode .goku-step-title {
+  color: #F8FAFC;
 }
 
-.quest-card-desc {
-  font-size: 0.8rem;
+.goku-step-desc {
+  font-size: 0.72rem;
   color: var(--muted-fg);
-  line-height: 1.3;
-  font-weight: 500;
-  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-body.saiyan-mode .quest-card-desc {
-  color: #94A3B8 !important;
+body.saiyan-mode .goku-step-desc {
+  color: #94A3B8;
 }
 
-.quest-footer {
+/* Chat Footer */
+.goku-chat-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(226, 217, 226, 0.7);
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(226, 217, 226, 0.8);
 }
 
-body.saiyan-mode .quest-footer {
+body.saiyan-mode .goku-chat-footer {
   border-top-color: rgba(245, 158, 11, 0.2);
 }
 
-.quest-checkbox-label {
+.goku-checkbox-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.84rem;
+  gap: 0.45rem;
+  font-size: 0.74rem;
   color: var(--muted-fg);
   cursor: pointer;
   user-select: none;
 }
 
-body.saiyan-mode .quest-checkbox-label {
-  color: #CBD5E1 !important;
+body.saiyan-mode .goku-checkbox-label {
+  color: #94A3B8;
 }
 
-.quest-checkbox {
+.goku-checkbox {
   accent-color: var(--accent);
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   cursor: pointer;
 }
 
-.quest-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.goku-gotit-btn {
+  padding: 0.45rem 1rem !important;
+  font-size: 0.82rem !important;
+  border-radius: 999px !important;
 }
 
-.quest-btn-primary {
-  padding: 0.65rem 1.4rem !important;
-  font-size: 0.9rem !important;
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+  .goku-chat-widget {
+    bottom: 16px;
+    left: 14px;
+    right: 14px;
+  }
+  .goku-chat-card {
+    width: 100%;
+    max-width: none;
+    padding: 1rem 1rem 0.85rem;
+  }
+  .goku-step-desc {
+    white-space: normal;
+  }
 }
 
 /* Radar guide help trigger button on floating widget */
@@ -11056,27 +11186,4 @@ body.saiyan-mode .dragon-radar-widget.radar-attention-pulse {
   }
 }
 
-@media (max-width: 640px) {
-  .quest-briefing-window {
-    padding: 1.5rem 1.15rem !important;
-    max-height: 85dvh;
-    overflow-y: auto;
-  }
-  .quest-grid {
-    grid-template-columns: 1fr;
-    gap: 0.65rem;
-  }
-  .quest-footer {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-  .quest-actions {
-    width: 100%;
-  }
-  .quest-btn-primary {
-    width: 100%;
-    justify-content: center;
-  }
-}
 
