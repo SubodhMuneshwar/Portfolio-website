@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="0.5" dy="1" stdDeviation="0.8" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+  <g id="precision-cursor" filter="url(#shadow)">
+    <!-- Crisp Outer Manga Boundary -->
+    <path d="M 0.8 0.8 L 0.8 17.5 L 5.2 13.5 L 8.5 21 L 11.8 19.5 L 8.5 12.2 L 14.5 12.2 Z" 
+          fill="#000000" 
+          stroke="#000000" 
+          stroke-width="1.8" 
+          stroke-linejoin="round" />
+
+    <!-- Left Blade: Deep Sleek Obsidian -->
+    <path d="M 1 1 L 1 16.5 L 5.2 12.8 L 8.5 20.2 L 11 19 L 7.8 11.5 L 13.5 11.5 Z" 
+          fill="#0F172A" />
+
+    <!-- Center Precision Bevel (Crisp White Reflection) -->
+    <path d="M 1.6 2 L 1.6 14.5 L 4.8 12.2 L 1.6 2 Z" 
+          fill="#FFFFFF" 
+          opacity="0.95" />
+
+    <!-- Right Blade: Dragon Ball Golden Ki Spine -->
+    <path d="M 1.6 2 L 12.5 11 L 6.8 11 Z" 
+          fill="#38BDF8" 
+          opacity="0.9" />
+
+    <!-- Apex Precision Dot at (1, 1) -->
+    <circle cx="1.2" cy="1.2" r="0.6" fill="#FFFFFF" />
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <!-- Super Saiyan Radiant Ki Gradient -->
+    <linearGradient id="ssj-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="25%" stop-color="#FEF08A" />
+      <stop offset="60%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+    <linearGradient id="ssj-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="30%" stop-color="#BAE6FD" />
+      <stop offset="70%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <!-- Amber Core Radial -->
+    <radialGradient id="amber-core" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFFBEB" />
+      <stop offset="40%" stop-color="#FBBF24" />
+      <stop offset="90%" stop-color="#EA580C" />
+      <stop offset="100%" stop-color="#9A3412" />
+    </radialGradient>
+  </defs>
+
+  <g id="ki-pointer">
+    <!-- Ambient Golden Ki Aura Halo -->
+    <path d="M 0.8 0.8 L 0.8 18.5 L 5.5 14 L 9 22.2 L 13 20.5 L 9.2 12.5 L 16 12.5 Z" 
+          fill="rgba(245, 158, 11, 0.6)" 
+          stroke="rgba(245, 158, 11, 0.6)" 
+          stroke-width="2.5" 
+          stroke-linejoin="round" />
+
+    <!-- Sharp Manga Ink Contour -->
+    <path d="M 0.8 0.8 L 0.8 17.5 L 5.2 13.5 L 8.5 21 L 12 19.5 L 8.5 12.2 L 15 12.2 Z" 
+          fill="#0F172A" 
+          stroke="#0F172A" 
+          stroke-width="1.8" 
+          stroke-linejoin="round" />
+
+    <!-- Main Aerodynamic Blade: Radiant Super Saiyan Ki -->
+    <path d="M 1 1 L 1 16.5 L 5.2 12.8 L 8.5 20.2 L 11.2 19 L 8 11.5 L 14 11.5 Z" 
+          fill="url(#ssj-gold)" />
+
+    <!-- Center Precision Highlight -->
+    <path d="M 1.5 2 L 1.5 14 L 4.8 12 L 1.5 2 Z" 
+          fill="#FFFFFF" 
+          opacity="0.8" />
+
+    <!-- Miniature 4-Star Amber Jewel Core at Arrow Notch (Coordinates ~ 9.5, 14.5) -->
+    <circle cx="9.8" cy="14.8" r="2.8" fill="url(#amber-core)" stroke="#0F172A" stroke-width="0.6" />
+    <!-- Specular highlight on gem -->
+    <circle cx="9" cy="14" r="0.6" fill="#FFFFFF" opacity="0.95" />
+    <!-- 4-Star Diamond Core Dot -->
+    <rect x="9.3" y="14.3" width="1.1" height="1.1" transform="rotate(45 9.85 14.85)" fill="#DC2626" />
+
+    <!-- Apex Precision Target Point at (0, 0) -->
+    <circle cx="1.2" cy="1.2" r="0.8" fill="#FFFFFF" />
+  </g>
+</svg>

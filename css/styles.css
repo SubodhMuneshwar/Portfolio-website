@@ -31,6 +31,107 @@ html, body {
   overflow-x: clip;
 }
 
+/* ==========================================================================
+   Dragon Ball Themed Interactive Cursors
+   Universal desktop & touchscreen device support: authentic 4-Star Dragon Ball pointer,
+   Ki arrow blade default cursor, and Nimbus cloud grab states.
+   ========================================================================== */
+
+  html, body {
+  cursor: var(--cursor-default);
+  }
+
+  /* Interactive Elements: Authentic 4-Star Dragon Ball Pointer */
+  a,
+  button,
+  [role="button"],
+  .btn,
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  .dragon-ball,
+  .fake-dragon-ball,
+  .dragon-radar-widget,
+  .radar-signal-card,
+  .filter-btn,
+  .nav-ctrl-btn,
+  .nav-links a,
+  .theme-switch-slider,
+  .theme-toggle-btn,
+  .carousel-nav-btn,
+  .flashcard-nav-btn,
+  .flashcard,
+  .flashcard-front,
+  .flashcard-back,
+  .view-project-btn,
+  .scouter-social-link,
+  .scouter-link,
+  .scouter-btn,
+  .skill-badge,
+  .tilt-card,
+  .faq-question,
+  .prank-actions .btn,
+  .radar-hud-actions .btn,
+  .hero-ctas .btn,
+  .project-actions .btn,
+  .close-modal-btn,
+  .cert-card,
+  .interactive,
+  .interactive-glow,
+  select,
+  summary,
+  [tabindex="0"] {
+    cursor: var(--cursor-pointer) !important;
+  }
+
+  /* Ensure icons and text inside buttons/links inherit pointer cursor */
+  a *,
+  button *,
+  [role="button"] *,
+  .btn *,
+  .dragon-ball *,
+  .fake-dragon-ball *,
+  .dragon-radar-widget *,
+  .radar-signal-card *,
+  .tilt-card *,
+  .filter-btn *,
+  .nav-ctrl-btn * {
+    cursor: inherit !important;
+  }
+
+  /* Flying Nimbus and Draggable Track: Magical Cloud Grab States */
+  .flying-nimbus,
+  .flashcard-track {
+    cursor: var(--cursor-grab) !important;
+  }
+
+  .flying-nimbus:active,
+  .flying-nimbus.nimbus-dragging,
+  .flashcard-track:active,
+  .flashcard-track.is-dragging {
+    cursor: var(--cursor-grabbing) !important;
+  }
+
+  /* Text inputs retain text selection cursor */
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  textarea {
+    cursor: text !important;
+  }
+
+  /* Disabled elements */
+  [disabled],
+  .disabled,
+  :disabled {
+    cursor: not-allowed !important;
+  }
+
+
 img, video, canvas, svg {
   max-width: 100%;
 }
@@ -394,7 +495,7 @@ body.saiyan-mode .section-tag > svg:not(.dragon-ball svg) {
   border-radius: var(--radius-full);
   border: var(--border-width) solid var(--border);
   box-shadow: var(--shadow-md);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: var(--transition-bounce);
   user-select: none;
   white-space: nowrap;
@@ -6932,13 +7033,13 @@ body.saiyan-mode .section-title::after {
   margin: 0;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
-  cursor: grab;
+  cursor: var(--cursor-grab);
   user-select: none;
   touch-action: pan-x pan-y;
   transform-style: preserve-3d;
 }
 .flashcard-track::-webkit-scrollbar { display: none; }
-.flashcard-track:active { cursor: grabbing; }
+.flashcard-track:active { cursor: var(--cursor-grabbing); }
 
 .flashcard-track > .skill-category-card,
 .flashcard-track > .project-card,
@@ -6952,7 +7053,7 @@ body.saiyan-mode .section-title::after {
   transform-origin: center center;
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease, border-color 0.35s ease;
   will-change: transform, opacity;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transform-style: preserve-3d;
 }
 

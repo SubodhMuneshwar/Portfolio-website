@@ -83,6 +83,12 @@
   --transition-fast: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   --transition-normal: transform 0.25s ease, opacity 0.25s ease, background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 
+/* --- Dragon Ball Custom Cursors (Hardware-Accelerated PNG + Inline Base64 + SVG) --- */
+  --cursor-default: url('../assets/icons/cursor-default.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADJElEQVR4nKyVS0hUYRiG37nUdNSjFnaiEpIWXaYSswIV0sxSa6A2hS0SgiCEcuGiRdAioo0QBQYF0aILRC1qkRVFIRjdoKTCwgrJS2qohZeTnhyn7P3O+WdScxpTv+GZ81/OfO//Xc4Zt2EYfYFAoA1AFkkms4kLM2Ruv9+fuKUwsJjjB2QHSVIi7pkQ8jQ3Nx8bHAhiSXJwdmtnvwiY5D35qZiWySmxbFUGtmXGYV9RqofTE6SSpBAN04zEFoDLhba47Ti0qQ+VpQZ0XS/l6nWSRuKJZ6oi7vAgZ2Muzj1Kwu71Fi6VaTAMXYp+m6QTnXinIhIRyM/LQXX9PNS3a8hItXDzIOBfaqRxq5oUYIrFjwjoegKyszfg5MMEe76IDXutzEIgy5DWvUr2YmwbT0rEPXpStDUPr9vm4H6DZs8TfEDVHgsVO41ZnJ4ix/GfxR8jUFiQa19P1yRjKOSssf4o32zhzH7DpUM/wKXLEiCJwySKP0bAMFKwbu1qfOn14uLzpDE3BtJZ/MMaUg09H05dVkiQiFF87/iFYqap7tVbnK1NJDyk1TvuDsmOuZxfd0kJqSMDcB7KkYkFRpz10HAIHR2dMlJbXpimBefh/sukFpmkgfxAlKfeEWCiGxubUF5xFE/qatj0PKWWYm/pehJFzF8cVpF2ddpB0qvm/zRb4MXLNyiuvoeutib7tPLRtWRnW0uUJanVGvKYdCuRcGjh9ExodpGbWpoiziM2Kve6bsglWzmTV/sn0qLEBhEl/xEBs+ujfEsabpAj5JZpdv25y47GbssAnI4ZUo4l96FoziMCtCA5L47JOzgvOgtWv9r2Shgy2EXmwmklDyZhHiVyhzwjzXAK10MWBoMjfl+88zz4ZvkQHOiRvpdcfoBTg5j/Fx7ltJVITjqVc4noKy8lvnjdBSsEs6dbLdsHkn+/74iRnrDAMJzqSj4G1HxEXTN46iXBoK0p86fkCvmsfjMcS8CrQg1b+GYpYh+5QFYqx7Uq0rDzmKcXi/YOkTRI18wnC+C8c0RUQvmmopV51PaMJSDrEp2mhGQs6bCU43BqYkbwGwAA//8wTt9TAAAABklEQVQDAPpB+I+Pg49eAAAAAElFTkSuQmCC') 0 0, auto;
+  --cursor-pointer: url('../assets/icons/cursor-pointer.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAEEklEQVR4nLSUf0xVZRzGn/dcLvd6uEBcuAKZYFBhphPb6JcyxAzaamtjGSNEB7I5palRUYti1MxpLXIyWLBLsWpq8oc2NmARdckSEudIkTAvkfIjkN/3Hs695557ztt7z7X+aCMuis92ds7Oe87zeZ/v+31f7qnUTE/xgWJn/R5zPu6CuNS0NH1p2Tumt5tia47siK6kFViGJRQJj15DZ4bb0NV1DjkFh/H0/WM/HM0ez+N3uoaxBOL8NxUpG1bgp6ZXcUVMSH/uWGx73xFjOpZAfgCVQRGEGAuH7xqysGpdUmJWXVyDrfyeYlrOBu4UQKkbhDOBqk4Y9C5YP0zB3sJ1kXn1MR98MRFV7ahBFG5T2uwIlQBdNCOJoF4JRJGwJzsGyYnEmFvSVzgwpY8X6hwlpl1zv2KRupVA8j8SMzN3M4gbYJAnHtHDVrOSNNstGXn1UcdvVgdvYyXjFg2ABlBAdPFsOfzmPogvycpIL9oqTAgKC12TURlXdckQVka/QtgiAW5fDFaw+5i5DNwyp16XBjNwEo6XeJGzhbO8UBv7xjeXIypnagyJiwAwU9aqIGxJdLH+BP9JQj0yDmTKqN4h8/u/Xr69rjOiSrCGPLsQwN+Cvln7ElAVZNlqqDNdmrkvydFTIuxDHvA6DmYjAWSKtESVe7/JnHl1TB819xmN5wvEWjZC5weosmZOpRtQp20QBBdCdG60dwno/UPGM+spensVtJzj0DNj+Pfn83/6ysQ9KtbxsdgljswP8DqZcSOUqbPYe3AA95pVvPYih+ZOCdaqMjYBCUrPQWw+M4czv7nPH945feofAxZ8PGRQHMX/lYgKnRAdDuS+2Y/2iyIiQgk2JhGkPqxqyzRR0QLDciAlxotDrUaw/XCMDcgIQBpgYlxA1v4+9PRL2stpJ0VXnwKTS4FyqRTBZgJCJIwOKvBSSIGa+6QzmizljbYp2AcllGZM204Wjn8reuBq7DbGRepVGIZdWMG7MDrgwaEOniYkqg2ddkdroACtTUduutWPsyabi9KF0/wNoSh7/eS7f01Sz+NrKS5MBuOt73mUXAiHbZYnOZucpsUcgOSTgui2BIt3dmuSq5U3sXZ7CYrPIPds3M+CZ9ljJ/IEeJwqRHYl15qxdbV4pXb7WFFogbs9EAC3e5Pj9JaHxJN8vvipz1yjlsP7coqj5sffOXpthODyEIfiFhNkhaB7yLCKgy4z0DOJzDcwa4V5mzXhl/6x4AcmRGbJUfr82rnZ3Rsd9uQ470WdKn9kLJTsWEDz1jK8EFNf7nOceK/JXLxv86xQ8KRw1RKqXieEsANK7TYo0nXcSQItxeeGB4Oo/nW2U4JAySiI2qGIYkfYK5hEgCILfTBn5TfodIpgzJeu4Tb0NwAAAP//P19zYAAAAAZJREFUAwBZo9+HriUHLAAAAABJRU5ErkJggg==') 0 0, pointer;
+  --cursor-grab: url('../assets/icons/cursor-grab.png') 8 8, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADn0lEQVR4nNRVbUxTVxh+z/2yvYVbWKFAKUUyJtMqK9O4TGJ0anAmw0yc7kMyl5HNfWRNtsQl45eTZGz7sZAlZkOUfcS5BRnL/BpBp/5RoyCJgEBFqbSUIkil0Nvb3tt7j6WJCXgBWxN++Px5T+59zn3u+z7veQ8BCwwCFhgLLkDFS8T7gBCytSaSlDnGJd5E+yASz764BUIWzdoRP6z8piVjtYGVHcG6+50UQfTRFXwHiuonLIBrgQ0gJo+kyAntf8KQgFHGzsMmu2N0US6O4pcrXNigi7gqPxv9NFwoeBiP2DdbVioP8AFI4mvZLIHSbhnw0aW7fzXWfB7OqewdojPGkcni7LkElhwTqq7erzHm2vKrmo11r/5srrsYYUvmzQD/DrqwpCv+7jy3rusuvUSRkeGyU/PCRJhIjsiw7a9rOv6DD7ei1FQ92Aqt8F75Dhi5O4p84y8uPnn6bO7eE+gLvt5LIMDX2fcFtyqDoMQuPXeT2Vh9JrXy4qD5DT+3bn3ZzvLUxj8P051t/yOd3pC0661tMe7rpZtjMSvTiL6t+grK3y5D3cOLNlqrzEeOtrLvuH8ArSoDhDC5Jl/wM6QcOtX0m2bp8/loeqrNx49A/rOLY+vNJetnxPR0Axz66Xuo+GivvqU7eWXFqjFK7YGEvRqSuLfCJN0+fqpF1RUPPz6FJB0bi8b0tFh8bcsmWL6sIPqTCDKTpaGo1SGVgPZsyKMo+P6GJUFn07/NCBJAhjEN2to7Yuvi54K9aA9IKgF0DGSKRHfeXBVodThu4dv9A5AI2to7gSYVcatV7Jv+fEabhsSg08wpg3lpkqfh7xM4EYGrre3YnBJxKSSemFOA2wP3FALGXs4L3WpoPBl3mdyDQ3Cjpw+tyJK6JFH2zSnwkL/Dxl91Drih8Z/TEA9+PFAfM7jM5r+g94bd09+pRoUsBV2rc1FPcR7f9bG9cjlH8/BKzh0ARZxJJBigC3ZD7R9n4GD9USjMDl/ftCzUgSpgBnHWMvCH2KKRAF67oSZn//YiXv916fhsNGjsfwnb64aRhlaEY+96PrFmTjYZ7DDxWIEpTB5krL1euqT2Usou7yRdpGCkKmfvMA3pOqX7yxJfzfYCX0O0Pf2PcuY1MjpR9UGKXRPgZYtjlLX0j1EcL6JYWY1cJGAzhRzZz+BOrUu4Ntf9EFenTE1YgdGmyFjWMwSDgBCVCKbGWT44huwQnm9vQif2SfD0X/oPAAAA///2ghdfAAAABklEQVQDAKVGaS7QKa4KAAAAAElFTkSuQmCC') 8 8, grab;
+  --cursor-grabbing: url('../assets/icons/cursor-grabbing.png') 8 8, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADnUlEQVR4nNRVX2xTZRQ/5/vubbntui6dW8cGSmrowhxhZuvmojPohgRCzAw+YPTNN2Ni9I0Y4/TBmOgTD77pk4k4Aw8kIDhm8S9M55ZJAoWNhQxatqyMtXS9bbn3O5xbwp+OdYPAHvg9tLnf9zvn953znXM+AasMAauMVRfQViJ0HqWA7bqxXilVKyUGnTUbaFqQNWvq3qnTXXhtOXssu0MkWqNmBJR4UQqoIwCPAPI4Wwowy4ZZW8E0ovpz+A9jGPpQPbBAS/RalQ7u7UC4BYUIkq0SCJQhFNeLRqR8LOJj43r2ME2KRoiMgf+2YWqxr/tT1E9SquybgBhhVzllWSNmbKQid/F8NdhWTZEjNbVmQ/iqsal1RIAIo8RuW2WrOOrv2E4tK9AeMNv5pCHHefbsaDz+9QefUDYThCUgKioT9R9+tc/TFKkXbNNx3GwfAjhVNkUdxzNBEtrbRNS8MH56/PLn734qiVx7936EdcFaiE9dhK7ubTD48xEwfH6YuDBF+386UFjX9+1n3tDmMCGNSTJ+GOrBmSUFIr+a3QjIuVdq4v1dveJ6Mhw91o+Bmrrifn2NH4bPTEFb09OQmE3BbHIOel7rJfLXxp7dd/gQX44QKI+cekU/cSfKknBIVHIeK+xUKmvPTTfu2tGDzU2NUA41TwXA4VjJxKZCes7k4xpEBX9JGkssSFVySEZqeLDS+WwMh2Al3OZk/o36kNADziHLCZDTQygU5XMrNuBiUD5btFHkuLmLEkeEeJV/M+6GUMH5nk8Vyx6kuHsOXZMla7c57mfCBccWJCbLCqAUSaXsBW9LpwVC5qO//e22bRuC1b47nC3hhuK/s+bsMQdIajnvc5G8ArIQZHmBtKbHfKaV4MbZ7Hv59f7YiYPv7Pnye4x37imNG26VX8PJfoidnyB/z+4fiaAWBP6fTqfOLeaVoG1g4XkpxRucL9+lL97bmItP7qza2stXU8olPu7874dgzdoNhxs+/mYSlD2PQj/4z6uusWUFuEyxY9Dczd3cTQiFhbGTc/O/7G/JX57cyKNCL3KkdsO9LjReteOtUW/zC9VI4EKBg0NbXQd4VNDyAozWAfILMLfzhbUgiKAi64ogLc0FkkFeYCcep6T5ptdyT84oolEtbxwb2olpWCKVS6OPRFuX2cZT+6Vy45qn2hUW+uuhx/W9aDqaClS4jPU8onngEUfDLwTiLKdwxtT1R3hwHhOe/Ef/JgAAAP//lC9OCwAAAAZJREFUAwDdQoqZWf0IpQAAAABJRU5ErkJggg==') 8 8, grabbing;
+
   /* Layout */
   --container-max: 1200px;
   --header-height: 80px;
@@ -119,6 +125,10 @@ body.saiyan-mode {
   --quaternary: #38BDF8;        /* Super Saiyan Electric Blue / Cyan Lightning */
   --quaternary-fg: #0A1410;
   --quaternary-hover: #0EA5E9;
+
+/* --- Dragon Ball Super Saiyan Glowing Cursors --- */
+  --cursor-default: url('../assets/icons/cursor-default-saiyan.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADIklEQVR4nKyVS0hUYRiG37nkNI1HjfSYJWRWZtOFNKI0yEQzYegGgRC2itqECxctAqOQNm5atClC6GIEQi7KkiKKgi5ESQSFJeJomeFoqE3j2KjZ+53zz6TlNKZ+wzPnv5z53v+7nDNWXdcHPR5PF4CtJInEEQvmyKxutzuhuMSzlOP7ZA9JVCLWuRCydXR0nO4dno+xlJVxge5WEfCT92RMMSuTUyInOxOLt5UifX+ljdMzpIYkEydmGYkhAIsFuWNfoO89jMyK84CmHeJqPckgLmKbqYg1PCjOz4Wv8QoWFeyGu+oGND1din6bbCAasc9EJCJQWJCP0IsHCHhb4FqxFsurb0LL2pzBrUZShBkWPyKgafHIy8tBX8MFY+5ITsWqk9eg7zgorXudlGNyG09LxDpxsmtnAYLtLRhsfmTMbU4X0o/VIL381DxOz5Jq/GfxJwmUFG03rgMNtRgbCZkibIC0fUeQdfyyhWEe5dJVsoQswDSKP0lA15OxKWcdggM+DNyrn3Rj4pZiVfzMQph1ySbxiFF8+58LpUxT8+u36G2qI5dAtal+t5o0kTLSTAIwH8rxqQXGzfXRkVF0d/fISG3Z4fcHYT7cf5nUIpe0kGFEeepNAea5rc2LisoqPG1+yKZnDZ3JxpamJVLE/5PDc+SzOu0QGVDzf5oh8PLVG5Q23oWvy2ucVj6aM8ncdibIktRqPXlCepVIOLRweqY0o8jeTm/EecQm5F7TdLnkKWfyam8nnUpsCFHyHxHw+1rlW9LQQE6QW36/7/ddRjRGW3pgdswP5VhyPxrNeUSAJk1/URyTdzBfdEEEv6ltu4QhgwNkIcwHzYZpmE2J3CHPSQfMwvWTtFBo3O1wJRo3OuY5EAr0S99LLj/ArEHM/wubcvqRSE56lHOJqI+XModLsyA4Cn9/r1o2DiT/ft8RIz1hgRGY1ZV8BNR8XF038tTLQiFDU+bPSB35pH4zEkvArkINW/hmKeIgqSVrlOPHKtKw85inF4v2DpE0SNekkFSY7xwRlVC+qmhlHrU9YwnIukTnVEIylnQEleNwamJG8AsAAP//gtWiBQAAAAZJREFUAwCpK/3DEWaYGgAAAABJRU5ErkJggg==') 0 0, auto;
+  --cursor-pointer: url('../assets/icons/cursor-pointer-saiyan.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAEKElEQVR4nLSUe1BUVRzHv2eX3WXlJSouj6SxyUkgTGJ55AyRhho0OiNhVkrNEEGDTDgNiZOWqbzKxlFqppnA1BpBbdIMNBse9hiM3WBYaIVhItzYhVZwEdiFy93du6dzl7S/iEXxO/d1zj3n+5nf73fOkcQmb7G/UVg8GVFSuxMPQJKUpDhZ2bs7lUOfHzi2ovDEyVU/mH0wjyIBqkhqMl3HNa0OOdn5oLEbfgvdvvvFllSlAfMgifiglCJq9ROoqT2PIKMu7kZZdvPqc6bnMQ9yA1yUgLC3/5IgVNRUI265KtR0KKs6ukp3ILaVynAfcgOcLAKFlMAusIaXHLvKD2Prjpf9B8re3MPVXzqd0EBVuEd5iQ+BAj7sy+GCG8Kzd/K2TAQ+GiWvKirIsN8cCE9smixoWbdAgzlqOgJmKKbIW0phZzCOEadYX0h0DLIqzxLh17qE/iO7z6rrRl9nBZPMHcBM2QV/uQQca0wJdyAE8iXB2FxRjQDifNjw/o6PY2puHI2uGw2cM8AlAmTT6eEYQDR3w8S0SRVQ76vAsuTUhYb9r+YIfR1fPVnPR3gMEGvA6uxOk1gL0fSOOef8t80GqbZkIzzvkOLvY0Vp1qtfn0xo4DNmA0wX2TUdgZgmlVKCLqtw17T9zHFYTAZQuRLUNxAO1qeMjCdDx0vj7cbekoQmfoVmrbwchNAZAQ4xRewe5in0YwLGbRPgZQtg0dQirLcKeavG0dUl4GqLBPpR+d3Jk3ptGKF0TWwDt6wN6J8RMMHSobvNzG87caZ4HxSLlyLipRzIrh3FiU/fZnQegr4Yz3w7gVJjbMdE4ZeX/7Og5rYUpQn/l6JeGzBim8QXRW/B0KaBwi8AvpFqZK4cdZepfCgR8SQF8cEXgHotr1mn2C8GDg/kBtyyWPBZQS5u9va4O3nrGMzdnfjDJoXQuRcxSMMjxnaYjQJ4SOyemouSevsGfdD5YwOG+/+C6rV3dOFFn7RSl4sfab6icniH4iHjn0gc/R3jXRYUt/jCHLP54uB1zfeeAtzLdGR4iIbll2oXPbftO0eAIt0nKW0PZxl2DsRn4iD3ClKbk7BdF4Wfxnzg3JQXMpcD0Gtp1t52eXD4hM/j6isa4v0h1MTJDOr9Ep7tudV4IUqy6wh4jsOU1Yqx97aCnq9Uh+aXrGdzL3sUQWBK+kVmfkr7i3cZ1hKn2NmmJg7f5E2VNr2WcqY+cH3dGD99mG0YJ7iejhC2pl/AOSr1BEBm+hHzMw0yH8xqnzL0hLmsbDVJveD/1AYuMDVzcMHyx7opJUWaFEUXZkvRTD/anybDK8sufWM/9VHuovRce8D6DKNs4eJB4j5BSIstWN6L+4lAVFwTHyWltJxtcnaQY4ANb5py2hs7N/oNwUOR2QbENU6uoU5hvHWjnx73oH8AAAD//88ZvFYAAAAGSURBVAMAELHlNVdda1wAAAAASUVORK5CYII=') 0 0, pointer;
 
   --shadow-color: #000000;
   --shadow-sm: 2px 2px 0px 0px #000000;
@@ -648,7 +658,7 @@ body.saiyan-mode .form-textarea:focus {
   border-radius: var(--radius-full);
   padding: 0.45rem 1.1rem 0.45rem 0.65rem;
   box-shadow: 4px 4px 0px var(--border), 0 0 20px rgba(34, 197, 94, 0.2);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: var(--transition-bounce);
   font-family: var(--font-heading);
   font-weight: 800;
@@ -771,7 +781,7 @@ body.saiyan-mode .dragon-radar-widget {
   height: 80px;
   z-index: 9990;
   pointer-events: auto;
-  cursor: grab;
+  cursor: var(--cursor-grab);
   transition: filter 0.3s ease, opacity 0.4s ease;
   filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
   touch-action: manipulation;
@@ -783,7 +793,7 @@ body.saiyan-mode .dragon-radar-widget {
   filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.95)) drop-shadow(4px 4px 0px #1E293B);
 }
 .flying-nimbus.nimbus-dragging {
-  cursor: grabbing;
+  cursor: var(--cursor-grabbing);
   z-index: 99999;
   filter: drop-shadow(0 0 22px rgba(251, 191, 36, 1)) drop-shadow(0 0 40px rgba(56, 189, 248, 0.7)) drop-shadow(4px 4px 0px #000000) !important;
   transition: filter 0.15s ease;
@@ -956,7 +966,7 @@ body.saiyan-mode .dragon-radar-widget {
   border-radius: 50%;
   /* Single subtle contact shadow — let the SVG gradients do the sphere shading */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.32);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
   user-select: none;
   position: relative;
