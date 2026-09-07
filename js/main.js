@@ -3405,6 +3405,10 @@ function initFlashcardDecks() {
     // Wrap with scroller for edge fades + nav
     const wrap = document.createElement('div');
     wrap.className = 'flashcard-scroller-wrap';
+    wrap.setAttribute('tabindex', '0');
+    wrap.setAttribute('role', 'region');
+    const cleanName = sel.replace('#', '').replace('Grid', '');
+    wrap.setAttribute('aria-label', `${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)} Carousel`);
     grid.parentNode.insertBefore(wrap, grid);
     wrap.appendChild(grid);
 
@@ -3417,17 +3421,39 @@ function initFlashcardDecks() {
     `;
     wrap.appendChild(nav);
 
-    // Bottom Navigation Dots Wrap (positioned below cards)
-    const dotsOuter = document.createElement('div');
-    dotsOuter.className = 'flashcard-dots-wrap';
-    dotsOuter.innerHTML = `<div class="flashcard-dots" role="tablist"></div>`;
-    wrap.appendChild(dotsOuter);
+    // Bottom Navigation Controls Wrap (positioned below cards)
+    const controlsWrap = document.createElement('div');
+    controlsWrap.className = 'flashcard-controls-wrap';
+    controlsWrap.innerHTML = `
+      <div class="flashcard-controls-bar">
+        <button type="button" class="flashcard-pill-btn flashcard-pill-prev" aria-label="Previous card">
+          <i data-lucide="chevron-left" style="width:15px;height:15px;"></i>
+          <span>Prev</span>
+        </button>
+        <div class="flashcard-dots" role="tablist" aria-label="Carousel pagination"></div>
+        <div class="flashcard-counter-badge" aria-live="polite">
+          <span class="cur-card-num">01</span><span class="counter-sep">/</span><span class="total-card-num">01</span>
+        </div>
+        <button type="button" class="flashcard-pill-btn flashcard-pill-next" aria-label="Next card">
+          <span>Next</span>
+          <i data-lucide="chevron-right" style="width:15px;height:15px;"></i>
+        </button>
+      </div>
+      <div class="flashcard-drag-hint" aria-hidden="true">
+        <span>←</span><span>Drag, swipe or use arrow keys</span><span>→</span>
+      </div>
+    `;
+    wrap.appendChild(controlsWrap);
 
     if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
 
     const prevBtn = nav.querySelector('.flashcard-prev');
     const nextBtn = nav.querySelector('.flashcard-next');
-    const dotsWrap = dotsOuter.querySelector('.flashcard-dots');
+    const pillPrev = controlsWrap.querySelector('.flashcard-pill-prev');
+    const pillNext = controlsWrap.querySelector('.flashcard-pill-next');
+    const dotsWrap = controlsWrap.querySelector('.flashcard-dots');
+    const curNumEl = controlsWrap.querySelector('.cur-card-num');
+    const totalNumEl = controlsWrap.querySelector('.total-card-num');
 
     let dots = [];
 
@@ -3435,11 +3461,13 @@ function initFlashcardDecks() {
       dotsWrap.innerHTML = '';
       dots = [];
       const cards = Array.from(grid.children);
+      totalNumEl.textContent = String(cards.length).padStart(2, '0');
+
       cards.forEach((card, i) => {
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.className = 'flashcard-dot';
-        dot.setAttribute('aria-label', `Go to card ${i+1}`);
+        dot.setAttribute('aria-label', `Go to card ${i + 1}`);
         dot.setAttribute('role', 'tab');
         dot.addEventListener('click', (e) => {
           e.preventDefault();
@@ -3448,9 +3476,11 @@ function initFlashcardDecks() {
         dotsWrap.appendChild(dot);
         dots.push(dot);
 
-        // Click on side card to center it
-        card.addEventListener('click', () => {
+        // Click on side card to smoothly glide it to center
+        card.addEventListener('click', (e) => {
           if (grid.dataset.dragging === '1') return;
+          // Don't intercept button or link clicks on active card
+          if (e.target.closest('a, button, .btn, .project-details-btn, .project-github-link, .modal-close-btn')) return;
           const gridCenter = grid.getBoundingClientRect().left + grid.clientWidth / 2;
           const cardCenter = card.getBoundingClientRect().left + card.offsetWidth / 2;
           if (Math.abs(cardCenter - gridCenter) > 40) {
@@ -3479,10 +3509,15 @@ function initFlashcardDecks() {
         }
       });
 
-      // Update dots
-      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === bestIdx));
+      // Update counter and dots
+      curNumEl.textContent = String(bestIdx + 1).padStart(2, '0');
+      dots.forEach((d, idx) => {
+        const isActive = idx === bestIdx;
+        d.classList.toggle('is-active', isActive);
+        d.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
 
-      // Update 3D card classes
+      // Update card classes for depth (no skew)
       cards.forEach((card, idx) => {
         card.classList.remove('is-active-card', 'is-prev-card', 'is-next-card', 'is-far-card');
         if (idx === bestIdx) {
@@ -3496,11 +3531,13 @@ function initFlashcardDecks() {
         }
       });
 
-      // Update nav arrows
+      // Update button disabled states
       const atStart = bestIdx === 0;
       const atEnd = bestIdx === cards.length - 1;
       if (prevBtn) prevBtn.disabled = atStart;
       if (nextBtn) nextBtn.disabled = atEnd;
+      if (pillPrev) pillPrev.disabled = atStart;
+      if (pillNext) pillNext.disabled = atEnd;
       wrap.classList.toggle('at-start', atStart);
       wrap.classList.toggle('at-end', atEnd);
     }
@@ -3517,20 +3554,34 @@ function initFlashcardDecks() {
       });
     }
 
-    prevBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    function goPrev() {
       const cards = Array.from(grid.children);
       const curIdx = dots.findIndex(d => d.classList.contains('is-active'));
       const target = Math.max(0, (curIdx >= 0 ? curIdx : 0) - 1);
       scrollToCard(target);
-    });
+    }
 
-    nextBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    function goNext() {
       const cards = Array.from(grid.children);
       const curIdx = dots.findIndex(d => d.classList.contains('is-active'));
       const target = Math.min(cards.length - 1, (curIdx >= 0 ? curIdx : 0) + 1);
       scrollToCard(target);
+    }
+
+    prevBtn.addEventListener('click', (e) => { e.preventDefault(); goPrev(); });
+    nextBtn.addEventListener('click', (e) => { e.preventDefault(); goNext(); });
+    pillPrev.addEventListener('click', (e) => { e.preventDefault(); goPrev(); });
+    pillNext.addEventListener('click', (e) => { e.preventDefault(); goNext(); });
+
+    // Keyboard navigation: Left/Right Arrow keys
+    wrap.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goNext();
+      }
     });
 
     let ticking = false;
@@ -3544,7 +3595,7 @@ function initFlashcardDecks() {
       }
     }, { passive: true });
 
-    // Drag / Swipe handling (desktop mouse only - mobile uses native touch scroll)
+    // Drag / Swipe handling (desktop mouse & trackpad)
     let isDown = false, startX = 0, startLeft = 0, hasDragged = false;
     grid.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse') return;
@@ -3563,7 +3614,7 @@ function initFlashcardDecks() {
     grid.addEventListener('pointermove', (e) => {
       if (!isDown) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 4) hasDragged = true;
+      if (Math.abs(dx) > 6) hasDragged = true;
       grid.scrollLeft = startLeft - dx;
     });
 
@@ -3577,7 +3628,7 @@ function initFlashcardDecks() {
       if (hasDragged) {
         const handler = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
         grid.addEventListener('click', handler, { capture: true, once: true });
-        setTimeout(() => { hasDragged = false; }, 50);
+        setTimeout(() => { hasDragged = false; }, 80);
       }
       setTimeout(updateState, 150);
     }
@@ -3589,7 +3640,6 @@ function initFlashcardDecks() {
     buildDots();
     requestAnimationFrame(() => {
       updateState();
-      // Center first card nicely
       setTimeout(updateState, 200);
     });
 
