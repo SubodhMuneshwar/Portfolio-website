@@ -144,16 +144,13 @@ html.saiyan-mode,
 body.saiyan-mode {
   color-scheme: dark !important;
   scrollbar-width: thin !important;
-  scrollbar-color: #F59E0B #050D09 !important;
-  background-color: #050D09 !important;
+  scrollbar-color: #F59E0B #090D16 !important;
+  background-color: #090D16 !important;
   background-image: 
-    radial-gradient(ellipse at 12% 8%, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.10) 25%, transparent 50%),
-    radial-gradient(ellipse at 88% 88%, rgba(16, 185, 129, 0.15) 0%, transparent 48%),
-    radial-gradient(ellipse at 50% 30%, rgba(56, 189, 248, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse at 75% 15%, rgba(234, 88, 12, 0.12) 0%, transparent 45%),
-    radial-gradient(#163224 1.5px, transparent 1.5px) !important;
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px !important;
-  background-attachment: fixed, fixed, fixed, fixed, scroll !important;
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+  background-size: 32px 32px !important;
+  background-attachment: fixed !important;
   transition: background-color 0.35s ease, color 0.3s ease !important;
 }
 
@@ -220,14 +217,10 @@ body {
   min-height: 100dvh;
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 75% 50% at 50% 0%, rgba(255, 46, 151, 0.12) 0%, rgba(255, 46, 151, 0.035) 40%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 92% 18%, rgba(168, 85, 247, 0.075) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 8% 42%, rgba(225, 29, 72, 0.065) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 92% 68%, rgba(255, 46, 151, 0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(244, 114, 182, 0.09) 0%, transparent 65%),
-    radial-gradient(rgba(244, 63, 94, 0.14) 1.5px, transparent 1.5px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
-  background-attachment: fixed, fixed, fixed, fixed, fixed, scroll;
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
   color: var(--fg);
   font-family: var(--font-body);
   font-weight: 500;
@@ -242,23 +235,10 @@ body {
   transition: background-color 0.35s ease, color 0.3s ease;
 }
 
-/* Goku Rose Divine Ki Veil - Light Mode */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 45% 35% at 16% 14%, rgba(255, 46, 151, 0.045) 0%, transparent 65%),
-    radial-gradient(ellipse 42% 40% at 86% 78%, rgba(168, 85, 247, 0.035) 0%, transparent 65%),
-    radial-gradient(circle at 50% 50%, rgba(251, 113, 133, 0.025) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 1;
-  transition: opacity 0.35s ease;
-}
-
+/* Removed fuzzy radial veils */
+body::before,
 body.saiyan-mode::before {
-  opacity: 0;
+  display: none !important;
 }
 
 /* --- Accessibility & Focus States --- */
@@ -1316,46 +1296,13 @@ body.saiyan-mode .nav-btn-connect {
   padding-bottom: 4.2rem;
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 72% 58% at 50% 0%, rgba(255,46,151,0.15) 0%, rgba(255,46,151,0.05) 34%, transparent 66%),
-    radial-gradient(ellipse 52% 46% at 92% 14%, rgba(157,23,77,0.10) 0%, transparent 58%),
-    radial-gradient(ellipse 42% 32% at 12% 28%, rgba(244,114,182,0.09) 0%, transparent 62%),
-    radial-gradient(ellipse 36% 30% at 18% 82%, rgba(7,5,16,0.03) 0%, transparent 58%),
-    radial-gradient(ellipse 88% 16% at 50% 100%, rgba(244,114,182,0.08) 0%, transparent 64%),
-    transparent;
-  border-bottom: 1px solid rgba(255, 46, 151, 0.12);
+  background: transparent;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
-/* Goku Black ROSE — divine energy field (light only) — pink/black god ki */
-.hero-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(ellipse at 18% 22%, rgba(255, 46, 151, 0.07) 0%, transparent 52%),
-    radial-gradient(ellipse at 88% 72%, rgba(244, 114, 182, 0.05) 0%, transparent 52%),
-    radial-gradient(ellipse at 50% 48%, rgba(157,23,77,0.04) 0%, transparent 68%),
-    radial-gradient(ellipse at 50% 100%, rgba(7,5,16,0.025) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-  animation: goku-rose-pulse 8s ease-in-out infinite alternate;
-}
-
+.hero-section::before,
 .hero-section::after {
-  content: '薔薇';
-  position: absolute;
-  right: 2%;
-  top: 8%;
-  font-family: var(--font-heading);
-  font-weight: 900;
-  font-size: clamp(4rem, 10vw, 7.5rem);
-  line-height: 1;
-  color: rgba(157,23,77,0.035);
-  writing-mode: vertical-rl;
-  letter-spacing: 0.08em;
-  pointer-events: none;
-  z-index: 0;
-  user-select: none;
+  display: none !important;
 }
 
 @media (max-width: 768px) {
@@ -1371,11 +1318,11 @@ body.saiyan-mode .hero-section::before {
   display: none !important;
 }
 
-/* Dark (Saiyan) mode — remove ALL pink/Rosé gradients; clean Namek void */
+/* Dark (Saiyan) mode — clean, sharp void */
 body.saiyan-mode .hero-section {
   background: transparent !important;
   background-image: none !important;
-  border-bottom: 2.5px solid rgba(245, 158, 11, 0.18) !important;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.22) !important;
   box-shadow: none !important;
 }
 body.saiyan-mode .hero-section::before,
@@ -1389,9 +1336,9 @@ body.saiyan-mode .hero-grid::after {
   box-shadow: none !important;
 }
 body.saiyan-mode .site-header {
-  background: rgba(10, 20, 16, 0.78) !important;
+  background: rgba(9, 13, 22, 0.88) !important;
   background-image: none !important;
-  border-bottom-color: rgba(245, 158, 11, 0.35) !important;
+  border-bottom-color: rgba(245, 158, 11, 0.25) !important;
   box-shadow: none !important;
 }
 body.saiyan-mode.page-intro-revealed .hero-section::before,
@@ -1905,18 +1852,15 @@ body.saiyan-mode .saiyan-sparks-field {
 body:not(.saiyan-mode) {
   background-color: var(--bg) !important;
   background-image:
-    radial-gradient(ellipse 75% 50% at 50% 0%, rgba(255, 46, 151, 0.12) 0%, rgba(255, 46, 151, 0.035) 40%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 92% 18%, rgba(168, 85, 247, 0.075) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 8% 42%, rgba(225, 29, 72, 0.065) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 92% 68%, rgba(255, 46, 151, 0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(244, 114, 182, 0.09) 0%, transparent 65%),
-    radial-gradient(rgba(244, 63, 94, 0.14) 1.5px, transparent 1.5px) !important;
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px !important;
-  background-attachment: fixed, fixed, fixed, fixed, fixed, scroll !important;
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px) !important;
+  background-size: 32px 32px !important;
+  background-attachment: fixed !important;
 }
 
 body:not(.saiyan-mode) .site-header {
-  border-bottom-color: rgba(157,23,77,0.12) !important;
+  background: rgba(248, 250, 252, 0.88) !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
 }
 
 body:not(.saiyan-mode) .btn-primary {
@@ -2495,14 +2439,14 @@ body.saiyan-mode .stat-icon-wrapper svg:not(.dragon-ball svg) {
 body.saiyan-mode .ticker-container {
   background: linear-gradient(
     90deg,
-    #050D09 0%,
+    #090D16 0%,
     #451A03 16%,
     #B45309 32%,
     #F59E0B 48%,
     #FBBF24 54%,
     #FEF08A 62%,
     #D97706 78%,
-    #050D09 100%
+    #090D16 100%
   );
   background-size: 250% 100%;
   border-top: 2.5px solid #FBBF24;
@@ -3820,18 +3764,11 @@ body.saiyan-mode .form-textarea:focus {
   }
 }
 
-/* --- Footer — Playful Premium (Goku Rose Theme in Light Mode) --- */
-/* Light mode: Goku Rose Divine White & Ki Glow — Dark mode: Namek storm with Saiyan glow */
+/* --- Footer — Razor-Sharp Clean Design --- */
 .site-footer.footer-premium {
   position: relative;
-  background: var(--bg);
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(244,63,94,0.14) 1.5px, transparent 0),
-    radial-gradient(ellipse 78% 45% at 18% 0%, rgba(255,46,151,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 52% 38% at 92% 8%, rgba(168,85,247,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 68% 28% at 50% 100%, rgba(244,114,182,0.10) 0%, transparent 62%);
-  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
-  border-top: 2.5px solid #1E293B;
+  background: #F1F5F9;
+  border-top: 2.5px solid #0F172A;
   padding: 3rem 0 1.6rem;
   margin-top: 3.5rem;
   overflow: hidden;
@@ -4209,16 +4146,12 @@ body.saiyan-mode .form-textarea:focus {
   box-shadow: 0 0 0 2px #FFF8FA, 0 0 0 4px #FF2E97;
 }
 
-/* ========== DARK MODE — Saiyan / Premium Dark (own touch, not just copy) ========== */
+/* ========== DARK MODE — Saiyan / Premium Razor-Sharp Dark ========== */
 body.saiyan-mode .site-footer.footer-premium {
-  background: #020617;
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(148,163,184,0.16) 1px, transparent 0),
-    radial-gradient(ellipse 78% 42% at 18% 0%, rgba(245,158,11,0.07) 0%, transparent 55%),
-    radial-gradient(ellipse 58% 38% at 92% 10%, rgba(16,185,129,0.06) 0%, transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
-  border-top: 1px solid rgba(234,88,12,0.9);
-  color: #CBD5E1;
+  background: #060911 !important;
+  background-image: none !important;
+  border-top: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #CBD5E1 !important;
 }
 
 body.saiyan-mode .site-footer.footer-premium::before {
@@ -4666,7 +4599,7 @@ body.saiyan-mode .footer-float-top:hover {
   }
 
   body.saiyan-mode .nav-menu.open {
-    background: #050D09 !important;
+    background: #090D16 !important;
     border-bottom: 2.5px solid #F59E0B !important;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 158, 11, 0.25) !important;
   }
@@ -6209,20 +6142,12 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
   transition-duration: 0.08s;
 }
 
-/* Floating Decoy Dragon Balls in empty/free spaces — gentle ambient drift */
 .floating-decoy-ball {
-  position: absolute;
-  z-index: 12;
-  animation: decoy-space-drift 6s ease-in-out infinite alternate;
-}
-
-@keyframes decoy-space-drift {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
-  50% { transform: translate3d(6px, -10px, 0) rotate(5deg); }
-  100% { transform: translate3d(-5px, 8px, 0) rotate(-5deg); }
+  display: none !important;
 }
 
 /* Floating Positioning Helpers */
+.float-right-ball,
 .floating-decoy-ball.float-right-ball {
   position: absolute;
   right: -16px;
@@ -6230,6 +6155,7 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
   z-index: 12;
 }
 
+.float-left-ball,
 .floating-decoy-ball.float-left-ball {
   position: absolute;
   left: -20px;
@@ -8064,7 +7990,7 @@ body.saiyan-mode .flashcard-dot.is-active {
   width: 100vw !important;
   height: 100vh !important;
   z-index: 99998 !important;
-  background: #050D09 !important;
+  background: #090D16 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -8234,11 +8160,7 @@ body.saiyan-mode .hero-section {
 }
 
 body.saiyan-mode .hero-section::before {
-  background-image:
-    radial-gradient(ellipse at 50% -10%, rgba(251, 191, 36, 0.22) 0%, transparent 62%),
-    radial-gradient(ellipse at 85% 35%, rgba(245, 158, 11, 0.16) 0%, transparent 52%),
-    radial-gradient(ellipse at 15% 75%, rgba(56, 189, 248, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 85%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+  display: none !important;
 }
 
 body.saiyan-mode .hero-title {

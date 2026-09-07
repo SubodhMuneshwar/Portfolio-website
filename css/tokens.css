@@ -4,16 +4,16 @@
    ========================================================================== */
 
 :root {
-  /* Color Palette (Light Mode - Goku Rosé Divine White & God Ki Accents) */
-  --bg: #FFF8FA;                /* Luminous Rosé Divine White Paper */
-  --fg: #1E293B;                /* Slate 800 (Deep, high contrast) */
-  --muted: #FFF1F6;             /* Rosé soft surface */
+  /* Color Palette (Light Mode - Crisp Minimal Canvas & Punchy Accents) */
+  --bg: #F8FAFC;                /* Pristine, razor-sharp Slate-50 Canvas */
+  --fg: #0F172A;                /* Slate 900 (Ultra-sharp, high contrast) */
+  --muted: #F1F5F9;             /* Crisp Slate-100 surface */
   --muted-fg: #64748B;          /* Slate 500 */
   --card: #FFFFFF;              /* Pure White for sticker cards */
-  --card-alt: #FFF0F5;          /* Soft LavenderBlush Rosé tinted card */
+  --card-alt: #F8FAFC;          /* Crisp elevated card */
   --input: #FFFFFF;             /* White */
-  --border: #1E293B;            /* Chunky 2.5px dark border */
-  --border-light: rgba(244, 114, 182, 0.28); /* Soft Rosé divider */
+  --border: #0F172A;            /* Chunky 2.5px dark border */
+  --border-light: rgba(15, 23, 42, 0.12); /* Sharp divider */
 
   /* Refined Rosé + Space Grotesk — balanced indigo/amber (better harmony with geometric headings) */
   --accent: #FF2E97;            /* Rosé Pink — primary */
@@ -99,15 +99,15 @@
    Dark stormy green-black sky, crackling electric lightning, and Super Saiyan Golden Ki
    ========================================================================== */
 body.saiyan-mode {
-  --bg: #050D09;                /* Deep Obsidian Namek Void */
+  --bg: #090D16;                /* Ultra-deep razor-sharp Obsidian Midnight */
   --fg: #F8FAFC;                /* Ultra-crisp high contrast text */
-  --muted: #0A1812;             /* Sleek dark surface */
+  --muted: #0F172A;             /* Sleek dark surface */
   --muted-fg: #94A3B8;          /* Slate 400 */
-  --card: #0A1611;              /* Rich Obsidian Card */
-  --card-alt: #0E2218;          /* Elevated surface */
-  --input: #0D1C15;             /* Input background */
+  --card: #0D1524;              /* Rich Obsidian Card */
+  --card-alt: #131E33;          /* Elevated surface */
+  --input: #0F172A;             /* Input background */
   --border: #F59E0B;            /* Glowing Golden Ki border */
-  --border-light: #143022;      /* Subtle dark border */
+  --border-light: rgba(245, 158, 11, 0.22); /* Crisp dark border */
 
   /* Goku Super Saiyan Ki, Aura & Bio-Electricity Palette */
   --accent: #FBBF24;            /* Super Saiyan Radiant Golden Ki */
@@ -136,31 +136,19 @@ body.saiyan-mode {
   --shadow-lg: 6px 6px 0px 0px #F59E0B;
   --shadow-xl: 8px 8px 0px 0px #F59E0B;
 
-  background-color: #050D09;
+  background-color: #090D16;
   background-image: 
-    radial-gradient(ellipse at 12% 8%, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.10) 25%, transparent 50%),
-    radial-gradient(ellipse at 88% 88%, rgba(16, 185, 129, 0.15) 0%, transparent 48%),
-    radial-gradient(ellipse at 50% 30%, rgba(56, 189, 248, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse at 75% 15%, rgba(234, 88, 12, 0.12) 0%, transparent 45%),
-    radial-gradient(#163224 1.5px, transparent 1.5px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
-  background-attachment: fixed, fixed, fixed, fixed, scroll;
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
   color: #F8FAFC;
-  transition: color 0.3s ease;
+  transition: background-color 0.35s ease, color 0.3s ease;
 }
 
-/* ——— Super Saiyan God Ki — Golden Electric Veil ——— */
+/* Disabled blurry fixed veil in Saiyan Mode */
 body.saiyan-mode::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 45% 30% at 18% 14%, rgba(251, 191, 36, 0.09) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 35% at 84% 78%, rgba(56, 189, 248, 0.07) 0%, transparent 65%),
-    radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.95;
+  display: none !important;
 }
 
 body.saiyan-mode .section-title {
@@ -451,23 +439,12 @@ body.saiyan-mode .hero-ambient-aura {
   }
 }
 
-/* Fullscreen Lightning Overlay Canvas */
+/* Fullscreen Lightning Overlay Canvas (Removed) */
 #lightningOverlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  display: none !important;
 }
 
-#lightningOverlay.active {
-  opacity: 1;
-}
-
-/* Cards in Saiyan Mode — Super Saiyan Obsidian + Golden Ki Borders */
+/* Cards in Saiyan Mode — Razor-Sharp Obsidian + Golden Ki Borders */
 body.saiyan-mode .sticker-card,
 body.saiyan-mode .stat-card,
 body.saiyan-mode .skill-category-card,
@@ -477,7 +454,7 @@ body.saiyan-mode .achievement-card,
 body.saiyan-mode .edu-card,
 body.saiyan-mode .cert-card,
 body.saiyan-mode .contact-wrapper {
-  background-color: #0A1611 !important;
+  background-color: #0D1524 !important;
   border-color: rgba(245, 158, 11, 0.5) !important;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 18px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(254, 240, 138, 0.14) !important;
 }
@@ -772,21 +749,9 @@ body.saiyan-mode .dragon-radar-widget {
   box-shadow: 4px 4px 0px #000000, 0 0 20px rgba(245, 158, 11, 0.4) !important;
 }
 
-/* Realistic Flying Nimbus (Kinto'un) - Randomized Trajectory Engine */
+/* Flying Nimbus (Disabled for clean background) */
 .flying-nimbus {
-  position: fixed;
-  top: clamp(68px, var(--nimbus-top, 72%), calc(100vh - 120px));
-  left: 0;
-  width: 140px;
-  height: 80px;
-  z-index: 9990;
-  pointer-events: auto;
-  cursor: var(--cursor-grab);
-  transition: filter 0.3s ease, opacity 0.4s ease;
-  filter: drop-shadow(4px 4px 0px rgba(30, 41, 59, 0.7));
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  will-change: transform, top, bottom;
+  display: none !important;
 }
 
 .flying-nimbus:hover {
