@@ -126,8 +126,8 @@ body.saiyan-mode {
   --quaternary-fg: #0A1410;
   --quaternary-hover: #0EA5E9;
 
-/* --- Dragon Ball Super Saiyan Glowing Cursors --- */
-  --cursor-default: url('../assets/icons/cursor-default-saiyan.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADIklEQVR4nKyVS0hUYRiG37nkNI1HjfSYJWRWZtOFNKI0yEQzYegGgRC2itqECxctAqOQNm5atClC6GIEQi7KkiKKgi5ESQSFJeJomeFoqE3j2KjZ+53zz6TlNKZ+wzPnv5z53v+7nDNWXdcHPR5PF4CtJInEEQvmyKxutzuhuMSzlOP7ZA9JVCLWuRCydXR0nO4dno+xlJVxge5WEfCT92RMMSuTUyInOxOLt5UifX+ljdMzpIYkEydmGYkhAIsFuWNfoO89jMyK84CmHeJqPckgLmKbqYg1PCjOz4Wv8QoWFeyGu+oGND1din6bbCAasc9EJCJQWJCP0IsHCHhb4FqxFsurb0LL2pzBrUZShBkWPyKgafHIy8tBX8MFY+5ITsWqk9eg7zgorXudlGNyG09LxDpxsmtnAYLtLRhsfmTMbU4X0o/VIL381DxOz5Jq/GfxJwmUFG03rgMNtRgbCZkibIC0fUeQdfyyhWEe5dJVsoQswDSKP0lA15OxKWcdggM+DNyrn3Rj4pZiVfzMQph1ySbxiFF8+58LpUxT8+u36G2qI5dAtal+t5o0kTLSTAIwH8rxqQXGzfXRkVF0d/fISG3Z4fcHYT7cf5nUIpe0kGFEeepNAea5rc2LisoqPG1+yKZnDZ3JxpamJVLE/5PDc+SzOu0QGVDzf5oh8PLVG5Q23oWvy2ucVj6aM8ncdibIktRqPXlCepVIOLRweqY0o8jeTm/EecQm5F7TdLnkKWfyam8nnUpsCFHyHxHw+1rlW9LQQE6QW36/7/ddRjRGW3pgdswP5VhyPxrNeUSAJk1/URyTdzBfdEEEv6ltu4QhgwNkIcwHzYZpmE2J3CHPSQfMwvWTtFBo3O1wJRo3OuY5EAr0S99LLj/ArEHM/wubcvqRSE56lHOJqI+XModLsyA4Cn9/r1o2DiT/ft8RIz1hgRGY1ZV8BNR8XF038tTLQiFDU+bPSB35pH4zEkvArkINW/hmKeIgqSVrlOPHKtKw85inF4v2DpE0SNekkFSY7xwRlVC+qmhlHrU9YwnIukTnVEIylnQEleNwamJG8AsAAP//gtWiBQAAAAZJREFUAwCpK/3DEWaYGgAAAABJRU5ErkJggg==') 0 0, auto;
+  /* --- Dragon Ball Super Saiyan Glowing Cursors --- */
+  --cursor-default: url('../assets/icons/cursor-default-saiyan.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADIklEQVR4nKyVS0hUYRiG37nkNI1HjfSYJWRWZtOFNKI0yEQzYegGgRC2itqECswIV0sxSa6A2hS0SgiCEcuGiRdAioo0QBQYF0aILRC1qkRVFIRjdoKTCwgrJS2qohZeTnhyn7P3O+WdScxpTv+GZ81/OfO//Xc4Zt2EYfYFAoA1AFkkms4kLM2Ruv9+fuKUwsJjjB2QHSVIi7pkQ8jQ3Nx8bHAhiSXJwdmtnvwiY5D35qZiWySmxbFUGtmXGYV9RqofTE6SSpBAN04zEFoDLhba47Ti0qQ+VpQZ0XS/l6nWSRuKJZ6oi7vAgZ2Muzj1Kwu71Fi6VaTAMXYp+m6QTnXinIhIRyM/LQXX9PNS3a8hItXDzIOBfaqRxq5oUYIrFjwjoegKyszfg5MMEe76IDXutzEIgy5DWvUr2YmwbT0rEPXpStDUPr9vm4H6DZs8TfEDVHgsVO41ZnJ4ix/GfxR8jUFiQa19P1yRjKOSssf4o32zhzH7DpUM/wKXLEiCJwySKP0bAMFKwbu1qfOn14uLzpDE3BtJZ/MMaUg09H05dVkiQiFF87/iFYqap7tVbnK1NJDyk1TvuDsmOuZxfd0kJqSMDcB7KkYkFRpz10HAIHR2dMlJbXpimBefh/sukFpmkgfxAlKfeEWCiGxubUF5xFE/qatj0PKWWYm/pehJFzF8cVpF2ddpB0qvm/zRb4MXLNyiuvoeutib7tPLRtWRnW0uUJanVGvKYdCuRcGjh9ExodpGbWpoiziM2Kve6bsglWzmTV/sn0qLEBhEl/xEBs+ujfEsabpAj5JZpdv25y47GbssAnI4ZUo4l96FoziMCtCA5L47JOzgvOgtWv9r2Shgy2EXmwmklDyZhHiVyhzwjzXAK10MWBoMjfl+88zz4ZvkQHOiRvpdcfoBTg5j/Fx7ltJVITjqVc4noKy8lvnjdBSsEs6dbLdsHkn+/74iRnrDAMJzqSj4G1HxEXTN46iXBoK0p86fkCvmsfjMcS8CrQg1b+GYpYh+5QFYqx7Uq0rDzmKcXi/YOkTRI18wnC+C8c0RUQvmmopV51PaMJSDrEp2mhGQs6bCU43BqYkbwGwAA//8wTt9TAAAABklEQVQDAPpB+I+Pg49eAAAAAElFTkSuQmCC') 0 0, auto;
   --cursor-pointer: url('../assets/icons/cursor-pointer-saiyan.png') 0 0, url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAEKElEQVR4nLSUe1BUVRzHv2eX3WXlJSouj6SxyUkgTGJ55AyRhho0OiNhVkrNEEGDTDgNiZOWqbzKxlFqppnA1BpBbdIMNBse9hiM3WBYaIVhItzYhVZwEdiFy93du6dzl7S/iEXxO/d1zj3n+5nf73fOkcQmb7G/UVg8GVFSuxMPQJKUpDhZ2bs7lUOfHzi2ovDEyVU/mH0wjyIBqkhqMl3HNa0OOdn5oLEbfgvdvvvFllSlAfMgifiglCJq9ROoqT2PIKMu7kZZdvPqc6bnMQ9yA1yUgLC3/5IgVNRUI265KtR0KKs6ukp3ILaVynAfcgOcLAKFlMAusIaXHLvKD2Prjpf9B8re3MPVXzqd0EBVuEd5iQ+BAj7sy+GCG8Kzd/K2TAQ+GiWvKirIsN8cCE9smixoWbdAgzlqOgJmKKbIW0phZzCOEadYX0h0DLIqzxLh17qE/iO7z6rrRl9nBZPMHcBM2QV/uQQca0wJdyAE8iXB2FxRjQDifNjw/o6PY2puHI2uGw2cM8AlAmTT6eEYQDR3w8S0SRVQ76vAsuTUhYb9r+YIfR1fPVnPR3gMEGvA6uxOk1gL0fSOOef8t80GqbZkIzzvkOLvY0Vp1qtfn0xo4DNmA0wX2TUdgZgmlVKCLqtw17T9zHFYTAZQuRLUNxAO1qeMjCdDx0vj7cbekoQmfoVmrbwchNAZAQ4xRewe5in0YwLGbRPgZQtg0dQirLcKeavG0dUl4GqLBPpR+d3Jk3ptGKF0TWwDt6wN6J8RMMHSobvNzG87caZ4HxSLlyLipRzIrh3FiU/fZnQegr4Yz3w7gVJjbMdE4ZeX/7Og5rYUpQn/l6JeGzBim8QXRW/B0KaBwi8AvpFqZK4cdZepfCgR8SQF8cEXgHotr1mn2C8GDg/kBtyyWPBZQS5u9va4O3nrGMzdnfjDJoXQuRcxSMMjxnaYjQJ4SOyemouSevsGfdD5YwOG+/+C6rV3dOFFn7RSl4sfab6icniH4iHjn0gc/R3jXRYUt/jCHLP54uB1zfeeAtzLdGR4iIbll2oXPbftO0eAIt0nKW0PZxl2DsRn4iD3ClKbk7BdF4Wfxnzg3JQXMpcD0Gtp1t52eXD4hM/j6isa4v0h1MTJDOr9Ep7tudV4IUqy6wh4jsOU1Yqx97aCnq9Uh+aXrGdzL3sUQWBK+kVmfkr7i3cZ1hKn2NmmJg7f5E2VNr2WcqY+cH3dGD99mG0YJ7iejhC2pl/AOSr1BEBm+hHzMw0yH8xqnzL0hLmsbDVJveD/1AYuMDVzcMHyx7opJUWaFEUXZkvRTD/anybDK8sufWM/9VHuovRce8D6DKNs4eJB4j5BSIstWN6L+4lAVFwTHyWltJxtcnaQY4ANb5py2hs7N/oNwUOR2QbENU6uoU5hvHWjnx73oH8AAAD//88ZvFYAAAAGSURBVAMAELHlNVdda1wAAAAASUVORK5CYII=') 0 0, pointer;
 
   --shadow-color: #000000;
@@ -137,18 +137,24 @@ body.saiyan-mode {
   --shadow-xl: 8px 8px 0px 0px #F59E0B;
 
   background-color: #090D16;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
+  /* Premium Saiyan Storm Mesh - golden ki + emerald aura + electric blue - layered over crisp grid */
+  background-image:
+    radial-gradient(ellipse 960px 680px at 12% 7%, rgba(251,191,36,0.18) 0%, rgba(245,158,11,0.10) 28%, transparent 62%),
+    radial-gradient(ellipse 820px 620px at 88% 11%, rgba(16,185,129,0.14) 0%, rgba(5,150,105,0.08) 30%, transparent 60%),
+    radial-gradient(ellipse 880px 660px at 78% 92%, rgba(56,189,248,0.12) 0%, rgba(14,165,233,0.06) 28%, transparent 62%),
+    radial-gradient(ellipse 640px 520px at 8% 88%, rgba(239,68,68,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 520px 420px at 50% 48%, rgba(251,191,36,0.05) 0%, transparent 65%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.038) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.038) 1px, transparent 1px);
+  background-size: auto, auto, auto, auto, auto, 32px 32px, 32px 32px;
   background-attachment: fixed;
   color: #F8FAFC;
   transition: background-color 0.35s ease, color 0.3s ease;
 }
 
-/* Disabled blurry fixed veil in Saiyan Mode */
+/* Saiyan Mode veil now handled by styles.css premium background system */
 body.saiyan-mode::before {
-  display: none !important;
+  display: block !important;
 }
 
 body.saiyan-mode .section-title {
@@ -415,28 +421,17 @@ body.saiyan-mode .achievement-card::before {
   }
 }
 
-/* Profile Photo Card — Super Saiyan Golden Aura */
+/* Profile Photo Card — Super Saiyan Golden Aura (Steady, No Float) */
 body.saiyan-mode .hero-photo-frame {
   border-color: #FBBF24 !important;
-  box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 55px rgba(245, 158, 11, 0.42), 0 0 85px rgba(56, 189, 248, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  animation: ssj-ki-aura-pulse 2.4s ease-in-out infinite !important;
-  transition: var(--transition-bounce) !important;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 55px rgba(245, 158, 11, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  animation: none !important;
+  transform: none !important;
 }
 
 body.saiyan-mode .hero-ambient-aura {
   background: radial-gradient(circle at 32% 28%, rgba(251, 191, 36, 0.38) 0%, rgba(245, 158, 11, 0.22) 38%, rgba(56, 189, 248, 0.16) 62%, transparent 76%) !important;
   filter: blur(36px) saturate(1.2) !important;
-}
-
-@keyframes ssj-ki-aura-pulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 45px rgba(245, 158, 11, 0.35), 0 0 70px rgba(56, 189, 248, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    box-shadow: 0 0 32px rgba(251, 191, 36, 0.85), 0 0 65px rgba(245, 158, 11, 0.55), 0 0 100px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transform: translateY(-4px) scale(1.015);
-  }
 }
 
 /* Fullscreen Lightning Overlay Canvas (Removed) */
