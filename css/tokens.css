@@ -4,13 +4,13 @@
    ========================================================================== */
 
 :root {
-  /* Color Palette (Light Mode - Crisp Minimal Canvas & Punchy Accents) */
-  --bg: #F8FAFC;                /* Pristine, razor-sharp Slate-50 Canvas */
+  /* Color Palette (Light Mode - Visible Rosé Mesh Canvas) */
+  --bg: #FDF2F8;                /* Soft Rosé Petal Canvas - VISIBLE against mesh */
   --fg: #0F172A;                /* Slate 900 (Ultra-sharp, high contrast) */
-  --muted: #F1F5F9;             /* Crisp Slate-100 surface */
+  --muted: #FDF2F8;             /* Rosé-tinted surface */
   --muted-fg: #64748B;          /* Slate 500 */
-  --card: #FFFFFF;              /* Pure White for sticker cards */
-  --card-alt: #F8FAFC;          /* Crisp elevated card */
+  --card: #FFFFFF;              /* Pure White for sticker cards - pops on rosé */
+  --card-alt: #FFF1F7;          /* Rosé elevated card */
   --input: #FFFFFF;             /* White */
   --border: #0F172A;            /* Chunky 2.5px dark border */
   --border-light: rgba(15, 23, 42, 0.12); /* Sharp divider */
@@ -434,9 +434,20 @@ body.saiyan-mode .hero-ambient-aura {
   filter: blur(36px) saturate(1.2) !important;
 }
 
-/* Fullscreen Lightning Overlay Canvas (Removed) */
+/* Fullscreen Planet Namek Super Saiyan Lightning Storm Canvas */
 #lightningOverlay {
-  display: none !important;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none !important;
+  z-index: 999999 !important;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+#lightningOverlay.active {
+  opacity: 1 !important;
 }
 
 /* Cards in Saiyan Mode — Razor-Sharp Obsidian + Golden Ki Borders */

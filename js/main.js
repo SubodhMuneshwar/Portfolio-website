@@ -771,9 +771,9 @@ function initSaiyanMode() {
         console.error('Saiyan transition error:', e);
       }
 
-      // 3. Trigger visual golden Ki energy flash
+      // 3. Trigger visual golden Ki energy flash & lightning storm
       if (flash) flash.classList.add('flashing');
-      try { drawLightningStrike(); } catch(e) {}
+      try { drawLightningStrike(); triggerLightningStorm(12); } catch(e) {}
 
       // 4. Add smooth reveal shockwave to hero section on the home page
       try {
@@ -800,6 +800,7 @@ function initSaiyanMode() {
     document.body.style.overflow = 'hidden';
     video.currentTime = 0;
     video.muted = true;
+    try { triggerLightningStorm(6); } catch(e) {}
 
     // Track playback progress frame-by-frame to transition smoothly at the video climax/end
     function monitorCutscene() {
@@ -1119,23 +1120,29 @@ setTimeout(() => {
 }
 
 /* --- Canvas Realistic Super Saiyan Lightning Storm --- */
-let lightningAnimId = null;
+let activeLightningStorms = 0;
 
 function triggerLightningStorm(strikeCount = 10) {
   const canvas = document.getElementById('lightningOverlay');
   if (!canvas) return;
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
   canvas.classList.add('active');
+  activeLightningStorms++;
 
   const ctx = canvas.getContext('2d');
   let strikesRemaining = strikeCount;
 
   function flashLoop() {
     if (strikesRemaining <= 0) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.classList.remove('active');
+      activeLightningStorms = Math.max(0, activeLightningStorms - 1);
+      if (activeLightningStorms === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.classList.remove('active');
+      }
       return;
     }
 
@@ -1148,7 +1155,7 @@ function triggerLightningStorm(strikeCount = 10) {
     }
 
     strikesRemaining--;
-    const nextInterval = 80 + Math.random() * 120;
+    const nextInterval = 75 + Math.random() * 110;
     setTimeout(flashLoop, nextInterval);
   }
 
@@ -1158,38 +1165,68 @@ function triggerLightningStorm(strikeCount = 10) {
 function drawLightningStrike() {
   const canvas = document.getElementById('lightningOverlay');
   if (!canvas) return;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
   canvas.classList.add('active');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawSingleBolt(ctx, canvas.width, canvas.height);
   setTimeout(() => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvas.classList.remove('active');
-  }, 120);
+    if (activeLightningStorms <= 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.classList.remove('active');
+    }
+  }, 130);
 }
 
 function drawSingleBolt(ctx, w, h) {
   let startX = Math.random() * w;
   let startY = 0;
-  let endX = startX + (Math.random() * 200 - 100);
-  let endY = h * (0.6 + Math.random() * 0.4);
+  let endX = startX + (Math.random() * 260 - 130);
+  let endY = h * (0.65 + Math.random() * 0.35);
 
-  const colors = ['#FBBF24', '#38BDF8', '#FFFFFF', '#06B6D4'];
+  const colors = ['#FBBF24', '#38BDF8', '#FFFFFF', '#06B6D4', '#F59E0B'];
   const boltColor = colors[Math.floor(Math.random() * colors.length)];
+
+  // Ambient atmospheric sky flash across screen
+  if (Math.random() > 0.45) {
+    ctx.fillStyle = Math.random() > 0.5 ? 'rgba(56, 189, 248, 0.08)' : 'rgba(251, 191, 36, 0.09)';
+    ctx.fillRect(0, 0, w, h);
+  }
 
   ctx.beginPath();
   ctx.moveTo(startX, startY);
 
   let currentX = startX;
   let currentY = startY;
-  const segments = 16;
+  const segments = 18;
 
   for (let i = 0; i < segments; i++) {
     const nextY = currentY + (endY - startY) / segments;
     const nextX = currentX + (Math.random() * 60 - 30);
     ctx.lineTo(nextX, nextY);
+
+    // Occasional jagged fork branch
+    if ((i === 6 || i === 11) && Math.random() > 0.45) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(currentX, currentY);
+      let forkX = currentX;
+      let forkY = currentY;
+      for (let f = 0; f < 5; f++) {
+        forkY += 25 + Math.random() * 20;
+        forkX += (Math.random() * 50 - 25);
+        ctx.lineTo(forkX, forkY);
+      }
+      ctx.strokeStyle = boltColor;
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = boltColor;
+      ctx.shadowBlur = 15;
+      ctx.stroke();
+      ctx.restore();
+    }
+
     currentX = nextX;
     currentY = nextY;
   }
@@ -1197,12 +1234,13 @@ function drawSingleBolt(ctx, w, h) {
   ctx.strokeStyle = boltColor;
   ctx.lineWidth = 3 + Math.random() * 2;
   ctx.shadowColor = boltColor;
-  ctx.shadowBlur = 20;
+  ctx.shadowBlur = 24;
   ctx.stroke();
 
   // Draw bright inner core
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.2;
   ctx.strokeStyle = '#FFFFFF';
+  ctx.shadowBlur = 8;
   ctx.stroke();
 }
 
