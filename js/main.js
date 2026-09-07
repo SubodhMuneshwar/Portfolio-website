@@ -771,9 +771,9 @@ function initSaiyanMode() {
         console.error('Saiyan transition error:', e);
       }
 
-      // 3. Trigger visual golden Ki energy flash & minimal lightning burst after video ends
+      // 3. Trigger visual golden Ki energy flash & minimal lightning burst after video ends (~1.7s duration)
       if (flash) flash.classList.add('flashing');
-      try { triggerLightningStorm(2); } catch(e) {}
+      try { triggerLightningStorm(1700); } catch(e) {}
 
       // 4. Add smooth reveal shockwave to hero section on the home page
       try {
@@ -1080,7 +1080,7 @@ function runPlanetNamekTransformation() {
 
   // 3. Fallback: trigger minimal lightning if cutscene video was not present
   if (!document.getElementById('saiyanVideoOverlay')) {
-    try { triggerLightningStorm(2); } catch(e) {}
+    try { triggerLightningStorm(1700); } catch(e) {}
   }
 
   // 4. Sequential list of elements to power up one at a time (individual components)
@@ -1118,9 +1118,13 @@ setTimeout(() => {
 /* --- Canvas Realistic Super Saiyan Lightning Storm --- */
 let activeLightningStorms = 0;
 
-function triggerLightningStorm(strikeCount = 2) {
+function triggerLightningStorm(durationOrCount = 1700) {
   const canvas = document.getElementById('lightningOverlay');
   if (!canvas) return;
+
+  const durationMs = (typeof durationOrCount === 'number' && durationOrCount <= 20)
+    ? 1700
+    : (durationOrCount || 1700);
 
   if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
     canvas.width = window.innerWidth;
@@ -1130,10 +1134,13 @@ function triggerLightningStorm(strikeCount = 2) {
   activeLightningStorms++;
 
   const ctx = canvas.getContext('2d');
-  let strikesRemaining = strikeCount;
+  const startTime = performance.now();
+  let boltClearTimer = null;
 
-  function flashLoop() {
-    if (strikesRemaining <= 0) {
+  function flashStep() {
+    const elapsed = performance.now() - startTime;
+    if (elapsed >= durationMs) {
+      if (boltClearTimer) clearTimeout(boltClearTimer);
       activeLightningStorms = Math.max(0, activeLightningStorms - 1);
       if (activeLightningStorms === 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1142,15 +1149,21 @@ function triggerLightningStorm(strikeCount = 2) {
       return;
     }
 
+    // Draw 1 single minimal crisp bolt
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawSingleBolt(ctx, canvas.width, canvas.height);
 
-    strikesRemaining--;
-    const nextInterval = 90 + Math.random() * 60;
-    setTimeout(flashLoop, nextInterval);
+    // After brief persistence (85ms), clear the bolt for a clean gap
+    boltClearTimer = setTimeout(() => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }, 85);
+
+    // Rhythmic spacing between strikes: ~220ms - 320ms
+    const nextInterval = 220 + Math.random() * 100;
+    setTimeout(flashStep, nextInterval);
   }
 
-  flashLoop();
+  flashStep();
 }
 
 function drawLightningStrike() {
