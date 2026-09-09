@@ -43,7 +43,7 @@
   </script>
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/tokens.css?v=20260907_sharpBackground_v2">
-  <link rel="stylesheet" href="css/styles.css?v=20260908_scrollingCardsV3">
+  <link rel="stylesheet" href="css/styles.css?v=20260909_soundToggleV1">
 
   <!-- External Libraries (Lucide Icons, Canvas Confetti & Lenis Smooth Scroll) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -115,6 +115,13 @@
 
         <!-- Right Quick Action Controls -->
         <div class="nav-actions">
+          <!-- Sound Effects (SFX) On/Off Switch Button -->
+          <button type="button" class="sfx-toggle-btn sfx-active" id="sfxToggleBtn" role="switch" aria-checked="true" aria-label="Toggle Sound Effects" title="Sound Effects: ON (Click or press 'M' to Mute)" onclick="window.toggleSoundEffects()">
+            <i data-lucide="volume-2" class="sfx-icon sfx-icon-on"></i>
+            <i data-lucide="volume-x" class="sfx-icon sfx-icon-off" style="display: none;"></i>
+            <span class="sfx-sr-status sr-only">Sound ON</span>
+          </button>
+
           <!-- Interactive Sliding Theme Switch (Rosé ⟷ Saiyan) -->
           <div class="theme-slider-toggle" id="themeSliderToggle" role="switch" aria-checked="false" aria-label="Toggle between Rosé Mode and Super Saiyan Mode" tabindex="0" title="Slide to switch between Rosé and Saiyan Mode">
             <div class="theme-slider-track">
@@ -370,7 +377,8 @@
     <section class="section" id="projects">
       <div class="container">
         <div class="section-header" style="position: relative;">
-          <!-- Collectible 4-Star Dragon Ball -->
+          <!-- Collectible 3-Star Dragon Ball (Left) & 4-Star Dragon Ball (Right) -->
+          <span class="dragon-ball float-left-ball" style="top: -12px; left: -16px;" data-ball="3" title="Collect the 3-Star Dragon Ball!">★★★</span>
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="4"
             title="The Iconic 4-Star Dragon Ball (Goku's Grandpa's Ball)!">★★★★</span>
           <div class="section-tag" style="background-color: var(--tertiary);">
@@ -401,8 +409,8 @@
     <section class="section" id="achievements">
       <div class="container">
         <div class="section-header" style="position: relative;">
-          <!-- Collectible 3-Star Dragon Ball -->
-          <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="3" title="Collect the 3-Star Dragon Ball!">★★★</span>
+          <!-- Collectible 5-Star Dragon Ball -->
+          <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="5" title="Collect the 5-Star Dragon Ball!">★★★★★</span>
           <div class="section-tag" style="background-color: var(--quaternary);">
             <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
             <span>Leadership & Honors</span>
@@ -424,8 +432,8 @@
     <section class="section" id="education">
       <div class="container">
         <div class="section-header" style="position: relative;">
-          <!-- Collectible 5-Star Dragon Ball -->
-          <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="5" title="Collect the 5-Star Dragon Ball!">★★★★★</span>
+          <!-- Collectible 6-Star Dragon Ball -->
+          <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="6" title="Collect the 6-Star Dragon Ball!">★★★★★★</span>
           <div class="section-tag" style="background-color: var(--secondary);">
             <i data-lucide="graduation-cap" style="width: 14px; height: 14px;"></i>
             <span>Academics & Badges</span>
@@ -436,8 +444,6 @@
 
         <div class="edu-cert-grid">
           <div style="position: relative;">
-            <!-- Collectible 6-Star Dragon Ball -->
-            <span class="dragon-ball" style="top: -10px; right: 10px;" data-ball="6" title="Collect the 6-Star Dragon Ball!">★★★★★★</span>
             <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
               <i data-lucide="book-open" style="color: var(--accent);"></i>
               <span>Academic Journey</span>
@@ -804,6 +810,10 @@
             <span class="goku-chip-mode-dot"></span>
             <span>Theme</span>
           </button>
+          <button type="button" class="goku-chip-btn" onclick="if(window.toggleSoundEffects) window.toggleSoundEffects()" title="Toggle sound effects">
+            <i data-lucide="volume-2" class="goku-sfx-icon" style="width: 14px; height: 14px;"></i>
+            <span class="goku-sfx-text">Sound: ON</span>
+          </button>
         </div>
       </div>
 
@@ -1045,8 +1055,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260902_mobilePerfBoost"></script>
-  <script src="js/main.js?v=20260908_scrollingCardsV3"></script>
+  <script src="js/data.js?v=20260909_dragonBallFlowFix_v1"></script>
+  <script src="js/main.js?v=20260909_soundToggleV1"></script>
 </body>
 
 </html>

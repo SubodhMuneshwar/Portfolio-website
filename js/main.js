@@ -36,13 +36,117 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatCountUp();
   initFlashcardDecks();
   initStartupQuestBriefing();
+  initSoundEffects();
 });
 
-function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
+/* ==========================================================================
+   Web Audio Synthesizers & Sound Effects (SFX) Engine
+   ========================================================================== */
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+const SFX_STORAGE_KEY = 'portfolio_sfx_enabled';
+
+let isSfxEnabledState = (() => {
   try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
+    const saved = localStorage.getItem(SFX_STORAGE_KEY);
+    return saved !== null ? saved === 'true' : true;
+  } catch (e) {
+    return true;
+  }
+})();
+
+function isSoundEffectsEnabled() {
+  return isSfxEnabledState;
+}
+window.isSoundEffectsEnabled = isSoundEffectsEnabled;
+
+function setSoundEffectsEnabled(enabled, playConfirmation = false) {
+  isSfxEnabledState = !!enabled;
+  try {
+    localStorage.setItem(SFX_STORAGE_KEY, isSfxEnabledState ? 'true' : 'false');
+  } catch (e) {}
+
+  updateSfxUI();
+
+  if (isSfxEnabledState && playConfirmation) {
+    playSfxChirp();
+  }
+}
+window.setSoundEffectsEnabled = setSoundEffectsEnabled;
+
+window.toggleSoundEffects = function() {
+  setSoundEffectsEnabled(!isSfxEnabledState, true);
+};
+
+function playSfxChirp() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, now); // D5
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.18);
+  } catch (e) {}
+}
+
+function updateSfxUI() {
+  const toggleBtns = document.querySelectorAll('.sfx-toggle-btn, #sfxToggleBtn');
+  toggleBtns.forEach(btn => {
+    btn.setAttribute('aria-checked', isSfxEnabledState ? 'true' : 'false');
+    btn.classList.toggle('sfx-active', isSfxEnabledState);
+    btn.classList.toggle('sfx-muted', !isSfxEnabledState);
+    btn.title = isSfxEnabledState
+      ? "Sound Effects: ON (Click or press 'M' to Mute)"
+      : "Sound Effects: OFF (Click or press 'M' to Unmute)";
+
+    const iconOn = btn.querySelector('.sfx-icon-on');
+    const iconOff = btn.querySelector('.sfx-icon-off');
+    const srStatus = btn.querySelector('.sfx-sr-status');
+
+    if (iconOn) iconOn.style.display = isSfxEnabledState ? 'inline-block' : 'none';
+    if (iconOff) iconOff.style.display = isSfxEnabledState ? 'none' : 'inline-block';
+    if (srStatus) srStatus.textContent = isSfxEnabledState ? 'Sound ON' : 'Sound OFF';
+  });
+
+  // Also update Goku widget chip if present
+  const gokuSfxIcons = document.querySelectorAll('.goku-sfx-icon');
+  const gokuSfxTexts = document.querySelectorAll('.goku-sfx-text');
+  gokuSfxTexts.forEach(t => { t.textContent = isSfxEnabledState ? 'Sound: ON' : 'Sound: OFF'; });
+  gokuSfxIcons.forEach(i => {
+    i.setAttribute('data-lucide', isSfxEnabledState ? 'volume-2' : 'volume-x');
+  });
+  if (window.lucide && gokuSfxIcons.length) {
+    try { window.lucide.createIcons(); } catch(e){}
+  }
+}
+
+function initSoundEffects() {
+  updateSfxUI();
+}
+
+function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
+  if (!isSoundEffectsEnabled()) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -68,6 +172,8 @@ function initKeyboardShortcuts() {
       closeQuestBriefingModal();
     } else if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
       openQuestBriefingModal();
+    } else if ((e.key === 'm' || e.key === 'M') && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      window.toggleSoundEffects();
     }
   });
 }
@@ -136,44 +242,127 @@ function renderSkills() {
   fills.forEach(f=>io.observe(f));
 }
 
-/* --- Render Experience --- */
+/* --- Render Experience — Modern Minimalist Timeline (Gemini 3.8) --- */
 function renderExperience() {
   const container = document.getElementById('experienceTimeline');
   if (!container || !portfolioData.experience) return;
 
-  container.innerHTML = portfolioData.experience.map(exp => `
-    <div class="experience-card">
-      <div class="card-floating-badge badge-${exp.badgeColor}" style="background-color: var(--${exp.badgeColor});">
-        <i data-lucide="briefcase" style="width: 14px; height: 14px;"></i>
-        ${exp.type}
+  container.innerHTML = portfolioData.experience.map((exp, idx) => `
+    <div class="exp-timeline-item" data-index="${idx}">
+      <!-- Visual Timeline Rail Spine & Beacon Node -->
+      <div class="exp-rail" aria-hidden="true">
+        <div class="exp-node">
+          <span class="exp-node-beacon"></span>
+          <i data-lucide="briefcase" class="exp-node-icon"></i>
+        </div>
+        <div class="exp-rail-line"></div>
       </div>
-      <div class="exp-header">
-        <div>
-          <h3 class="exp-role">${exp.role}</h3>
-          <div class="exp-company">
-            <i data-lucide="building-2" style="width: 18px; height: 18px;"></i>
-            ${exp.company} • ${exp.location}
+
+      <!-- Modern Minimalist Experience Card -->
+      <div class="experience-card">
+        <!-- Header Bar: Company Monogram + Role Title + Meta + Date Badge -->
+        <div class="exp-header-bar">
+          <div class="exp-company-block">
+            <div class="exp-company-avatar">
+              ${exp.logo ? `
+                <img src="${exp.logo}" alt="${exp.company} Logo" class="exp-company-logo" width="38" height="38" loading="lazy" />
+              ` : `
+                <span>${exp.logoText || 'EXP'}</span>
+              `}
+            </div>
+            <div class="exp-title-meta">
+              <div class="exp-role-row">
+                <h3 class="exp-role">${exp.role}</h3>
+                <span class="exp-type-badge">${exp.type || 'Internship'}</span>
+              </div>
+              <div class="exp-company-line">
+                <span class="exp-company-name">${exp.company}</span>
+                <span class="exp-meta-separator">•</span>
+                <span class="exp-location-tag">
+                  <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
+                  ${exp.location}
+                </span>
+                ${exp.mode ? `
+                  <span class="exp-meta-separator">•</span>
+                  <span class="exp-mode-tag">
+                    <i data-lucide="building" style="width: 12px; height: 12px;"></i>
+                    ${exp.mode}
+                  </span>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-date-container">
+            <div class="exp-date-pill">
+              <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
+              <span>${exp.period}</span>
+            </div>
+            ${exp.duration ? `
+              <span class="exp-duration-pill">${exp.duration}</span>
+            ` : ''}
           </div>
         </div>
-        <div class="exp-period-badge">
-          <i data-lucide="calendar" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
-          ${exp.period}
+
+        <!-- Executive Summary Callout -->
+        <div class="exp-summary-callout">
+          <p class="exp-description">${exp.description}</p>
         </div>
-      </div>
-      <p class="exp-description">${exp.description}</p>
-      <ul class="exp-bullet-list">
-        ${exp.highlights.map(hl => `
-          <li class="exp-bullet-item">
-            <span class="exp-bullet-icon">✓</span>
-            <span>${hl}</span>
-          </li>
-        `).join('')}
-      </ul>
-      <div class="exp-tech-tags">
-        ${exp.techStack.map(tech => `<span class="exp-tag">#${tech}</span>`).join('')}
+
+        <!-- Minimal Impact Capability Bento Strip -->
+        ${exp.impactMetrics && exp.impactMetrics.length ? `
+          <div class="exp-impact-grid">
+            ${exp.impactMetrics.map(m => `
+              <div class="exp-impact-card">
+                <div class="exp-impact-icon-wrap">
+                  <i data-lucide="${m.icon || 'check-circle'}" style="width: 15px; height: 15px;"></i>
+                </div>
+                <div class="exp-impact-text">
+                  <span class="exp-impact-title">${m.title}</span>
+                  <span class="exp-impact-desc">${m.desc}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <!-- Deliverables & Highlights with Sleek Micro Markers -->
+        <div class="exp-deliverables-wrap">
+          <h4 class="exp-deliverables-heading">
+            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+            Key Contributions & System Deliverables
+          </h4>
+          <ul class="exp-bullet-list">
+            ${exp.highlights.map(hl => `
+              <li class="exp-bullet-item">
+                <span class="exp-bullet-marker">
+                  <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                </span>
+                <span class="exp-bullet-text">${hl.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+
+        <!-- Modern Minimalist Tech Stack -->
+        <div class="exp-footer-bar">
+          <span class="exp-tech-label">Core Technologies:</span>
+          <div class="exp-tech-tags">
+            ${exp.techStack.map(tech => `
+              <span class="exp-tag">
+                <span class="exp-tag-dot"></span>
+                ${tech}
+              </span>
+            `).join('')}
+          </div>
+        </div>
       </div>
     </div>
   `).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 }
 
 /* --- Render Projects --- */
@@ -1258,20 +1447,8 @@ const dragonBallLocations = [
   { num: 7, name: "7-Star Dragon Ball", sector: "Contact Radar Base", hint: "Secured near Contact Hub", x: 50, y: 22, selector: "#contact" }
 ];
 
-/* Web Audio Synthesizers for authentic sound effects */
-let audioCtx = null;
-function getAudioContext() {
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (AudioContextClass) audioCtx = new AudioContextClass();
-  }
-  if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-  return audioCtx;
-}
-
 function playRadarPingSound() {
+  if (!isSoundEffectsEnabled()) return;
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -1290,6 +1467,7 @@ function playRadarPingSound() {
 }
 
 function playDragonBallCollectChime() {
+  if (!isSoundEffectsEnabled()) return;
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -1721,6 +1899,7 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
 }
 
 function playPrankBoingSound() {
+  if (!isSoundEffectsEnabled()) return;
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -2358,6 +2537,7 @@ let shenronTimelineTimers = [];
 let shenronStormLoopId = null;
 
 function playShenronThunderSynth() {
+  if (!isSoundEffectsEnabled()) return;
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -2388,6 +2568,7 @@ function playShenronThunderSynth() {
 }
 
 function playShenronRoarSound() {
+  if (!isSoundEffectsEnabled()) return;
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -2419,6 +2600,26 @@ function playShenronRoarSound() {
     osc2.start(now);
     osc1.stop(now + 2.3);
     osc2.stop(now + 2.3);
+  } catch (e) {}
+}
+
+function playSuperSaiyanAuraSound() {
+  if (!isSoundEffectsEnabled()) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.exponentialRampToValueAtTime(330, now + 0.8);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 1.2);
   } catch (e) {}
 }
 

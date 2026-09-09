@@ -111,17 +111,28 @@ const portfolioData = {
     {
       role: "Software Developer Intern",
       company: "Rashtriya Chemicals & Fertilizers Limited (RCF)",
+      shortCompany: "RCF Ltd.",
       location: "Mumbai, India",
-      period: "01 Jan 2026 – 28 Feb 2026",
-      type: "Internship",
+      period: "Jan 2026 – Feb 2026",
+      duration: "2 Months",
+      type: "Enterprise Internship",
+      mode: "On-site",
+      status: "Completed",
       badgeColor: "accent",
-      description: "Architected and delivered an enterprise-grade role-based access control (RBAC) platform integrated with SAP and Active Directory.",
+      logo: "assets/rcf_logo.svg",
+      logoText: "RCF",
+      description: "Architected and delivered an enterprise-grade role-based access control (RBAC) platform integrated with SAP ERP and Active Directory to streamline authorization governance.",
       highlights: [
-        "Developed an SAP-integrated RBAC platform using C#, ASP.NET, Oracle Database, and SAP NCo to streamline enterprise authorization management.",
-        "Implemented LDAP-based authentication and SAP-integrated role provisioning utilizing SAP BAPIs and custom Function Modules.",
-        "Engineered comprehensive role administration, T-Code assignment, audit logging, real-time authorization synchronization, and session management to tighten enterprise security."
+        "Engineered an SAP-integrated RBAC platform using **C#**, **ASP.NET**, and **Oracle Database**, interfacing with SAP ERP via **SAP NCo** connector.",
+        "Implemented **LDAP-based Active Directory authentication** and automated role provisioning utilizing custom **SAP BAPIs** and **Function Modules**.",
+        "Delivered granular role administration, **T-Code assignment**, tamper-evident **audit logging**, real-time authorization synchronization, and secure **session management**."
       ],
-      techStack: ["C#", "ASP.NET", "Oracle DB", "SAP NCo", "SAP BAPIs", "LDAP", "RBAC"]
+      impactMetrics: [
+        { icon: "shield-check", title: "Enterprise Security", desc: "Granular RBAC & T-Code authorization matrix" },
+        { icon: "layers", title: "ERP Integration", desc: "SAP NCo & Active Directory LDAP synchronization" },
+        { icon: "file-check", title: "Audit & Governance", desc: "Real-time logging & automated provisioning" }
+      ],
+      techStack: ["C#", "ASP.NET", "Oracle DB", "SAP NCo", "SAP BAPIs", "Active Directory (LDAP)", "Enterprise RBAC"]
     }
   ],
 
