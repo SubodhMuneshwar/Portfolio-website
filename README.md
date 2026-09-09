@@ -13,16 +13,6 @@ The portfolio is built as a zero-dependency, high-performance web application ut
 
 ---
 
-## Interactive Preview
-
-<p align="center">
-  <img src="assets/preview.webp" alt="Subodh Uttam Muneshwar - Portfolio Interactive Preview" width="100%" />
-</p>
-
-> *Live demonstration showcasing the initial page entrance, one-by-one cascading scroll reveals across section headers and cards, and dynamic dual-theme switching.*
-
----
-
 ## Architectural Highlights
 
 ### 1. Zero-Dependency Vanilla Core
