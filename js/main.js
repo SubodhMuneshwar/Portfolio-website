@@ -205,42 +205,86 @@ function initHeroStats() {
   `).join('');
 }
 
-/* --- Render Skills Matrix — with Scouter Power Levels (Claude PowerBar-inspired) --- */
+/* --- Render Skills — Tabbed Category Interface --- */
 function renderSkills() {
   const container = document.getElementById('skillsGrid');
   if (!container || !portfolioData.skills) return;
 
-  container.innerHTML = portfolioData.skills.map(cat => `
-    <div class="skill-category-card">
-      <div class="skill-card-header">
-        <div class="skill-icon-box" style="background-color: var(--${cat.color});">
-          <i data-lucide="${cat.icon}" style="width: 22px; height: 22px; stroke-width: 2.5;"></i>
-        </div>
-        <h3 class="skill-card-title">${cat.category}</h3>
+  // Map proficiency levels to dot colors
+  const levelColors = {
+    'Expert': '#10B981',
+    'Advanced': '#3B82F6',
+    'Strong': '#3B82F6',
+    'Proficient': '#F59E0B',
+    'Intermediate': '#F59E0B'
+  };
+
+  // Build tabbed interface
+  container.innerHTML = `
+    <div class="skills-tabs-wrapper">
+      <div class="skills-tab-bar" role="tablist">
+        ${portfolioData.skills.map((cat, i) => `
+          <button type="button" class="skills-tab${i === 0 ? ' is-active' : ''}"
+                  role="tab"
+                  aria-selected="${i === 0}"
+                  data-tab-index="${i}"
+                  style="--tab-color: var(--${cat.color});">
+            <i data-lucide="${cat.icon}" style="width: 16px; height: 16px; stroke-width: 2.5;"></i>
+            <span>${cat.category}</span>
+          </button>
+        `).join('')}
       </div>
-      ${cat.power ? `
-      <div class="skill-power-row" aria-label="${cat.category} power ${cat.power}">
-        <div class="skill-power-track" role="progressbar" aria-valuenow="${cat.level}" aria-valuemin="0" aria-valuemax="100">
-          <div class="skill-power-fill" data-level="${cat.level}" style="background:var(--${cat.color});width:0%"></div>
-        </div>
-        <span class="skill-power-label" style="color:var(--${cat.color})"><span class="skill-power-dot" style="background:var(--${cat.color})"></span>PWR <strong>${cat.power.toLocaleString()}</strong> · ${cat.level}%</span>
-      </div>` : ''}
-      <div class="skill-items-wrap">
-        ${cat.items.map(skill => `
-          <div class="skill-chip">
-            <span>${skill.name}</span>
-            <span class="skill-chip-tag">${skill.tag}</span>
+      <div class="skills-tab-panels">
+        ${portfolioData.skills.map((cat, i) => `
+          <div class="skills-tab-panel${i === 0 ? ' is-active' : ''}"
+               role="tabpanel"
+               data-panel-index="${i}">
+            <div class="skills-panel-header">
+              <div class="skills-panel-icon" style="background-color: var(--${cat.color});">
+                <i data-lucide="${cat.icon}" style="width: 20px; height: 20px; stroke-width: 2.5;"></i>
+              </div>
+              <div class="skills-panel-meta">
+                <h3 class="skills-panel-title">${cat.category}</h3>
+                <span class="skills-panel-count">${cat.items.length} skill${cat.items.length !== 1 ? 's' : ''}</span>
+              </div>
+            </div>
+            <div class="skills-panel-chips">
+              ${cat.items.map(skill => `
+                <span class="skill-chip" title="${skill.level}">
+                  <span class="skill-level-dot" style="background-color: ${levelColors[skill.level] || '#94A3B8'};"></span>
+                  <span class="skill-chip-name">${skill.name}</span>
+                  <span class="skill-chip-level">${skill.level}</span>
+                </span>
+              `).join('')}
+            </div>
           </div>
         `).join('')}
       </div>
+      <div class="skills-legend">
+        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #10B981;"></span> Expert</span>
+        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #3B82F6;"></span> Advanced</span>
+        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #F59E0B;"></span> Proficient</span>
+      </div>
     </div>
-  `).join('');
-  const fills=container.querySelectorAll('.skill-power-fill[data-level]');
-  if(!fills.length) return;
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ fills.forEach(f=>f.style.width=f.dataset.level+'%'); return; }
-  const io=new IntersectionObserver((entries,obs)=>{entries.forEach(e=>{if(e.isIntersecting){const f=e.target; requestAnimationFrame(()=>{f.style.width=f.dataset.level+'%'; f.classList.add('is-animated');}); obs.unobserve(f);}});},{threshold:.35});
-  fills.forEach(f=>io.observe(f));
+  `;
+
+  // Tab switching logic
+  const tabs = container.querySelectorAll('.skills-tab');
+  const panels = container.querySelectorAll('.skills-tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = tab.dataset.tabIndex;
+      tabs.forEach(t => { t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
+      panels.forEach(p => p.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected', 'true');
+      const panel = container.querySelector(`.skills-tab-panel[data-panel-index="${idx}"]`);
+      if (panel) panel.classList.add('is-active');
+    });
+  });
 }
+
 
 /* --- Render Experience — Modern Minimalist Timeline (Gemini 3.8) --- */
 function renderExperience() {
@@ -3593,7 +3637,7 @@ function initStatCountUp() {
 
 /* --- Dynamic: 3D Flashcard Carousel Decks (Skills / Projects / Achievements) --- */
 function initFlashcardDecks() {
-  const deckSelectors = ['#skillsGrid', '#projectsGrid', '#achievementsGrid'];
+  const deckSelectors = ['#projectsGrid', '#achievementsGrid'];
 
   deckSelectors.forEach(sel => {
     const grid = document.querySelector(sel);
