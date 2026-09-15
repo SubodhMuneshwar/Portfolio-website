@@ -41,14 +41,22 @@
       } catch(e) {}
     })();
   </script>
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/tokens.css?v=20260907_sharpBackground_v2">
-  <link rel="stylesheet" href="css/styles.css?v=20260909_soundToggleV1">
+  <!-- Preconnect & Preload Critical Resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="assets/subodh.jpg">
 
-  <!-- External Libraries (Lucide Icons, Canvas Confetti & Lenis Smooth Scroll) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <!-- Google Fonts directly linked (eliminates CSS @import waterfall delay) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css?v=20260907_sharpBackground_v2">
+  <link rel="stylesheet" href="css/styles.css?v=20260916_studioCodexV1">
+
+  <!-- Deferred External Libraries (Non-blocking First Contentful Paint) -->
+  <script defer src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 </head>
 
 <body>
@@ -201,6 +209,7 @@
           </div>
 
           <div class="hero-visual" style="position: relative;">
+            <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: -16px; right: 12px;" data-fake-ball="spiral" title="Secret Cosmic Dragon Ball?! Click me!"></span>
             <div class="hero-visual-wrapper">
               <!-- High-Tech / ROSE & SAIYAN HUD Card Frame -->
 
@@ -255,6 +264,7 @@
          Stats & Highlights Strip
          ========================================================================= -->
     <section class="stats-section" id="stats" style="position: relative;">
+      <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: -18px; right: 35px;" data-fake-ball="100" title="100-Star Ultra Mythic Ball?! Click to claim!"></span>
       <div class="container">
         <div class="stats-grid" id="statsGrid">
           <!-- Dynamic render from data.js -->
@@ -271,14 +281,14 @@
         <div class="ticker-item"><span>C# .NET Enterprise Apps</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>Computer Vision & CNN (98% Acc)</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>Smart India Hackathon Top 5</span><span class="ticker-bullet">★</span></div>
-        <div class="ticker-item"><span>SAP NCo & LDAP Authentication</span><span class="ticker-bullet">★</span></div>
+        <div class="ticker-item"><span>SAP NCo & LDAP Authentication</span><span class="dragon-ball fake-dragon-ball" data-fake-ball="cookie" title="Chocolate Chip Dragon Ball?!"></span></div>
         <div class="ticker-item"><span>Distributed Systems & Algorithms</span><span class="ticker-bullet">★</span></div>
         <!-- Repeated for seamless loop -->
         <div class="ticker-item"><span>Python & Flask Systems</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>C# .NET Enterprise Apps</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>Computer Vision & CNN (98% Acc)</span><span class="ticker-bullet">★</span></div>
         <div class="ticker-item"><span>Smart India Hackathon Top 5</span><span class="ticker-bullet">★</span></div>
-        <div class="ticker-item"><span>SAP NCo & LDAP Authentication</span><span class="ticker-bullet">★</span></div>
+        <div class="ticker-item"><span>SAP NCo & LDAP Authentication</span><span class="dragon-ball fake-dragon-ball" data-fake-ball="cookie" title="Chocolate Chip Dragon Ball?!"></span></div>
         <div class="ticker-item">
           <span>Distributed Systems & Algorithms</span>
           <span class="ticker-bullet">★</span>
@@ -292,6 +302,8 @@
     <section class="section" id="about">
       <div class="container">
         <div class="sticker-card card-violet" style="max-width: 980px; margin: 0 auto; position: relative;">
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: -20px; right: 28px;" data-fake-ball="0" title="A mysterious blank Dragon Ball?"></span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="bottom: -20px; left: 24px;" data-fake-ball="9" title="9-Star Ancient Dragon Ball?!"></span>
           <div class="card-floating-badge" style="background-color: var(--tertiary);">
             <i data-lucide="user-check" style="width: 14px; height: 14px;"></i>
             <span>Professional Summary</span>
@@ -334,6 +346,7 @@
         <div class="section-header" style="position: relative;">
           <!-- Collectible 1-Star Dragon Ball -->
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="1" title="Collect the 1-Star Dragon Ball!">★</span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="glitch" title="Cyber Matrix Glitch Ball?! Click to hack!"></span>
           <div class="section-tag" style="background-color: var(--secondary);">
             <i data-lucide="cpu" style="width: 14px; height: 14px;"></i>
             <span>Technical Skills</span>
@@ -357,6 +370,7 @@
         <div class="section-header" style="position: relative;">
           <!-- Collectible 2-Star Dragon Ball -->
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="2" title="Collect the 2-Star Dragon Ball!">★★</span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="cookie" title="Chocolate Chip Dragon Ball?!"></span>
           <div class="section-tag" style="background-color: var(--accent);">
             <i data-lucide="briefcase" style="width: 14px; height: 14px;"></i>
             <span>Professional Experience</span>
@@ -381,6 +395,7 @@
           <span class="dragon-ball float-left-ball" style="top: -12px; left: -16px;" data-ball="3" title="Collect the 3-Star Dragon Ball!">★★★</span>
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="4"
             title="The Iconic 4-Star Dragon Ball (Goku's Grandpa's Ball)!">★★★★</span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="8" title="Bonus Project Dragon Ball?! Click!"></span>
           <div class="section-tag" style="background-color: var(--tertiary);">
             <i data-lucide="folder-git-2" style="width: 14px; height: 14px;"></i>
             <span>Featured Projects</span>
@@ -411,6 +426,7 @@
         <div class="section-header" style="position: relative;">
           <!-- Collectible 5-Star Dragon Ball -->
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="5" title="Collect the 5-Star Dragon Ball!">★★★★★</span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="100" title="100-Star National Trophy Ball?!"></span>
           <div class="section-tag" style="background-color: var(--quaternary);">
             <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
             <span>Leadership & Honors</span>
@@ -442,7 +458,8 @@
           <p class="section-subtitle">Academic foundations and continuous professional credentials.</p>
         </div>
 
-        <div class="edu-cert-grid">
+        <div class="edu-cert-grid" style="position: relative;">
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: -10px; right: 10px;" data-fake-ball="question" title="A mystery question-mark Dragon Ball?"></span>
           <div style="position: relative;">
             <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
               <i data-lucide="book-open" style="color: var(--accent);"></i>
@@ -474,6 +491,7 @@
         <!-- Clean Section Header with Collectible 7-Star Dragon Ball -->
         <div class="section-header" style="position: relative;">
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="7" title="Collect the 7-Star Dragon Ball!">★★★★★★★</span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="cracked" title="This Dragon Ball has a band-aid on it?!"></span>
           <div class="section-badge bg-mint">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right: 4px;">
               <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/>
@@ -1055,8 +1073,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260909_dragonBallFlowFix_v1"></script>
-  <script src="js/main.js?v=20260909_soundToggleV1"></script>
+  <script defer src="js/data.js?v=20260915_fastLoadV2"></script>
+  <script defer src="js/main.js?v=20260916_studioCodexV1"></script>
 </body>
 
 </html>
