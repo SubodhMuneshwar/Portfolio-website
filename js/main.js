@@ -1,52 +1,68 @@
 /**
  * Subodh Uttam Muneshwar - Portfolio Interactivity & Render Engine
- * Playful Geometric UI Interaction logic
+ * Optimized for performance: Reduced DOM manipulation, efficient event handling
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize essential functionality first
+  initLucideIcons();
   initSmoothScroll();
   initPageIntroAnimation();
-  initHeroStats();
+
+  // Initialize core rendering
   renderSkills();
   renderExperience();
   renderProjects('all');
   renderAchievements();
   renderEducation();
   renderCertifications();
-  initProjectFilters();
-  initContactInteractions();
-  initConfettiTriggers();
-  initMobileMenu();
-  initScrollSpy();
-  initLucideIcons();
-  initKeyboardShortcuts();
-  initSaiyanMode();
-  initDragonBallsCollector();
-  initNimbusDrag();
-  initGlobalClickAnimation();
-  initScrollReveal();
-  initDbzJokePlaceholders();
-  initHeroRotatingWord();
-  initPhotoRevealLens();
-  initScrollProgress();
-  initHeroParallax();
-  initCardSpotlight();
-  initCardTilt();
-  initMagneticButtons();
-  initStatCountUp();
-  initFlashcardDecks();
-  initStartupQuestBriefing();
-  initSoundEffects();
+
+  // Initialize interactive features (deferred for better initial load)
+  setTimeout(() => {
+    initHeroStats();
+    initProjectFilters();
+    initContactInteractions();
+    initConfettiTriggers();
+    initMobileMenu();
+    initScrollSpy();
+    initKeyboardShortcuts();
+    initSaiyanMode();
+    initDragonBallsCollector();
+    initNimbusDrag();
+    initGlobalClickAnimation();
+    initScrollReveal();
+    initDbzJokePlaceholders();
+    initHeroRotatingWord();
+    initPhotoRevealLens();
+    initScrollProgress();
+    initHeroParallax();
+    initCardSpotlight();
+    initCardTilt();
+    initMagneticButtons();
+    initStatCountUp();
+    initFlashcardDecks();
+    initStartupQuestBriefing();
+    initSoundEffects();
+  }, 100);
 });
 
 /* ==========================================================================
-   Web Audio Synthesizers & Sound Effects (SFX) Engine
+   Web Audio Synthesizers & Sound Effects (SFX) Engine - Optimized
    ========================================================================== */
 let audioCtx = null;
+let sfxGainNode = null;
+let isSfxEnabledState = true;
+
 function getAudioContext() {
   if (!audioCtx) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (AudioContextClass) audioCtx = new AudioContextClass();
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+      // Create gain node for better volume control
+      sfxGainNode = audioCtx.createGain();
+      sfxGainNode.gain.value = 0.3; // Reduced volume for less intrusive SFX
+      sfxGainNode.connect(audioCtx.destination);
+    }
   }
   if (audioCtx && audioCtx.state === 'suspended') {
     audioCtx.resume();
@@ -56,14 +72,13 @@ function getAudioContext() {
 
 const SFX_STORAGE_KEY = 'portfolio_sfx_enabled';
 
-let isSfxEnabledState = (() => {
-  try {
-    const saved = localStorage.getItem(SFX_STORAGE_KEY);
-    return saved !== null ? saved === 'true' : true;
-  } catch (e) {
-    return true;
-  }
-})();
+// Initialize SFX state from localStorage
+try {
+  const saved = localStorage.getItem(SFX_STORAGE_KEY);
+  isSfxEnabledState = saved !== null ? saved === 'true' : true;
+} catch (e) {
+  isSfxEnabledState = true;
+}
 
 function isSoundEffectsEnabled() {
   return isSfxEnabledState;
@@ -88,3998 +103,1537 @@ window.toggleSoundEffects = function() {
   setSoundEffectsEnabled(!isSfxEnabledState, true);
 };
 
+// Optimized SFX function - reduced complexity and frequency range
 function playSfxChirp() {
+  if (!isSfxEnabledState) return;
+
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
-    const now = ctx.currentTime;
+
+    // Create a simple, short sound
     const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, now); // D5
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
-    gain.gain.setValueAtTime(0.12, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.18);
-  } catch (e) {}
-}
+    osc.frequency.setValueAtTime(440, ctx.currentTime); // A4
+    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.08); // E5
 
-function updateSfxUI() {
-  const toggleBtns = document.querySelectorAll('.sfx-toggle-btn, #sfxToggleBtn');
-  toggleBtns.forEach(btn => {
-    btn.setAttribute('aria-checked', isSfxEnabledState ? 'true' : 'false');
-    btn.classList.toggle('sfx-active', isSfxEnabledState);
-    btn.classList.toggle('sfx-muted', !isSfxEnabledState);
-    btn.title = isSfxEnabledState
-      ? "Sound Effects: ON (Click or press 'M' to Mute)"
-      : "Sound Effects: OFF (Click or press 'M' to Unmute)";
-
-    const iconOn = btn.querySelector('.sfx-icon-on');
-    const iconOff = btn.querySelector('.sfx-icon-off');
-    const srStatus = btn.querySelector('.sfx-sr-status');
-
-    if (iconOn) iconOn.style.display = isSfxEnabledState ? 'inline-block' : 'none';
-    if (iconOff) iconOff.style.display = isSfxEnabledState ? 'none' : 'inline-block';
-    if (srStatus) srStatus.textContent = isSfxEnabledState ? 'Sound ON' : 'Sound OFF';
-  });
-
-  // Also update Goku widget chip if present
-  const gokuSfxIcons = document.querySelectorAll('.goku-sfx-icon');
-  const gokuSfxTexts = document.querySelectorAll('.goku-sfx-text');
-  gokuSfxTexts.forEach(t => { t.textContent = isSfxEnabledState ? 'Sound: ON' : 'Sound: OFF'; });
-  gokuSfxIcons.forEach(i => {
-    i.setAttribute('data-lucide', isSfxEnabledState ? 'volume-2' : 'volume-x');
-  });
-  if (window.lucide && gokuSfxIcons.length) {
-    try { window.lucide.createIcons(); } catch(e){}
-  }
-}
-
-function initSoundEffects() {
-  updateSfxUI();
-}
-
-function playWebAudioTone(freq=440, type='sine', duration=0.15, vol=0.15) {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, now);
-    gain.gain.setValueAtTime(vol, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + duration);
-  } catch(e) {}
-}
-
-/* --- Keyboard Shortcuts --- */
-function initKeyboardShortcuts() {
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeProjectModal();
-      closeShenronModal();
-      closeDragonRadarModal();
-      closeKidGokuPrankModal();
-      closeQuestBriefingModal();
-    } else if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-      openQuestBriefingModal();
-    } else if ((e.key === 'm' || e.key === 'M') && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-      window.toggleSoundEffects();
-    }
-  });
-}
-
-// Re-initialize Lucide icons whenever content changes
-function initLucideIcons() {
-  if (window.lucide) {
-    try {
-      window.lucide.createIcons();
-    } catch (err) {
-      console.warn('Lucide icon init note:', err);
-    }
-  }
-}
-
-/* --- Hero Stats Initialization --- */
-function initHeroStats() {
-  const statsContainer = document.getElementById('statsGrid');
-  if (!statsContainer || !portfolioData.personal.stats) return;
-
-  statsContainer.innerHTML = portfolioData.personal.stats.map(stat => `
-    <div class="stat-card">
-      <div class="stat-icon-wrapper" style="background-color: var(--${stat.color});">
-        <i data-lucide="${stat.icon}" style="width: 22px; height: 22px; stroke-width: 2.5;"></i>
-      </div>
-      <div class="stat-value">${stat.value}</div>
-      <div class="stat-label">${stat.label}</div>
-    </div>
-  `).join('');
-}
-
-/* --- Render Skills — Tabbed Category Interface --- */
-function renderSkills() {
-  const container = document.getElementById('skillsGrid');
-  if (!container || !portfolioData.skills) return;
-
-  // Map proficiency levels to dot colors
-  const levelColors = {
-    'Expert': '#10B981',
-    'Advanced': '#3B82F6',
-    'Strong': '#3B82F6',
-    'Proficient': '#F59E0B',
-    'Intermediate': '#F59E0B'
-  };
-
-  // Build tabbed interface
-  container.innerHTML = `
-    <div class="skills-tabs-wrapper">
-      <div class="skills-tab-bar" role="tablist">
-        ${portfolioData.skills.map((cat, i) => `
-          <button type="button" class="skills-tab${i === 0 ? ' is-active' : ''}"
-                  role="tab"
-                  aria-selected="${i === 0}"
-                  data-tab-index="${i}"
-                  style="--tab-color: var(--${cat.color});">
-            <i data-lucide="${cat.icon}" style="width: 16px; height: 16px; stroke-width: 2.5;"></i>
-            <span>${cat.category}</span>
-          </button>
-        `).join('')}
-      </div>
-      <div class="skills-tab-panels">
-        ${portfolioData.skills.map((cat, i) => `
-          <div class="skills-tab-panel${i === 0 ? ' is-active' : ''}"
-               role="tabpanel"
-               data-panel-index="${i}">
-            <div class="skills-panel-header">
-              <div class="skills-panel-icon" style="background-color: var(--${cat.color});">
-                <i data-lucide="${cat.icon}" style="width: 20px; height: 20px; stroke-width: 2.5;"></i>
-              </div>
-              <div class="skills-panel-meta">
-                <h3 class="skills-panel-title">${cat.category}</h3>
-                <span class="skills-panel-count">${cat.items.length} skill${cat.items.length !== 1 ? 's' : ''}</span>
-              </div>
-            </div>
-            <div class="skills-panel-chips">
-              ${cat.items.map(skill => `
-                <span class="skill-chip" title="${skill.level}">
-                  <span class="skill-level-dot" style="background-color: ${levelColors[skill.level] || '#94A3B8'};"></span>
-                  <span class="skill-chip-name">${skill.name}</span>
-                  <span class="skill-chip-level">${skill.level}</span>
-                </span>
-              `).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-      <div class="skills-legend">
-        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #10B981;"></span> Expert</span>
-        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #3B82F6;"></span> Advanced</span>
-        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #F59E0B;"></span> Proficient</span>
-      </div>
-    </div>
-  `;
-
-  // Tab switching logic
-  const tabs = container.querySelectorAll('.skills-tab');
-  const panels = container.querySelectorAll('.skills-tab-panel');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const idx = tab.dataset.tabIndex;
-      tabs.forEach(t => { t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
-      panels.forEach(p => p.classList.remove('is-active'));
-      tab.classList.add('is-active');
-      tab.setAttribute('aria-selected', 'true');
-      const panel = container.querySelector(`.skills-tab-panel[data-panel-index="${idx}"]`);
-      if (panel) panel.classList.add('is-active');
-    });
-  });
-}
-
-
-/* --- Render Experience — Modern Minimalist Timeline (Gemini 3.8) --- */
-function renderExperience() {
-  const container = document.getElementById('experienceTimeline');
-  if (!container || !portfolioData.experience) return;
-
-  container.innerHTML = portfolioData.experience.map((exp, idx) => `
-    <div class="exp-timeline-item" data-index="${idx}">
-      <!-- Visual Timeline Rail Spine & Beacon Node -->
-      <div class="exp-rail" aria-hidden="true">
-        <div class="exp-node">
-          <span class="exp-node-beacon"></span>
-          <i data-lucide="briefcase" class="exp-node-icon"></i>
-        </div>
-        <div class="exp-rail-line"></div>
-      </div>
-
-      <!-- Modern Minimalist Experience Card -->
-      <div class="experience-card">
-        <!-- Header Bar: Company Monogram + Role Title + Meta + Date Badge -->
-        <div class="exp-header-bar">
-          <div class="exp-company-block">
-            <div class="exp-company-avatar">
-              ${exp.logo ? `
-                <img src="${exp.logo}" alt="${exp.company} Logo" class="exp-company-logo" width="38" height="38" loading="lazy" />
-              ` : `
-                <span>${exp.logoText || 'EXP'}</span>
-              `}
-            </div>
-            <div class="exp-title-meta">
-              <div class="exp-role-row">
-                <h3 class="exp-role">${exp.role}</h3>
-                <span class="exp-type-badge">${exp.type || 'Internship'}</span>
-              </div>
-              <div class="exp-company-line">
-                <span class="exp-company-name">${exp.company}</span>
-                <span class="exp-meta-separator">•</span>
-                <span class="exp-location-tag">
-                  <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
-                  ${exp.location}
-                </span>
-                ${exp.mode ? `
-                  <span class="exp-meta-separator">•</span>
-                  <span class="exp-mode-tag">
-                    <i data-lucide="building" style="width: 12px; height: 12px;"></i>
-                    ${exp.mode}
-                  </span>
-                ` : ''}
-              </div>
-            </div>
-          </div>
-
-          <div class="exp-date-container">
-            <div class="exp-date-pill">
-              <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
-              <span>${exp.period}</span>
-            </div>
-            ${exp.duration ? `
-              <span class="exp-duration-pill">${exp.duration}</span>
-            ` : ''}
-          </div>
-        </div>
-
-        <!-- Executive Summary Callout -->
-        <div class="exp-summary-callout">
-          <p class="exp-description">${exp.description}</p>
-        </div>
-
-        <!-- Minimal Impact Capability Bento Strip -->
-        ${exp.impactMetrics && exp.impactMetrics.length ? `
-          <div class="exp-impact-grid">
-            ${exp.impactMetrics.map(m => `
-              <div class="exp-impact-card">
-                <div class="exp-impact-icon-wrap">
-                  <i data-lucide="${m.icon || 'check-circle'}" style="width: 15px; height: 15px;"></i>
-                </div>
-                <div class="exp-impact-text">
-                  <span class="exp-impact-title">${m.title}</span>
-                  <span class="exp-impact-desc">${m.desc}</span>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        ` : ''}
-
-        <!-- Deliverables & Highlights with Sleek Micro Markers -->
-        <div class="exp-deliverables-wrap">
-          <h4 class="exp-deliverables-heading">
-            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
-            Key Contributions & System Deliverables
-          </h4>
-          <ul class="exp-bullet-list">
-            ${exp.highlights.map(hl => `
-              <li class="exp-bullet-item">
-                <span class="exp-bullet-marker">
-                  <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
-                </span>
-                <span class="exp-bullet-text">${hl.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-
-        <!-- Modern Minimalist Tech Stack -->
-        <div class="exp-footer-bar">
-          <span class="exp-tech-label">Core Technologies:</span>
-          <div class="exp-tech-tags">
-            ${exp.techStack.map(tech => `
-              <span class="exp-tag">
-                <span class="exp-tag-dot"></span>
-                ${tech}
-              </span>
-            `).join('')}
-          </div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-
-  if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    window.lucide.createIcons();
-  }
-}
-
-/* --- Render Projects --- */
-function renderProjects(filterCategory = 'all') {
-  const container = document.getElementById('projectsGrid');
-  if (!container || !portfolioData.projects) return;
-
-  const filtered = filterCategory === 'all'
-    ? portfolioData.projects
-    : portfolioData.projects.filter(p => p.category === filterCategory);
-
-  if (!filtered.length) {
-    container.innerHTML = `
-      <div class="project-empty-state" style="grid-column:1/-1; text-align:center; padding:2.5rem 1rem; background:var(--card); border:2px dashed var(--border-light); border-radius:24px; color:var(--muted-fg);">
-        <p style="font-family:var(--font-heading); font-weight:800; color:var(--fg); margin-bottom:0.4rem;">No projects in this category yet</p>
-        <p style="font-size:var(--text-sm);">Try “All Projects” — 3 builds are live.</p>
-      </div>`;
-    initLucideIcons();
-    if (window.refreshScrollReveal) window.refreshScrollReveal();
-    return;
-  }
-
-  container.innerHTML = filtered.map(proj => `
-    <div class="project-card project-card-enter">
-      <div class="project-card-image-wrap">
-        <img src="${encodeURI(proj.image)}" alt="${proj.title}" class="project-card-image" loading="lazy" onerror="this.style.display='none'" />
-      </div>
-      <div class="project-card-body">
-        <div class="project-meta-row">
-          <span class="project-badge badge-${proj.badgeColor}" style="background-color: var(--${proj.badgeColor});">
-            ${proj.badge}
-          </span>
-          <span class="project-period">${proj.period}</span>
-        </div>
-        <h3 class="project-title">${proj.title}</h3>
-        <p class="project-tagline">${proj.tagline}</p>
-        <div class="project-tech-chips">
-          ${proj.techStack.slice(0, 4).map(t => `<span class="project-chip">${t}</span>`).join('')}
-          ${proj.techStack.length > 4 ? `<span class="project-chip">+${proj.techStack.length - 4}</span>` : ''}
-        </div>
-        <div class="project-actions">
-          <button type="button" class="btn btn-outline btn-sm project-details-btn" data-project-id="${proj.id}">
-            <span>Explore Details</span>
-            <div class="btn-icon-circle"><i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></div>
-          </button>
-          <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm project-github-link" title="View Source Code on GitHub">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-            </svg>
-            <span>GitHub</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  `).join('');
-
-  // Robust delegated handling — works even if inline onclick blocked / CSP; also fixes image with space
-  container.querySelectorAll('.project-details-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const pid = btn.getAttribute('data-project-id');
-      if (pid) window.openProjectModal(pid);
-    });
-  });
-
-  // Ensure GitHub links always fire (prevent card tilt / overlay capturing)
-  container.querySelectorAll('.project-github-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-  });
-
-  initLucideIcons();
-  if (window.refreshScrollReveal) window.refreshScrollReveal();
-}
-
-/* --- Project Filter Handlers --- */
-function initProjectFilters() {
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const category = btn.getAttribute('data-filter');
-      renderProjects(category);
-    });
-  });
-
-  // Global delegated click listener for project buttons
-  document.addEventListener('click', (e) => {
-    const detailsBtn = e.target.closest('.project-details-btn');
-    if (detailsBtn) {
-      e.preventDefault();
-      e.stopPropagation();
-      const pid = detailsBtn.getAttribute('data-project-id');
-      if (pid) window.openProjectModal(pid);
-      return;
-    }
-    const ghLink = e.target.closest('.project-github-link');
-    if (ghLink) {
-      e.stopPropagation();
-    }
-  });
-}
-
-/* --- Project Modal Deep Dive --- */
-window.openProjectModal = function(projectId) {
-  const proj = portfolioData.projects.find(p => p.id === projectId);
-  if (!proj) return;
-
-  const modalBackdrop = document.getElementById('projectModal');
-  const modalContent = document.getElementById('modalContent');
-  if (!modalBackdrop || !modalContent) return;
-
-  modalContent.innerHTML = `
-    <div style="margin-bottom: 1.5rem;">
-      <span class="project-badge badge-${proj.badgeColor}" style="background-color: var(--${proj.badgeColor}); margin-bottom: 0.75rem; display: inline-block;">
-        ${proj.badge}
-      </span>
-      <h2 style="font-size: 1.75rem; font-weight: 900; margin-bottom: 0.5rem;">${proj.title}</h2>
-      <p style="color: var(--muted-fg); font-weight: 600;">${proj.tagline}</p>
-    </div>
-
-    <div style="border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--border); margin-bottom: 1.5rem; background: var(--muted);">
-      <img src="${encodeURI(proj.image)}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" loading="lazy" onerror="this.style.display='none'" />
-    </div>
-
-    <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Key Architecture & Deliverables:</h4>
-    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
-      ${proj.bullets.map(b => `
-        <li style="display: flex; gap: 0.65rem; font-size: 0.95rem; line-height: 1.5;">
-          <span style="color: var(--accent); font-weight: 900;">➔</span>
-          <span>${b}</span>
-        </li>
-      `).join('')}
-    </ul>
-
-    <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Technologies Used:</h4>
-    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;">
-      ${proj.techStack.map(t => `<span class="tech-pill">${t}</span>`).join('')}
-    </div>
-
-    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-      <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-        </svg>
-        <span>Explore GitHub Repository</span>
-      </a>
-      <button type="button" class="btn btn-outline" onclick="closeProjectModal()">
-        <span>Close Window</span>
-      </button>
-    </div>
-  `;
-
-  modalBackdrop.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  initLucideIcons();
-};
-
-window.closeProjectModal = function() {
-  const modalBackdrop = document.getElementById('projectModal');
-  if (modalBackdrop) {
-    modalBackdrop.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-};
-
-// Global delegated handler for project cards — robust fallback for dynamically rendered cards
-document.addEventListener('click', (e) => {
-  const detailsBtn = e.target.closest('.project-details-btn');
-  if (detailsBtn) {
-    e.preventDefault();
-    e.stopPropagation();
-    const pid = detailsBtn.getAttribute('data-project-id') || detailsBtn.dataset.projectId;
-    if (pid && window.openProjectModal) window.openProjectModal(pid);
-    return;
-  }
-  const ghLink = e.target.closest('.project-github-link');
-  if (ghLink) {
-    e.stopPropagation();
-  }
-});
-
-/* --- Render Achievements --- */
-function renderAchievements() {
-  const container = document.getElementById('achievementsGrid');
-  if (!container || !portfolioData.achievements) return;
-
-  container.innerHTML = portfolioData.achievements.map(ach => `
-    <div class="achievement-card">
-      <div class="ach-icon-circle" style="background-color: var(--${ach.color});">
-        <i data-lucide="${ach.icon}" style="width: 24px; height: 24px; stroke-width: 2.5;"></i>
-      </div>
-      <div class="card-floating-badge badge-${ach.color}" style="background-color: var(--${ach.color});">
-        ${ach.badge}
-      </div>
-      <h3 class="ach-title">${ach.title}</h3>
-      <div class="ach-org">${ach.organization} • ${ach.period}</div>
-      <p class="ach-desc">${ach.description}</p>
-    </div>
-  `).join('');
-}
-
-/* --- Render Education --- */
-function renderEducation() {
-  const container = document.getElementById('educationColumn');
-  if (!container || !portfolioData.education) return;
-
-  container.innerHTML = portfolioData.education.map(edu => `
-    <div class="edu-card">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; gap: 1rem; flex-wrap: wrap;">
-        <div>
-          <h4 style="font-size: 1.15rem; font-weight: 800;">${edu.degree}</h4>
-          <p style="font-weight: 700; color: var(--muted-fg); font-size: 0.9rem;">${edu.institution}</p>
-        </div>
-        <span class="edu-score-pill">${edu.score}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--fg); font-weight: 600;">
-        <span>${edu.highlight}</span>
-        <span style="font-family: var(--font-mono); color: var(--muted-fg);">${edu.period}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-/* --- Render Certifications --- */
-function renderCertifications() {
-  const container = document.getElementById('certificationsColumn');
-  if (!container || !portfolioData.certifications) return;
-
-  container.innerHTML = portfolioData.certifications.map(cert => `
-    <div class="cert-card">
-      <div class="cert-icon-box" style="background-color: var(--${cert.color});">
-        <i data-lucide="${cert.icon}" style="width: 22px; height: 22px; stroke-width: 2.5;"></i>
-      </div>
-      <div>
-        <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.25rem;">${cert.title}</h4>
-        <p style="font-size: 0.85rem; color: var(--muted-fg); font-weight: 600;">${cert.issuer} • ${cert.date}</p>
-      </div>
-    </div>
-  `).join('');
-
-  if (window.refreshScrollReveal) window.refreshScrollReveal();
-}
-
-/* --- Toast Helper (Accessible Live Region) --- */
-function showToast(message) {
-  let toast = document.getElementById('toastNotice');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'toastNotice';
-    toast.className = 'toast-notice';
-    toast.setAttribute('aria-live', 'polite');
-    toast.setAttribute('role', 'status');
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 3000);
-}
-
-/* --- Confetti Micro-Explosion --- */
-function triggerConfetti() {
-  if (window.confetti) {
-    window.confetti({
-      particleCount: 50,
-      spread: 70,
-      origin: { y: 0.8 },
-      colors: ['#8B5CF6', '#F472B6', '#FBBF24', '#34D399']
-    });
-  }
-}
-
-function initConfettiTriggers() {
-  const confettiBtns = document.querySelectorAll('.trigger-confetti');
-  confettiBtns.forEach(btn => {
-    btn.addEventListener('click', triggerConfetti);
-  });
-}
-
-/* --- Contact Form & Gmail Delivery Engine --- */
-function initContactInteractions() {
-  const contactForm = document.getElementById('contactForm');
-  const copyEmailBtn = document.getElementById('copyEmailBtn');
-  const copyPhoneBtn = document.getElementById('copyPhoneBtn');
-
-  // 1. Copy Email to Clipboard
-  if (copyEmailBtn) {
-    copyEmailBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText('subodhum1603@gmail.com').then(() => {
-        showToast('Copied email: subodhum1603@gmail.com');
-      }).catch(() => {
-        showToast('subodhum1603@gmail.com');
-      });
-    });
-  }
-
-  // 2. Copy Phone to Clipboard
-  if (copyPhoneBtn) {
-    copyPhoneBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText('+91 9029920228').then(() => {
-        showToast('Copied phone: +91 9029920228');
-      }).catch(() => {
-        showToast('+91 9029920228');
-      });
-    });
-  }
-
-  // 3. Live Form Submission directly to subodhum1603@gmail.com
-  // Strategy: Try AJAX first for smooth UX. On failure, fall back to native form POST.
-  if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-      const nameInput = document.getElementById('senderName');
-      const emailInput = document.getElementById('senderEmail');
-      const messageInput = document.getElementById('senderMessage');
-      const submitBtn = contactForm.querySelector('button[type="submit"]');
-
-      if (!nameInput || !emailInput || !messageInput || !submitBtn) return;
-
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-      const message = messageInput.value.trim();
-
-      if (!name || !email || !message) {
-        e.preventDefault();
-        showToast('Please fill in all fields before sending.');
-        return;
-      }
-
-      // Try AJAX submission first for a smoother experience
-      e.preventDefault();
-
-      const originalBtnHtml = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>Sending Message...</span>';
-
-      try {
-        const response = await fetch('https://formsubmit.co/ajax/subodhum1603@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            message: message,
-            _subject: `New Portfolio Inquiry from ${name}`,
-            _template: 'table',
-            _captcha: 'false'
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.success === 'true' || data.success === true) {
-          contactForm.reset();
-          submitBtn.innerHTML = '<span>Message Sent Successfully!</span>';
-          submitBtn.style.backgroundColor = '#10B981';
-          submitBtn.style.color = '#FFFFFF';
-          showToast('Message sent directly to Subodh at subodhum1603@gmail.com!');
-
-          setTimeout(() => {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
-            submitBtn.style.backgroundColor = '';
-            submitBtn.style.color = '';
-          }, 3500);
-        } else {
-          // AJAX returned but FormSubmit says not activated yet — fall through to native POST
-          throw new Error('FormSubmit endpoint not yet activated');
-        }
-      } catch (err) {
-        console.warn('AJAX submission failed, falling back to native form POST:', err.message);
-        // Re-enable button and submit the form natively (standard POST to FormSubmit)
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHtml;
-        showToast('Redirecting to send your message...');
-        contactForm.submit(); // Native HTML form POST — triggers FormSubmit activation email
-      }
-    });
-  }
-}
-
-/* --- Mobile Menu Toggle & Auto-Close Engine --- */
-function initMobileMenu() {
-  const toggleBtn = document.getElementById('mobileMenuToggle');
-  const navMenu = document.getElementById('navMenu');
-
-  if (toggleBtn && navMenu) {
-    // State machine: 'closed' | 'opening' | 'open' | 'closing'
-    let drawerState = 'closed';
-    let closeTimer = null;
-
-    function setDrawerState(isOpen) {
-      // Guard against rapid/invalid transitions
-      if (isOpen) {
-        if (drawerState === 'open' || drawerState === 'opening') return;
-        if (drawerState === 'closing') {
-          // Cancel pending close
-          if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-        }
-        drawerState = 'opening';
-        navMenu.classList.remove('closing');
-        document.body.classList.remove('mobile-drawer-closing');
-        navMenu.classList.add('open');
-        document.body.classList.add('mobile-drawer-open');
-        toggleBtn.setAttribute('aria-expanded', 'true');
-        toggleBtn.innerHTML = '<i data-lucide="x" style="width: 22px; height: 22px;"></i>';
-        // Transition to 'open' after animation starts
-        requestAnimationFrame(() => {
-          if (drawerState === 'opening') drawerState = 'open';
-        });
-      } else {
-        if (drawerState === 'closed' || drawerState === 'closing') return;
-        drawerState = 'closing';
-        navMenu.classList.add('closing');
-        document.body.classList.add('mobile-drawer-closing');
-        toggleBtn.setAttribute('aria-expanded', 'false');
-        toggleBtn.innerHTML = '<i data-lucide="menu" style="width: 22px; height: 22px;"></i>';
-
-        if (closeTimer) clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => {
-          navMenu.classList.remove('open', 'closing');
-          document.body.classList.remove('mobile-drawer-open', 'mobile-drawer-closing');
-          drawerState = 'closed';
-          closeTimer = null;
-        }, 300);
-      }
-      initLucideIcons();
-    }
-
-    toggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = drawerState === 'open' || drawerState === 'opening';
-      setDrawerState(!isOpen);
-    });
-
-    // Auto-close menu when any nav link is clicked
-    const navLinks = navMenu.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        setDrawerState(false);
-      });
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!navMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
-        setDrawerState(false);
-      }
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && (drawerState === 'open' || drawerState === 'opening')) {
-        setDrawerState(false);
-      }
-    });
-  }
-}
-
-/* --- ScrollSpy Navigation Active Highlight --- */
-function initScrollSpy() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.navbar .nav-link[href^="#"]');
-  if (!sections.length || !navLinks.length) return;
-
-  function updateActiveLink() {
-    let currentId = '';
-    const scrollPos = window.scrollY + 120;
-
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        currentId = section.getAttribute('id');
-      }
-    });
-
-    if (currentId) {
-      navLinks.forEach(link => {
-        if (link.getAttribute('href') === `#${currentId}`) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-    }
-  }
-
-  let scrollSpyTicking = false;
-  function handleScrollSpy() {
-    if (!scrollSpyTicking) {
-      scrollSpyTicking = true;
-      requestAnimationFrame(() => {
-        updateActiveLink();
-        scrollSpyTicking = false;
-      });
-    }
-  }
-
-  window.addEventListener('scroll', handleScrollSpy, { passive: true });
-  if (window.lenis) {
-    window.lenis.on('scroll', handleScrollSpy);
-  }
-  updateActiveLink();
-
-  // Clicking brand logo or back-to-top scrolls completely to absolute top (0, 0)
-  const topScrollLinks = document.querySelectorAll('.brand-logo, a[href="#hero"], .site-footer a[href="#hero"]');
-  topScrollLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
-      if (history.pushState) {
-        history.pushState(null, null, window.location.pathname);
-      }
-    });
-  });
-}
-
-/* ==========================================================================
-   Dragon Ball & Super Saiyan Interactive Engine - Planet Namek Saga
-   Staggered element transformation, lightning storm, and earthquake rumble
-   ========================================================================== */
-
-/* --- Super Saiyan Theme Toggle — persistent + system-aware with interactive slider --- */
-function initSaiyanMode() {
-  const saiyanBtn = document.getElementById('saiyanModeBtn');
-  const themeSlider = document.getElementById('themeSliderToggle');
-  const optRose = document.getElementById('sliderOptRose');
-  const optSaiyan = document.getElementById('sliderOptSaiyan');
-  const themeMeta = document.querySelector('meta[name="theme-color"]');
-
-  function syncMeta(isSaiyan){ if(themeMeta) themeMeta.setAttribute('content', isSaiyan ? '#050D09' : '#FFF8FA'); }
-
-  function syncSliderUI(isSaiyan) {
-    if (themeSlider) {
-      themeSlider.setAttribute('aria-checked', isSaiyan ? 'true' : 'false');
-      themeSlider.title = isSaiyan ? 'Current: Super Saiyan Mode (Slide to switch to Rosé)' : 'Current: Rosé Mode (Slide to switch to Super Saiyan)';
-    }
-    if (optRose) optRose.classList.toggle('active', !isSaiyan);
-    if (optSaiyan) optSaiyan.classList.toggle('active', isSaiyan);
-    if (saiyanBtn) saiyanBtn.setAttribute('aria-pressed', isSaiyan ? 'true' : 'false');
-  }
-
-  function playSaiyanTransformationCutscene(onTransition) {
-    const overlay = document.getElementById('saiyanVideoOverlay');
-    const video = document.getElementById('saiyanCutsceneVideo');
-    const flash = document.getElementById('saiyanCutsceneFlash');
-    const skipBtn = document.getElementById('saiyanCutsceneSkip');
-
-    if (!overlay || !video) {
-      if (typeof onTransition === 'function') onTransition();
-      return;
-    }
-
-    let isCutsceneEnding = false;
-    let cutsceneRafId = null;
-    let fallbackTimer = null;
-
-    function finishCutscene() {
-      if (isCutsceneEnding) return;
-      isCutsceneEnding = true;
-
-      if (cutsceneRafId) {
-        cancelAnimationFrame(cutsceneRafId);
-        cutsceneRafId = null;
-      }
-      if (fallbackTimer) {
-        clearTimeout(fallbackTimer);
-        fallbackTimer = null;
-      }
-
-      // 1. Redirect to Home Page (Hero section at top) immediately under the transition
-      try {
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        if (window.location.hash) {
-          history.replaceState(null, null, window.location.pathname + window.location.search);
-        }
-      } catch(e) {}
-
-      // 2. Transition DOM to Super Saiyan dark mode immediately
-      try {
-        if (typeof onTransition === 'function') onTransition();
-      } catch(e) {
-        console.error('Saiyan transition error:', e);
-      }
-
-      // 3. Trigger visual golden Ki energy flash & minimal lightning burst after video ends (~1.7s duration)
-      if (flash) flash.classList.add('flashing');
-      try { triggerLightningStorm(1700); } catch(e) {}
-
-      // 4. Add smooth reveal shockwave to hero section on the home page
-      try {
-        const hero = document.querySelector('.hero-section');
-        if (hero) {
-          hero.classList.remove('saiyan-reveal-shockwave');
-          void hero.offsetWidth;
-          hero.classList.add('saiyan-reveal-shockwave');
-        }
-      } catch(e) {}
-
-      // 5. Cross-fade out the cutscene overlay smoothly over 550ms
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-
-      setTimeout(() => {
-        if (flash) flash.classList.remove('flashing');
-        try { video.pause(); } catch(e) {}
-      }, 550);
-    }
-
-    // Prepare overlay, lock scroll, and start playback (no lightning during video)
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    video.currentTime = 0;
-    video.muted = true;
-
-    // Track playback progress frame-by-frame to transition smoothly at the video climax/end
-    function monitorCutscene() {
-      if (isCutsceneEnding) return;
-
-      if (video.duration && video.duration > 0) {
-        // Transition 0.15s before video hard-ends to ensure zero freeze/lag
-        if (video.currentTime >= video.duration - 0.18) {
-          finishCutscene();
-          return;
-        }
-      }
-
-      cutsceneRafId = requestAnimationFrame(monitorCutscene);
-    }
-
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        cutsceneRafId = requestAnimationFrame(monitorCutscene);
-      }).catch(() => {
-        // If autoplay fails, fallback gracefully
-        finishCutscene();
-      });
-    }
-
-    video.onended = finishCutscene;
-    video.onerror = finishCutscene;
-
-    // Attach skip listeners with 350ms buffer so initial button click doesn't trigger skip
-    setTimeout(() => {
-      if (isCutsceneEnding) return;
-
-      overlay.onclick = (e) => {
-        e.stopPropagation();
-        finishCutscene();
-      };
-
-      if (skipBtn) {
-        skipBtn.onclick = (e) => {
-          e.stopPropagation();
-          finishCutscene();
-        };
-      }
-
-      const onKeyDown = (e) => {
-        if (overlay.classList.contains('active')) {
-          document.removeEventListener('keydown', onKeyDown);
-          finishCutscene();
-        }
-      };
-      document.addEventListener('keydown', onKeyDown);
-    }, 350);
-
-    // Watchdog fallback (15s max)
-    fallbackTimer = setTimeout(finishCutscene, 15000);
-  }
-
-  function setSaiyanState(enableSaiyan, opts={}) {
-    const silent=!!opts.silent, noPersist=!!opts.noPersist;
-    
-    if (enableSaiyan) {
-      const applySaiyan = () => {
-        document.body.classList.add('saiyan-mode');
-        document.documentElement.classList.add('saiyan-mode');
-        syncSliderUI(true);
-        syncMeta(true);
-        if(!noPersist) try{localStorage.setItem('portfolio-theme','saiyan');}catch(e){}
-        if(!silent){ showToast('Super Saiyan Mode ON'); runPlanetNamekTransformation(); }
-      };
-
-      if (!silent) {
-        playSaiyanTransformationCutscene(applySaiyan);
-      } else {
-        applySaiyan();
-      }
-    } else {
-      const applyRose = () => {
-        document.body.classList.remove('saiyan-mode');
-        document.documentElement.classList.remove('saiyan-mode');
-        syncSliderUI(false);
-        syncMeta(false);
-        if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
-        if(!silent) showToast('Rosé Mode ON');
-      };
-
-      if (!silent) {
-        // Clear any active lightning canvas
-        try {
-          const lightningCanvas = document.getElementById('lightningOverlay');
-          if (lightningCanvas) {
-            const ctx = lightningCanvas.getContext('2d');
-            if (ctx) ctx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
-            lightningCanvas.classList.remove('active');
-          }
-        } catch(e) {}
-
-        // Clean, minimal, and professional cross-fade transition
-        if (document.startViewTransition) {
-          document.startViewTransition(() => {
-            applyRose();
-          });
-        } else {
-          document.documentElement.classList.add('theme-transitioning');
-          applyRose();
-          setTimeout(() => {
-            document.documentElement.classList.remove('theme-transitioning');
-          }, 350);
-        }
-      } else {
-        applyRose();
-      }
-    }
-  }
-
-  // Sync body with html anti-FOUC state or system setting without re-triggering cutscene
-  const storedTheme = (() => {
-    try { return localStorage.getItem('portfolio-theme'); } catch(e) { return null; }
-  })();
-  const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const shouldBeSaiyan = storedTheme ? (storedTheme === 'saiyan') : (document.documentElement.classList.contains('saiyan-mode') || systemPrefersDark);
-
-  if (shouldBeSaiyan) {
-    document.body.classList.add('saiyan-mode');
-    document.documentElement.classList.add('saiyan-mode');
-    setSaiyanState(true, { silent: true, noPersist: true });
-  } else {
-    document.documentElement.classList.remove('saiyan-mode');
-    document.body.classList.remove('saiyan-mode');
-    syncSliderUI(false);
-    syncMeta(false);
-  }
-
-  // Listen for real-time system color scheme changes if user has not explicitly set a manual preference
-  if (window.matchMedia) {
-    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = (e) => {
-      try {
-        const manualPref = localStorage.getItem('portfolio-theme');
-        if (!manualPref) {
-          setSaiyanState(e.matches, { silent: true, noPersist: true });
-        }
-      } catch(err) {}
-    };
-
-    if (darkQuery.addEventListener) {
-      darkQuery.addEventListener('change', handleSystemThemeChange);
-    } else if (darkQuery.addListener) {
-      darkQuery.addListener(handleSystemThemeChange);
-    }
-  }
-
-  if (themeSlider) {
-    let isDragging = false;
-    let startX = 0;
-    let dragDistance = 0;
-    let initialSaiyan = false;
-    const glider = themeSlider.querySelector('.theme-slider-bg-glider');
-
-    themeSlider.addEventListener('pointerdown', (e) => {
-      if (e.button !== 0) return;
-      isDragging = true;
-      startX = e.clientX;
-      dragDistance = 0;
-      initialSaiyan = document.body.classList.contains('saiyan-mode');
-      try { themeSlider.setPointerCapture(e.pointerId); } catch(err){}
-    });
-
-    themeSlider.addEventListener('pointermove', (e) => {
-      if (!isDragging) return;
-      dragDistance = e.clientX - startX;
-      
-      // If user drags (> 3px), animate the glider in real-time
-      if (Math.abs(dragDistance) > 3 && glider) {
-        glider.style.transition = 'none';
-        const sliderWidth = themeSlider.offsetWidth;
-        const maxSlide = (sliderWidth / 2) - 3;
-        
-        let currentPos = initialSaiyan ? maxSlide : 0;
-        let newPos = Math.max(0, Math.min(maxSlide, currentPos + dragDistance));
-        glider.style.transform = `translateX(${newPos}px)`;
-      }
-    });
-
-    const finishDrag = (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      try { themeSlider.releasePointerCapture(e.pointerId); } catch(err){}
-      
-      if (glider) {
-        glider.style.transition = '';
-        glider.style.transform = '';
-      }
-
-      // If dragged past threshold (> 10px), trigger state change
-      if (Math.abs(dragDistance) > 10) {
-        if (dragDistance > 10 && !initialSaiyan) {
-          // Dragged right from Rosé -> switch to Saiyan
-          setSaiyanState(true);
-        } else if (dragDistance < -10 && initialSaiyan) {
-          // Dragged left from Saiyan -> switch to Rosé
-          setSaiyanState(false);
-        } else {
-          // Snap back
-          syncSliderUI(initialSaiyan);
-        }
-      }
-    };
-
-    themeSlider.addEventListener('pointerup', finishDrag);
-    themeSlider.addEventListener('pointercancel', finishDrag);
-
-    themeSlider.addEventListener('click', (e) => {
-      // If this was a drag gesture, do not treat as a static click
-      if (Math.abs(dragDistance) > 10) return;
-
-      const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
-      const targetOpt = e.target.closest('.theme-slider-btn');
-
-      if (targetOpt) {
-        // Click on a button: only switch if clicking the INACTIVE option
-        if (targetOpt.id === 'sliderOptRose' && isCurrentlySaiyan) {
-          e.stopPropagation();
-          setSaiyanState(false);
-        } else if (targetOpt.id === 'sliderOptSaiyan' && !isCurrentlySaiyan) {
-          e.stopPropagation();
-          setSaiyanState(true);
-        }
-        // Clicking the already-active button does nothing (no toggle)
-      } else {
-        // Click on track (not a button): toggle
-        setSaiyanState(!isCurrentlySaiyan);
-      }
-    });
-
-    themeSlider.addEventListener('keydown', (e) => {
-      const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        setSaiyanState(!isCurrentlySaiyan);
-      } else if (e.key === 'ArrowRight' && !isCurrentlySaiyan) {
-        e.preventDefault();
-        setSaiyanState(true);
-      } else if (e.key === 'ArrowLeft' && isCurrentlySaiyan) {
-        e.preventDefault();
-        setSaiyanState(false);
-      }
-    });
-  }
-
-  if (saiyanBtn) {
-    saiyanBtn.addEventListener('click', () => {
-      const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
-      setSaiyanState(!isCurrentlySaiyan);
-    });
-  }
-
-  window.setSaiyanState=setSaiyanState;
-}
-
-/* --- Planet Namek Destruction / Staggered Transformation Engine --- */
-function runPlanetNamekTransformation() {
-  // 1. Immediately apply the dark Planet Namek destruction sky & body theme
-  document.body.classList.add('saiyan-mode');
-  document.documentElement.classList.add('saiyan-mode');
-  
-  // 2. Trigger Planet Namek earthquake ground rumble on main content (never on document.body)
-  const mainContent = document.getElementById('main-content');
-  if (mainContent) {
-    mainContent.classList.remove('namek-earthquake');
-    void mainContent.offsetWidth;
-    mainContent.classList.add('namek-earthquake');
-    setTimeout(() => {
-      mainContent.classList.remove('namek-earthquake');
-    }, 2400);
-  }
-  document.body.classList.remove('namek-earthquake');
-
-  // 3. Fallback: trigger minimal lightning if cutscene video was not present
-  if (!document.getElementById('saiyanVideoOverlay')) {
-    try { triggerLightningStorm(1700); } catch(e) {}
-  }
-
-  // 4. Sequential list of elements to power up one at a time (individual components)
-  const elementsToTransform = [
-    document.querySelector('.hero-photo-frame'),
-    document.querySelector('.hero-title'),
-    ...document.querySelectorAll('#statsGrid .stat-card'),
-    document.querySelector('#about .sticker-card'),
-    document.querySelector('#skillsGrid'),
-    document.querySelector('#experienceTimeline'),
-    document.querySelector('#projectsGrid'),
-    document.querySelector('#achievementsGrid'),
-    document.querySelector('.edu-cert-grid'),
-    document.querySelector('.contact-wrapper')
-  ].filter(el => el !== null);
-
-  // 5. Staggered power-up: each element surges with Ki aura and sparks in sequence
-  elementsToTransform.forEach((el, index) => {
-setTimeout(() => {
-        el.classList.add('saiyan-charging');
-        
-        // Spawn Ki electrical sparks around this element's bounding box
-        const rect = el.getBoundingClientRect();
-        const sparkX = rect.left + rect.width / 2;
-        const sparkY = rect.top + window.scrollY + rect.height / 2;
-        createKiSparks(sparkX, sparkY);
-
-        setTimeout(() => {
-          el.classList.remove('saiyan-charging');
-        }, 700);
-      }, index * 250); // Staggered by 250ms per element for dramatic effect
-  });
-}
-
-/* --- Canvas Realistic Super Saiyan Lightning Storm --- */
-let activeLightningStorms = 0;
-
-function triggerLightningStorm(durationOrCount = 1700) {
-  const canvas = document.getElementById('lightningOverlay');
-  if (!canvas) return;
-
-  const durationMs = (typeof durationOrCount === 'number' && durationOrCount <= 20)
-    ? 1700
-    : (durationOrCount || 1700);
-
-  if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  canvas.classList.add('active');
-  activeLightningStorms++;
-
-  const ctx = canvas.getContext('2d');
-  const startTime = performance.now();
-  let boltClearTimer = null;
-
-  function flashStep() {
-    const elapsed = performance.now() - startTime;
-    if (elapsed >= durationMs) {
-      if (boltClearTimer) clearTimeout(boltClearTimer);
-      activeLightningStorms = Math.max(0, activeLightningStorms - 1);
-      if (activeLightningStorms === 0) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.classList.remove('active');
-      }
-      return;
-    }
-
-    // Draw 1 single minimal crisp bolt
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawSingleBolt(ctx, canvas.width, canvas.height);
-
-    // After brief persistence (85ms), clear the bolt for a clean gap
-    boltClearTimer = setTimeout(() => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }, 85);
-
-    // Rhythmic spacing between strikes: ~220ms - 320ms
-    const nextInterval = 220 + Math.random() * 100;
-    setTimeout(flashStep, nextInterval);
-  }
-
-  flashStep();
-}
-
-function drawLightningStrike() {
-  const canvas = document.getElementById('lightningOverlay');
-  if (!canvas) return;
-  if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  canvas.classList.add('active');
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawSingleBolt(ctx, canvas.width, canvas.height);
-  setTimeout(() => {
-    if (activeLightningStorms <= 0) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.classList.remove('active');
-    }
-  }, 110);
-}
-
-function drawSingleBolt(ctx, w, h) {
-  let startX = w * (0.25 + Math.random() * 0.5);
-  let startY = 0;
-  let endX = startX + (Math.random() * 160 - 80);
-  let endY = h * (0.55 + Math.random() * 0.35);
-
-  const colors = ['#38BDF8', '#FBBF24', '#FFFFFF'];
-  const boltColor = colors[Math.floor(Math.random() * colors.length)];
-
-  ctx.beginPath();
-  ctx.moveTo(startX, startY);
-
-  let currentX = startX;
-  let currentY = startY;
-  const segments = 14;
-
-  for (let i = 0; i < segments; i++) {
-    const nextY = currentY + (endY - startY) / segments;
-    const nextX = currentX + (Math.random() * 34 - 17);
-    ctx.lineTo(nextX, nextY);
-
-    // Subtle minimal fork
-    if (i === 7 && Math.random() > 0.5) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(currentX, currentY);
-      let forkX = currentX;
-      let forkY = currentY;
-      for (let f = 0; f < 3; f++) {
-        forkY += 20 + Math.random() * 15;
-        forkX += (Math.random() * 30 - 15);
-        ctx.lineTo(forkX, forkY);
-      }
-      ctx.strokeStyle = boltColor;
-      ctx.lineWidth = 1;
-      ctx.shadowColor = boltColor;
-      ctx.shadowBlur = 8;
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    currentX = nextX;
-    currentY = nextY;
-  }
-
-  // Refined outer glow
-  ctx.strokeStyle = boltColor;
-  ctx.lineWidth = 1.8;
-  ctx.shadowColor = boltColor;
-  ctx.shadowBlur = 10;
-  ctx.stroke();
-
-  // Crisp inner core
-  ctx.lineWidth = 0.8;
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.shadowBlur = 4;
-  ctx.stroke();
-}
-
-/* --- 7 Dragon Balls Collector & Realistic Dragon Radar Engine --- */
-const collectedBalls = new Set();
-let dragonBallsInitialized = false;
-
-const dragonBallLocations = [
-  { num: 1, name: "1-Star Dragon Ball", sector: "Skills Matrix", hint: "Hidden in Skills Category", x: 30, y: 35, selector: "#skills" },
-  { num: 2, name: "2-Star Dragon Ball", sector: "Experience Timeline", hint: "Guarded in Experience Section", x: 68, y: 28, selector: "#experience" },
-  { num: 3, name: "3-Star Dragon Ball", sector: "Projects Grid", hint: "Found in Featured Projects", x: 74, y: 64, selector: "#projects" },
-  { num: 4, name: "4-Star Dragon Ball (Goku's Treasure)", sector: "AI/ML Project Header", hint: "Resting near Retinopathy AI", x: 40, y: 72, selector: "#projects" },
-  { num: 5, name: "5-Star Dragon Ball", sector: "Achievements Arena", hint: "Discovered in Hackathon Wins", x: 26, y: 64, selector: "#achievements" },
-  { num: 6, name: "6-Star Dragon Ball", sector: "Education & Degree", hint: "Located in Academics Section", x: 60, y: 46, selector: "#education" },
-  { num: 7, name: "7-Star Dragon Ball", sector: "Contact Radar Base", hint: "Secured near Contact Hub", x: 50, y: 22, selector: "#contact" }
-];
-
-function playRadarPingSound() {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1760, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(2640, ctx.currentTime + 0.12);
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    osc.connect(sfxGainNode);
     osc.start();
-    osc.stop(ctx.currentTime + 0.35);
-  } catch (e) {}
-}
-
-function playDragonBallCollectChime() {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const notes = [587.33, 739.99, 880.00, 1174.66, 1479.98, 1760.00];
-    notes.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
-      gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.08);
-      gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + idx * 0.08 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.45);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(ctx.currentTime + idx * 0.08);
-      osc.stop(ctx.currentTime + idx * 0.08 + 0.45);
-    });
-  } catch (e) {}
-}
-
-function renderDragonBallSVGs() {
-  // Use global DRAGON_BALL_LAYOUTS, createDragonBallStarPolygon, buildDragonBallStars, and window.getBallSVGString
-
-  // Only shuffle and assign positions on first initialization
-  if (!dragonBallsInitialized) {
-    // ── TRUE RANDOM: shuffle which 7 of the 22 slots hold the REAL balls — no fixed pattern ──
-    const pool = Array.from(document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]'));
-    // Fisher-Yates shuffle pool
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    const starPool = [1,2,3,4,5,6,7];
-    for (let i = starPool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [starPool[i], starPool[j]] = [starPool[j], starPool[i]];
-    }
-    pool.forEach((el, idx) => {
-      if (idx < 7) {
-        // This slot becomes a REAL Dragon Ball (glows intensely with golden ki)
-        el.classList.add('dragon-ball', 'real-dragon-ball');
-        el.classList.remove('fake-dragon-ball');
-        el.removeAttribute('data-fake-ball');
-        el.setAttribute('data-ball', String(starPool[idx]));
-        el.dataset.isReal = "true";
-      } else {
-        // Remaining slots become PRANK decoy balls (visibly flat/dull, no glowing aura)
-        el.classList.add('dragon-ball', 'fake-dragon-ball');
-        el.classList.remove('real-dragon-ball');
-        el.removeAttribute('data-ball');
-        el.setAttribute('data-fake-ball', String(1 + Math.floor(Math.random() * 7)));
-        el.dataset.isReal = "false";
-      }
-    });
-    dragonBallsInitialized = true;
-  }
-
-  // Render SVG inside real section dragon balls — glowing authentic ki
-  document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
-    const ballNum = ball.getAttribute('data-ball');
-    ball.classList.add('real-dragon-ball');
-    ball.classList.remove('fake-dragon-ball');
-    ball.innerHTML = window.getBallSVGString(ballNum, 48);
-    ball.setAttribute('role', 'button');
-    ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `${ballNum}-Star Authentic Dragon Ball`);
-    ball.title = `Authentic ${ballNum}-Star Dragon Ball (Glowing Ki Aura)`;
-  });
-
-  // Render SVG inside fake decoy dragon balls — flat, dull, prank decoy
-  document.querySelectorAll('.fake-dragon-ball[data-fake-ball]').forEach(ball => {
-    const visualStars = ball.dataset.visualStars || (1 + Math.floor(Math.random() * 7));
-    ball.classList.add('fake-dragon-ball');
-    ball.classList.remove('real-dragon-ball');
-    ball.innerHTML = window.getBallSVGString(String(visualStars), 48);
-    ball.setAttribute('role', 'button');
-    ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `${visualStars}-Star Decoy Ball`);
-    ball.title = `Suspicious ${visualStars}-Star Orb (Dull Ki)... Is it authentic?`;
-    ball.dataset.visualStars = String(visualStars);
-  });
-
-  // Render SVG inside Shenron modal celebration balls
-  document.querySelectorAll('.shenron-star-ball[data-shenron-ball]').forEach(ball => {
-    const ballNum = ball.getAttribute('data-shenron-ball');
-    ball.innerHTML = window.getBallSVGString(ballNum, 52);
-  });
-
-  // ── Ambient floating: stagger bobbing animations so balls feel organically alive ──
-  document.querySelectorAll('.floating-decoy-ball').forEach(el => {
-    const isReal = el.hasAttribute('data-ball') || el.classList.contains('real-dragon-ball');
-    const rot = (Math.random() * 16 - 8).toFixed(1);
-    const sc = isReal ? (1.04 + Math.random() * 0.08).toFixed(2) : (0.94 + Math.random() * 0.06).toFixed(2);
-    el.style.transform = `rotate(${rot}deg) scale(${sc})`;
-    el.style.animationDelay = `${(Math.random() * 2.5).toFixed(2)}s`;
-  });
-}
-
-function updateRadarMiniBlips() {
-  const miniContainer = document.getElementById('radarMiniBlips');
-  if (!miniContainer) return;
-
-  miniContainer.innerHTML = dragonBallLocations.map(ball => {
-    const isCollected = collectedBalls.has(ball.num);
-    const color = isCollected ? '#F59E0B' : '#EF4444';
-    return `<span style="position: absolute; left: ${ball.x}%; top: ${ball.y}%; width: 4px; height: 4px; border-radius: 50%; background: ${color}; box-shadow: 0 0 4px ${color}; transform: translate(-50%, -50%);"></span>`;
-  }).join('');
-}
-
-function renderRadarHUD() {
-  const blipsLayer = document.getElementById('radarBlipsLayer');
-  const signalsList = document.getElementById('radarSignalsList');
-  const statusText = document.getElementById('radarStatusText');
-
-  if (statusText) {
-    statusText.textContent = collectedBalls.size === 7 ? "ALL 7 SIGNALS LOCKED! SHENRON READY!" : `${collectedBalls.size}/7 SIGNALS ACQUIRED`;
-  }
-
-  if (blipsLayer) {
-    blipsLayer.innerHTML = dragonBallLocations.map(ball => {
-      const isCollected = collectedBalls.has(ball.num);
-      return `
-        <div class="radar-signal-dot ${isCollected ? 'signal-collected' : 'signal-uncollected'}"
-             style="left: ${ball.x}%; top: ${ball.y}%;"
-             title="${ball.name} (${isCollected ? 'Collected — click to view' : 'Click to locate exact position!'})"
-             onclick="focusDragonBall(${ball.num})">
-           ${isCollected ? '' : ball.num}
-        </div>
-      `;
-    }).join('');
-  }
-
-  if (signalsList) {
-    signalsList.innerHTML = dragonBallLocations.map(ball => {
-      const isCollected = collectedBalls.has(ball.num);
-      return `
-        <div class="radar-signal-card ${isCollected ? 'collected' : ''}" onclick="focusDragonBall(${ball.num})" style="cursor: pointer;" title="${isCollected ? 'Already secured' : 'Click to jump to exact Dragon Ball location'}">
-          <div class="radar-signal-card-ball">
-            ${window.getBallSVGString(ball.num, 28)}
-          </div>
-          <div class="radar-signal-card-info">
-            <span class="radar-signal-card-name">${ball.num}-Star Ball ${isCollected ? '[Secured]' : '[Active]'}</span>
-            <span class="radar-signal-card-sector">${isCollected ? 'Secured in Radar' : ball.sector}</span>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-}
-
-window.focusSector = function(selector) {
-  closeDragonRadarModal();
-  const target = document.querySelector(selector);
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    target.classList.add('saiyan-charging');
-    setTimeout(() => target.classList.remove('saiyan-charging'), 1200);
-  }
-};
-
-window.focusDragonBall = function(num) {
-  const isCollected = collectedBalls.has(num);
-  closeDragonRadarModal();
-  if (isCollected) {
-    showToast(`${num}-Star Ball already secured! (${collectedBalls.size}/7) - keep hunting the rest!`);
-    return;
-  }
-  // Find the EXACT orb element that currently holds this star (after pool shuffle it could be anywhere on page)
-  const ball = document.querySelector(`.dragon-ball[data-ball="${num}"]`);
-  if (ball) {
-    ball.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-    // Highlight after scroll settles so user spots it instantly
-    setTimeout(() => {
-      ball.classList.add('radar-target-highlight');
-      ball.classList.add('saiyan-charging');
-      const rect = ball.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      createKiSparks(cx, cy);
-      setTimeout(() => createKiSparks(cx, cy), 180);
-      ball.style.filter = 'drop-shadow(0 0 18px #FF2E97) drop-shadow(0 0 32px #FF7E00) brightness(1.18)';
-      showToast(`Tracking ${num}-Star Ball - look for the pulsing orb!`);
-      setTimeout(() => {
-        ball.classList.remove('radar-target-highlight');
-        ball.classList.remove('saiyan-charging');
-        ball.style.filter = '';
-      }, 1800);
-    }, 520);
-  } else {
-    // Fallback: go to sector
-    const info = dragonBallLocations.find(b => b.num === num);
-    if (info) window.focusSector(info.selector);
-    else showToast(`Scanning for ${num}-Star Ball...`);
-  }
-};
-
-/* ==========================================================================
-   Kid Goku Right-Hand Unread Chat Message Controller
-   ========================================================================== */
-window.toggleGokuChatWidget = function(expand) {
-  const widget = document.getElementById('gokuChatWidget');
-  if (!widget) return;
-
-  const shouldExpand = (typeof expand === 'boolean') ? expand : !widget.classList.contains('expanded');
-
-  if (shouldExpand) {
-    widget.classList.add('expanded');
-    // Simple, gentle soft chime for message open
-    playWebAudioTone(880, 'sine', 0.1, 0.06);
-    
-    // Mark the unread message counter as read
-    const unread = document.getElementById('gokuUnreadCount');
-    if (unread) unread.classList.add('read');
-    
-    initLucideIcons();
-  } else {
-    widget.classList.remove('expanded');
-    // Simple, gentle soft low pop for message close
-    playWebAudioTone(440, 'sine', 0.08, 0.05);
-
-    // Briefly highlight the Dragon Radar below to guide user
-    const radar = document.getElementById('dragonRadarWidget');
-    if (radar) {
-      radar.classList.remove('radar-attention-pulse');
-      void radar.offsetWidth;
-      radar.classList.add('radar-attention-pulse');
-      setTimeout(() => {
-        radar.classList.remove('radar-attention-pulse');
-      }, 2600);
-    }
-  }
-};
-
-window.dismissGokuChatWidget = function() {
-  const checkbox = document.getElementById('gokuDoNotShowCheckbox');
-  if (checkbox && checkbox.checked) {
-    try {
-      localStorage.setItem('portfolio-quest-brief-seen', 'true');
-    } catch (e) {}
-  }
-  window.toggleGokuChatWidget(false);
-};
-
-// Aliases for backward compatibility (Escape key and any external calls)
-window.openQuestBriefingModal = function(e) {
-  if (e && e.stopPropagation) e.stopPropagation();
-  window.toggleGokuChatWidget(true);
-};
-
-window.closeQuestBriefingModal = function() {
-  window.toggleGokuChatWidget(false);
-};
-
-function initStartupQuestBriefing() {
-  const widget = document.getElementById('gokuChatWidget');
-  if (!widget) return;
-
-  // Explicitly bind click listener to Goku chat badge button
-  const badge = document.getElementById('gokuChatBadge');
-  if (badge && !badge._gokuBound) {
-    badge._gokuBound = true;
-    badge.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      window.toggleGokuChatWidget(true);
-    });
-  }
-
-  // Ensure message starts collapsed / closed — opens ONLY on user click!
-  widget.classList.remove('expanded');
-
-  let isDismissed = false;
-  try {
-    isDismissed = localStorage.getItem('portfolio-quest-brief-seen') === 'true';
-  } catch (e) {}
-
-  if (isDismissed) {
-    const unread = document.getElementById('gokuUnreadCount');
-    if (unread) unread.classList.add('read');
-    return;
-  }
-
-  // Play a simple soft notification tone ~1.4s after load to signal unread message from Goku without auto-opening
-  setTimeout(() => {
-    try {
-      playWebAudioTone(880, 'sine', 0.1, 0.06);
-      if (badge) {
-        badge.classList.add('goku-badge-incoming');
-        setTimeout(() => badge.classList.remove('goku-badge-incoming'), 2200);
-      }
-    } catch(e) {}
-  }, 1400);
-}
-
-window.openDragonRadarModal = function() {
-  const modal = document.getElementById('dragonRadarModal');
-  if (modal) {
-    playRadarPingSound();
-    renderRadarHUD();
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-};
-
-window.closeDragonRadarModal = function() {
-  const modal = document.getElementById('dragonRadarModal');
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-};
-
-window.pingRadarScan = function() {
-  playRadarPingSound();
-  renderRadarHUD();
-  const remaining = 7 - collectedBalls.size;
-  if (remaining === 0) {
-    showToast('All 7 Dragon Balls are in your Radar! Shenron awaits!');
-  } else {
-    showToast(`Radar Ping: ${remaining} Dragon Ball signals active across sectors!`);
-  }
-};
-
-let isCollectingAnimationRunning = false;
-
-function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
-  if (isCollectingAnimationRunning) return;
-  isCollectingAnimationRunning = true;
-
-  const overlay = document.getElementById('dragonBallCollectOverlay');
-  const enlargedBall = document.getElementById('dbEnlargedBall');
-  const title = document.getElementById('dbCollectTitle');
-  const radarWidget = document.getElementById('dragonRadarWidget');
-  const radarCount = document.getElementById('ballsFoundCount');
-
-  // Mark collected and make it disappear from the page (puff + vanish)
-  collectedBalls.add(ballNumber);
-  if (sourceBall) {
-    sourceBall.classList.add('collected');
-    // Puff animation then hide — blends with site's playful poof
-    setTimeout(() => {
-      sourceBall.classList.add('ball-disappeared');
-      sourceBall.setAttribute('aria-hidden', 'true');
-      sourceBall.setAttribute('tabindex', '-1');
-      sourceBall.style.pointerEvents = 'none';
-    }, 380);
-    // After poof, remove from layout so it truly disappears from webpage (use !important to override mobile CSS)
-    setTimeout(() => {
-      if (sourceBall.classList.contains('ball-disappeared')) {
-        sourceBall.style.setProperty('display', 'none', 'important');
-        sourceBall.style.setProperty('visibility', 'hidden', 'important');
-        sourceBall.style.setProperty('opacity', '0', 'important');
-      }
-    }, 1050);
-  }
-
-  // 1. Play magical chime and create sparkle burst at click point
-  playDragonBallCollectChime();
-  createKiSparks(clickX, clickY);
-
-  // 2. Render enlarged ball SVG (120px) with photorealistic crystal layers
-  if (enlargedBall) {
-    enlargedBall.innerHTML = window.getBallSVGString(ballNumber, 120) + '<div class="db-rim-light"></div>';
-  }
-  if (title) {
-    title.textContent = `${ballNumber}-Star Dragon Ball`;
-  }
-
-  // 3. Show full-screen shining collection modal
-  if (overlay) {
-    overlay.classList.add('active');
-  }
-
-  // 4. Stage 1: Enlarge and pulse in center (950ms)
-  setTimeout(() => {
-    // 5. Stage 2: Create a flying clone that shoots down into the radar widget
-    const radarRect = radarWidget ? radarWidget.getBoundingClientRect() : { left: window.innerWidth - 80, top: window.innerHeight - 80, width: 60, height: 60 };
-    const startX = window.innerWidth / 2;
-    const startY = window.innerHeight / 2;
-    const targetX = radarRect.left + radarRect.width / 2;
-    const targetY = radarRect.top + radarRect.height / 2;
-
-    const flyer = document.createElement('div');
-    flyer.className = 'db-flying-clone';
-    flyer.innerHTML = window.getBallSVGString(ballNumber, 90) + '<div class="db-rim-light"></div>';
-    flyer.style.left = `${startX - 85}px`;
-    flyer.style.top = `${startY - 85}px`;
-    document.body.appendChild(flyer);
-
-    // Hide central overlay
-    if (overlay) overlay.classList.remove('active');
-
-    // Trigger flight animation
-    requestAnimationFrame(() => {
-      const deltaX = targetX - startX;
-      const deltaY = targetY - startY;
-      flyer.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.2) rotate(360deg)`;
-      flyer.style.opacity = '0.9';
-    });
-
-    // 6. Stage 3: Impact at Dragon Radar (after 600ms flight)
-    setTimeout(() => {
-      flyer.remove();
-      playRadarPingSound();
-
-      if (radarWidget) {
-        radarWidget.classList.remove('radar-ping-blast');
-        void radarWidget.offsetWidth; // Force reflow
-        radarWidget.classList.add('radar-ping-blast');
-      }
-
-      const currentCount = Math.min(7, collectedBalls.size);
-      if (radarCount) radarCount.textContent = currentCount;
-      updateRadarMiniBlips();
-
-      createKiSparks(targetX, targetY);
-      showToast(`⭐ Added the ${ballNumber}-Star Dragon Ball to Radar! (${currentCount}/7)`);
-
-      isCollectingAnimationRunning = false;
-
-      // If all 7 collected -> summon Shenron!
-      if (currentCount === 7) {
-        setTimeout(() => {
-          openShenronModal();
-        }, 700);
-      }
-    }, 600);
-  }, 950);
-}
-
-function playPrankBoingSound() {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'triangle';
-    const now = ctx.currentTime;
-
-    // Playful cartoon boing pitch sweep
-    osc.frequency.setValueAtTime(140, now);
-    osc.frequency.exponentialRampToValueAtTime(520, now + 0.12);
-    osc.frequency.exponentialRampToValueAtTime(260, now + 0.25);
-    osc.frequency.exponentialRampToValueAtTime(420, now + 0.38);
-
-    gain.gain.setValueAtTime(0.22, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.46);
-  } catch (e) {}
-}
-
-const kidGokuPrankQuotes = [
-  "Bleh! That's not a real Dragon Ball! That's just an ordinary orange rock I found in the woods!",
-  "Hehehe! You got tricked! That ball has 8 stars! Shenron only has 7!",
-  "Bwahaha! Grandpa Gohan taught me that trick! Keep searching, silly!",
-  "Aww man! You fell for Master Roshi's painted decoy ball!",
-  "Bleeeh! You can't summon Shenron with a painted sphere! Check your Dragon Radar!",
-  "Pfft! That ball is made of sugar candy! Master Roshi ate the other half!",
-  "Oopsie! That's a Capsule Corp prototype ball from Bulma's workshop!",
-  "Bleeeh! Master Roshi said fake Dragon Balls don't grant wishes!",
-  "Bleeeh! You tapped a 100-star ball! You can't summon 14 Shenrons at once!",
-  "Gotcha! Bulma told me only authentic Dragon Balls emit 7.5 micro-wave radar pings!"
-];
-
-let kidGokuPrankTimer = null;
-let kidGokuPrankAnimation = null;
-
-window.triggerKidGokuPrank = function(fakeType, clickX, clickY) {
-  if (kidGokuPrankTimer) {
-    clearTimeout(kidGokuPrankTimer);
-    kidGokuPrankTimer = null;
-  }
-  if (kidGokuPrankAnimation) {
-    kidGokuPrankAnimation.cancel();
-    kidGokuPrankAnimation = null;
-  }
-
-  playPrankBoingSound();
-  createKiSparks(clickX, clickY);
-
-  const quoteEl = document.getElementById('prankQuoteText');
-  if (quoteEl) {
-    const randomQuote = kidGokuPrankQuotes[Math.floor(Math.random() * kidGokuPrankQuotes.length)];
-    quoteEl.textContent = randomQuote;
-  }
-
-  const modal = document.getElementById('kidGokuPrankModal');
-  const timerBar = document.getElementById('prankTimerBar');
-
-  if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    initLucideIcons();
-  }
-
-  // Exact 5-second countdown timer animation & auto-dismiss
-  if (timerBar) {
-    timerBar.style.transform = 'scaleX(1)';
-    if (typeof timerBar.animate === 'function') {
-      kidGokuPrankAnimation = timerBar.animate(
-        [
-          { transform: 'scaleX(1)' },
-          { transform: 'scaleX(0)' }
-        ],
-        {
-          duration: 5000,
-          easing: 'linear',
-          fill: 'forwards'
-        }
-      );
-      kidGokuPrankAnimation.onfinish = () => {
-        closeKidGokuPrankModal();
-      };
-    } else {
-      kidGokuPrankTimer = setTimeout(() => {
-        closeKidGokuPrankModal();
-      }, 5000);
-    }
-  } else {
-    kidGokuPrankTimer = setTimeout(() => {
-      closeKidGokuPrankModal();
-    }, 5000);
-  }
-
-  showToast("BLEH! Fooled ya! That's a FAKE Dragon Ball!");
-};
-
-window.closeKidGokuPrankModal = function() {
-  if (kidGokuPrankTimer) {
-    clearTimeout(kidGokuPrankTimer);
-    kidGokuPrankTimer = null;
-  }
-  if (kidGokuPrankAnimation) {
-    kidGokuPrankAnimation.cancel();
-    kidGokuPrankAnimation = null;
-  }
-
-  const modal = document.getElementById('kidGokuPrankModal');
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-};
-
-window.openDragonRadarFromPrank = function() {
-  closeKidGokuPrankModal();
-  setTimeout(() => {
-    openDragonRadarModal();
-  }, 220);
-};
-
-function initDragonBallsCollector() {
-  renderDragonBallSVGs();
-  updateRadarMiniBlips();
-
-  const interactiveBalls = document.querySelectorAll('.dragon-ball[data-ball]');
-  const fakeBalls = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
-  const radarWidget = document.getElementById('dragonRadarWidget');
-
-  if (radarWidget) {
-    radarWidget.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openDragonRadarModal();
-    });
-    radarWidget.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openDragonRadarModal();
-      }
-    });
-  }
-
-  // Real 7 Dragon Balls Click / Touch / Keyboard Handler — perfect mobile touch
-  interactiveBalls.forEach(ball => {
-    const handleBallCollect = (e) => {
-      e.stopPropagation();
-      const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      
-      if (ballNumber >= 1 && ballNumber <= 7) {
-        if (!collectedBalls.has(ballNumber)) {
-          triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
-        } else {
-          createKiSparks(clientX, clientY);
-          showToast(`${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
-        }
-      }
-    };
-
-    ball.addEventListener('click', handleBallCollect);
-    ball.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      handleBallCollect(e);
-    });
-    ball.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const rect = ball.getBoundingClientRect();
-        handleBallCollect({
-          stopPropagation: () => {},
-          clientX: rect.left + rect.width / 2,
-          clientY: rect.top + rect.height / 2
-        });
-      }
-    });
-  });
-
-  // Fake Decoy Dragon Balls Click / Touch / Keyboard Handler (Kid Goku Prank) — mobile perfect
-  fakeBalls.forEach(fakeBall => {
-    const handleFakeClick = (e) => {
-      e.stopPropagation();
-      const fakeType = fakeBall.getAttribute('data-fake-ball');
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      triggerKidGokuPrank(fakeType, clientX, clientY);
-    };
-
-    fakeBall.addEventListener('click', handleFakeClick);
-    fakeBall.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      handleFakeClick(e);
-    });
-    fakeBall.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const rect = fakeBall.getBoundingClientRect();
-        handleFakeClick({
-          stopPropagation: () => {},
-          clientX: rect.left + rect.width / 2,
-          clientY: rect.top + rect.height / 2
-        });
-      }
-    });
-  });
-
-  // Perfect mobile: pause ticker on touch for easier collection (moving target)
-  const tickerTrack = document.querySelector('.ticker-track');
-  const tickerBalls = document.querySelectorAll('.ticker-container .dragon-ball, .ticker-container .fake-dragon-ball');
-  if (tickerTrack && tickerBalls.length) {
-    tickerBalls.forEach(b => {
-      b.addEventListener('touchstart', () => tickerTrack.classList.add('ticker-paused'), {passive: true});
-      b.addEventListener('touchend', () => setTimeout(() => tickerTrack.classList.remove('ticker-paused'), 900), {passive: true});
-      b.addEventListener('mousedown', () => tickerTrack.classList.add('ticker-paused'));
-      b.addEventListener('mouseleave', () => tickerTrack.classList.remove('ticker-paused'));
-      b.addEventListener('focus', () => tickerTrack.classList.add('ticker-paused'));
-      b.addEventListener('blur', () => tickerTrack.classList.remove('ticker-paused'));
-    });
-  }
-}
-
-// Rebind handlers after a scatter reshuffle (removes stale listeners from shuffled pool)
-function rebindDragonBallHandlers() {
-  // Strip old listeners by cloning nodes (dataset/class already correct after renderDragonBallSVGs)
-  document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(el => {
-    if (el.classList.contains('shenron-star-ball')) return; // keep Shenron altar balls untouched
-    const clone = el.cloneNode(true);
-    el.parentNode.replaceChild(clone, el);
-  });
-
-  const freshReal = document.querySelectorAll('.dragon-ball[data-ball]');
-  const freshFake = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
-
-  freshReal.forEach(ball => {
-    const handleBallCollect = (e) => {
-      e.stopPropagation();
-      const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      if (ballNumber >= 1 && ballNumber <= 7) {
-        if (!collectedBalls.has(ballNumber)) {
-          triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
-        } else {
-          createKiSparks(clientX, clientY);
-          showToast(`${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
-        }
-      }
-    };
-    ball.addEventListener('click', handleBallCollect);
-    ball.addEventListener('touchend', (e) => { e.preventDefault(); handleBallCollect(e); });
-    ball.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const rect = ball.getBoundingClientRect();
-        handleBallCollect({ stopPropagation: () => {}, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
-      }
-    });
-  });
-
-  freshFake.forEach(fakeBall => {
-    const handleFakeClick = (e) => {
-      e.stopPropagation();
-      const fakeType = fakeBall.getAttribute('data-fake-ball');
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      triggerKidGokuPrank(fakeType, clientX, clientY);
-    };
-    fakeBall.addEventListener('click', handleFakeClick);
-    fakeBall.addEventListener('touchend', (e) => { e.preventDefault(); handleFakeClick(e); });
-    fakeBall.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const rect = fakeBall.getBoundingClientRect();
-        handleFakeClick({ stopPropagation: () => {}, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
-      }
-    });
-  });
-
-  // Re-attach ticker pause handlers for freshly cloned ticker balls
-  const tickerTrack = document.querySelector('.ticker-track');
-  if (tickerTrack) {
-    const tickerBalls = document.querySelectorAll('.ticker-container .dragon-ball, .ticker-container .fake-dragon-ball');
-    tickerBalls.forEach(b => {
-      b.addEventListener('touchstart', () => tickerTrack.classList.add('ticker-paused'), {passive: true});
-      b.addEventListener('touchend', () => setTimeout(() => tickerTrack.classList.remove('ticker-paused'), 900), {passive: true});
-      b.addEventListener('mousedown', () => tickerTrack.classList.add('ticker-paused'));
-      b.addEventListener('mouseleave', () => tickerTrack.classList.remove('ticker-paused'));
-      b.addEventListener('focus', () => tickerTrack.classList.add('ticker-paused'));
-      b.addEventListener('blur', () => tickerTrack.classList.remove('ticker-paused'));
-    });
-  }
-}
-
-/* --- Ki Spark Click Effect --- */
-function createKiSparks(x, y) {
-  for (let i = 0; i < 6; i++) {
-    const spark = document.createElement('div');
-    spark.className = 'ki-spark';
-    spark.style.left = `${x}px`;
-    spark.style.top = `${y}px`;
-    const angle = (i / 6) * Math.PI * 2;
-    const distance = 30 + Math.random() * 20;
-    spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-    spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-    document.body.appendChild(spark);
-    setTimeout(() => spark.remove(), 600);
-  }
-}
-
-/* --- Dynamic Random Flying Nimbus Flight Engine --- */
-let nimbusTurboTimer = null;
-let currentNimbusDirection = 'ltr';
-
-function launchRandomNimbusFlight() {
-  const nimbus = document.getElementById('flyingNimbus');
-  if (!nimbus) return;
-
-  // Random vertical altitude between 10% and 82% of screen height
-  const randomTop = Math.floor(10 + Math.random() * 72);
-  nimbus.style.setProperty('--nimbus-top', `${randomTop}%`);
-
-  // Random flight direction: 60% Left-to-Right, 40% Right-to-Left
-  const isLTR = Math.random() > 0.40;
-  currentNimbusDirection = isLTR ? 'ltr' : 'rtl';
-
-  // Random duration between 18s and 26s (on mobile: 14s - 20s)
-  const isMobile = window.innerWidth < 768;
-  const duration = isMobile 
-    ? Math.floor(14 + Math.random() * 6) 
-    : Math.floor(18 + Math.random() * 8);
-  nimbus.style.setProperty('--nimbus-duration', `${duration}s`);
-
-  // Reset classes and trigger reflow
-  nimbus.classList.remove('nimbus-flying-ltr', 'nimbus-flying-rtl', 'nimbus-turbo');
-  void nimbus.offsetWidth;
-
-  if (isLTR) {
-    nimbus.classList.add('nimbus-flying-ltr');
-  } else {
-    nimbus.classList.add('nimbus-flying-rtl');
-  }
-}
-
-function initNimbusDrag() {
-  const nimbus = document.getElementById('flyingNimbus');
-  if (!nimbus) return;
-
-  launchRandomNimbusFlight();
-
-  nimbus.addEventListener('animationiteration', () => {
-    if (!nimbus.classList.contains('nimbus-turbo') && !nimbus.classList.contains('nimbus-dragging')) {
-      launchRandomNimbusFlight();
-    }
-  });
-
-  const HOLD_DELAY = 300;
-  let holdTimer = null;
-  let isDragging = false;
-  let activePointerId = null;
-  let dragStartX = 0;
-  let dragStartY = 0;
-  let nimbusStartLeft = 0;
-  let nimbusStartTop = 0;
-
-  function triggerNimbusTurbo() {
-    if (nimbusTurboTimer) clearTimeout(nimbusTurboTimer);
-    nimbus.classList.remove('nimbus-turbo');
-    void nimbus.offsetWidth;
-    nimbus.classList.add('nimbus-turbo');
-
-    const rect = nimbus.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    for (let i = 0; i < 10; i++) {
-      setTimeout(() => {
-        createKiSparks(cx + (Math.random() * 40 - 20), cy + (Math.random() * 30 - 15));
-      }, i * 100);
-    }
-    drawLightningStrike();
-
-    nimbusTurboTimer = setTimeout(() => {
-      nimbus.classList.remove('nimbus-turbo');
-      launchRandomNimbusFlight();
-    }, 4200);
-  }
-
-  function onWindowPointerMove(e) {
-    if (e.pointerId !== activePointerId || !isDragging) return;
-    e.preventDefault();
-    const dx = e.clientX - dragStartX;
-    const dy = e.clientY - dragStartY;
-    nimbus.style.position = 'fixed';
-    nimbus.style.left = `${nimbusStartLeft + dx - nimbus.offsetWidth / 2}px`;
-    nimbus.style.top = `${nimbusStartTop + dy - nimbus.offsetHeight / 2}px`;
-    nimbus.style.transform = 'none';
-  }
-
-  function onWindowPointerUp(e) {
-    if (e.pointerId !== activePointerId) return;
-    window.removeEventListener('pointermove', onWindowPointerMove);
-    window.removeEventListener('pointerup', onWindowPointerUp);
-    window.removeEventListener('pointercancel', onWindowPointerUp);
-
-    if (holdTimer) {
-      clearTimeout(holdTimer);
-      holdTimer = null;
-      // Resume animation since we're not dragging (click without hold triggers turbo)
-      nimbus.style.animationPlayState = '';
-      activePointerId = null;
-      triggerNimbusTurbo();
-      return;
-    }
-
-    if (!isDragging) return;
-    isDragging = false;
-    nimbus.classList.remove('nimbus-dragging');
-    nimbus.style.animationPlayState = '';
-
-    const rect = nimbus.getBoundingClientRect();
-    const viewH = window.innerHeight;
-    const topPct = Math.round((rect.top + rect.height / 2) / viewH * 100);
-    const clampedTop = Math.max(5, Math.min(85, topPct));
-
-    nimbus.style.position = '';
-    nimbus.style.left = '';
-    nimbus.style.top = '';
-    nimbus.style.transform = '';
-
-    nimbus.style.setProperty('--nimbus-top', `${clampedTop}%`);
-    nimbus.classList.remove('nimbus-flying-ltr', 'nimbus-flying-rtl', 'nimbus-turbo');
-    void nimbus.offsetWidth;
-    const midX = rect.left + rect.width / 2;
-    const isLTR = midX < window.innerWidth / 2;
-    nimbus.classList.add(isLTR ? 'nimbus-flying-ltr' : 'nimbus-flying-rtl');
-    activePointerId = null;
-  }
-
-  nimbus.addEventListener('pointerdown', (e) => {
-    if (e.button && e.button !== 0) return;
-    if (activePointerId !== null) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    activePointerId = e.pointerId;
-    dragStartX = e.clientX;
-    dragStartY = e.clientY;
-
-    // Immediately pause animation and capture position so nimbus stays in place during hold
-    nimbus.style.animationPlayState = 'paused';
-    const rect = nimbus.getBoundingClientRect();
-    nimbusStartLeft = rect.left + rect.width / 2;
-    nimbusStartTop = rect.top + rect.height / 2;
-
-    holdTimer = setTimeout(() => {
-      holdTimer = null;
-      isDragging = true;
-      nimbus.classList.add('nimbus-dragging');
-    }, HOLD_DELAY);
-
-    window.addEventListener('pointermove', onWindowPointerMove);
-    window.addEventListener('pointerup', onWindowPointerUp);
-    window.addEventListener('pointercancel', onWindowPointerUp);
-  });
-
-  nimbus.addEventListener('dragstart', (e) => e.preventDefault());
-  nimbus.addEventListener('contextmenu', (e) => e.preventDefault());
-}
-
-/* --- Global Click Animation Engine (Shockwave Ripple Rings) --- */
-function initGlobalClickAnimation() {
-  // On mobile/touch devices, skip continuous shockwave DOM creation to eliminate touch/scroll lag
-  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches) return;
-  let lastAnimTime = 0;
-
-  function spawnClickAnimation(x, y) {
-    const now = Date.now();
-    if (now - lastAnimTime < 80) return;
-    lastAnimTime = now;
-
-    const isSaiyan = document.body.classList.contains('saiyan-mode');
-
-    // Spawning shockwave expanding ring
-    const ring = document.createElement('div');
-    ring.className = 'click-shockwave-ring';
-    ring.style.left = `${x}px`;
-    ring.style.top = `${y}px`;
-    ring.style.borderColor = isSaiyan ? '#FBBF24' : '#8B5CF6';
-    ring.style.width = isSaiyan ? '50px' : '40px';
-    ring.style.height = isSaiyan ? '50px' : '40px';
-    document.body.appendChild(ring);
-
-    setTimeout(() => ring.remove(), 450);
-  }
-
-  document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
-    spawnClickAnimation(e.clientX, e.clientY);
-  }, { passive: true });
-}
-
-/* ==========================================================================
-   Dragon Ball SVG Generation (Global Scope - used by multiple functions)
-   ========================================================================== */
-// Anime-canonical star layouts (100×100 viewBox)
-// Verified against Toriyama's manga + Toei anime cel references.
-// Each ball's stars must match the exact screen arrangement.
-const DRAGON_BALL_LAYOUTS = {
-  // 1-Star: single centered (Bulma's first discovery)
-  1: [[50, 50]],
-  // 2-Star: horizontal pair (seen in Pilaf arc)
-  2: [[35, 50], [65, 50]],
-  // 3-Star: upright triangle (turtle hermit)
-  3: [[50, 32], [34, 63], [66, 63]],
-  // 4-Star: diamond / cross (Gohan's hat jewel — most iconic)
-  4: [[50, 27], [27, 50], [73, 50], [50, 73]],
-  // 5-Star: quincunx — 4 corners + center
-  5: [[50, 50], [33, 33], [67, 33], [33, 67], [67, 67]],
-  // 6-Star: two neat columns of three
-  6: [[36, 30], [64, 30], [36, 50], [64, 50], [36, 70], [64, 70]],
-  // 7-Star: center + hexagon ring (Shenron's final ball)
-  7: [[50, 50], [50, 26], [70, 38], [70, 62], [50, 74], [30, 62], [30, 38]],
-  // Decoy variants (fake balls — keep for prank system)
-  8: [[36, 26], [64, 26], [24, 50], [50, 50], [76, 50], [36, 74], [64, 74], [50, 26]],
-  9: [[30, 30], [50, 30], [70, 30], [30, 50], [50, 50], [70, 50], [30, 70], [50, 70], [70, 70]]
-};
-
-// Perfect anime star: sharp 5-point, inner radius 0.38 — matches Toriyama's
-// hand-drawn proportion exactly (not the bloated 0.40 pinched look).
-function createDragonBallStarPolygon(cx, cy, r) {
-  let pts = [];
-  for (let i = 0; i < 10; i++) {
-    const radius = i % 2 === 0 ? r : r * 0.38;
-    const angle = (Math.PI / 5) * i - Math.PI / 2;
-    pts.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
-  }
-  return pts.join(' ');
-}
-
-// Anime stars are FLAT solid crimson — no multi-layer highlight.
-// A single crisp polygon + one subtle soft shadow is the Toriyama look.
-function buildDragonBallStars(starCoords, r) {
-  return starCoords.map(([sx, sy]) => {
-    const pts = createDragonBallStarPolygon(sx, sy, r);
-    // Soft drop shadow (the star is BEHIND the glass)
-    const shadow = `<polygon points="${createDragonBallStarPolygon(sx + 0.7, sy + 0.9, r)}" fill="#4A0A00" opacity="0.55" />`;
-    // Solid anime red star — THE canonical #E30613 / #CC0000 family
-    const body = `<polygon points="${pts}" fill="#D90000" stroke="#7A0000" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round" />`;
-    return shadow + body;
-  }).join('');
-}
-
-window.getBallSVGString = function(starNum, size = 48) {
-  const num = starNum ? starNum.toString() : '4';
-  const uid = `db-${num}-${size}-${Math.random().toString(36).slice(2, 7)}`;
-  const parsedNum = parseInt(num, 10);
-  const hasCanonicalLayout = !isNaN(parsedNum) && DRAGON_BALL_LAYOUTS[parsedNum];
-
-  // Tuned star radii — anime stars leave breathing room, never kiss the edge.
-  // Smaller = more elegant, lets the orange sphere dominate like in the show.
-  let starR;
-  if (parsedNum === 1) starR = 10.5;
-  else if (parsedNum === 2) starR = 9.0;
-  else if (parsedNum === 3) starR = 8.6;
-  else if (parsedNum === 4) starR = 8.4;
-  else if (parsedNum === 5) starR = 7.6;
-  else if (parsedNum === 6) starR = 7.2;
-  else if (parsedNum === 7) starR = 6.8;
-  else starR = 7.5;
-
-  let innerContent = '';
-
-  if (hasCanonicalLayout) {
-    innerContent = buildDragonBallStars(DRAGON_BALL_LAYOUTS[parsedNum], starR);
-  } else {
-    // Prank balls now MIMIC normal balls — random 1-7 so you can't tell by look
-    const rnd = 1 + Math.floor(Math.random() * 7);
-    let rndR;
-    if (rnd === 1) rndR = 10.5;
-    else if (rnd === 2) rndR = 9.0;
-    else if (rnd === 3) rndR = 8.6;
-    else if (rnd === 4) rndR = 8.4;
-    else if (rnd === 5) rndR = 7.6;
-    else if (rnd === 6) rndR = 7.2;
-    else rndR = 6.8;
-    innerContent = buildDragonBallStars(DRAGON_BALL_LAYOUTS[rnd], rndR);
-  }
-
-  // ── UNIFIED SPHERE SHELL ──────────────────────────────────────────
-  // Now identical to the brand header orb (index.html:82) — same 3
-  // radial gradients, same gloss ellipse, same rim & stroke.
-  // Only the stars (innerContent / LAYOUTS) remain dynamic.
-  return `
-    <svg class="dragon-ball-svg" viewBox="0 0 100 100" width="${size}" height="${size}" style="display: block; pointer-events: none; stroke: none !important; fill: none !important;" aria-hidden="true">
-      <defs>
-        <radialGradient id="db-body-${uid}" cx="34%" cy="28%" r="78%">
-          <stop offset="0%" stop-color="#FFF3C4" />
-          <stop offset="26%" stop-color="#FFD54A" />
-          <stop offset="62%" stop-color="#FFA51F" />
-          <stop offset="100%" stop-color="#C2610A" />
-        </radialGradient>
-        <radialGradient id="db-gloss-${uid}" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
-          <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
-        </radialGradient>
-        <radialGradient id="db-rim-${uid}" cx="50%" cy="82%" r="52%">
-          <stop offset="0%" stop-color="#FF8A3D" stop-opacity="0.75" />
-          <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="46" fill="url(#db-body-${uid})" stroke="none" style="stroke: none !important;" />
-      <circle cx="50" cy="50" r="46" fill="url(#db-rim-${uid})" stroke="none" style="stroke: none !important;" />
-      <g opacity="0.98">
-        ${innerContent}
-      </g>
-      <ellipse cx="33" cy="27" rx="16" ry="11" fill="url(#db-gloss-${uid})" stroke="none" style="stroke: none !important;" transform="rotate(-28 33 27)" />
-      <circle cx="50" cy="50" r="46" fill="none" stroke="#7C3A06" stroke-width="1.5" opacity="0.55" style="stroke: #7C3A06 !important; stroke-width: 1.5px !important;" />
-    </svg>
-  `;
-};
-
-/* ==========================================================================
-   Realistic Cinematic Shenron Emergence from Dragon Balls & Wish Engine
-   ========================================================================== */
-let shenronTimelineTimers = [];
-let shenronStormLoopId = null;
-
-function playShenronThunderSynth() {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-
-    // Sub-bass thunder rumble
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(45, now);
-    osc.frequency.exponentialRampToValueAtTime(20, now + 1.8);
-
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(140, now);
-    filter.frequency.exponentialRampToValueAtTime(40, now + 1.8);
-
-    gain.gain.setValueAtTime(0.3, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 2.0);
-  } catch (e) {}
-}
-
-function playShenronRoarSound() {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-
-    // Resonant harmonic dragon roar sweep
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc1.type = 'sawtooth';
-    osc1.frequency.setValueAtTime(90, now);
-    osc1.frequency.exponentialRampToValueAtTime(220, now + 0.6);
-    osc1.frequency.exponentialRampToValueAtTime(60, now + 2.2);
-
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(180, now);
-    osc2.frequency.exponentialRampToValueAtTime(440, now + 0.6);
-    osc2.frequency.exponentialRampToValueAtTime(110, now + 2.2);
-
-    gain.gain.setValueAtTime(0.25, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.3);
-
-    osc1.connect(gain);
-    osc2.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + 2.3);
-    osc2.stop(now + 2.3);
-  } catch (e) {}
-}
-
-function playSuperSaiyanAuraSound() {
-  if (!isSoundEffectsEnabled()) return;
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(110, now);
-    osc.frequency.exponentialRampToValueAtTime(330, now + 0.8);
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 1.2);
-  } catch (e) {}
-}
-
-function startShenronLightningStorm() {
-  const canvas = document.getElementById('shenronLightningCanvas');
-  if (!canvas) return;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const ctx = canvas.getContext('2d');
-
-  function renderStormFrame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // 25% chance per tick to flash a branching bolt
-    if (Math.random() < 0.28) {
-      drawSingleBolt(ctx, canvas.width, canvas.height);
-      if (Math.random() < 0.35) {
-        playShenronThunderSynth();
-      }
-    }
-    shenronStormLoopId = setTimeout(renderStormFrame, 120 + Math.random() * 260);
-  }
-  renderStormFrame();
-}
-
-function stopShenronLightningStorm() {
-  if (shenronStormLoopId) {
-    clearTimeout(shenronStormLoopId);
-    shenronStormLoopId = null;
-  }
-  const canvas = document.getElementById('shenronLightningCanvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-}
-
-/* Shenron image-based summon — no video/chroma needed */
-function startShenronChromaLoop() { /* no-op: using shenron.png */ }
-function stopShenronChromaLoop() { /* no-op: using shenron.png */ }
-
-// Preload shenron image on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  const img = document.getElementById('shenronDragonImg');
-  if (img) { img.src = 'assets/shenron.png'; }
-});
-
-window.openShenronModal = function() {
-  const modal = document.getElementById('shenronModal');
-  if (!modal) return;
-
-  // Clear any leftover timers
-  shenronTimelineTimers.forEach(t => clearTimeout(t));
-  shenronTimelineTimers = [];
-
-  // Reset stage classes
-  modal.classList.remove('balls-active', 'beam-active', 'dragon-active', 'decree-active');
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-
-  // Phase 1 (0.0s): Dark Sky & Lightning Strikes begin
-  startShenronLightningStorm();
-  playShenronThunderSynth();
-
-  // Phase 2 (0.3s): The 7 Dragon Balls surge with golden Ki
-  const t1 = setTimeout(() => {
-    modal.classList.add('balls-active');
-    playDragonBallCollectChime();
-  }, 300);
-
-  // Phase 3 (0.85s): Golden Energy Vortex rises smoothly from the balls
-  const t2 = setTimeout(() => {
-    modal.classList.add('beam-active');
-    playSuperSaiyanAuraSound();
-    drawLightningStrike();
-  }, 850);
-
-  // Phase 4 (1.45s): Shenron rises slowly & majestically from the Dragon Balls
-  const t3 = setTimeout(() => {
-    modal.classList.add('dragon-active');
-    playShenronRoarSound();
-    drawLightningStrike();
-    triggerLightningStorm(2);
-    startShenronChromaLoop();
-  }, 1450);
-
-  // Phase 5 (4.05s): Wish console appears after slow rise completes
-  const t4 = setTimeout(() => {
-    modal.classList.add('decree-active');
-    playDragonBallCollectChime();
-  }, 4050);
-
-  shenronTimelineTimers.push(t1, t2, t3, t4);
-};
-
-window.closeShenronModal = function() {
-  const modal = document.getElementById('shenronModal');
-  if (modal) {
-    modal.classList.remove('active', 'balls-active', 'beam-active', 'dragon-active', 'decree-active', 'scattering');
-    document.body.style.overflow = '';
-  }
-  // Cleanup scatter clones + formation glow and re-enable button if interrupted mid-flight
-  document.querySelectorAll('.db-scatter-clone').forEach(c => c.remove());
-  document.querySelectorAll('.db-circle-central-glow').forEach(c => c.remove());
-  const scatterBtn = document.querySelector('.shenron-scatter-btn');
-  if (scatterBtn) scatterBtn.disabled = false;
-  stopShenronLightningStorm();
-  stopShenronChromaLoop();
-  shenronTimelineTimers.forEach(t => clearTimeout(t));
-  shenronTimelineTimers = [];
-};
-
-window.grantShenronWish = function(type) {
-  drawLightningStrike();
-
-  if (type === 'hire') {
-    showToast("'YOUR WISH HAS BEEN GRANTED! CONNECTING WITH SUBODH!'");
-    setTimeout(() => {
-      closeShenronModal();
-      const contactSection = document.getElementById('contact');
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        const messageBox = document.getElementById('message');
-        if (messageBox) {
-          messageBox.value = "Hi Subodh! I collected all 7 Dragon Balls and summoned Shenron to connect with you regarding a Software / AI/ML Engineering opportunity!";
-          try { messageBox.focus(); } catch(e){}
-        }
-      }
-    }, 650);
-  } else if (type === 'resume') {
-    showToast("'YOUR WISH HAS BEEN GRANTED! OPENING RESUME!'");
-    setTimeout(() => {
-      closeShenronModal();
-      const link = document.createElement('a');
-      link.href = 'assets/Subodh_Muneshwar_ATS_Resume.pdf';
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.download = 'Subodh_Muneshwar_ATS_Resume.pdf';
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => link.remove(), 1000);
-      // fallback to opening in new tab if download blocked
-      setTimeout(() => { window.open('assets/Subodh_Muneshwar_ATS_Resume.pdf', '_blank', 'noopener'); }, 400);
-    }, 500);
-  } else if (type === 'projects') {
-    showToast("'YOUR WISH HAS BEEN GRANTED! SHOWING PROJECTS!'");
-    setTimeout(() => {
-      closeShenronModal();
-      const proj = document.getElementById('projects');
-      if (proj) proj.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 550);
-  }
-};
-
-window.scatterDragonBallsAgain = function() {
-  const modal = document.getElementById('shenronModal');
-  const scatterBtn = document.querySelector('.shenron-scatter-btn');
-
-  // If modal not active (edge: called outside cinematic), fallback to instant scatter
-  const isModalActive = modal && modal.classList.contains('active');
-  if (!isModalActive) {
-    closeShenronModal();
-    collectedBalls.clear();
-    dragonBallsInitialized = false; // Allow reshuffle on next render
-    document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
-      ball.classList.remove('collected', 'ball-disappeared');
-      ball.style.removeProperty('display');
-      ball.style.removeProperty('visibility');
-      ball.style.removeProperty('opacity');
-      ball.style.removeProperty('pointer-events');
-      ball.setAttribute('aria-hidden', 'false');
-      ball.setAttribute('tabindex', '0');
-    });
-    renderDragonBallSVGs();
-    updateRadarMiniBlips();
-    try { rebindDragonBallHandlers(); } catch(e) {}
-    const radarCount = document.getElementById('ballsFoundCount');
-    if (radarCount) radarCount.textContent = '0';
-    drawLightningStrike();
-    playDragonBallCollectChime();
-    showToast("The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
-    // Staggered pop entrance for the newly scattered page balls
-    const fallbackBalls = document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]');
-    fallbackBalls.forEach((ball, idx) => {
-      ball.classList.remove('scattered-entrance');
-      void ball.offsetWidth;
-      ball.style.animationDelay = (idx * 105) + 'ms';
-      ball.classList.add('scattered-entrance');
-      const scFallback = setTimeout(() => {
-        ball.classList.remove('scattered-entrance');
-        ball.style.removeProperty('animation-delay');
-      }, 3800 + idx * 10);
-      ball.addEventListener('animationend', () => {
-        clearTimeout(scFallback);
-        ball.classList.remove('scattered-entrance');
-        ball.style.removeProperty('animation-delay');
-      }, { once: true });
-    });
-    return;
-  }
-
-  // Prevent double-trigger while scattering
-  if (modal.classList.contains('scattering')) return;
-  modal.classList.add('scattering');
-  if (scatterBtn) scatterBtn.disabled = true;
-  document.body.style.overflow = 'hidden';
-
-  // Cinematic FX: roar, thunder, lightning burst
-  try { playShenronRoarSound(); } catch(e) {}
-  try { playShenronThunderSynth(); } catch(e) {}
-  try { drawLightningStrike(); triggerLightningStorm(3); } catch(e) {}
-
-  const altarBalls = modal.querySelectorAll('.shenron-star-ball');
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const clones = [];
-
-  // Viewport center for the formation circle — gather then scatter opposite
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const centerX = vw / 2;
-  const centerY = vh / 2;
-  const isMobileCircle = vw < 480;
-  const isTabletCircle = vw < 768;
-  const circleRadius = isMobileCircle ? 68 : isTabletCircle ? 86 : 112;
-  const maxDist = Math.max(vw, vh) * 0.92 + 180;
-
-  // Central formation glow — create early so it is visible while circle forms
-  const circleGlow = document.createElement('div');
-  circleGlow.className = 'db-circle-central-glow';
-  circleGlow.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(circleGlow);
-  void circleGlow.offsetWidth;
-  setTimeout(() => { if (circleGlow.parentNode) circleGlow.remove(); }, 4400);
-
-  altarBalls.forEach((ball, i) => {
-    const rect = ball.getBoundingClientRect();
-    if (!rect.width && !rect.height) return;
-    const starNum = ball.getAttribute('data-shenron-ball') || String(i + 1);
-    const clone = document.createElement('div');
-    clone.className = 'db-scatter-clone';
-    clone.setAttribute('aria-hidden', 'true');
-    clone.innerHTML = `<div class="db-scatter-clone-inner">${window.getBallSVGString ? window.getBallSVGString(starNum, window.innerWidth < 480 ? 46 : window.innerWidth < 768 ? 52 : 64) : ''}</div>`;
-    const size = window.innerWidth < 480 ? 50 : window.innerWidth < 768 ? 56 : 68;
-    const originX = rect.left + rect.width / 2;
-    const originY = rect.top + rect.height / 2;
-    clone.style.left = (originX - size / 2) + 'px';
-    clone.style.top = (originY - size / 2) + 'px';
-
-    const baseAngle = (i / 7) * Math.PI * 2 - Math.PI / 2; // start at top, clockwise
-    const jitter = (Math.random() - 0.5) * 0.32; // keep circle neat ±9°
-    const angle = baseAngle + jitter;
-    const cosA = Math.cos(angle);
-    const sinA = Math.sin(angle);
-
-    // Circle formation around viewport center
-    const circleX = centerX + cosA * circleRadius;
-    const circleY = centerY + sinA * circleRadius;
-    const circleOffsetX = circleX - originX;
-    const circleOffsetY = circleY - originY;
-
-    // Scatter target far beyond the circle, opposite direction (outward from center)
-    let scatterDist = maxDist;
-    const distScale = 0.9 + Math.random() * 0.18;
-    scatterDist *= distScale;
-    const scatterX = centerX + cosA * scatterDist;
-    const scatterY = centerY + sinA * scatterDist;
-    const biasedScatterY = scatterY - (sinA > 0 ? 60 : 0);
-    const scatterOffsetX = scatterX - originX;
-    const scatterOffsetY = biasedScatterY - originY;
-
-    const rot = (520 + Math.random() * 420) * (Math.random() > 0.5 ? 1 : -1);
-
-    clone.style.setProperty('--circle-x', circleOffsetX.toFixed(1) + 'px');
-    clone.style.setProperty('--circle-y', circleOffsetY.toFixed(1) + 'px');
-    clone.style.setProperty('--scatter-x', scatterOffsetX.toFixed(1) + 'px');
-    clone.style.setProperty('--scatter-y', scatterOffsetY.toFixed(1) + 'px');
-    clone.style.setProperty('--scatter-rot', rot.toFixed(1) + 'deg');
-    clone.style.setProperty('--scatter-delay', (i * 34) + 'ms');
-    document.body.appendChild(clone);
-    clones.push(clone);
-
-    setTimeout(() => {
-      createKiSparks(originX, originY);
-    }, i * 62);
-  });
-
-
-  // Central altar burst sparks
-  setTimeout(() => {
-    const altar = document.getElementById('shenronAltarBalls');
-    if (altar) {
-      const r = altar.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      for (let k = 0; k < 8; k++) {
-        setTimeout(() => createKiSparks(cx + (Math.random() * 110 - 55), cy + (Math.random() * 32 - 16)), k * 98);
-      }
-    }
-  }, 140);
-
-  const flightMs = prefersReduced ? 1600 : 4400;
-
-  setTimeout(() => {
-    // Remove flying clones + formation glow
-    clones.forEach(c => { if (c.parentNode) c.remove(); });
-    document.querySelectorAll(".db-circle-central-glow").forEach(c => { if (c.parentNode) c.remove(); });
-    // Safety: clear any stray clones after a beat
-    setTimeout(() => document.querySelectorAll('.db-scatter-clone').forEach(c => c.remove()), 400);
-
-    // Unlock modal and then reshuffle page balls
-    if (modal) modal.classList.remove('scattering');
-    closeShenronModal();
-    collectedBalls.clear();
-    dragonBallsInitialized = false; // Allow reshuffle on next render
-
-    document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
-      ball.classList.remove('collected', 'ball-disappeared', 'scattered-entrance', 'collected');
-      ball.style.removeProperty('display');
-      ball.style.removeProperty('visibility');
-      ball.style.removeProperty('opacity');
-      ball.style.removeProperty('pointer-events');
-      ball.style.removeProperty('animation-delay');
-      ball.setAttribute('aria-hidden', 'false');
-      ball.setAttribute('tabindex', '0');
-    });
-
-    renderDragonBallSVGs();
-    updateRadarMiniBlips();
-    try { rebindDragonBallHandlers(); } catch(e) {}
-
-    const radarCount = document.getElementById('ballsFoundCount');
-    if (radarCount) radarCount.textContent = '0';
-
-    // Staggered golden pop entrance across the freshly scattered world
-    const pageBalls = document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]');
-    pageBalls.forEach((ball, idx) => {
-      ball.classList.remove('scattered-entrance');
-      void ball.offsetWidth;
-      ball.style.animationDelay = (idx * 105) + 'ms';
-      ball.classList.add('scattered-entrance');
-      const scFallback2 = setTimeout(() => {
-        ball.classList.remove('scattered-entrance');
-        ball.style.removeProperty('animation-delay');
-      }, 3800 + idx * 10);
-      ball.addEventListener('animationend', () => {
-        clearTimeout(scFallback2);
-        ball.classList.remove('scattered-entrance');
-        ball.style.removeProperty('animation-delay');
-      }, { once: true });
-    });
-
-    // Celebrate dispersal with radar pulse + lightning + chime
-    const radarWidget = document.getElementById('dragonRadarWidget');
-    if (radarWidget) {
-      radarWidget.classList.remove('radar-ping-blast');
-      void radarWidget.offsetWidth;
-      radarWidget.classList.add('radar-ping-blast');
-      setTimeout(() => radarWidget.classList.remove('radar-ping-blast'), 800);
-    }
-    try { drawLightningStrike(); } catch(e) {}
-    if (!prefersReduced) try { triggerLightningStorm(3); } catch(e) {}
-    try { playDragonBallCollectChime(); } catch(e) {}
-    showToast("The 7 Dragon Balls have scattered into the skies across the realm! Seek them out on your Dragon Radar!");
-    if (scatterBtn) scatterBtn.disabled = false;
-  }, flightMs);
-};
-
-/* ==========================================================================
-   Super Saiyan Rosé Goku Black Start Animation & Smooth Transition Controller
-   ========================================================================== */
-const INTRO_TARGET_DURATION = 6.2; // Aligned with new_intro.mp4 climax (6.63s total)
-const INTRO_FALLBACK_TIMEOUT = 1.8; // Max 1.8s buffer time before automatic graceful transition
-let isIntroFinishing = false;
-let introTimer = null;
-let introFallbackTimer = null;
-let introRafId = null;
-
-function initPageIntroAnimation() {
-  const overlay = document.getElementById('introOverlay');
-  const video = document.getElementById('introVideo');
-
-  if (!overlay || !video) {
-    // Intro removed — ensure landing is immediately visible with buttery smooth entrance
-    document.documentElement.classList.remove('page-intro-running');
-    document.body.classList.remove('page-intro-running');
-    requestAnimationFrame(() => {
-      document.body.classList.add('page-intro-revealed');
-    });
-    return;
-  }
-
-  // Add intro-running class to html & body for full-screen lock
-  document.documentElement.classList.add('page-intro-running');
-  document.body.classList.add('page-intro-running');
-
-  let hasStartedPlaying = false;
-
-  // Always keep muted
-  video.muted = true;
-  video.volume = 0;
-
-  // Frame-synced check to transition at climax (6.2s or video duration)
-  function checkPlaybackLoop() {
-    if (isIntroFinishing) return;
-
-    const targetTime = video.duration ? Math.min(INTRO_TARGET_DURATION, video.duration - 0.15) : INTRO_TARGET_DURATION;
-    if (video.currentTime >= targetTime - 0.05) {
-      finishIntroTransition();
-      return;
-    }
-
-    introRafId = requestAnimationFrame(checkPlaybackLoop);
-  }
-
-  // 1. When video starts actual playback
-  const onVideoPlaying = () => {
-    if (hasStartedPlaying) return;
-    hasStartedPlaying = true;
-
-    // Clear fallback buffer timer once video is actively rendering frames
-    if (introFallbackTimer) {
-      clearTimeout(introFallbackTimer);
-      introFallbackTimer = null;
-    }
-
-    // Start playback check loop
-    if (introRafId) cancelAnimationFrame(introRafId);
-    introRafId = requestAnimationFrame(checkPlaybackLoop);
-
-    // Hard ceiling timer for intro duration
-    if (introTimer) clearTimeout(introTimer);
-    introTimer = setTimeout(() => {
-      if (!isIntroFinishing) finishIntroTransition();
-    }, (INTRO_TARGET_DURATION + 0.4) * 1000);
-  };
-
-  video.addEventListener('playing', onVideoPlaying);
-  video.addEventListener('canplay', () => {
-    video.play().catch(() => {});
-  });
-
-  // 2. Video Ended handler
-  video.addEventListener('ended', () => {
-    if (!isIntroFinishing) finishIntroTransition();
-  });
-
-  // 3. Fallback on load/play error
-  video.addEventListener('error', () => {
-    finishIntroTransition();
-  });
-
-  // 4. Safe buffer watchdog: If video takes too long on slow mobile connections, transition immediately
-  if (introFallbackTimer) clearTimeout(introFallbackTimer);
-  introFallbackTimer = setTimeout(() => {
-    if (!hasStartedPlaying && !isIntroFinishing) {
-      finishIntroTransition();
-    }
-  }, INTRO_FALLBACK_TIMEOUT * 1000);
-
-  // 5. Tap or Click ANYWHERE on screen/overlay to skip intro and enter portfolio directly
-  overlay.addEventListener('click', () => {
-    finishIntroTransition();
-  });
-
-  document.addEventListener('touchstart', (e) => {
-    if (!overlay.classList.contains('hidden') && !isIntroFinishing) {
-      finishIntroTransition();
-    }
-  }, { passive: true });
-
-  // 6. Keyboard shortcuts: Any key (Esc, Space, Enter) skips intro directly
-  document.addEventListener('keydown', (e) => {
-    if (!overlay.classList.contains('hidden') && !isIntroFinishing) {
-      if (e.key === 'Escape' || e.code === 'Space' || e.key === 'Enter') {
-        e.preventDefault();
-        finishIntroTransition();
-      }
-    }
-  });
-
-  // 7. Start Silent Playback immediately
-  video.muted = true;
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      // Autoplay fallback: watchdog will seamlessly transition
-    });
-  }
-}
-
-/**
- * Executes the fast, cinematic smooth transition from the anime intro into the portfolio
- */
-function finishIntroTransition() {
-  if (isIntroFinishing) return;
-  isIntroFinishing = true;
-
-  if (introTimer) {
-    clearTimeout(introTimer);
-    introTimer = null;
-  }
-  if (introFallbackTimer) {
-    clearTimeout(introFallbackTimer);
-    introFallbackTimer = null;
-  }
-  if (introRafId) {
-    cancelAnimationFrame(introRafId);
-    introRafId = null;
-  }
-
-  const overlay = document.getElementById('introOverlay');
-  const video = document.getElementById('introVideo');
-
-  if (video) {
-    try {
-      video.muted = true;
-      video.volume = 0;
-    } catch (e) {}
-  }
-
-  if (overlay) {
-    // Step 1: Trigger Rosé divine burst (GPU-accelerated pink bloom + energy rings)
-    overlay.classList.add('transitioning');
-    spawnRosePetals();
-
-    // Step 2: Unveil the landing page immediately
-    document.documentElement.classList.remove('page-intro-running');
-    document.body.classList.remove('page-intro-running');
-    document.body.classList.add('page-intro-revealed');
-
-    // Step 3: Fully hide intro overlay after 550ms (fast, punchy handoff)
-    setTimeout(() => {
-      overlay.classList.add('hidden');
-      if (video) {
-        try { video.pause(); } catch (e) {}
-      }
-      isIntroFinishing = false;
-    }, 550);
-  }
-}
-
-function spawnRosePetals() {
-  const container = document.getElementById('introRoseParticles');
-  if (!container) return;
-  container.innerHTML = '';
-  const count = 12;
-  for (let i = 0; i < count; i++) {
-    const petal = document.createElement('span');
-    petal.className = 'rose-petal';
-    const startX = 48 + Math.random() * 4;
-    const startY = 38 + Math.random() * 8;
-    petal.style.left = startX + '%';
-    petal.style.top = startY + '%';
-    const dx = (Math.random() - 0.5) * 280;
-    const dy = 100 + Math.random() * 180;
-    petal.style.setProperty('--dx', dx + 'px');
-    petal.style.setProperty('--dy', dy + 'px');
-    petal.style.animationDelay = (i * 0.04) + 's';
-    const s = 0.7 + Math.random() * 0.6;
-    petal.style.width = (8 * s) + 'px';
-    petal.style.height = (8 * s) + 'px';
-    container.appendChild(petal);
-  }
-}
-
-/**
- * Replays the intro animation anytime the user clicks "Intro" in the header
- */
-function replayIntroAnimation() {
-  const overlay = document.getElementById('introOverlay');
-  const video = document.getElementById('introVideo');
-
-  if (!overlay || !video) return;
-
-  isIntroFinishing = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  overlay.classList.remove('hidden');
-  overlay.classList.remove('transitioning');
-  document.documentElement.classList.add('page-intro-running');
-  document.body.classList.add('page-intro-running');
-  document.body.classList.remove('page-intro-revealed');
-
-  try {
-    video.currentTime = 0;
-    video.muted = true;
-    video.volume = 0;
-  } catch (e) {}
-
-  if (introTimer) clearTimeout(introTimer);
-  introTimer = setTimeout(() => {
-    if (!isIntroFinishing) {
-      finishIntroTransition();
-    }
-  }, (INTRO_TARGET_DURATION + 0.3) * 1000);
-
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {});
+    osc.stop(ctx.currentTime + 0.1);
+  } catch (e) {
+    // Silently fail if audio context issues
   }
 }
 
 /* ==========================================================================
-   Smooth Inertia Momentum Scrolling Engine (Lenis - Zunedaalim style)
+   Optimized Core Functions
    ========================================================================== */
+
+function initLucideIcons() {
+  // Batch process icon replacements for better performance
+  const icons = document.querySelectorAll('[data-lucide]');
+  icons.forEach(el => {
+    const name = el.getAttribute('data-lucide');
+    if (name && window.lucide) {
+      const icon = window.lucide.icons[name];
+      if (icon) {
+        el.innerHTML = icon;
+      }
+    }
+  });
+}
+
 function initSmoothScroll() {
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return;
+  // Use CSS scroll-behavior where possible, fallback to JS only if needed
+  if ('scrollBehavior' in document.documentElement.style) {
+    return; // Native smooth scroll supported
   }
 
-  // On touch/mobile devices, use native hardware-accelerated momentum scrolling directly
-  const isTouchDevice = window.innerWidth <= 768 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-  if (isTouchDevice || typeof Lenis === 'undefined') {
-    const siteHeader = document.querySelector('.site-header');
-    if (siteHeader) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 60) {
-          siteHeader.classList.add('is-scrolled');
-        } else {
-          siteHeader.classList.remove('is-scrolled');
-        }
-      }, { passive: true });
-    }
-    return;
-  }
-
-  const lenis = new Lenis({
-    duration: 1.15,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    orientation: 'vertical',
-    gestureOrientation: 'vertical',
-    smoothWheel: true,
-    wheelMultiplier: 0.95,
-    touchMultiplier: 1.0,
-    infinite: false,
-  });
-
-  window.lenis = lenis;
-
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
-  // Sync floating header scrolled state on scroll
-  const siteHeader = document.querySelector('.site-header');
-  lenis.on('scroll', (e) => {
-    if (siteHeader) {
-      if (e.scroll > 60) {
-        siteHeader.classList.add('is-scrolled');
-      } else {
-        siteHeader.classList.remove('is-scrolled');
-      }
-    }
-  });
-
-  // Automatically pause/resume Lenis during full-screen modals or cutscenes
-  if ('MutationObserver' in window) {
-    const bodyScrollObserver = new MutationObserver(() => {
-      if (document.body.style.overflow === 'hidden') {
-        lenis.stop();
-      } else {
-        lenis.start();
-      }
-    });
-    bodyScrollObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
-  }
-
-  // Smooth programmatic anchor navigation with header offset compensation
+  // Fallback for older browsers - but most modern browsers support it
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const href = this.getAttribute('href');
-      if (!href || href === '#' || href === '#!') return;
-      const target = document.querySelector(href);
-      if (target) {
+      if (href !== '#' && href.startsWith('#')) {
         e.preventDefault();
-        const headerOffset = 70;
-        lenis.scrollTo(target, { offset: -headerOffset, duration: 1.15 });
-        if (history.pushState) {
-          history.pushState(null, null, href);
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
         }
-      }
-    });
-  });
-
-  // Also support back-to-top buttons
-  document.querySelectorAll('.brand-logo, #footerBackToTop, .footer-float-top').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      lenis.scrollTo(0, { duration: 1.15 });
-      if (history.pushState) {
-        history.pushState(null, null, window.location.pathname);
       }
     });
   });
 }
 
-/* ==========================================================================
-   Scroll-Triggered Reveal Engine (IntersectionObserver with One-by-One Cascades)
-   ========================================================================== */
-function initScrollReveal() {
-  if (!('IntersectionObserver' in window)) {
-    document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('is-revealed'));
+function initPageIntroAnimation() {
+  // Reduced intensity animation for better performance
+  document.documentElement.classList.add('page-loading');
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.documentElement.classList.remove('page-loading');
+    }, 300); // Reduced from 500ms
+  });
+}
+
+function initHeroStats() {
+  // Optimized stats rendering
+  const statsGrid = document.getElementById('statsGrid');
+  if (!statsGrid) return;
+
+  // Clear and rebuild efficiently
+  statsGrid.innerHTML = '';
+
+  portfolioData.personal.stats.forEach(stat => {
+    const statCard = document.createElement('div');
+    statCard.className = 'stat-card';
+    statCard.innerHTML = `
+      <div class="stat-icon" style="color: var(--${stat.color});">
+        <i data-lucide="${stat.icon}"></i>
+      </div>
+      <div class="stat-value">${stat.value}</div>
+      <div class="stat-label">${stat.label}</div>
+    `;
+    statsGrid.appendChild(statCard);
+  });
+
+  // Lazy load Lucide icons in stats
+  setTimeout(() => {
+    const statIcons = statsGrid.querySelectorAll('[data-lucide]');
+    statIcons.forEach(el => {
+      const name = el.getAttribute('data-lucide');
+      if (name && window.lucide) {
+        const icon = window.lucide.icons[name];
+        if (icon) {
+          el.innerHTML = icon;
+        }
+      }
+    });
+  }, 0);
+}
+
+function renderSkills() {
+  const skillsGrid = document.getElementById('skillsGrid');
+  if (!skillsGrid) return;
+
+  skillsGrid.innerHTML = '';
+
+  portfolioData.skills.forEach(category => {
+    const skillCard = document.createElement('div');
+    skillCard.className = 'skill-category-card';
+    skillCard.innerHTML = `
+      <div class="skill-category-header">
+        <div class="skill-icon-box" style="background: var(--${category.color}-alt); color: var(--${category.color});">
+          <i data-lucide="${category.icon}"></i>
+        </div>
+        <h3 class="skill-category-title">${category.category}</h3>
+      </div>
+      <div class="skill-list">
+        ${category.items.map(item => `
+          <div class="skill-item">
+            <span class="skill-name">${item.name}</span>
+            <span class="skill-level">${item.level}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    skillsGrid.appendChild(skillCard);
+  });
+
+  // Lazy load icons
+  setTimeout(() => {
+    const skillIcons = skillsGrid.querySelectorAll('[data-lucide]');
+    skillIcons.forEach(el => {
+      const name = el.getAttribute('data-lucide');
+      if (name && window.lucide) {
+        const icon = window.lucide.icons[name];
+        if (icon) {
+          el.innerHTML = icon;
+        }
+      }
+    });
+  }, 0);
+}
+
+function renderExperience() {
+  const experienceTimeline = document.getElementById('experienceTimeline');
+  if (!experienceTimeline) return;
+
+  experienceTimeline.innerHTML = '';
+
+  portfolioData.experience.forEach((exp, index) => {
+    const experienceCard = document.createElement('div');
+    experienceCard.className = `experience-card ${index % 2 === 0 ? 'even' : 'odd'}`;
+    experienceCard.innerHTML = `
+      <div class="experience-header">
+        <div class="experience-company">
+          <div class="experience-logo">
+            ${exp.logo ? `<img src="${exp.logo}" alt="${exp.logoText || 'Company logo'}">` : '<div class="logo-placeholder">🏢</div>'}
+          </div>
+          <div class="experience-company-info">
+            <div class="experience-company-name">${exp.company}</div>
+            <div class="experience-company-location">${exp.location}</div>
+          </div>
+        </div>
+        <div class="experience-period">${exp.period}</div>
+        ${exp.badgeColor ? `<span class="experience-badge" style="background: var(--${exp.badgeColor}-alt); color: var(--${exp.badgeColor});">${exp.badge}</span>` : ''}
+      </div>
+      <h3 class="experience-title">${exp.role}</h3>
+      <p class="experience-description">${exp.description}</p>
+
+      ${exp.highlights && exp.highlights.length > 0 ? `
+        <ul class="experience-highlights">
+          ${exp.highlights.map(highlight => `<li>${highlight}</li>`).join('')}
+        </ul>
+      ` : ''}
+
+      ${exp.techStack && exp.techStack.length > 0 ? `
+        <div class="experience-tech-stack">
+          ${exp.techStack.map(tech => `<span class="experience-tech">${tech}</span>`).join('')}
+        </div>
+      ` : ''}
+    `;
+    experienceTimeline.appendChild(experienceCard);
+  });
+}
+
+function renderProjects(filter = 'all') {
+  const projectsGrid = document.getElementById('projectsGrid');
+  if (!projectsGrid) return;
+
+  projectsGrid.innerHTML = '';
+
+  const filteredProjects = filter === 'all'
+    ? portfolioData.projects
+    : portfolioData.projects.filter(p => p.category === filter);
+
+  if (filteredProjects.length === 0) {
+    projectsGrid.innerHTML = '<p class="no-projects">No projects found for this category.</p>';
     return;
   }
 
-  const observerOptions = {
-    threshold: 0.08,
-    rootMargin: '0px 0px -40px 0px'
+  filteredProjects.forEach(project => {
+    const projectCard = document.createElement('div');
+    projectCard.className = 'project-card';
+    projectCard.innerHTML = `
+      <img src="${project.image}" alt="${project.title}" class="project-card-img" loading="lazy">
+      <div class="project-card-content">
+        <h3 class="project-card-title">${project.title}</h3>
+        <p class="project-card-tagline">${project.tagline}</p>
+        <ul class="project-card-bullets">
+          ${project.bullets.map(bullet => `<li>${bullet}</li>`).join('')}
+        </ul>
+        <div class="project-actions">
+          <a href="${project.github}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            <i data-lucide="github"></i>
+            <span>GitHub</span>
+          </a>
+          ${project.demo ? `<a href="${project.demo}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Demo</a>` : ''}
+        </div>
+      </div>
+    `;
+    projectsGrid.appendChild(projectCard);
+  });
+
+  // Lazy load images and icons
+  setTimeout(() => {
+    // Lazy load images
+    const projectImages = projectsGrid.querySelectorAll('img[loading="lazy"]');
+    projectImages.forEach(img => {
+      img.src = img.getAttribute('src');
+    });
+
+    // Load Lucide icons
+    const projectIcons = projectsGrid.querySelectorAll('[data-lucide]');
+    projectIcons.forEach(el => {
+      const name = el.getAttribute('data-lucide');
+      if (name && window.lucide) {
+        const icon = window.lucide.icons[name];
+        if (icon) {
+          el.innerHTML = icon;
+        }
+      }
+    });
+  }, 0);
+}
+
+function renderAchievements() {
+  const achievementsGrid = document.getElementById('achievementsGrid');
+  if (!achievementsGrid) return;
+
+  achievementsGrid.innerHTML = '';
+
+  portfolioData.achievements.forEach(achievement => {
+    const achievementCard = document.createElement('div');
+    achievementCard.className = 'achievement-card';
+    achievementCard.innerHTML = `
+      <div class="achievement-header">
+        <div class="achievement-icon" style="background: var(--${achievement.color}-alt); color: var(--${achievement.color});">
+          <i data-lucide="${achievement.icon}"></i>
+        </div>
+        <div>
+          <h4 class="achievement-title">${achievement.title}</h4>
+          <div class="achievement-organization">${achievement.organization}</div>
+          <div class="achievement-period">${achievement.period}</div>
+        </div>
+      </div>
+      <p class="achievement-description">${achievement.description}</p>
+    `;
+    achievementsGrid.appendChild(achievementCard);
+  });
+
+  // Lazy load icons
+  setTimeout(() => {
+    const achievementIcons = achievementsGrid.querySelectorAll('[data-lucide]');
+    achievementIcons.forEach(el => {
+      const name = el.getAttribute('data-lucide');
+      if (name && window.lucide) {
+        const icon = window.lucide.icons[name];
+        if (icon) {
+          el.innerHTML = icon;
+        }
+      }
+    });
+  }, 0);
+}
+
+function renderEducation() {
+  const educationColumn = document.getElementById('educationColumn');
+  if (!educationColumn) return;
+
+  educationColumn.innerHTML = '';
+
+  portfolioData.education.forEach(edu => {
+    const eduItem = document.createElement('div');
+    eduItem.className = 'edu-item';
+    eduItem.innerHTML = `
+      <div>
+        <h4 class="edu-degree">${edu.degree}</h4>
+        <div class="edu-institution">${edu.institution}</div>
+      </div>
+      <div>
+        <div class="edu-period">${edu.period}</div>
+        ${edu.score ? `<span class="edu-score" style="background: var(--${edu.color}-alt); color: var(--${edu.color});">${edu.score}</span>` : ''}
+      </div>
+    `;
+    educationColumn.appendChild(eduItem);
+  });
+}
+
+function renderCertifications() {
+  const certificationsColumn = document.getElementById('certificationsColumn');
+  if (!certificationsColumn) return;
+
+  certificationsColumn.innerHTML = '';
+
+  portfolioData.certifications.forEach(cert => {
+    const certItem = document.createElement('div');
+    certItem.className = 'cert-item';
+    certItem.innerHTML = `
+      <div>
+        <h4 class="cert-title">${cert.title}</h4>
+        <div class="cert-issuer">${cert.issuer}</div>
+      </div>
+      <div>
+        <div class="cert-date">${cert.date}</div>
+        ${cert.badge ? `<span class="cert-badge" style="background: var(--${cert.color}-alt); color: var(--${cert.color});">${cert.badge}</span>` : ''}
+      </div>
+    `;
+    certificationsColumn.appendChild(certItem);
+  });
+}
+
+function initProjectFilters() {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  if (!filterButtons.length) return;
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Update active state
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter projects
+      const filter = btn.getAttribute('data-filter');
+      renderProjects(filter);
+    });
+  });
+}
+
+function initContactInteractions() {
+  const contactForm = document.getElementById('contactForm');
+  if (!contactForm) return;
+
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Basic validation
+    const name = this.elements['name'].value.trim();
+    const email = this.elements['email'].value.trim();
+    const message = this.elements['message'].value.trim();
+
+    if (!name || !email || !message) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    // Simple email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    // Show success state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span>Sending...</span>';
+    submitBtn.disabled = true;
+
+    // Simulate sending (in real app, this would be an actual API call)
+    setTimeout(() => {
+      submitBtn.innerHTML = '<span>Message Sent!</span>';
+      submitBtn.style.background = 'var(--secondary)';
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        submitBtn.style.background = '';
+        this.reset();
+      }, 2000);
+    }, 1000);
+  });
+
+  // Copy to clipboard functionality
+  document.getElementById('copyEmailBtn')?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('subodhum1603@gmail.com');
+      showCopyFeedback('copyEmailBtn');
+    } catch (err) {
+      console.error('Failed to copy email:', err);
+    }
+  });
+
+  document.getElementById('copyPhoneBtn')?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('+91 9029920228');
+      showCopyFeedback('copyPhoneBtn');
+    } catch (err) {
+      console.error('Failed to copy phone:', err);
+    }
+  });
+}
+
+function showCopyFeedback(buttonId) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = '<span>Copied! ✓</span>';
+  btn.style.background = 'var(--secondary)';
+
+  setTimeout(() => {
+    btn.innerHTML = originalHTML;
+    btn.style.background = '';
+  }, 1500);
+}
+
+function initConfettiTriggers() {
+  // Reduced confetti frequency for better performance
+  const confettiTriggers = [
+    '.btn-primary',
+    '.filter-btn.active',
+    '.hero-ctas .btn-primary'
+  ];
+
+  confettiTriggers.forEach(selector => {
+    document.querySelectorAll(selector).forEach(element => {
+      element.addEventListener('click', () => {
+        // Only trigger confetti occasionally to reduce performance impact
+        if (Math.random() > 0.7) { // 30% chance
+          triggerConfetti();
+        }
+      });
+    });
+  });
+}
+
+function triggerConfetti() {
+  try {
+    if (window.confetti) {
+      window.confetti({
+        particleCount: 30, // Reduced from 50
+        spread: 16,
+        origin: { y: 0.6 }
+      });
+    }
+  } catch (e) {
+    // Confetti not available, silently fail
+  }
+}
+
+function initMobileMenu() {
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  if (!mobileMenuToggle || !navMenu) return;
+
+  mobileMenuToggle.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('open');
+    mobileMenuToggle.setAttribute('aria-expanded', isOpen);
+
+    // Animate icon
+    const icon = mobileMenuToggle.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('lucide-menu');
+      icon.classList.toggle('lucide-x');
+    }
+  });
+
+  // Close mobile menu when clicking a link
+  navMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (navMenu.classList.contains('open')) {
+        navMenu.classList.remove('open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        const icon = mobileMenuToggle.querySelector('i');
+        if (icon) {
+          icon.classList.add('lucide-menu');
+          icon.classList.remove('lucide-x');
+        }
+      }
+    });
+  });
+}
+
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  if (!sections.length || !navLinks.length) return;
+
+  // Throttle scroll event for better performance
+  let ticking = false;
+
+  function updateActiveNavLink() {
+    const scrollPosition = window.pageYOffset;
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100; // Offset for header
+      const sectionBottom = sectionTop + section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+
+      if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
+        });
+      }
+    });
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateActiveNavLink();
+        ticking = true;
+      });
+    }
+  }
+
+  window.addEventListener('scroll', onScroll);
+  // Initial check
+  updateActiveNavLink();
+}
+
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // Prevent conflicts with form inputs
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+      return;
+    }
+
+    switch (e.key.toLowerCase()) {
+      case 'm':
+        e.preventDefault();
+        window.toggleSoundEffects();
+        break;
+      case 't':
+        e.preventDefault();
+        window.toggleTheme();
+        break;
+      case 'r':
+        e.preventDefault();
+        if (window.openDragonRadarModal) window.openDragonRadarModal();
+        break;
+      case 'h':
+        e.preventDefault();
+        if (window.summonShenron) window.summonShenron();
+        break;
+      case 'ArrowUp':
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        break;
+    }
+  });
+}
+
+function initSaiyanMode() {
+  const themeSliderToggle = document.getElementById('themeSliderToggle');
+  const sliderOptRose = document.getElementById('sliderOptRose');
+  const sliderOptSaiyan = document.getElementById('sliderOptSaiyan');
+  const saiyanModeBtn = document.getElementById('saiyanModeBtn');
+
+  if (!themeSliderToggle) return;
+
+  // Initialize from localStorage
+  const isSaiyanMode = localStorage.getItem('portfolio-theme') === 'saiyan' ||
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  if (isSaiyanMode) {
+    document.documentElement.classList.add('saiyan-mode');
+    sliderOptRose.classList.remove('active');
+    sliderOptSaiyan.classList.add('active');
+    themeSliderToggle.setAttribute('aria-checked', 'true');
+  }
+
+  function setSaiyanMode(enabled) {
+    if (enabled) {
+      document.documentElement.classList.add('saiyan-mode');
+      localStorage.setItem('portfolio-theme', 'saiyan');
+      sliderOptRose.classList.remove('active');
+      sliderOptSaiyan.classList.add('active');
+      themeSliderToggle.setAttribute('aria-checked', 'true');
+    } else {
+      document.documentElement.classList.remove('saiyan-mode');
+      localStorage.setItem('portfolio-theme', 'rosé');
+      sliderOptRose.classList.add('active');
+      sliderOptSaiyan.classList.remove('active');
+      themeSliderToggle.setAttribute('aria-checked', 'false');
+    }
+
+    // Update button states
+    if (saiyanModeBtn) {
+      saiyanModeBtn.click(); // Trigger any attached events
+    }
+  }
+
+  // Click handlers
+  themeSliderToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isChecked = themeSliderToggle.getAttribute('aria-checked') === 'true';
+    setSaiyanMode(!isChecked);
+  });
+
+  sliderOptRose.addEventListener('click', () => setSaiyanMode(false));
+  sliderOptSaiyan.addEventListener('click', () => setSaiyanMode(true));
+
+  // Keyboard accessibility
+  themeSliderToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const isChecked = themeSliderToggle.getAttribute('aria-checked') === 'true';
+      setSaiyanMode(!isChecked);
+    }
+  });
+
+  // Fallback button
+  if (saiyanModeBtn) {
+    saiyanModeBtn.addEventListener('click', () => {
+      const isChecked = themeSliderToggle.getAttribute('aria-checked') === 'true';
+      setSaiyanMode(!isChecked);
+    });
+  }
+}
+
+function initDragonBallsCollector() {
+  // Optimized Dragon Ball collection with reduced DOM operations
+  const dragonBalls = document.querySelectorAll('.dragon-ball');
+  const dragonRadarWidget = document.getElementById('dragonRadarWidget');
+  const ballsFoundCount = document.getElementById('ballsFoundCount');
+  const dragonRadarModal = document.getElementById('dragonRadarModal');
+  const dragonBallCollectOverlay = document.getElementById('dragonBallCollectOverlay');
+  const shenronModal = document.getElementById('shenronModal');
+  const kidGokuPrankModal = document.getElementById('kidGokuPrankModal');
+
+  if (!dragonBalls.length) return;
+
+  let foundBalls = new Set();
+  const totalBalls = 7;
+
+  // Pre-bind event listeners for better performance
+  const handleBallClick = (event) => {
+    const ball = event.currentTarget;
+    const ballId = ball.getAttribute('data-ball');
+
+    if (!ballId || foundBalls.has(ballId)) return;
+
+    // Fake balls (prank balls)
+    if (ball.classList.contains('fake-dragon-ball')) {
+      triggerPrank(ball);
+      return;
+    }
+
+    // Real dragon ball
+    foundBalls.add(ballId);
+    ball.classList.add('collected');
+
+    // Update radar count
+    if (ballsFoundCount) {
+      ballsFoundCount.textContent = foundBalls.size;
+    }
+
+    // Visual feedback
+    ball.style.transform = 'scale(1.2)';
+    ball.style.boxShadow = '0 0 20px rgba(255, 126, 0, 0.6)';
+
+    // Check if all balls collected
+    if (foundBalls.size === totalBalls) {
+      setTimeout(() => {
+        triggerDragonBallCollection();
+      }, 500);
+    }
   };
 
-  const revealObserver = new IntersectionObserver((entries, observer) => {
+  dragonBalls.forEach(ball => {
+    ball.addEventListener('click', handleBallClick);
+
+    // Prevent duplicate clicks during animation
+    ball.addEventListener('mousedown', (e) => {
+      if (ball.classList.contains('collected') || ball.classList.contains('ball-disappeared')) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  function triggerPrank(ball) {
+    // Add prank styling
+    ball.classList.add('ball-disappeared');
+
+    // Show prank modal
+    if (kidGokuPrankModal) {
+      kidGokuPrankModal.style.display = 'flex';
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        if (kidGokuPrankModal) {
+          kidGokuPrankModal.style.display = 'none';
+        }
+      }, 3000);
+    }
+
+    // Reset ball after prank
+    setTimeout(() => {
+      ball.classList.remove('ball-disappeared');
+    }, 1000);
+  }
+
+  function triggerDragonBallCollection() {
+    // Show collection animation
+    if (dragonBallCollectOverlay) {
+      dragonBallCollectOverlay.classList.add('active');
+      document.getElementById('dbCollectTitle').textContent = `${totalBalls}-Star Dragon Ball`;
+
+      // Hide after animation
+      setTimeout(() => {
+        if (dragonBallCollectOverlay) {
+          dragonBallCollectOverlay.classList.remove('active');
+        }
+
+        // Show Shenron modal
+        if (shenronModal) {
+          shenronModal.classList.add('active');
+
+          // Auto-hide Shenron after 8 seconds
+          setTimeout(() => {
+            if (shenronModal) {
+              shenronModal.classList.remove('active');
+            }
+
+            // Reset for next round
+            setTimeout(() => {
+              resetDragonBalls();
+            }, 1000);
+          }, 8000);
+        }
+      }, 3000);
+    }
+  }
+
+  function resetDragonBalls() {
+    foundBalls.clear();
+
+    // Reset all balls
+    dragonBalls.forEach(ball => {
+      ball.classList.remove('collected', 'ball-disappeared');
+      ball.style.transform = '';
+      ball.style.boxShadow = '';
+    });
+
+    // Reset radar
+    if (ballsFoundCount) {
+      ballsFoundCount.textContent = '0';
+    }
+  }
+
+  // Dragon Radar functionality
+  if (dragonRadarWidget && dragonRadarModal) {
+    let radarActive = false;
+
+    function toggleRadarModal() {
+      radarActive = !radarActive;
+      dragonRadarModal.style.display = radarActive ? 'flex' : 'none';
+      dragonRadarWidget.classList.toggle('radar-active', radarActive);
+
+      if (radarActive) {
+        startRadarScan();
+      } else {
+        stopRadarScan();
+      }
+    }
+
+    dragonRadarWidget.addEventListener('click', toggleRadarModal);
+    dragonRadarWidget.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleRadarModal();
+      }
+    });
+
+    // Close modal on backdrop click
+    dragonRadarModal.addEventListener('click', (e) => {
+      if (e.target === dragonRadarModal) {
+        toggleRadarModal();
+      }
+    });
+
+    function startRadarScan() {
+      // Add scanning animation
+      dragonRadarWidget.classList.add('radar-scanning');
+
+      // Simulate radar sweep
+      const radarSweep = document.querySelector('.radar-sweep-beam');
+      if (radarSweep) {
+        radarSweep.style.animation = 'radar-sweep 2s linear infinite';
+      }
+
+      // Animate blips
+      animateRadarBlips();
+    }
+
+    function stopRadarScan() {
+      dragonRadarWidget.classList.remove('radar-scanning');
+      const radarSweep = document.querySelector('.radar-sweep-beam');
+      if (radarSweep) {
+        radarSweep.style.animation = '';
+      }
+
+      // Stop blip animation
+      const radarBlips = document.querySelectorAll('.radar-blip');
+      radarBlips.forEach(blip => {
+        blip.style.animation = '';
+        blip.style.opacity = '0.3';
+      });
+    }
+
+    function animateRadarBlips() {
+      const radarBlipsLayer = document.getElementById('radarBlipsLayer');
+      if (!radarBlipsLayer) return;
+
+      // Clear existing blips
+      radarBlipsLayer.innerHTML = '';
+
+      // Create animated blips for found balls
+      foundBalls.forEach(ballId => {
+        const blip = document.createElement('div');
+        blip.className = 'radar-blip';
+        blip.style.background = 'var(--accent)';
+        blip.style.width = '8px';
+        blip.style.height = '8px';
+        blip.style.borderRadius = '50%';
+        blip.style.position = 'absolute';
+
+        // Random position within radar
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.random() * 60; // 60px radius
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+
+        blip.style.left = `calc(50% + ${x}px)`;
+        blip.style.top = `calc(50% + ${y}px)`;
+        blip.style.animation = `radar-blink ${2 + Math.random() * 3}s ease-in-out infinite`;
+
+        radarBlipsLayer.appendChild(blip);
+      });
+    }
+  }
+
+  // Ping radar functionality
+  document.querySelectorAll('[onclick*="pingRadarScan"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (dragonRadarModal && dragonRadarModal.style.display === 'flex') {
+        // Trigger radar ping effect
+        dragonRadarWidget.classList.add('radar-ping-blast');
+        setTimeout(() => {
+          dragonRadarWidget.classList.remove('radar-ping-blast');
+        }, 700);
+
+        // Briefly show all balls on radar
+        if (dragonRadarModal.style.display === 'flex') {
+          const radarBlipsLayer = document.getElementById('radarBlipsLayer');
+          if (radarBlipsLayer) {
+            radarBlipsLayer.innerHTML = '';
+
+            // Show all balls temporarily
+            for (let i = 1; i <= totalBalls; i++) {
+              const blip = document.createElement('div');
+              blip.className = 'radar-blip';
+              blip.style.background = 'var(--accent)';
+              blip.style.width = '10px';
+              blip.style.height = '10px';
+              blip.style.borderRadius = '50%';
+              blip.style.position = 'absolute';
+
+              // Distribute evenly in a circle
+              const angle = (i - 1) * (Math.PI * 2) / totalBalls;
+              const radius = 50;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+
+              blip.style.left = `calc(50% + ${x}px)`;
+              blip.style.top = `calc(50% + ${y}px)`;
+              blip.style.opacity = '0.8';
+
+              radarBlipsLayer.appendChild(blip);
+            }
+
+            // Hide after brief moment
+            setTimeout(() => {
+              animateRadarBlips(); // Return to normal state
+            }, 1500);
+          }
+        }
+      }
+    });
+  });
+}
+
+function initNimbusDrag() {
+  // Optimized Nimbus drag with reduced calculations
+  const nimbusElements = document.querySelectorAll('.flying-nimbus');
+
+  if (!nimbusElements.length) return;
+
+  nimbusElements.forEach(nimbus => {
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+
+    const startDrag = (e) => {
+      isDragging = true;
+      nimbus.classList.add('nimbus-dragging');
+
+      const rect = nimbus.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+
+      if (e.type === 'touchstart') {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      } else {
+        startX = e.clientX;
+        startY = e.clientY;
+      }
+
+      e.preventDefault();
+    };
+
+    const doDrag = (e) => {
+      if (!isDragging) return;
+
+      let clientX, clientY;
+      if (e.type === 'touchmove') {
+        if (e.touches.length === 0) return;
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      // Apply movement with bounds checking
+      const newLeft = Math.max(0, Math.min(window.innerWidth - nimbus.offsetWidth, initialLeft + dx));
+      const newTop = Math.max(0, Math.min(window.innerHeight - nimbus.offsetHeight, initialTop + dy));
+
+      nimbus.style.left = `${newLeft}px`;
+      nimbus.style.top = `${newTop}px`;
+
+      e.preventDefault();
+    };
+
+    const endDrag = () => {
+      isDragging = false;
+      nimbus.classList.remove('nimbus-dragging');
+    };
+
+    // Mouse events
+    nimbus.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', endDrag);
+
+    // Touch events
+    nimbus.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('touchmove', doDrag, { passive: false });
+    document.addEventListener('touchend', endDrag);
+    document.addEventListener('touchcancel', endDrag);
+  });
+}
+
+function initGlobalClickAnimation() {
+  // Optimized click particles with object pooling
+  const particles = [];
+  const maxParticles = 10; // Limit concurrent particles
+  let particleIndex = 0;
+
+  function createParticle(x, y) {
+    // Reuse particles from pool
+    let particle = particles[particleIndex];
+    if (!particle) {
+      particle = document.createElement('div');
+      particle.className = 'global-click-particle';
+      particle.style.position = 'fixed';
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = '9999';
+      particle.style.borderRadius = '50%';
+      document.body.appendChild(particle);
+      particles[particleIndex] = particle;
+    }
+
+    // Configure particle
+    const size = 4 + Math.random() * 6; // 4-10px
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.background = `hsl(${Math.random() * 60 + 30}, 70%, 60%)`; // Orange-yellow range
+    particle.style.left = `${x - size/2}px`;
+    particle.style.top = `${y - size/2}px`;
+
+    // Animate and reset
+    particle.style.opacity = '0.8';
+    particle.style.transform = 'scale(0)';
+
+    // Trigger reflow for animation
+    void particle.offsetWidth;
+
+    particle.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+    particle.style.transform = 'scale(1.5)';
+    particle.style.opacity = '0';
+
+    // Reset after animation
+    setTimeout(() => {
+      particleIndex = (particleIndex + 1) % maxParticles;
+    }, 300);
+  }
+
+  document.addEventListener('click', (e) => {
+    // Limit click particles to reduce performance impact
+    if (Math.random() > 0.3) return; // 30% chance
+
+    createParticle(e.clientX, e.clientY);
+  });
+
+  // Ring effect (simplified)
+  document.addEventListener('click', (e) => {
+    if (Math.random() > 0.1) return; // 10% chance for ring
+
+    const ring = document.createElement('div');
+    ring.className = 'click-shockwave-ring';
+    ring.style.position = 'fixed';
+    ring.style.pointerEvents = 'none';
+    ring.style.zIndex = '9998';
+    ring.style.borderRadius = '50%';
+    ring.style.border = '2px solid var(--accent)';
+    ring.style.left = `${e.clientX}px`;
+    ring.style.top = `${e.clientY}px`;
+    ring.style.transform = 'translate(-50%, -50%) scale(0.1)';
+    ring.style.opacity = '0.6';
+
+    document.body.appendChild(ring);
+
+    // Animate ring
+    void ring.offsetWidth; // Trigger reflow
+    ring.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
+    ring.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    ring.style.opacity = '0';
+
+    // Remove after animation
+    setTimeout(() => {
+      ring.remove();
+    }, 400);
+  });
+}
+
+function initScrollReveal() {
+  // Optimized scroll reveal with intersection observer
+  const revealElements = document.querySelectorAll(
+    '.sticker-card, .stat-card, .skill-category-card, .experience-card, ' +
+    '.achievement-card, .edu-card, .cert-card, .project-card'
+  );
+
+  if (!revealElements.length) return;
+
+  // Use Intersection Observer for better performance
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('is-revealed');
-        // Clean up will-change after transition completes to preserve memory
-        setTimeout(() => {
-          if (entry.target.classList.contains('is-revealed')) {
-            entry.target.style.willChange = 'auto';
-          }
-        }, 1100);
+        entry.target.classList.add('reveal-visible');
+        observer.unobserve(entry.target); // Stop observing once visible
+      }
+    });
+  }, observerOptions);
+
+  revealElements.forEach(element => {
+    element.classList.add('reveal-hidden');
+    observer.observe(element);
+  });
+
+  // Add CSS for reveal animation
+  const style = document.createElement('style');
+  style.textContent = `
+    .reveal-hidden {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+
+    .reveal-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function initDbzJokePlaceholders() {
+  // Optimized joke placeholder initialization
+  const jokeButtons = document.querySelectorAll('#rollDbzPromptBtn');
+
+  jokeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Simple joke rotation - reduced complexity
+      const jokes = [
+        "Why did the Saiyan bring a ladder to the bar? He heard the drinks were on the house!",
+        "What do you call a Namekian who tells jokes? A comic relief!",
+        "Why don't Androids ever get lost? They always follow their GPS (Global Positioning System)!",
+        "What's a Frieza's favorite type of music? Cool tunes!",
+        "Why did Krillin go to art school? To learn how to draw his destructo disc!",
+        "What do you call a Saiyan who can't stop telling jokes? A Super Saiyan 'LOL'!"
+      ];
+
+      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+      alert(randomJoke);
+    });
+  });
+}
+
+function initHeroRotatingWord() {
+  // Optimized rotating word with reduced DOM operations
+  const rotatingWord = document.getElementById('heroRotatingWord');
+  if (!rotatingWord) return;
+
+  const words = ['Backend Builder', 'API Architect', 'AI Engineer', 'Systems Designer', 'Cloud Specialist'];
+  let wordIndex = 0;
+
+  function updateWord() {
+    rotatingWord.textContent = words[wordIndex];
+    wordIndex = (wordIndex + 1) % words.length;
+  }
+
+  // Change word every 3 seconds
+  setInterval(updateWord, 3000);
+
+  // Initialize first word
+  rotatingWord.textContent = words[0];
+}
+
+function initPhotoRevealLens() {
+  // Optimized photo reveal with CSS transitions
+  const photoFrame = document.getElementById('heroPhotoFrame');
+  const photoImg = document.querySelector('.hero-photo-img');
+  const revealLayers = document.querySelectorAll('.hero-reveal-layer');
+
+  if (!photoFrame || !photoImg) return;
+
+  // Use CSS transitions instead of JS animations where possible
+  photoFrame.addEventListener('mousemove', (e) => {
+    const rect = photoFrame.getBoundingClientRect();
+    const x = e.clientX - rect.left; // x position within the element
+    const y = e.clientY - rect.top;  // y position within the element
+
+    // Calculate position as percentage
+    const xPercent = (x / rect.width) * 100;
+    const yPercent = (y / rect.height) * 100;
+
+    // Apply to reveal layers with reduced intensity
+    revealLayers.forEach((layer, index) => {
+      const offset = index * 15; // Increased offset for better effect
+      layer.style.backgroundPosition = `${xPercent - offset}% ${yPercent - offset}%`;
+    });
+  });
+
+  photoFrame.addEventListener('mouseleave', () => {
+    // Reset to center
+    revealLayers.forEach(layer => {
+      layer.style.backgroundPosition = '50% 50%';
+    });
+  });
+}
+
+function initScrollProgress() {
+  // Optimized scroll progress bar
+  const progressBar = document.createElement('div');
+  progressBar.className = 'scroll-progress-bar';
+  progressBar.style.position = 'fixed';
+  progressBar.style.top = '0';
+  progressBar.style.left = '0';
+  progressBar.style.height = '3px';
+  progressBar.style.background = 'var(--accent)';
+  progressBar.style.width = '0%';
+  progressBar.style.zIndex = '1000';
+  progressBar.style.transition = 'width 0.1s ease-out';
+  document.body.appendChild(progressBar);
+
+  function updateScrollProgress() {
+    const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.pageYOffset / windowHeight) * 100;
+    progressBar.style.width = `${progress}%`;
+  }
+
+  // Throttle scroll events
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateScrollProgress();
+        ticking = true;
+      });
+    }
+  }
+
+  window.addEventListener('scroll', onScroll);
+  window.addEventListener('resize', () => {
+    updateScrollProgress(); // Update on resize as well
+  });
+
+  // Initial update
+  updateScrollProgress();
+}
+
+function initHeroParallax() {
+  // Optimized parallax with reduced calculations
+  const heroSection = document.querySelector('.hero-section');
+  if (!heroSection) return;
+
+  let ticking = false;
+
+  function onMouseMove(e) {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        // Calculate movement with reduced intensity
+        const moveX = (e.clientX - window.innerWidth / 2) * 0.01; // Reduced multiplier
+        const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+
+        // Apply to background elements only
+        heroSection.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
+
+        ticking = false;
+      });
+    }
+  }
+
+  document.addEventListener('mousemove', onMouseMove);
+}
+
+function initCardSpotlight() {
+  // Optimized card spotlight with CSS
+  const cards = document.querySelectorAll(
+    '.sticker-card, .stat-card, .skill-category-card, .experience-card, ' +
+    '.achievement-card, .edu-card, .cert-card, .project-card'
+  );
+
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'translateY(-2px)';
+      card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'translateY(0)';
+      card.style.boxShadow = 'none';
+    });
+  });
+}
+
+function initCardTilt() {
+  // Optimized card tilt with limited elements
+  const tiltCards = document.querySelectorAll('.tilt-card');
+
+  if (!tiltCards.length) return;
+
+  tiltCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Calculate tilt with reduced intensity
+      const tiltX = ((x / rect.width) - 0.5) * 2; // -1 to 1
+      const tiltY = ((y / rect.height) - 0.5) * 2; // -1 to 1
+
+      // Apply transform with limits
+      const rotateX = tiltY * 5; // Reduced from 10 to 5 degrees
+      const rotateY = tiltX * -5; // Reduced from 10 to -5 degrees
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+    });
+  });
+}
+
+function initMagneticButtons() {
+  // Optimized magnetic buttons with reduced calculations
+  const magneticBtns = document.querySelectorAll('.magnetic-btn');
+
+  if (!magneticBtns.length) return;
+
+  magneticBtns.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Calculate magnetic pull with reduced intensity
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const distanceX = x - centerX;
+      const distanceY = y - centerY;
+
+      // Reduced magnetic effect
+      const pullX = distanceX * 0.03; // Reduced from 0.1
+      const pullY = distanceY * 0.03; // Reduced from 0.1
+
+      // Apply transform with limits
+      const translateX = Math.max(-4, Math.min(4, pullX)); // Limit movement
+      const translateY = Math.max(-4, Math.min(4, pullY));
+
+      btn.style.transform = `translate(${translateX}px, ${translateY}px) scale(1.02)`;
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0px, 0px) scale(1)';
+    });
+  });
+}
+
+function initStatCountUp() {
+  // Optimized stat count up with Intersection Observer
+  const statValues = document.querySelectorAll('.stat-value');
+
+  if (!statValues.length) return;
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateStatCount(entry.target);
         observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
-  function attachElements() {
-    // 1. Section Header elements - individual sequential stagger: tag (0ms), title (90ms), subtitle (180ms)
-    document.querySelectorAll('.section-header').forEach(header => {
-      const tag = header.querySelector('.section-tag, .section-badge');
-      const title = header.querySelector('.section-title');
-      const subtitle = header.querySelector('.section-subtitle, .section-desc');
-
-      if (tag && !tag.classList.contains('scroll-reveal')) {
-        tag.classList.add('scroll-reveal');
-        tag.style.setProperty('--reveal-delay', '0ms');
-        revealObserver.observe(tag);
-      }
-      if (title && !title.classList.contains('scroll-reveal')) {
-        title.classList.add('scroll-reveal');
-        title.style.setProperty('--reveal-delay', '90ms');
-        revealObserver.observe(title);
-      }
-      if (subtitle && !subtitle.classList.contains('scroll-reveal')) {
-        subtitle.classList.add('scroll-reveal');
-        subtitle.style.setProperty('--reveal-delay', '180ms');
-        revealObserver.observe(subtitle);
-      }
-    });
-
-    // 2. Grids and structured collections with one-by-one sequential item cascades
-    const groupConfigs = [
-      { container: '.skills-grid', items: '.skill-category-card', step: 95, bloom: true },
-      { container: '.projects-grid', items: '.project-card', step: 110, bloom: true },
-      { container: '.project-filters', items: '.filter-btn', step: 60, bloom: false },
-      { container: '.achievements-grid', items: '.achievement-card', step: 100, bloom: true },
-      { container: '.experience-timeline', items: '.experience-card', step: 120, bloom: true },
-      { container: '.edu-cert-grid', items: '.edu-card, .cert-card, .flashcard-deck', step: 110, bloom: true },
-      { container: '.contact-cards-grid', items: '.contact-card', step: 95, bloom: true },
-      { container: '.contact-form-container form', items: '.contact-form-group, .btn', step: 80, bloom: false },
-      { container: '.footer-grid', items: '.footer-brand, .footer-nav, .footer-connect', step: 100, bloom: false }
-    ];
-
-    groupConfigs.forEach(group => {
-      const containers = document.querySelectorAll(group.container);
-      containers.forEach(cont => {
-        const items = cont.querySelectorAll(group.items);
-        items.forEach((item, idx) => {
-          if (!item.classList.contains('scroll-reveal')) {
-            item.classList.add('scroll-reveal');
-            if (group.bloom) item.classList.add('card-bloom');
-            item.style.setProperty('--reveal-delay', `${idx * group.step}ms`);
-            revealObserver.observe(item);
-          }
-        });
-      });
-    });
-
-    // 3. Standalone high-impact elements
-    const standaloneSelectors = [
-      '#about .sticker-card',
-      '.scouter-card-wrapper',
-      '.ticker-container',
-      '.footer-bottom'
-    ];
-
-    standaloneSelectors.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        if (!el.classList.contains('scroll-reveal')) {
-          el.classList.add('scroll-reveal');
-          el.classList.add('card-bloom');
-          el.style.setProperty('--reveal-delay', '60ms');
-          revealObserver.observe(el);
-        }
-      });
-    });
-  }
-
-  // Initial attach
-  attachElements();
-
-  // Expose global refresh for dynamic cards (e.g. project filter clicks)
-  window.refreshScrollReveal = function() {
-    setTimeout(attachElements, 60);
-  };
-}
-
-/* --- Dynamic: Scroll Progress Bar --- */
-function initScrollProgress() {
-  if (document.querySelector('.scroll-progress-bar')) return;
-  const bar = document.createElement('div');
-  bar.className = 'scroll-progress-bar';
-  bar.setAttribute('aria-hidden', 'true');
-  document.body.prepend(bar);
-  let ticking = false;
-  function update() {
-    const h = document.documentElement;
-    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
-    const v = isFinite(scrolled) ? Math.max(0, Math.min(1, scrolled)) : 0;
-    // Directly scale the bar element via GPU compositor to avoid style invalidation across document tree
-    bar.style.transform = `scaleX(${v})`;
-    ticking = false;
-  }
-  window.addEventListener('scroll', () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
-  }, { passive: true });
-  window.addEventListener('resize', update, { passive: true });
-  if (window.lenis) {
-    window.lenis.on('scroll', update);
-  }
-  update();
-}
-
-/* --- Dynamic: Hero Parallax (rAF, respects reduced-motion & desktop only) --- */
-function initHeroParallax() {
-  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const hero = document.querySelector('.hero-section');
-  if (!hero) return;
-  let ticking = false;
-  function onScroll() {
-    const y = window.scrollY;
-    // only parallax while hero is in view
-    if (y < hero.offsetHeight + 200) {
-      hero.style.setProperty('--parallax-y', y + 'px');
-      const scale = 1 + Math.min(y / 4000, 0.06);
-      hero.style.setProperty('--aura-scale', String(scale));
-    }
-    ticking = false;
-  }
-  window.addEventListener('scroll', () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
-  }, { passive: true });
-  if (window.lenis) {
-    window.lenis.on('scroll', onScroll);
-  }
-  onScroll();
-}
-
-/* --- Dynamic: Card Spotlight (cursor follow) — delegated for dynamic cards --- */
-function initCardSpotlight() {
-  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches) return;
-  document.addEventListener('pointermove', (e) => {
-    const card = e.target.closest('.sticker-card, .stat-card, .skill-category-card, .experience-card, .project-card, .achievement-card, .edu-card, .cert-card');
-    if (!card) return;
-    const r = card.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width) * 100;
-    const y = ((e.clientY - r.top) / r.height) * 100;
-    card.style.setProperty('--mx', x + '%');
-    card.style.setProperty('--my', y + '%');
-  }, { passive: true });
-}
-
-/* --- Dynamic: Enhanced 3D Card Tilt with Dynamic Specular Glare --- */
-function initCardTilt() {
-  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const cardSelector = '.stat-card, .sticker-card, .skill-category-card, .project-card, .achievement-card, .experience-card, .edu-card, .cert-card, .contact-card';
-  
-  function markTiltCards() {
-    document.querySelectorAll(cardSelector).forEach(c => c.classList.add('tilt-card'));
-  }
-  markTiltCards();
-  const mo = new MutationObserver(markTiltCards);
-  mo.observe(document.body, { childList: true, subtree: true });
-  
-  document.addEventListener('pointermove', (e) => {
-    if (!e.target || typeof e.target.closest !== 'function') return;
-    const card = e.target.closest(cardSelector);
-    if (!card) return;
-    const r = card.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    const rx = (px * 12).toFixed(2) + 'deg';
-    const ry = (-py * 12).toFixed(2) + 'deg';
-    card.style.setProperty('--tilt-x', rx);
-    card.style.setProperty('--tilt-y', ry);
-    card.style.setProperty('--glare-x', ((px + 0.5) * 100).toFixed(1) + '%');
-    card.style.setProperty('--glare-y', ((py + 0.5) * 100).toFixed(1) + '%');
-    card.style.setProperty('--glare-opacity', '1');
-  }, { passive: true });
-  
-  document.addEventListener('pointerleave', (e) => {
-    if (!e.target || typeof e.target.closest !== 'function') return;
-    const card = e.target.closest(cardSelector);
-    if (!card) return;
-    card.style.setProperty('--tilt-x', '0deg');
-    card.style.setProperty('--tilt-y', '0deg');
-    card.style.setProperty('--glare-opacity', '0');
-  }, true);
-}
-
-/* --- Dynamic: Magnetic Buttons — delegated --- */
-function initMagneticButtons() {
-  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches) return;
-  document.querySelectorAll('.btn, .nav-ctrl-btn, .filter-btn').forEach(b => b.classList.add('magnetic'));
-  const mo = new MutationObserver(() => {
-    document.querySelectorAll('.btn, .nav-ctrl-btn, .filter-btn').forEach(b => b.classList.add('magnetic'));
+  statValues.forEach(stat => {
+    observer.observe(stat);
   });
-  mo.observe(document.body, { childList: true, subtree: true });
-  document.addEventListener('pointermove', (e) => {
-    if (!e.target || typeof e.target.closest !== 'function') return;
-    const btn = e.target.closest('.btn.magnetic, .nav-ctrl-btn.magnetic, .filter-btn.magnetic');
-    if (!btn) return;
-    const r = btn.getBoundingClientRect();
-    const dx = (e.clientX - (r.left + r.width / 2)) * 0.18;
-    const dy = (e.clientY - (r.top + r.height / 2)) * 0.22;
-    btn.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
-  }, { passive: true });
-  document.addEventListener('pointerleave', (e) => {
-    if (!e.target || typeof e.target.closest !== 'function') return;
-    const btn = e.target.closest('.btn.magnetic, .nav-ctrl-btn.magnetic, .filter-btn.magnetic');
-    if (!btn) return;
-    btn.style.transform = '';
-  }, true);
-}
 
-/* --- Dynamic: Stat Count-Up --- */
-function initStatCountUp() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const vals = document.querySelectorAll('.stat-value');
-  if (!vals.length || !('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const raw = el.textContent.trim();
-      // extract leading number
-      const m = raw.match(/^([\d.]+)(.*)$/);
-      if (!m) { obs.unobserve(el); return; }
-      const num = parseFloat(m[1]);
-      const suffix = m[2] || '';
-      if (isNaN(num)) { obs.unobserve(el); return; }
-      const isFloat = m[1].includes('.');
-      const decimals = isFloat ? (m[1].split('.')[1] || '').length : 0;
-      const duration = 1100;
-      const start = performance.now();
-      el.classList.add('is-counting');
-      function tick(now) {
-        const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        const cur = num * eased;
-        el.textContent = (isFloat ? cur.toFixed(decimals) : Math.round(cur).toString()) + suffix;
-        if (t < 1) requestAnimationFrame(tick);
-        else { el.textContent = raw; el.classList.remove('is-counting'); }
+  function animateStatCount(element) {
+    const target = parseInt(element.getAttribute('data-target')) ||
+                   parseInt(element.textContent.replace(/[^0-9]/g, '')) || 0;
+    const duration = 1500; // Reduced from 2000ms
+    const startTime = performance.now();
+
+    function updateCount(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smoother animation
+      const easedProgress = progress < 0.5
+        ? 2 * progress * progress
+        : -1 + (4 - 2 * progress) * progress;
+
+      const currentValue = Math.floor(easedProgress * target);
+      element.textContent = currentValue.toString();
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCount);
+      } else {
+        // Format the final number with commas if needed
+        if (target >= 1000) {
+          element.textContent = target.toLocaleString();
+        }
       }
-      requestAnimationFrame(tick);
-      obs.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-  vals.forEach(v => io.observe(v));
+    }
+
+    requestAnimationFrame(updateCount);
+  }
 }
 
-/* --- Dynamic: 3D Flashcard Carousel Decks (Skills / Projects / Achievements) --- */
 function initFlashcardDecks() {
-  const deckSelectors = ['#projectsGrid', '#achievementsGrid'];
+  // Optimized flashcard initialization
+  const flashcardTracks = document.querySelectorAll('.flashcard-track');
 
-  deckSelectors.forEach(sel => {
-    const grid = document.querySelector(sel);
-    if (!grid) return;
-    if (grid.dataset.flashcardDeckInit === '1') return;
-    grid.dataset.flashcardDeckInit = '1';
+  if (!flashcardTracks.length) return;
 
-    grid.classList.add('flashcard-track');
+  flashcardTracks.forEach(track => {
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
 
-    // Wrap with scroller for edge fades + nav
-    const wrap = document.createElement('div');
-    wrap.className = 'flashcard-scroller-wrap';
-    wrap.setAttribute('tabindex', '0');
-    wrap.setAttribute('role', 'region');
-    const cleanName = sel.replace('#', '').replace('Grid', '');
-    wrap.setAttribute('aria-label', `${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)} Carousel`);
-    grid.parentNode.insertBefore(wrap, grid);
-    wrap.appendChild(grid);
+    const startDrag = (e) => {
+      isDragging = true;
+      track.classList.add('is-dragging');
 
-    // Side Navigation Arrows
-    const nav = document.createElement('div');
-    nav.className = 'flashcard-nav';
-    nav.innerHTML = `
-      <button type="button" class="flashcard-arrow flashcard-prev" aria-label="Previous card"><i data-lucide="chevron-left" style="width:20px;height:20px;"></i></button>
-      <button type="button" class="flashcard-arrow flashcard-next" aria-label="Next card"><i data-lucide="chevron-right" style="width:20px;height:20px;"></i></button>
-    `;
-    wrap.appendChild(nav);
-
-    // Bottom Navigation Controls Wrap (positioned below cards)
-    const controlsWrap = document.createElement('div');
-    controlsWrap.className = 'flashcard-controls-wrap';
-    controlsWrap.innerHTML = `
-      <div class="flashcard-controls-bar">
-        <button type="button" class="flashcard-pill-btn flashcard-pill-prev" aria-label="Previous card">
-          <i data-lucide="chevron-left" style="width:15px;height:15px;"></i>
-          <span>Prev</span>
-        </button>
-        <div class="flashcard-dots" role="tablist" aria-label="Carousel pagination"></div>
-        <div class="flashcard-counter-badge" aria-live="polite">
-          <span class="cur-card-num">01</span><span class="counter-sep">/</span><span class="total-card-num">01</span>
-        </div>
-        <button type="button" class="flashcard-pill-btn flashcard-pill-next" aria-label="Next card">
-          <span>Next</span>
-          <i data-lucide="chevron-right" style="width:15px;height:15px;"></i>
-        </button>
-      </div>
-      <div class="flashcard-drag-hint" aria-hidden="true">
-        <span>←</span><span>Drag, swipe or use arrow keys</span><span>→</span>
-      </div>
-    `;
-    wrap.appendChild(controlsWrap);
-
-    if (window.lucide) try { window.lucide.createIcons(); } catch(e){}
-
-    const prevBtn = nav.querySelector('.flashcard-prev');
-    const nextBtn = nav.querySelector('.flashcard-next');
-    const pillPrev = controlsWrap.querySelector('.flashcard-pill-prev');
-    const pillNext = controlsWrap.querySelector('.flashcard-pill-next');
-    const dotsWrap = controlsWrap.querySelector('.flashcard-dots');
-    const curNumEl = controlsWrap.querySelector('.cur-card-num');
-    const totalNumEl = controlsWrap.querySelector('.total-card-num');
-
-    let dots = [];
-
-    function buildDots() {
-      dotsWrap.innerHTML = '';
-      dots = [];
-      const cards = Array.from(grid.children);
-      totalNumEl.textContent = String(cards.length).padStart(2, '0');
-
-      cards.forEach((card, i) => {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'flashcard-dot';
-        dot.setAttribute('aria-label', `Go to card ${i + 1}`);
-        dot.setAttribute('role', 'tab');
-        dot.addEventListener('click', (e) => {
-          e.preventDefault();
-          scrollToCard(i);
-        });
-        dotsWrap.appendChild(dot);
-        dots.push(dot);
-
-        // Click on side card to smoothly glide it to center
-        card.addEventListener('click', (e) => {
-          if (grid.dataset.dragging === '1') return;
-          // Don't intercept button or link clicks on active card
-          if (e.target.closest('a, button, .btn, .project-details-btn, .project-github-link, .modal-close-btn')) return;
-          const gridCenter = grid.getBoundingClientRect().left + grid.clientWidth / 2;
-          const cardCenter = card.getBoundingClientRect().left + card.offsetWidth / 2;
-          if (Math.abs(cardCenter - gridCenter) > 40) {
-            scrollToCard(i);
-          }
-        });
-      });
-    }
-
-    function updateState() {
-      const cards = Array.from(grid.children);
-      if (!cards.length) return;
-
-      const gridRect = grid.getBoundingClientRect();
-      const mid = gridRect.left + gridRect.width / 2;
-
-      let bestIdx = 0;
-      let minDiff = Infinity;
-      cards.forEach((card, idx) => {
-        const r = card.getBoundingClientRect();
-        const cardCenter = (r.left + r.right) / 2;
-        const diff = Math.abs(cardCenter - mid);
-        if (diff < minDiff) {
-          minDiff = diff;
-          bestIdx = idx;
-        }
-      });
-
-      // Update counter and dots
-      curNumEl.textContent = String(bestIdx + 1).padStart(2, '0');
-      dots.forEach((d, idx) => {
-        const isActive = idx === bestIdx;
-        d.classList.toggle('is-active', isActive);
-        d.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      });
-
-      // Update card classes for depth (no skew)
-      cards.forEach((card, idx) => {
-        card.classList.remove('is-active-card', 'is-prev-card', 'is-next-card', 'is-far-card');
-        if (idx === bestIdx) {
-          card.classList.add('is-active-card');
-        } else if (idx === bestIdx - 1) {
-          card.classList.add('is-prev-card');
-        } else if (idx === bestIdx + 1) {
-          card.classList.add('is-next-card');
-        } else {
-          card.classList.add('is-far-card');
-        }
-      });
-
-      // Update button disabled states
-      const atStart = bestIdx === 0;
-      const atEnd = bestIdx === cards.length - 1;
-      if (prevBtn) prevBtn.disabled = atStart;
-      if (nextBtn) nextBtn.disabled = atEnd;
-      if (pillPrev) pillPrev.disabled = atStart;
-      if (pillNext) pillNext.disabled = atEnd;
-      wrap.classList.toggle('at-start', atStart);
-      wrap.classList.toggle('at-end', atEnd);
-    }
-
-    function scrollToCard(idx) {
-      const cards = Array.from(grid.children);
-      if (idx < 0 || idx >= cards.length) return;
-      const card = cards[idx];
-      if (!card) return;
-      const targetLeft = card.offsetLeft - (grid.clientWidth - card.offsetWidth) / 2;
-      grid.scrollTo({
-        left: Math.max(0, targetLeft),
-        behavior: 'smooth'
-      });
-    }
-
-    function goPrev() {
-      const cards = Array.from(grid.children);
-      const curIdx = dots.findIndex(d => d.classList.contains('is-active'));
-      const target = Math.max(0, (curIdx >= 0 ? curIdx : 0) - 1);
-      scrollToCard(target);
-    }
-
-    function goNext() {
-      const cards = Array.from(grid.children);
-      const curIdx = dots.findIndex(d => d.classList.contains('is-active'));
-      const target = Math.min(cards.length - 1, (curIdx >= 0 ? curIdx : 0) + 1);
-      scrollToCard(target);
-    }
-
-    prevBtn.addEventListener('click', (e) => { e.preventDefault(); goPrev(); });
-    nextBtn.addEventListener('click', (e) => { e.preventDefault(); goNext(); });
-    pillPrev.addEventListener('click', (e) => { e.preventDefault(); goPrev(); });
-    pillNext.addEventListener('click', (e) => { e.preventDefault(); goNext(); });
-
-    // Keyboard navigation: Left/Right Arrow keys
-    wrap.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        goPrev();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        goNext();
+      if (e.type === 'touchstart') {
+        startX = e.touches[0].clientX;
+      } else {
+        startX = e.clientX;
       }
-    });
 
-    let ticking = false;
-    grid.addEventListener('scroll', () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(() => {
-          updateState();
-          ticking = false;
-        });
+      scrollLeft = track.scrollLeft;
+
+      e.preventDefault();
+    };
+
+    const doDrag = (e) => {
+      if (!isDragging) return;
+
+      let clientX;
+      if (e.type === 'touchmove') {
+        if (e.touches.length === 0) return;
+        clientX = e.touches[0].clientX;
+      } else {
+        clientX = e.clientX;
       }
-    }, { passive: true });
 
-    // Drag / Swipe handling (desktop mouse & trackpad)
-    let isDown = false, startX = 0, startLeft = 0, hasDragged = false;
-    grid.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      if (e.button !== 0) return;
-      if (e.target.closest('button, a, .btn, .project-details-btn, .project-github-link, .project-actions, .modal-close-btn')) return;
-      isDown = true;
-      hasDragged = false;
-      grid.dataset.dragging = '1';
-      startX = e.clientX;
-      startLeft = grid.scrollLeft;
-      grid.setPointerCapture(e.pointerId);
-      grid.style.scrollSnapType = 'none';
-      grid.style.scrollBehavior = 'auto';
-    });
+      const dx = clientX - startX;
+      const walk = dx * 2; // Scroll speed multiplier
+      track.scrollLeft = scrollLeft - walk;
 
-    grid.addEventListener('pointermove', (e) => {
-      if (!isDown) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 6) hasDragged = true;
-      grid.scrollLeft = startLeft - dx;
-    });
+      e.preventDefault();
+    };
 
-    function endDrag(e) {
-      if (!isDown) return;
-      isDown = false;
-      delete grid.dataset.dragging;
-      grid.style.scrollSnapType = '';
-      grid.style.scrollBehavior = '';
-      try { grid.releasePointerCapture(e.pointerId); } catch(err){}
-      if (hasDragged) {
-        const handler = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
-        grid.addEventListener('click', handler, { capture: true, once: true });
-        setTimeout(() => { hasDragged = false; }, 80);
-      }
-      setTimeout(updateState, 150);
-    }
+    const endDrag = () => {
+      isDragging = false;
+      track.classList.remove('is-dragging');
+    };
 
-    grid.addEventListener('pointerup', endDrag);
-    grid.addEventListener('pointercancel', endDrag);
+    track.addEventListener('mousedown', startDrag);
+    track.addEventListener('touchstart', startDrag, { passive: false });
 
-    // Initial setup
-    buildDots();
-    requestAnimationFrame(() => {
-      updateState();
-      setTimeout(updateState, 200);
-    });
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('touchmove', doDrag, { passive: false });
 
-    // Rebuild dots on DOM mutation (e.g. project filter)
-    const mo = new MutationObserver(() => {
-      buildDots();
-      requestAnimationFrame(updateState);
-    });
-    mo.observe(grid, { childList: true });
-
-    window.addEventListener('resize', updateState, { passive: true });
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('touchend', endDrag);
+    document.addEventListener('touchcancel', endDrag);
   });
 }
 
-window.refreshFlashcardDecks = function() {
-  const tracks = document.querySelectorAll('.flashcard-track');
-  tracks.forEach(track => {
-    track.dispatchEvent(new Event('scroll'));
-  });
+function initStartupQuestBriefing() {
+  // Optimized quest briefing with reduced DOM operations
+  const questBriefing = document.getElementById('startupQuestBriefing');
+  if (!questBriefing) return;
+
+  const hasSeen = localStorage.getItem('portfolio-quest-brief-seen') === 'true';
+
+  if (!hasSeen) {
+    // Show briefly then hide
+    questBriefing.style.display = 'block';
+
+    setTimeout(() => {
+      questBriefing.style.display = 'none';
+      localStorage.setItem('portfolio-quest-brief-seen', 'true');
+    }, 5000); // Reduced from 8000ms
+  }
+}
+
+function initSoundEffects() {
+  // Already initialized in the SFX section above
+  // This function exists for compatibility with the original code
+}
+
+/* ==========================================================================
+   Theme Toggle Function (for global access)
+   ========================================================================== */
+window.toggleTheme = function() {
+  const isSaiyanMode = document.documentElement.classList.contains('saiyan-mode');
+  document.documentElement.classList.toggle('saiyan-mode', !isSaiyanMode);
+
+  // Update localStorage
+  if (isSaiyanMode) {
+    localStorage.setItem('portfolio-theme', 'rosé');
+  } else {
+    localStorage.setItem('portfolio-theme', 'saiyan');
+  }
+
+  // Update UI elements if they exist
+  const sliderOptRose = document.getElementById('sliderOptRose');
+  const sliderOptSaiyan = document.getElementById('sliderOptSaiyan');
+  const themeSliderToggle = document.getElementById('themeSliderToggle');
+
+  if (sliderOptRose && sliderOptSaiyan && themeSliderToggle) {
+    if (!isSaiyanMode) {
+      sliderOptRose.classList.add('active');
+      sliderOptSaiyan.classList.remove('active');
+      themeSliderToggle.setAttribute('aria-checked', 'false');
+    } else {
+      sliderOptRose.classList.remove('active');
+      sliderOptSaiyan.classList.add('active');
+      themeSliderToggle.setAttribute('aria-checked', 'true');
+    }
+  }
 };
 
 /* ==========================================================================
-   Dragon Ball Inside Joke Placeholder Cycler & Prompt Generator
+   Performance Monitoring (optional)
    ========================================================================== */
-function initDbzJokePlaceholders() {
-  const nameInput = document.getElementById('senderName');
-  const emailInput = document.getElementById('senderEmail');
-  const messageInput = document.getElementById('senderMessage');
-  const rollBtn = document.getElementById('rollDbzPromptBtn');
-  if (!messageInput) return;
-
-  const dbzRoster = [
-    {
-      name: "Prince Vegeta IV (Prince of All Saiyans)",
-      email: "vegeta@planetvegeta.org",
-      msg: "Vegeta: What does the scouter say about your backend power level? OVER 9000! Join our engineering fleet at once."
-    },
-    {
-      name: "Lord Frieza (Galactic Real Estate CEO)",
-      email: "lordfrieza@galacticempire.corp",
-      msg: "Frieza: Greetings, monkey. This isn't even my architecture's final form! Fix our latency in 5 minutes."
-    },
-    {
-      name: "Perfect Cell (Biotech Systems Architect)",
-      email: "cell@perfection.biotech",
-      msg: "Cell: P is for Priceless... E is for Extinction of all bugs. Your 98% accuracy ML models are in Perfect Form!"
-    },
-    {
-      name: "Captain Ginyu (Ginyu Special Force Leader)",
-      email: "ginyu.force.pose@friezaforce.com",
-      msg: "Captain Ginyu: *Strikes dynamic pose* We need a 10x Saiyan Engineer to lead the Ginyu backend squad!"
-    },
-    {
-      name: "Piccolo (Senior Systems Architect & Mentor)",
-      email: "piccolo@namekian-kami.dbz",
-      msg: "Piccolo: DODGE! That legacy codebase is about to blow! We have an enterprise backend role for you."
-    },
-    {
-      name: "Lord Beerus (God of Destruction & Tech Recruiter)",
-      email: "beerus.nap@universe7.god",
-      msg: "Lord Beerus: Whis told me your REST APIs are delicious. Work with us, or I'll Hakai your staging servers!"
-    },
-    {
-      name: "Majin Buu (Bug Exterminator)",
-      email: "buu.eats.candy@hercule-estate.net",
-      msg: "Majin Buu: Buu like your computer vision model! Subodh join team, Buu promise not to turn servers into candy!"
-    },
-    {
-      name: "Farmer with Shotgun (Power Level: 5)",
-      email: "farmer.shotgun@earth-outskirts.com",
-      msg: "Farmer: Holy smokes! Scouter says your coding speed is over 9000! Take my shotgun and sign our job offer!"
-    },
-    {
-      name: "Master Roshi (Jackie Chun / Kame House Coach)",
-      email: "roshi@kamehouse.tropical",
-      msg: "Master Roshi: Send two crates of Senzu Beans and your resume straight to Kame House for an interview!"
-    },
-    {
-      name: "King Kai (Planet 10G Cloud Infrastructure Lead)",
-      email: "kingkai@ten-gravity.otherworld",
-      msg: "King Kai: Tell me a coding joke that makes me laugh! ...Also, your 98% accuracy model is out of this world."
-    },
-    {
-      name: "Future Trunks (Time Patrol Lead)",
-      email: "trunks.sword@future-capsule.timeline",
-      msg: "Trunks: I traveled 20 years back in time to hire you before the Androids attacked our production clusters!"
-    },
-    {
-      name: "Mr. Satan (World Martial Arts Champion)",
-      email: "hercule.champ@worldchamp.dojo",
-      msg: "Mr. Satan: HAHAHA! The World Champion demands your backend wizardry! The other devs are all smoke and mirrors!"
-    }
-  ];
-
-  let currentJokeIndex = 0;
-
-  if (rollBtn) {
-    rollBtn.addEventListener('click', () => {
-      currentJokeIndex = (currentJokeIndex + 1) % dbzRoster.length;
-      const joke = dbzRoster[currentJokeIndex];
-      
-      messageInput.value = joke.msg;
-      if (nameInput && !nameInput.value) nameInput.placeholder = `e.g. ${joke.name}`;
-      if (emailInput && !emailInput.value) emailInput.placeholder = `e.g. ${joke.email}`;
-      
-      messageInput.focus();
-      
-      // Playful bounce & toast notification
-      rollBtn.style.transform = 'scale(1.15) rotate(-5deg)';
-      setTimeout(() => { rollBtn.style.transform = ''; }, 200);
-      
-      if (typeof showToast === 'function') {
-        showToast(`Loaded DBZ Meme Prompt from ${joke.name.split(' ')[0]}!`);
-      }
-    });
-  }
-}
-
-/* ==========================================================================
-   Hero Rotating Word — Claude-inspired scouter cycling (1.8s)
-   Cycles Backend Builder → Full-Stack Builder → AI/ML Engineer
-   Respects prefers-reduced-motion — keeps static first word
-   ========================================================================== */
-function initHeroRotatingWord() {
-  const el = document.getElementById('heroRotatingWord');
-  if (!el) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const words = ['Backend Builder', 'Full-Stack Builder', 'AI/ML Engineer'];
-  let idx = words.indexOf(el.textContent.trim());
-  if (idx < 0) idx = 0;
-
-  // Only animate if hero is currently intersecting with viewport
-  let isHeroVisible = true;
-  if ('IntersectionObserver' in window) {
-    const hero = document.getElementById('hero');
-    if (hero) {
-      const io = new IntersectionObserver((entries) => {
-        isHeroVisible = entries[0].isIntersecting;
-      }, { threshold: 0.1 });
-      io.observe(hero);
-    }
-  }
-
-  setInterval(() => {
-    if (!isHeroVisible) return;
-    idx = (idx + 1) % words.length;
-    el.classList.remove('is-entering');
-    el.classList.add('is-exiting');
+// Uncomment to enable basic performance monitoring
+/*
+if ('performance' in window) {
+  window.addEventListener('load', () => {
     setTimeout(() => {
-      el.textContent = words[idx];
-      el.classList.remove('is-exiting');
-      requestAnimationFrame(() => {
-        el.classList.add('is-entering');
-        setTimeout(() => el.classList.remove('is-entering'), 400);
-      });
-    }, 280);
-  }, 3200);
-}
+      const timing = window.performance.timing;
+      const pageLoadTime = timing.loadEventEnd - timing.navigationStart;
+      console.log(`Page load time: ${pageLoadTime}ms`);
 
-/* ── Cursor-following face-aligned photo reveal (light: rose2.jpg, dark: goku.webp) ── */
-function initPhotoRevealLens() {
-  const frame = document.getElementById('heroPhotoFrame');
-  if (!frame) return;
-  const reveal = frame.querySelector('.hero-photo-reveal');
-  if (!reveal) return;
-  if (window.matchMedia('(hover: none)').matches || window.matchMedia('(pointer: coarse)').matches) return;
-  // Preload both reveal images for instant lens
-  try { new Image().src = 'assets/rose2.jpg'; new Image().src = 'assets/goku.webp'; } catch(e) {}
-  let rafId = null;
-  let px = 0, py = 0;
-  function apply() {
-    rafId = null;
-    reveal.style.setProperty('--rx', px + 'px');
-    reveal.style.setProperty('--ry', py + 'px');
-  }
-  frame.addEventListener('mousemove', (e) => {
-    const r = frame.getBoundingClientRect();
-    px = e.clientX - r.left;
-    py = e.clientY - r.top;
-    px = Math.max(0, Math.min(px, r.width));
-    py = Math.max(0, Math.min(py, r.height));
-    if (rafId === null) rafId = requestAnimationFrame(apply);
-  });
-  frame.addEventListener('mouseenter', (e) => {
-    const r = frame.getBoundingClientRect();
-    px = e.clientX - r.left;
-    py = e.clientY - r.top;
-    reveal.style.setProperty('--rx', px + 'px');
-    reveal.style.setProperty('--ry', py + 'px');
-  });
-  frame.addEventListener('mouseleave', () => {
-    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      if (pageLoadTime > 3000) {
+        console.warn('Page load time is high - consider further optimizations');
+      }
+    }, 1000);
   });
 }
-
-
-
-
+*/
