@@ -409,9 +409,8 @@ function renderExperience() {
   }
 }
 
-/* --- Render Projects — The Interactive Project Studio (Single-Focus Bento) --- */
+/* --- Render Projects — Scroll-Linked Stacking Cards Showcase --- */
 let activeProjectCategory = 'all';
-let activeProjectIndex = 0;
 
 function renderProjects(filterCategory = 'all') {
   activeProjectCategory = filterCategory;
@@ -427,7 +426,7 @@ function renderProjects(filterCategory = 'all') {
       <div class="project-empty-state">
         <div class="empty-state-icon"><i data-lucide="folder-search" style="width: 32px; height: 32px;"></i></div>
         <h4 class="empty-state-title">No projects found in this filter</h4>
-        <p class="empty-state-desc">Switch back to "All Projects" to explore all engineering builds.</p>
+        <p class="empty-state-desc">Select "All Projects" to explore all engineering builds.</p>
         <button type="button" class="btn btn-primary btn-sm" onclick="document.querySelector('.filter-btn[data-filter=\\'all\\']').click()">
           <span>Show All Projects</span>
         </button>
@@ -436,159 +435,113 @@ function renderProjects(filterCategory = 'all') {
     return;
   }
 
-  if (activeProjectIndex >= filtered.length) {
-    activeProjectIndex = 0;
-  }
-
-  const proj = filtered[activeProjectIndex];
-  const total = filtered.length;
-
-  // Custom key metric badge per project
-  let metricHighlight = '★ Production Ready';
-  if (proj.id === 'dr-detection') metricHighlight = '★ 92% Acc · 10k Scans';
-  else if (proj.id === 'facial-recognition') metricHighlight = '★ 98% Recognition · Real-Time';
-  else if (proj.id === 'foodies-goodies') metricHighlight = '★ Edamam API · 100+ Recipes';
-
   container.innerHTML = `
-    <div class="project-studio-card" id="projectStudioCard">
-      <!-- Integrated Top Hardware Switcher Dock -->
-      <div class="studio-header-bar">
-        <div class="studio-tabs-track" role="tablist" aria-label="Select Project">
-          ${filtered.map((item, idx) => {
-            const isActive = idx === activeProjectIndex;
-            const numStr = String(idx + 1).padStart(2, '0');
-            const shortName = item.title.split('–')[0].split('using')[0].trim();
-            return `
-              <button type="button" role="tab" class="studio-tab-btn ${isActive ? 'active' : ''}" data-project-idx="${idx}" aria-selected="${isActive ? 'true' : 'false'}" style="--tab-theme: var(--${item.badgeColor || 'accent'});">
-                <span class="studio-tab-num">${numStr}</span>
-                <span class="studio-tab-title">${shortName}</span>
-                <span class="studio-tab-indicator"></span>
-              </button>
-            `;
-          }).join('')}
-        </div>
+    <div class="projects-stack-deck" id="projectsStackDeck">
+      ${filtered.map((proj, idx) => {
+        const numStr = String(idx + 1).padStart(2, '0');
+        const totalStr = String(filtered.length).padStart(2, '0');
+        let metricTag = '★ High Performance';
+        if (proj.id === 'dr-detection') metricTag = '★ 92% Acc · 10,000+ Scans';
+        else if (proj.id === 'facial-recognition') metricTag = '★ 98% Acc · Biometric Real-Time';
+        else if (proj.id === 'foodies-goodies') metricTag = '★ Edamam REST API · 100+ Recipes';
 
-        <div class="studio-header-meta">
-          <span class="studio-badge-pill" style="background-color: var(--${proj.badgeColor || 'accent'});">
-            ${proj.badge}
-          </span>
-          <div class="studio-mini-stepper">
-            <button type="button" class="studio-step-btn studio-prev" aria-label="Previous project" ${activeProjectIndex === 0 ? 'disabled' : ''}>
-              <i data-lucide="chevron-left" style="width: 14px; height: 14px;"></i>
-            </button>
-            <span class="studio-step-counter"><strong>0${activeProjectIndex + 1}</strong>/0${total}</span>
-            <button type="button" class="studio-step-btn studio-next" aria-label="Next project" ${activeProjectIndex === total - 1 ? 'disabled' : ''}>
-              <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+        return `
+          <div class="project-stack-card" style="--card-idx: ${idx}; --total-cards: ${filtered.length}; --theme-color: var(--${proj.badgeColor || 'accent'});" data-stack-idx="${idx}" data-project-id="${proj.id}">
+            <!-- Card Header Band -->
+            <div class="stack-card-header">
+              <div class="stack-header-left">
+                <span class="stack-card-idx">${numStr} / ${totalStr}</span>
+                <span class="stack-card-badge" style="background-color: var(--${proj.badgeColor || 'accent'});">
+                  ${proj.badge}
+                </span>
+              </div>
+              <div class="stack-header-right">
+                <span class="stack-card-period">
+                  <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
+                  <span>${proj.period}</span>
+                </span>
+              </div>
+            </div>
 
-      <!-- Main Stage Split (Compact 42% / 58%) -->
-      <div class="studio-body-grid">
-        <!-- Visual Column -->
-        <div class="studio-visual-col">
-          <div class="studio-media-frame" onclick="window.openProjectModal('${proj.id}')" title="Click to view full architecture deep-dive">
-            <img src="${encodeURI(proj.image)}" alt="${proj.title}" class="studio-media-img" loading="lazy" />
-            <div class="studio-floating-metric">${metricHighlight}</div>
-            <div class="studio-media-overlay">
-              <span class="studio-inspect-pill">
-                <i data-lucide="search" style="width: 13px; height: 13px;"></i>
-                <span>Explore Architecture</span>
-              </span>
+            <!-- Card Content Body -->
+            <div class="stack-card-body">
+              <!-- Left Visual Panel -->
+              <div class="stack-media-col">
+                <div class="stack-media-frame" onclick="window.openProjectModal('${proj.id}')" title="Click to inspect system architecture">
+                  <div class="stack-browser-bar">
+                    <div class="stack-dots">
+                      <span class="s-dot dot-r"></span>
+                      <span class="s-dot dot-y"></span>
+                      <span class="s-dot dot-g"></span>
+                    </div>
+                    <span class="stack-url-tag">https://${proj.id}.app.internal</span>
+                  </div>
+                  <div class="stack-img-wrap">
+                    <img src="${encodeURI(proj.image)}" alt="${proj.title}" class="stack-proj-img" loading="lazy" />
+                    <span class="stack-metric-pill">${metricTag}</span>
+                    <div class="stack-lens-overlay">
+                      <span class="stack-lens-badge">
+                        <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+                        <span>Inspect Architecture</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="stack-actions-row">
+                  <button type="button" class="btn btn-primary btn-sm project-details-btn stack-cta-primary" data-project-id="${proj.id}">
+                    <i data-lucide="layers" style="width: 14px; height: 14px;"></i>
+                    <span>Architecture & Details</span>
+                  </button>
+                  <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm project-github-link stack-cta-secondary" title="GitHub Repository">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    <span>View Code</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Right Dossier Panel -->
+              <div class="stack-dossier-col">
+                <h3 class="stack-proj-title">${proj.title}</h3>
+                <p class="stack-proj-tagline">${proj.tagline}</p>
+                
+                <!-- Deliverables Box -->
+                <div class="stack-deliverables-box">
+                  <div class="stack-deliverables-header">
+                    <i data-lucide="sparkles" style="width: 14px; height: 14px; color: var(--accent);"></i>
+                    <span>Engineered Deliverables:</span>
+                  </div>
+                  <ul class="stack-bullet-list">
+                    ${(proj.bullets || []).map(b => `
+                      <li>
+                        <span class="stack-bullet-caret">▸</span>
+                        <span>${b}</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+
+                <!-- Tech Stack Tags -->
+                <div class="stack-tech-row">
+                  <span class="stack-tech-label">Stack:</span>
+                  <div class="stack-tech-tags">
+                    ${proj.techStack.map(t => `<span class="stack-tech-chip">${t}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <!-- Direct Actions Underneath Image -->
-          <div class="studio-action-row">
-            <button type="button" class="btn btn-outline btn-sm studio-deepdive-btn project-details-btn" data-project-id="${proj.id}">
-              <i data-lucide="layers" style="width: 14px; height: 14px;"></i>
-              <span>System Deep Dive</span>
-            </button>
-            <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm studio-github-btn project-github-link" title="View Source Code on GitHub">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-              <span>GitHub</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Spec & Dossier Column -->
-        <div class="studio-spec-col">
-          <div class="studio-title-row">
-            <div class="studio-title-block">
-              <span class="studio-period-tag">
-                <i data-lucide="calendar" style="width: 11px; height: 11px;"></i>
-                <span>${proj.period}</span>
-              </span>
-              <h3 class="studio-proj-title">${proj.title}</h3>
-            </div>
-          </div>
-
-          <p class="studio-proj-tagline">${proj.tagline}</p>
-
-          <!-- Key Highlights Compact Box -->
-          <div class="studio-highlights-box">
-            <div class="studio-highlights-header">
-              <i data-lucide="zap" style="width: 13px; height: 13px; color: var(--accent);"></i>
-              <span>Engineered Core Deliverables:</span>
-            </div>
-            <ul class="studio-bullet-list">
-              ${(proj.bullets || []).map(b => `
-                <li>
-                  <span class="studio-caret">▸</span>
-                  <span>${b}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-
-          <!-- Tech Stack Strip -->
-          <div class="studio-tech-strip">
-            <span class="studio-tech-label">Stack:</span>
-            <div class="studio-tech-pills">
-              ${proj.techStack.map(t => `<span class="studio-tech-tag">${t}</span>`).join('')}
-            </div>
-          </div>
-        </div>
-      </div>
+        `;
+      }).join('')}
     </div>
   `;
 
-  // Attach interactive project switcher listeners
-  container.querySelectorAll('[data-project-idx]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = parseInt(btn.getAttribute('data-project-idx'), 10);
-      if (!isNaN(idx) && idx !== activeProjectIndex) {
-        activeProjectIndex = idx;
-        renderProjects(activeProjectCategory);
-      }
-    });
-  });
-
-  // Attach stepper listeners
-  const prevBtn = container.querySelector('.studio-prev');
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (activeProjectIndex > 0) {
-        activeProjectIndex--;
-        renderProjects(activeProjectCategory);
-      }
-    });
-  }
-
-  const nextBtn = container.querySelector('.studio-next');
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (activeProjectIndex < total - 1) {
-        activeProjectIndex++;
-        renderProjects(activeProjectCategory);
-      }
-    });
-  }
-
   initLucideIcons();
+  initStackCardScrollAnimation();
+  initStackCardReveals();
 }
 
 /* --- Project Filter Handlers --- */
@@ -599,7 +552,6 @@ function initProjectFilters() {
       filterButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const category = btn.getAttribute('data-filter');
-      activeProjectIndex = 0;
       renderProjects(category);
     });
   });
@@ -700,131 +652,252 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* --- Render Achievements — The Honors Codex (Vertical Milestone Rail + Spotlight) --- */
-let activeAchievementIndex = 0;
-
+/* --- Render Achievements — Scroll-Linked Stacking Honors Deck --- */
 function renderAchievements() {
   const container = document.getElementById('achievementsGrid');
   if (!container || !portfolioData.achievements) return;
 
   const items = portfolioData.achievements;
   const total = items.length;
-  if (activeAchievementIndex >= total) activeAchievementIndex = 0;
-  const activeAch = items[activeAchievementIndex];
 
   container.innerHTML = `
-    <div class="honors-codex-wrapper">
-      <!-- Left: Vertical Milestone Rail (32% width) -->
-      <div class="codex-timeline-rail" role="tablist" aria-label="Milestones Timeline">
-        <div class="codex-rail-header">
-          <i data-lucide="award" style="width: 14px; height: 14px; color: var(--accent);"></i>
-          <span>HONORS TIMELINE</span>
-          <span class="codex-rail-count">0${activeAchievementIndex + 1} / 0${total}</span>
-        </div>
+    <div class="achievements-stack-deck" id="achievementsStackDeck">
+      ${items.map((ach, idx) => {
+        const numStr = String(idx + 1).padStart(2, '0');
+        const totalStr = String(total).padStart(2, '0');
 
-        <div class="codex-rail-list">
-          ${items.map((ach, idx) => {
-            const isActive = idx === activeAchievementIndex;
-            return `
-              <button type="button" role="tab" class="codex-rail-item ${isActive ? 'active' : ''}" data-ach-idx="${idx}" aria-selected="${isActive ? 'true' : 'false'}" style="--ach-theme: var(--${ach.color || 'accent'});">
-                <div class="codex-rail-icon" style="background-color: var(--${ach.color || 'accent'});">
-                  <i data-lucide="${ach.icon}" style="width: 14px; height: 14px; stroke-width: 2.5;"></i>
+        return `
+          <div class="achievement-stack-card" style="--ach-idx: ${idx}; --total-achs: ${total}; --ach-color: var(--${ach.color || 'accent'});" data-ach-idx="${idx}">
+            <!-- Header Bar -->
+            <div class="ach-stack-header">
+              <div class="ach-stack-header-left">
+                <span class="ach-stack-counter">${numStr} / ${totalStr}</span>
+                <span class="ach-stack-org">
+                  <i data-lucide="building-2" style="width: 13px; height: 13px;"></i>
+                  <span>${ach.organization}</span>
+                </span>
+              </div>
+              <div class="ach-stack-header-right">
+                <span class="ach-stack-period">
+                  <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
+                  <span>${ach.period}</span>
+                </span>
+                <span class="ach-stack-badge" style="background-color: var(--${ach.color || 'accent'});">
+                  ${ach.badge}
+                </span>
+              </div>
+            </div>
+
+            <!-- Body Grid -->
+            <div class="ach-stack-body">
+              <div class="ach-stack-icon-col">
+                <div class="ach-medallion-badge" style="background-color: var(--${ach.color || 'accent'});">
+                  <i data-lucide="${ach.icon}" style="width: 32px; height: 32px; stroke-width: 2.5;"></i>
                 </div>
-                <div class="codex-rail-meta">
-                  <span class="codex-rail-period">${ach.period}</span>
-                  <span class="codex-rail-title">${ach.title}</span>
+              </div>
+
+              <div class="ach-stack-content-col">
+                <h3 class="ach-stack-title">${ach.title}</h3>
+                <div class="ach-stack-narrative">
+                  <p>${ach.description}</p>
                 </div>
-                <span class="codex-rail-arrow" aria-hidden="true">›</span>
-              </button>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <!-- Right: Spotlight Focus Card (68% width) -->
-      <div class="codex-spotlight-panel" id="codexSpotlightPanel" style="--spotlight-accent: var(--${activeAch.color || 'accent'});">
-        <div class="codex-spotlight-header">
-          <div class="codex-meta-pills">
-            <span class="codex-org-pill">
-              <i data-lucide="building-2" style="width: 13px; height: 13px;"></i>
-              <span>${activeAch.organization}</span>
-            </span>
-            <span class="codex-period-pill">
-              <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
-              <span>${activeAch.period}</span>
-            </span>
+              </div>
+            </div>
           </div>
-
-          <span class="codex-rank-pill" style="background-color: var(--${activeAch.color || 'accent'});">
-            ${activeAch.badge}
-          </span>
-        </div>
-
-        <div class="codex-title-row">
-          <div class="codex-hero-icon" style="background-color: var(--${activeAch.color || 'accent'});">
-            <i data-lucide="${activeAch.icon}" style="width: 24px; height: 24px; stroke-width: 2.5;"></i>
-          </div>
-          <h3 class="codex-spotlight-title">${activeAch.title}</h3>
-        </div>
-
-        <div class="codex-narrative-card">
-          <p class="codex-narrative-text">${activeAch.description}</p>
-        </div>
-
-        <!-- Bottom Stepper Navigation Bar -->
-        <div class="codex-controls-bar">
-          <button type="button" class="btn btn-outline btn-sm codex-prev-btn" aria-label="Previous honor" ${activeAchievementIndex === 0 ? 'disabled' : ''}>
-            <i data-lucide="chevron-left" style="width: 14px; height: 14px;"></i>
-            <span>Previous</span>
-          </button>
-
-          <div class="codex-stepper-dots">
-            ${items.map((_, i) => `
-              <button type="button" class="codex-dot ${i === activeAchievementIndex ? 'active' : ''}" data-ach-idx="${i}" aria-label="Go to honor ${i + 1}"></button>
-            `).join('')}
-          </div>
-
-          <button type="button" class="btn btn-outline btn-sm codex-next-btn" aria-label="Next honor" ${activeAchievementIndex === total - 1 ? 'disabled' : ''}>
-            <span>Next</span>
-            <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
-          </button>
-        </div>
-      </div>
+        `;
+      }).join('')}
     </div>
   `;
 
-  // Attach interactive milestone rail listeners
-  container.querySelectorAll('[data-ach-idx]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = parseInt(btn.getAttribute('data-ach-idx'), 10);
-      if (!isNaN(idx) && idx !== activeAchievementIndex) {
-        activeAchievementIndex = idx;
-        renderAchievements();
+  initLucideIcons();
+  initStackCardScrollAnimation();
+  initStackCardReveals();
+}
+
+/* --- Scroll-Linked Card Stacking & Field Reveal Engine --- */
+let stackAnimationInit = false;
+
+function initStackCardScrollAnimation() {
+  if (stackAnimationInit) return;
+  stackAnimationInit = true;
+
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateCardsStackDepth();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  // Also synchronize with Lenis smooth scroll engine
+  if (window.lenis && typeof window.lenis.on === 'function') {
+    window.lenis.on('scroll', onScroll);
+  } else {
+    const checkLenis = setInterval(() => {
+      if (window.lenis && typeof window.lenis.on === 'function') {
+        window.lenis.on('scroll', onScroll);
+        clearInterval(checkLenis);
       }
-    });
+    }, 200);
+    setTimeout(() => clearInterval(checkLenis), 3000);
+  }
+
+  // Initial calls
+  setTimeout(updateCardsStackDepth, 150);
+  setTimeout(updateCardsStackDepth, 600);
+}
+
+function updateCardsStackDepth() {
+  const projCards = document.querySelectorAll('.project-stack-card');
+  const achCards = document.querySelectorAll('.achievement-stack-card');
+
+  // Ensure any card approaching/within viewport has is-stacked-in-view class
+  const winH = window.innerHeight || document.documentElement.clientHeight || 800;
+  projCards.forEach(c => {
+    if (c.getBoundingClientRect().top < winH + 150) c.classList.add('is-stacked-in-view');
+  });
+  achCards.forEach(c => {
+    if (c.getBoundingClientRect().top < winH + 150) c.classList.add('is-stacked-in-view');
   });
 
-  const prevBtn = container.querySelector('.codex-prev-btn');
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (activeAchievementIndex > 0) {
-        activeAchievementIndex--;
-        renderAchievements();
-      }
-    });
+  applyStackTransform(projCards);
+  applyStackTransform(achCards);
+}
+
+function applyStackTransform(cards) {
+  const total = cards.length;
+  if (!total) return;
+
+  // Resolved sticky top in pixels (e.g. 96px desktop, 86px tablet, 72px mobile, 66px small)
+  const computedTopStr = window.getComputedStyle(cards[0]).top;
+  const stickyTop = parseFloat(computedTopStr) || 96;
+  const winH = window.innerHeight || document.documentElement.clientHeight || 800;
+
+  // Measure all card rects and determine the highest card that has docked
+  const cardRects = [];
+  let activeDockIdx = -1;
+
+  for (let i = 0; i < total; i++) {
+    const r = cards[i].getBoundingClientRect();
+    cardRects.push(r);
+    // A card is considered docked if its top has reached or passed stickyTop (with 18px tolerance for subpixels & scaling)
+    if (r.top <= stickyTop + 18) {
+      activeDockIdx = i;
+    }
   }
 
-  const nextBtn = container.querySelector('.codex-next-btn');
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (activeAchievementIndex < total - 1) {
-        activeAchievementIndex++;
-        renderAchievements();
+  cards.forEach((card, idx) => {
+    const currentRect = cardRects[idx];
+
+    // Case 1: Any card before activeDockIdx is completely covered by a higher docked card
+    if (idx < activeDockIdx) {
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.94)';
+      card.style.filter = 'blur(6px)';
+      card.style.visibility = 'hidden';
+      card.style.pointerEvents = 'none';
+      return;
+    }
+
+    // Case 2: This card is currently the active docked card
+    if (idx === activeDockIdx) {
+      // If there is an incoming card after this one, smoothly fade out as it approaches
+      if (idx < total - 1) {
+        const nextRect = cardRects[idx + 1];
+        const fadeDistance = Math.min(winH * 0.72, (currentRect.height || 460) * 0.95);
+        const distFromDock = nextRect.top - stickyTop;
+
+        if (distFromDock <= 18) {
+          // Next card has docked flush over this one
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.94)';
+          card.style.filter = 'blur(6px)';
+          card.style.visibility = 'hidden';
+          card.style.pointerEvents = 'none';
+        } else if (distFromDock < fadeDistance) {
+          const prog = (fadeDistance - distFromDock) / fadeDistance;
+          const clampedProg = Math.max(0, Math.min(1, prog));
+          const opacity = Math.max(0, 1 - Math.pow(clampedProg, 1.25));
+          const scale = 1 - (clampedProg * 0.05);
+          const blur = clampedProg * 5;
+
+          card.style.opacity = opacity.toFixed(3);
+          card.style.transform = `scale(${scale.toFixed(3)})`;
+          card.style.filter = `blur(${blur.toFixed(1)}px)`;
+          card.style.visibility = opacity <= 0.02 ? 'hidden' : 'visible';
+          card.style.pointerEvents = clampedProg > 0.6 ? 'none' : 'auto';
+        } else {
+          // Next card is far below: this card is 100% active and in focus
+          card.style.opacity = '1';
+          card.style.transform = 'scale(1)';
+          card.style.filter = 'blur(0px)';
+          card.style.visibility = 'visible';
+          card.style.pointerEvents = 'auto';
+        }
+      } else {
+        // This is the LAST card (idx === total - 1) and it has arrived at the dock!
+        // It stays 100% in exclusive focus!
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+        card.style.filter = 'blur(0px)';
+        card.style.visibility = 'visible';
+        card.style.pointerEvents = 'auto';
       }
-    });
+      return;
+    }
+
+    // Case 3: Card is approaching from below in normal scroll flow (idx > activeDockIdx)
+    card.style.opacity = '1';
+    card.style.transform = 'scale(1)';
+    card.style.filter = 'blur(0px)';
+    card.style.visibility = 'visible';
+    card.style.pointerEvents = 'auto';
+  });
+}
+
+/* --- Staggered Field Appearance on Card Scroll Entry --- */
+let stackRevealsObserver = null;
+
+function initStackCardReveals() {
+  if (stackRevealsObserver) {
+    stackRevealsObserver.disconnect();
   }
 
-  initLucideIcons();
+  const cards = document.querySelectorAll('.project-stack-card, .achievement-stack-card');
+  if (!cards.length) return;
+
+  // Immediately mark any cards already in viewport or approaching
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    if (rect.top < viewportHeight * 0.92) {
+      card.classList.add('is-stacked-in-view');
+    }
+  });
+
+  if ('IntersectionObserver' in window) {
+    stackRevealsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-stacked-in-view');
+        }
+      });
+    }, {
+      threshold: 0.05,
+      rootMargin: '100px 0px 50px 0px'
+    });
+
+    cards.forEach(card => stackRevealsObserver.observe(card));
+  } else {
+    // Fallback: reveal all
+    cards.forEach(card => card.classList.add('is-stacked-in-view'));
+  }
 }
 
 /* --- Render Education --- */
@@ -1089,37 +1162,31 @@ function initMobileMenu() {
 }
 
 /* --- ScrollSpy Navigation Active Highlight (Optimized with Cached Offsets) --- */
+/* --- ScrollSpy Navigation Active Highlight (Dynamically Aligned with Scrolling Fields) --- */
 function initScrollSpy() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.navbar .nav-link[href^="#"]');
   if (!sections.length || !navLinks.length) return;
 
-  let sectionMetrics = [];
-  function cacheSectionMetrics() {
-    sectionMetrics = Array.from(sections).map(section => ({
-      id: section.getAttribute('id'),
-      top: section.offsetTop,
-      height: section.offsetHeight
-    }));
-  }
-  cacheSectionMetrics();
-  window.addEventListener('resize', cacheSectionMetrics, { passive: true });
-
   function updateActiveLink() {
-    let currentId = '';
-    const scrollPos = window.scrollY + 120;
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.offsetHeight : 80;
+    // The active trigger line is aligned right below the floating navbar
+    const activeThreshold = headerHeight + 60;
 
-    for (let i = 0; i < sectionMetrics.length; i++) {
-      const item = sectionMetrics[i];
-      if (scrollPos >= item.top && scrollPos < item.top + item.height) {
-        currentId = item.id;
-        break;
+    let currentId = '';
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      // Section is active if its top is at or above activeThreshold, and its bottom is still below activeThreshold
+      if (rect.top <= activeThreshold && rect.bottom > activeThreshold) {
+        currentId = section.getAttribute('id');
       }
-    }
+    });
 
     if (currentId) {
       navLinks.forEach(link => {
-        if (link.getAttribute('href') === `#${currentId}`) {
+        const targetHref = link.getAttribute('href');
+        if (targetHref === `#${currentId}`) {
           link.classList.add('active');
         } else {
           link.classList.remove('active');
@@ -1140,7 +1207,8 @@ function initScrollSpy() {
   }
 
   window.addEventListener('scroll', handleScrollSpy, { passive: true });
-  if (window.lenis) {
+  window.addEventListener('resize', handleScrollSpy, { passive: true });
+  if (window.lenis && typeof window.lenis.on === 'function') {
     window.lenis.on('scroll', handleScrollSpy);
   }
   updateActiveLink();
@@ -3566,7 +3634,8 @@ function initSmoothScroll() {
       const target = document.querySelector(href);
       if (target) {
         e.preventDefault();
-        const headerOffset = 70;
+        const header = document.querySelector('.site-header');
+        const headerOffset = header ? header.offsetHeight : 80;
         lenis.scrollTo(target, { offset: -headerOffset, duration: 1.15 });
         if (history.pushState) {
           history.pushState(null, null, href);
