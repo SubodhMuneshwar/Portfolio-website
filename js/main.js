@@ -3824,7 +3824,7 @@ function initCardSpotlight() {
 
 function initCardTilt() {
   if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const cardSelector = '.stat-card, .sticker-card, .skill-category-card, .project-card, .achievement-card, .experience-card, .edu-card, .cert-card, .contact-card';
+  const cardSelector = '.stat-card, .sticker-card, .skill-category-card, .project-card, .achievement-card, .edu-card, .cert-card, .contact-card';
 
   document.querySelectorAll(cardSelector).forEach(c => c.classList.add('tilt-card'));
 

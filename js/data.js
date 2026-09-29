@@ -152,7 +152,7 @@ const portfolioData = {
       badge: "Computer Vision",
       badgeColor: "accent",
       github: "https://github.com/Nihar0001/Final_face_recognition.git",
-      image: "assets/face recog.jpg",
+      image: "assets/face recog.png",
       description: "An intelligent, contactless attendance monitoring system utilizing high-speed face detection and biometric feature matching.",
       bullets: [
         "Built a real-time Python/Flask backend and pipeline for webcam-driven face detection, landmark alignment, and facial encoding.",

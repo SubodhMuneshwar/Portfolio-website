@@ -3286,9 +3286,10 @@ body.saiyan-mode .ticker-bullet {
     0 1px 2px rgba(15, 23, 42, 0.04),
     0 8px 24px -4px rgba(15, 23, 42, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s ease !important;
+  transform: none !important;
+  transform-style: flat !important;
+  perspective: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   overflow: hidden;
 }
 
@@ -3304,22 +3305,20 @@ body.saiyan-mode .ticker-bullet {
 }
 
 .experience-card:hover {
-  transform: translateY(-3px) !important;
-  border-color: rgba(255, 46, 151, 0.4) !important;
+  transform: none !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
   box-shadow:
-    0 4px 8px rgba(15, 23, 42, 0.04),
-    0 18px 40px -6px rgba(255, 46, 151, 0.14),
-    0 0 0 1px rgba(255, 46, 151, 0.2),
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -4px rgba(15, 23, 42, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 1) !important;
 }
 
 .exp-timeline-item:hover .exp-node {
-  transform: scale(1.08);
-  box-shadow: 0 0 0 6px rgba(255, 46, 151, 0.2), 0 4px 12px rgba(255, 46, 151, 0.25);
+  transform: none;
 }
 
 .exp-timeline-item:hover .exp-node-icon {
-  transform: scale(1.1);
+  transform: none;
 }
 
 /* Header Bar */
@@ -3696,11 +3695,12 @@ body.saiyan-mode .experience-card::before {
 }
 
 body.saiyan-mode .experience-card:hover {
-  border-color: rgba(251, 191, 36, 0.6) !important;
+  transform: none !important;
+  border-color: rgba(251, 191, 36, 0.28) !important;
   box-shadow:
-    0 12px 36px rgba(0, 0, 0, 0.9),
-    0 0 30px rgba(251, 191, 36, 0.25),
-    inset 0 1px 0 rgba(254, 240, 138, 0.25) !important;
+    0 4px 24px rgba(0, 0, 0, 0.75),
+    0 0 20px rgba(251, 191, 36, 0.08),
+    inset 0 1px 0 rgba(254, 240, 138, 0.12) !important;
 }
 
 body.saiyan-mode .exp-node {
@@ -7840,7 +7840,6 @@ body.saiyan-mode .scroll-progress-bar {
 .sticker-card,
 .stat-card,
 .skill-category-card,
-.experience-card,
 .achievement-card,
 .edu-card,
 .cert-card,
@@ -7909,7 +7908,6 @@ body.saiyan-mode .tilt-card::before {
 .sticker-card > *,
 .stat-card > *,
 .skill-category-card > *,
-.experience-card > *,
 .achievement-card > *,
 .edu-card > *,
 .cert-card > *,
