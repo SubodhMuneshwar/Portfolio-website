@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFlashcardDecks();
   initStartupQuestBriefing();
   initSoundEffects();
+  initDraggableTicker();
 });
 
 /* ==========================================================================
@@ -286,7 +287,7 @@ function renderSkills() {
 }
 
 
-/* --- Render Experience — Modern Minimalist Timeline (Gemini 3.8) --- */
+/* --- Render Experience — Modern Minimalist Timeline --- */
 function renderExperience() {
   const container = document.getElementById('experienceTimeline');
   if (!container || !portfolioData.experience) return;
@@ -377,14 +378,17 @@ function renderExperience() {
             Key Contributions & System Deliverables
           </h4>
           <ul class="exp-bullet-list">
-            ${exp.highlights.map(hl => `
-              <li class="exp-bullet-item">
-                <span class="exp-bullet-marker">
-                  <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
-                </span>
-                <span class="exp-bullet-text">${hl.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
-              </li>
-            `).join('')}
+            ${exp.highlights.map(hl => {
+              const text = typeof hl === 'object' ? (hl.description || hl.title) : hl;
+              return `
+                <li class="exp-bullet-item">
+                  <span class="exp-bullet-marker">
+                    <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                  </span>
+                  <span class="exp-bullet-text">${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
+                </li>
+              `;
+            }).join('')}
           </ul>
         </div>
 
@@ -408,6 +412,7 @@ function renderExperience() {
     window.lucide.createIcons();
   }
 }
+
 
 /* --- Render Projects — Scroll-Linked Stacking Cards Showcase --- */
 let activeProjectCategory = 'all';
@@ -441,9 +446,13 @@ function renderProjects(filterCategory = 'all') {
         const numStr = String(idx + 1).padStart(2, '0');
         const totalStr = String(filtered.length).padStart(2, '0');
         let metricTag = '★ High Performance';
-        if (proj.id === 'dr-detection') metricTag = '★ 92% Acc · 10,000+ Scans';
+        if (proj.id === 'dr-detection' || proj.id === 'diabetic-retinopathy') metricTag = '★ 92% Acc · 10,000+ Scans';
         else if (proj.id === 'facial-recognition') metricTag = '★ 98% Acc · Biometric Real-Time';
         else if (proj.id === 'foodies-goodies') metricTag = '★ Edamam REST API · 100+ Recipes';
+
+        const isVideo = !!(proj.video || (proj.image && proj.image.endsWith('.mp4')));
+        const mediaSrc = proj.video || proj.image;
+        const posterSrc = proj.poster || (proj.image && !proj.image.endsWith('.mp4') ? proj.image : 'assets/dr.png');
 
         return `
           <div class="project-stack-card" style="--card-idx: ${idx}; --total-cards: ${filtered.length}; --theme-color: var(--${proj.badgeColor || 'accent'});" data-stack-idx="${idx}" data-project-id="${proj.id}">
@@ -475,14 +484,23 @@ function renderProjects(filterCategory = 'all') {
                       <span class="s-dot dot-g"></span>
                     </div>
                     <span class="stack-url-tag">https://${proj.id}.app.internal</span>
+                    ${isVideo ? `
+                      <span class="stack-video-pill">
+                        <span class="stack-video-pulse"></span>
+                        <span>LIVE DEMO</span>
+                      </span>` : ''}
                   </div>
                   <div class="stack-img-wrap">
-                    <img src="${encodeURI(proj.image)}" alt="${proj.title}" class="stack-proj-img" loading="lazy" />
+                    ${isVideo ? `
+                      <video src="${encodeURI(mediaSrc)}" poster="${encodeURI(posterSrc)}" class="stack-proj-img" autoplay loop muted playsinline preload="auto" title="${proj.title} Live Demo Video"></video>
+                    ` : `
+                      <img src="${encodeURI(proj.image)}" alt="${proj.title}" class="stack-proj-img" loading="lazy" />
+                    `}
                     <span class="stack-metric-pill">${metricTag}</span>
                     <div class="stack-lens-overlay">
                       <span class="stack-lens-badge">
-                        <i data-lucide="search" style="width: 14px; height: 14px;"></i>
-                        <span>Inspect Architecture</span>
+                        <i data-lucide="${isVideo ? 'play' : 'search'}" style="width: 14px; height: 14px;"></i>
+                        <span>${isVideo ? 'Inspect Demo & Architecture' : 'Inspect Architecture'}</span>
                       </span>
                     </div>
                   </div>
@@ -542,6 +560,12 @@ function renderProjects(filterCategory = 'all') {
   initLucideIcons();
   initStackCardScrollAnimation();
   initStackCardReveals();
+
+  container.querySelectorAll('video').forEach(vid => {
+    vid.muted = true;
+    const p = vid.play();
+    if (p !== undefined) p.catch(() => {});
+  });
 }
 
 /* --- Project Filter Handlers --- */
@@ -582,6 +606,20 @@ window.openProjectModal = function(projectId) {
   const modalContent = document.getElementById('modalContent');
   if (!modalBackdrop || !modalContent) return;
 
+  const isVideo = !!(proj.video || (proj.image && proj.image.endsWith('.mp4')));
+  const mediaSrc = proj.video || proj.image;
+  const posterSrc = proj.poster || (proj.image && !proj.image.endsWith('.mp4') ? proj.image : 'assets/dr.png');
+
+  const mediaHtml = isVideo
+    ? `
+      <div style="border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--border); margin-bottom: 1.5rem; background: #080612; position: relative;">
+        <video src="${encodeURI(mediaSrc)}" poster="${encodeURI(posterSrc)}" controls autoplay loop muted playsinline style="width: 100%; height: auto; max-height: 480px; display: block; object-fit: contain; margin: 0 auto;"></video>
+      </div>`
+    : `
+      <div style="border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--border); margin-bottom: 1.5rem; background: var(--muted);">
+        <img src="${encodeURI(proj.image)}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" loading="lazy" onerror="this.style.display='none'" />
+      </div>`;
+
   modalContent.innerHTML = `
     <div style="margin-bottom: 1.5rem;">
       <span class="project-badge badge-${proj.badgeColor}" style="background-color: var(--${proj.badgeColor}); margin-bottom: 0.75rem; display: inline-block;">
@@ -591,9 +629,7 @@ window.openProjectModal = function(projectId) {
       <p style="color: var(--muted-fg); font-weight: 600;">${proj.tagline}</p>
     </div>
 
-    <div style="border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--border); margin-bottom: 1.5rem; background: var(--muted);">
-      <img src="${encodeURI(proj.image)}" alt="${proj.title}" style="width: 100%; height: auto; display: block;" loading="lazy" onerror="this.style.display='none'" />
-    </div>
+    ${mediaHtml}
 
     <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Key Architecture & Deliverables:</h4>
     <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
@@ -631,6 +667,10 @@ window.openProjectModal = function(projectId) {
 window.closeProjectModal = function() {
   const modalBackdrop = document.getElementById('projectModal');
   if (modalBackdrop) {
+    const modalVideo = modalBackdrop.querySelector('video');
+    if (modalVideo) {
+      try { modalVideo.pause(); } catch (e) {}
+    }
     modalBackdrop.classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -652,66 +692,338 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* --- Render Achievements — Scroll-Linked Stacking Honors Deck --- */
+/* --- Render Achievements — Awwwards Horizontal Scroll Gallery --- */
 function renderAchievements() {
-  const container = document.getElementById('achievementsGrid');
-  if (!container || !portfolioData.achievements) return;
+  const track = document.getElementById('achHorizontalTrack') || document.getElementById('achievementsGrid');
+  if (!track || !portfolioData.achievements) return;
 
   const items = portfolioData.achievements;
   const total = items.length;
 
-  container.innerHTML = `
-    <div class="achievements-stack-deck" id="achievementsStackDeck">
-      ${items.map((ach, idx) => {
-        const numStr = String(idx + 1).padStart(2, '0');
-        const totalStr = String(total).padStart(2, '0');
+  const totalNumEl = document.getElementById('achTotalNum');
+  if (totalNumEl) {
+    totalNumEl.textContent = String(total).padStart(2, '0');
+  }
 
-        return `
-          <div class="achievement-stack-card" style="--ach-idx: ${idx}; --total-achs: ${total}; --ach-color: var(--${ach.color || 'accent'});" data-ach-idx="${idx}">
-            <!-- Header Bar -->
-            <div class="ach-stack-header">
-              <div class="ach-stack-header-left">
-                <span class="ach-stack-counter">${numStr} / ${totalStr}</span>
-                <span class="ach-stack-org">
-                  <i data-lucide="building-2" style="width: 13px; height: 13px;"></i>
-                  <span>${ach.organization}</span>
-                </span>
-              </div>
-              <div class="ach-stack-header-right">
-                <span class="ach-stack-period">
-                  <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
-                  <span>${ach.period}</span>
-                </span>
-                <span class="ach-stack-badge" style="background-color: var(--${ach.color || 'accent'});">
-                  ${ach.badge}
-                </span>
-              </div>
-            </div>
+  track.innerHTML = items.map((ach, idx) => {
+    const numStr = ach.num || String(idx + 1).padStart(2, '0');
+    const colorVar = ach.color || 'accent';
+    const accentColor = ach.accentColor || '#EC4899';
+    const metricText = ach.metric || ach.badge;
+    const tagsHtml = (ach.tags && ach.tags.length > 0)
+      ? ach.tags.map(t => `
+          <span class="ach-tag-chip">
+            <span class="ach-tag-dot" style="background-color: ${accentColor};"></span>
+            <span>${t}</span>
+          </span>
+        `).join('')
+      : '';
 
-            <!-- Body Grid -->
-            <div class="ach-stack-body">
-              <div class="ach-stack-icon-col">
-                <div class="ach-medallion-badge" style="background-color: var(--${ach.color || 'accent'});">
-                  <i data-lucide="${ach.icon}" style="width: 32px; height: 32px; stroke-width: 2.5;"></i>
-                </div>
-              </div>
-
-              <div class="ach-stack-content-col">
-                <h3 class="ach-stack-title">${ach.title}</h3>
-                <div class="ach-stack-narrative">
-                  <p>${ach.description}</p>
-                </div>
-              </div>
-            </div>
+    return `
+      <article class="ach-card" data-ach-idx="${idx}" style="--card-accent: ${accentColor}; --card-theme-color: var(--${colorVar});">
+        <!-- Top Metadata Row -->
+        <div class="ach-card-top">
+          <div class="ach-card-num-box">
+            <span class="ach-card-num">${numStr}</span>
           </div>
-        `;
-      }).join('')}
-    </div>
-  `;
+          <div class="ach-card-org-pill">
+            <i data-lucide="building-2" style="width: 14px; height: 14px;"></i>
+            <span>${ach.organization}</span>
+          </div>
+          <div class="ach-card-top-right">
+            <span class="ach-card-period">
+              <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
+              <span>${ach.period}</span>
+            </span>
+            <span class="ach-card-badge" style="background-color: var(--${colorVar});">
+              ${ach.badge}
+            </span>
+          </div>
+        </div>
+
+        <!-- Card Hero / Medallion & Metric Banner -->
+        <div class="ach-card-hero">
+          <div class="ach-card-medallion" style="background: linear-gradient(135deg, ${accentColor}24, ${accentColor}08); border-color: ${accentColor}66;">
+            <i data-lucide="${ach.icon || 'award'}" style="width: 28px; height: 28px; color: ${accentColor}; stroke-width: 2.2;"></i>
+          </div>
+          <div class="ach-card-metric-pill" style="border-color: ${accentColor};">
+            <i data-lucide="sparkles" style="width: 14px; height: 14px; color: ${accentColor};"></i>
+            <span>${metricText}</span>
+          </div>
+        </div>
+
+        <!-- Title & Narrative -->
+        <div class="ach-card-content">
+          <h3 class="ach-card-title">${ach.title}</h3>
+          <p class="ach-card-desc">${ach.description}</p>
+        </div>
+
+        <!-- Tag Chips -->
+        <div class="ach-card-tags">
+          ${tagsHtml}
+        </div>
+      </article>
+    `;
+  }).join('');
 
   initLucideIcons();
-  initStackCardScrollAnimation();
-  initStackCardReveals();
+  initAchievementsHorizontalScroll();
+}
+
+/* --- Achievements Horizontal Scroll Engine (Elevated Beyond awrs.me) --- */
+let achHorizontalInit = false;
+
+function initAchievementsHorizontalScroll() {
+  const section = document.getElementById('achievements');
+  const trackWrapper = document.getElementById('achTrackWrapper');
+  const track = document.getElementById('achHorizontalTrack');
+  if (!section || !trackWrapper || !track) return;
+
+  const cards = track.querySelectorAll('.ach-card');
+  const total = cards.length;
+  if (!total) return;
+
+  const progressFill = document.getElementById('achProgressFill');
+  const progressTrack = document.getElementById('achProgressTrack');
+  const activeNumEl = document.getElementById('achActiveNum');
+  const prevBtn = document.getElementById('achPrevBtn');
+  const nextBtn = document.getElementById('achNextBtn');
+  const dotsContainer = document.getElementById('achDotsContainer');
+
+  let currentFocalIdx = 0;
+  let maxScrollDistance = 0;
+
+  if (prevBtn) prevBtn.disabled = true;
+  if (nextBtn) nextBtn.disabled = (total <= 1);
+
+  // Render clickable pagination dots
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = `ach-dot-btn ${i === 0 ? 'is-active' : ''}`;
+      dot.setAttribute('aria-label', `Go to achievement ${i + 1}`);
+      dot.title = `${portfolioData.achievements[i]?.title || `Achievement ${i + 1}`}`;
+      dot.dataset.idx = i;
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        scrollToCard(i);
+      });
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  // Calculate section vertical scroll runway based on actual card positions
+  function calculateDimensions() {
+    const prevTransform = track.style.transform;
+    track.style.transform = 'translate3d(0, 0, 0)';
+
+    const wrapperWidth = trackWrapper.clientWidth;
+    const lastCard = cards[total - 1];
+    if (lastCard) {
+      const lastCardCenter = lastCard.offsetLeft + lastCard.offsetWidth / 2;
+      maxScrollDistance = Math.max(0, Math.round(lastCardCenter - wrapperWidth / 2));
+    } else {
+      maxScrollDistance = Math.max(0, track.scrollWidth - wrapperWidth);
+    }
+
+    // Dynamic runway: natural 1:1 scroll feel with comfortable pacing
+    const totalSectionHeight = Math.max(window.innerHeight * 2.6, window.innerHeight + maxScrollDistance * 1.05);
+    section.style.height = `${Math.round(totalSectionHeight)}px`;
+
+    track.style.transform = prevTransform;
+    updateHorizontalScroll();
+  }
+
+  // Smooth jump to specific card
+  function scrollToCard(targetIdx) {
+    if (targetIdx < 0 || targetIdx >= total) return;
+    const targetCard = cards[targetIdx];
+    if (!targetCard) return;
+
+    const wrapperWidth = trackWrapper.clientWidth;
+    const cardWidth = targetCard.offsetWidth;
+    const cardLeft = targetCard.offsetLeft;
+
+    let desiredTranslateX = cardLeft - (wrapperWidth / 2 - cardWidth / 2);
+    desiredTranslateX = Math.max(0, Math.min(maxScrollDistance, desiredTranslateX));
+
+    const progress = maxScrollDistance > 0 ? (desiredTranslateX / maxScrollDistance) : 0;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    const scrollRunway = (parseFloat(section.style.height) || section.offsetHeight) - window.innerHeight;
+    const targetDocY = sectionTop + (progress * scrollRunway);
+
+    if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+      window.lenis.scrollTo(targetDocY, { duration: 0.9, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    } else {
+      window.scrollTo({ top: targetDocY, behavior: 'smooth' });
+    }
+  }
+
+  // Update on scroll frame
+  function updateHorizontalScroll() {
+    const rect = section.getBoundingClientRect();
+    const winH = window.innerHeight;
+    const sectionH = parseFloat(section.style.height) || rect.height;
+    const scrollRunway = sectionH - winH;
+
+    if (scrollRunway <= 0) return;
+
+    const scrolledIntoSection = -rect.top;
+    const rawProgress = scrolledIntoSection / scrollRunway;
+    const progress = Math.max(0, Math.min(1, rawProgress));
+
+    const currentX = progress * maxScrollDistance;
+    track.style.transform = `translate3d(-${currentX.toFixed(2)}px, 0, 0)`;
+
+    // Update Progress bar
+    if (progressFill) {
+      progressFill.style.width = `${(progress * 100).toFixed(2)}%`;
+    }
+    if (progressTrack) {
+      progressTrack.setAttribute('aria-valuenow', Math.round(progress * 100));
+    }
+
+    // Determine focal card closest to viewport center
+    const viewportCenterX = window.innerWidth / 2;
+    let closestIdx = 0;
+    let minDistance = Infinity;
+
+    cards.forEach((card, idx) => {
+      const cardRect = card.getBoundingClientRect();
+      const cardCenterX = cardRect.left + cardRect.width / 2;
+      const distance = Math.abs(viewportCenterX - cardCenterX);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIdx = idx;
+      }
+    });
+
+    if (closestIdx !== currentFocalIdx) {
+      currentFocalIdx = closestIdx;
+
+      if (activeNumEl) {
+        activeNumEl.textContent = String(currentFocalIdx + 1).padStart(2, '0');
+      }
+
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.ach-dot-btn');
+        dots.forEach((dot, dIdx) => {
+          dot.classList.toggle('is-active', dIdx === currentFocalIdx);
+        });
+      }
+
+      if (prevBtn) prevBtn.disabled = (currentFocalIdx === 0);
+      if (nextBtn) nextBtn.disabled = (currentFocalIdx === total - 1);
+    }
+
+    cards.forEach((card, idx) => {
+      card.classList.toggle('is-focal', idx === currentFocalIdx);
+    });
+  }
+
+  // Hook scroll listeners with RAF
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateHorizontalScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => {
+    calculateDimensions();
+    onScroll();
+  }, { passive: true });
+
+  // Hook Lenis smooth scroll
+  if (window.lenis && typeof window.lenis.on === 'function') {
+    window.lenis.on('scroll', onScroll);
+  } else {
+    const checkLenis = setInterval(() => {
+      if (window.lenis && typeof window.lenis.on === 'function') {
+        window.lenis.on('scroll', onScroll);
+        clearInterval(checkLenis);
+      }
+    }, 200);
+    setTimeout(() => clearInterval(checkLenis), 3000);
+  }
+
+  // Prev / Next button click handlers
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (currentFocalIdx > 0) {
+        scrollToCard(currentFocalIdx - 1);
+      }
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (currentFocalIdx < total - 1) {
+        scrollToCard(currentFocalIdx + 1);
+      }
+    });
+  }
+
+  // Keyboard navigation when section is in view
+  window.addEventListener('keydown', (e) => {
+    const rect = section.getBoundingClientRect();
+    const inView = rect.top <= 120 && rect.bottom >= window.innerHeight - 120;
+    if (!inView) return;
+
+    if (e.key === 'ArrowRight' && currentFocalIdx < total - 1) {
+      e.preventDefault();
+      scrollToCard(currentFocalIdx + 1);
+    } else if (e.key === 'ArrowLeft' && currentFocalIdx > 0) {
+      e.preventDefault();
+      scrollToCard(currentFocalIdx - 1);
+    }
+  });
+
+  // Pointer / Drag support
+  let isPointerDown = false;
+  let dragStartX = 0;
+  let dragStartScrollY = 0;
+
+  trackWrapper.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button, a')) return;
+    isPointerDown = true;
+    dragStartX = e.clientX;
+    dragStartScrollY = window.scrollY;
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+    const deltaX = e.clientX - dragStartX;
+    if (Math.abs(deltaX) > 6) {
+      const scrollRatio = 1.35;
+      window.scrollTo({ top: dragStartScrollY - (deltaX * scrollRatio), behavior: 'auto' });
+    }
+  });
+
+  window.addEventListener('pointerup', () => { isPointerDown = false; });
+  window.addEventListener('pointercancel', () => { isPointerDown = false; });
+
+  // ResizeObserver for dynamic layout settling (e.g. after video intro reveal or font loading)
+  if (window.ResizeObserver) {
+    const achRo = new ResizeObserver(() => {
+      calculateDimensions();
+    });
+    achRo.observe(trackWrapper);
+    achRo.observe(track);
+  }
+
+  // Initial calculations with timeouts for layout settling
+  calculateDimensions();
+  setTimeout(calculateDimensions, 200);
+  setTimeout(calculateDimensions, 800);
 }
 
 /* --- Scroll-Linked Card Stacking & Field Reveal Engine --- */
@@ -1619,7 +1931,7 @@ function runPlanetNamekTransformation() {
     document.querySelector('#skillsGrid'),
     document.querySelector('#experienceTimeline'),
     document.querySelector('#projectsGrid'),
-    document.querySelector('#achievementsGrid'),
+    document.querySelector('#achHorizontalTrack, #achievementsGrid'),
     document.querySelector('.edu-cert-grid'),
     document.querySelector('.contact-wrapper')
   ].filter(el => el !== null);
@@ -2591,6 +2903,144 @@ function launchRandomNimbusFlight() {
   }
 }
 
+/* ==========================================================================
+   Interactive Draggable Marquee Ticker Stream (Momentum + Seamless Loop)
+   ========================================================================== */
+function initDraggableTicker() {
+  const container = document.querySelector('.ticker-container');
+  const track = document.querySelector('.ticker-track');
+  if (!container || !track) return;
+
+  container.classList.add('is-draggable');
+  track.style.animation = 'none';
+
+  let currentX = 0;
+  const autoSpeed = -1.15;
+  let velocityX = 0;
+  let isDragging = false;
+  let hasDragged = false;
+  let startX = 0;
+  let lastX = 0;
+  let lastTime = 0;
+  let isHovered = false;
+
+  let totalWidth = track.scrollWidth;
+  let loopWidth = totalWidth / 2;
+
+  function measureLoop() {
+    totalWidth = track.scrollWidth;
+    loopWidth = totalWidth / 2;
+  }
+  window.addEventListener('resize', measureLoop);
+  setTimeout(measureLoop, 300);
+
+  function tick() {
+    if (!isDragging) {
+      if (Math.abs(velocityX) > 0.08) {
+        currentX += velocityX;
+        velocityX *= 0.94; // natural fluid friction
+      } else {
+        velocityX = 0;
+        if (!track.classList.contains('ticker-paused')) {
+          currentX += isHovered ? (autoSpeed * 0.4) : autoSpeed;
+        }
+      }
+    }
+
+    if (loopWidth > 50) {
+      while (currentX <= -loopWidth) currentX += loopWidth;
+      while (currentX > 0) currentX -= loopWidth;
+    }
+
+    track.style.transform = `translate3d(${currentX.toFixed(2)}px, 0, 0)`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // Pointer event listeners (Mouse, Touch, Pen)
+  container.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+    isDragging = true;
+    hasDragged = false;
+    startX = e.clientX;
+    lastX = e.clientX;
+    lastTime = performance.now();
+    velocityX = 0;
+
+    container.classList.add('is-dragging');
+    try {
+      container.setPointerCapture(e.pointerId);
+    } catch (err) {}
+  });
+
+  container.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+
+    const dx = e.clientX - lastX;
+    if (Math.abs(e.clientX - startX) > 4) {
+      hasDragged = true;
+    }
+
+    currentX += dx;
+
+    if (loopWidth > 50) {
+      while (currentX <= -loopWidth) currentX += loopWidth;
+      while (currentX > 0) currentX -= loopWidth;
+    }
+
+    track.style.transform = `translate3d(${currentX.toFixed(2)}px, 0, 0)`;
+
+    const now = performance.now();
+    const dt = Math.max(1, now - lastTime);
+    const instantV = dx / (dt / 16.67);
+    velocityX = velocityX * 0.35 + instantV * 0.65;
+
+    lastX = e.clientX;
+    lastTime = now;
+  });
+
+  function endDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    container.classList.remove('is-dragging');
+    try {
+      if (e && container.hasPointerCapture(e.pointerId)) {
+        container.releasePointerCapture(e.pointerId);
+      }
+    } catch (err) {}
+
+    velocityX = Math.max(-28, Math.min(28, velocityX));
+  }
+
+  container.addEventListener('pointerup', endDrag);
+  container.addEventListener('pointercancel', endDrag);
+
+  // Prevent accidental click triggering on dragon balls or items during drag
+  container.addEventListener('click', (e) => {
+    if (hasDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  // Horizontal wheel / trackpad scroll support
+  container.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      currentX -= e.deltaX * 0.85;
+      velocityX = -e.deltaX * 0.25;
+    }
+  }, { passive: false });
+
+  // Hover states
+  container.addEventListener('mouseenter', () => { isHovered = true; });
+  container.addEventListener('mouseleave', () => {
+    isHovered = false;
+    if (isDragging) endDrag();
+  });
+}
+
 function initNimbusDrag() {
   const nimbus = document.getElementById('flyingNimbus');
   if (!nimbus) return;
@@ -3486,6 +3936,10 @@ function finishIntroTransition() {
     document.documentElement.classList.remove('page-intro-running');
     document.body.classList.remove('page-intro-running');
     document.body.classList.add('page-intro-revealed');
+
+    // Trigger layout refresh across all dynamic scroll runways
+    window.dispatchEvent(new Event('resize'));
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 150);
 
     // Step 3: Fully hide intro overlay after 550ms (fast, punchy handoff)
     setTimeout(() => {
