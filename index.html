@@ -51,7 +51,7 @@
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="css/tokens.css?v=20260907_sharpBackground_v2">
-  <link rel="stylesheet" href="css/styles.css?v=20260930_achHorizontal_v6">
+  <link rel="stylesheet" href="css/styles.css?v=20261001_spiritBomb_seamless_v3">
 
   <!-- Deferred External Libraries (Non-blocking First Contentful Paint) -->
   <script defer src="https://unpkg.com/lucide@latest"></script>
@@ -351,25 +351,107 @@
     </section>
 
     <!-- =========================================================================
-         Skills Matrix Section
+         Skills Matrix Section — Goku's 3D Spirit Bomb (Genki Dama) Tech Sphere
          ========================================================================= -->
-    <section class="section" id="skills">
-      <div class="container">
+    <section class="section spirit-bomb-section" id="skills">
+      <div class="container spirit-bomb-container">
         <div class="section-header" style="position: relative;">
           <!-- Collectible 1-Star Dragon Ball -->
           <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="1" title="Collect the 1-Star Dragon Ball!">★</span>
           <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="glitch" title="Cyber Matrix Glitch Ball?! Click to hack!"></span>
           <div class="section-tag" style="background-color: var(--secondary);">
-            <i data-lucide="cpu" style="width: 14px; height: 14px;"></i>
-            <span>Technical Skills</span>
+            <i data-lucide="zap" style="width: 14px; height: 14px;"></i>
+            <span>Universal Ki • Technical Arsenal</span>
           </div>
           <h2 class="section-title">My Tech Stack & Tools</h2>
-          <p class="section-subtitle">A curated matrix of languages, backend frameworks, machine learning toolkits, and
-            infrastructure skills.</p>
+          <p class="section-subtitle">Gathering universal engineering energy into the Spirit Bomb • Drag the sphere in 3D, hover for Ki stats, or click any stack to analyze its power level.</p>
         </div>
 
-        <div class="skills-grid" id="skillsGrid">
-          <!-- Dynamic render from data.js -->
+        <!-- Category Energy Filter HUD -->
+        <div class="spirit-filter-hud" id="spiritFilterHud" role="tablist" aria-label="Tech Stack Categories">
+          <button type="button" class="spirit-filter-btn is-active" data-cat="all" role="tab" aria-selected="true">
+            <span class="spirit-filter-dot" style="background: #38bdf8;"></span>
+            <span>All Energy (<span id="spiritTotalCount">26</span>)</span>
+          </button>
+          <button type="button" class="spirit-filter-btn" data-cat="languages" role="tab" aria-selected="false">
+            <span class="spirit-filter-dot" style="background: #facc15;"></span>
+            <span>Languages</span>
+          </button>
+          <button type="button" class="spirit-filter-btn" data-cat="backend" role="tab" aria-selected="false">
+            <span class="spirit-filter-dot" style="background: #818cf8;"></span>
+            <span>Backend & Systems</span>
+          </button>
+          <button type="button" class="spirit-filter-btn" data-cat="ai-ml" role="tab" aria-selected="false">
+            <span class="spirit-filter-dot" style="background: #10b981;"></span>
+            <span>AI, ML & Vision</span>
+          </button>
+          <button type="button" class="spirit-filter-btn" data-cat="frontend" role="tab" aria-selected="false">
+            <span class="spirit-filter-dot" style="background: #f97316;"></span>
+            <span>Frontend & UI/UX</span>
+          </button>
+          <button type="button" class="spirit-filter-btn" data-cat="database" role="tab" aria-selected="false">
+            <span class="spirit-filter-dot" style="background: #06b6d4;"></span>
+            <span>Databases</span>
+          </button>
+          <button type="button" class="spirit-filter-btn" data-cat="devops" role="tab" aria-selected="false">
+            <span class="spirit-filter-dot" style="background: #ec4899;"></span>
+            <span>DevOps & Cloud</span>
+          </button>
+        </div>
+
+        <!-- Main Spirit Bomb Stage Area (Centered Webpage Layout) -->
+        <div class="spirit-bomb-stage spirit-bomb-centered" id="spiritBombStage">
+          <!-- Centered 3D Arena: Goku Holding the Celestial Spirit Bomb Sphere -->
+          <div class="spirit-arena" id="spiritArena">
+            <!-- Plasma Energy Backdrop Glow -->
+            <div class="spirit-plasma-aura" aria-hidden="true"></div>
+
+            <!-- Canvas for Spirit Bomb Energy Plasma, Flares & Lightning Sparks -->
+            <canvas class="spirit-core-canvas" id="spiritCoreCanvas" width="600" height="600" aria-hidden="true"></canvas>
+
+            <!-- 3D Tech Nodes Interactive Layer -->
+            <div class="spirit-nodes-layer" id="spiritNodesLayer" aria-label="Interactive 3D Spirit Bomb Tech Sphere">
+              <!-- Dynamically populated with 3D Tech Nodes + Labels below icons -->
+            </div>
+
+            <!-- Floating Hover Tooltip HUD (tracks hovered node directly) -->
+            <div class="spirit-hover-tooltip" id="spiritHoverTooltip" aria-hidden="true" style="opacity: 0;">
+              <div class="spirit-tooltip-header">
+                <span class="spirit-tooltip-cat" id="spiritTooltipCat">AI / ML</span>
+                <span class="spirit-tooltip-level" id="spiritTooltipLevel">Expert</span>
+              </div>
+              <div class="spirit-tooltip-title" id="spiritTooltipTitle">Python</div>
+              <div class="spirit-tooltip-desc" id="spiritTooltipDesc">Click to inspect tech specs</div>
+            </div>
+
+            <!-- Goku Holding the Spirit Bomb Aloft -->
+            <div class="spirit-goku-wrapper" id="spiritGokuWrapper">
+              <div class="spirit-goku-glow" aria-hidden="true"></div>
+              <img src="assets/spirit_bomb.png" alt="Goku channeling and holding the Spirit Bomb" class="spirit-goku-img" id="spiritGokuImg" loading="lazy" />
+              <div class="spirit-ground-energy" aria-hidden="true"></div>
+            </div>
+
+            <!-- Stage Interaction Controls Overlay -->
+            <div class="spirit-stage-controls">
+              <button type="button" class="spirit-ctrl-btn" id="spiritRotateToggle" title="Toggle Auto-Rotation" aria-label="Toggle Auto-Rotation">
+                <i data-lucide="pause" id="spiritRotateIcon" style="width: 14px; height: 14px;"></i>
+                <span id="spiritRotateText">Orbiting</span>
+              </button>
+              <button type="button" class="spirit-ctrl-btn" id="spiritResetView" title="Reset Sphere Angle" aria-label="Reset Sphere Angle">
+                <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
+                <span>Reset View</span>
+              </button>
+              <span class="spirit-drag-hint">
+                <i data-lucide="move" style="width: 12px; height: 12px;"></i>
+                <span>Drag to spin in 3D • Click tool</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Compact Tech Scouter HUD Strip (Small, sleek information on click/hover) -->
+          <div class="spirit-compact-hud" id="spiritCompactHud" aria-live="polite">
+            <!-- Dynamically populated when a skill is active or clicked -->
+          </div>
         </div>
       </div>
     </section>
@@ -1141,8 +1223,8 @@
   </div>
 
   <!-- Scripts -->
-  <script defer src="js/data.js?v=20260930_achHorizontal_v6"></script>
-  <script defer src="js/main.js?v=20260930_achHorizontal_v6"></script>
+  <script defer src="js/data.js?v=20261001_spiritBomb_seamless_v3"></script>
+  <script defer src="js/main.js?v=20261001_spiritBomb_seamless_v3"></script>
 </body>
 
 </html>

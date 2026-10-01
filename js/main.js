@@ -206,84 +206,648 @@ function initHeroStats() {
   `).join('');
 }
 
-/* --- Render Skills — Tabbed Category Interface --- */
-function renderSkills() {
-  const container = document.getElementById('skillsGrid');
-  if (!container || !portfolioData.skills) return;
+/* ==========================================================================
+   Goku's 3D Spirit Bomb (Genki Dama) Tech Sphere Engine
+   Interactive 3D Fibonacci Sphere • Canvas Energy Core • Scouter Dossier HUD
+   ========================================================================== */
+function initSpiritBomb() {
+  const arena = document.getElementById('spiritArena');
+  const canvas = document.getElementById('spiritCoreCanvas');
+  const nodesLayer = document.getElementById('spiritNodesLayer');
+  const compactHud = document.getElementById('spiritCompactHud');
+  const tooltip = document.getElementById('spiritHoverTooltip');
+  const filterHud = document.getElementById('spiritFilterHud');
+  const rotateToggleBtn = document.getElementById('spiritRotateToggle');
+  const resetBtn = document.getElementById('spiritResetView');
+  const rotateIcon = document.getElementById('spiritRotateIcon');
+  const rotateText = document.getElementById('spiritRotateText');
+  const totalCountEl = document.getElementById('spiritTotalCount');
 
-  // Map proficiency levels to dot colors
-  const levelColors = {
-    'Expert': '#10B981',
-    'Advanced': '#3B82F6',
-    'Strong': '#3B82F6',
-    'Proficient': '#F59E0B',
-    'Intermediate': '#F59E0B'
+  if (!arena || !canvas || !nodesLayer) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const playKiSound = (freq = 440, type = 'sine', duration = 0.08, vol = 0.08) => {
+    if (typeof playWebAudioTone === 'function') {
+      playWebAudioTone(freq, type, duration, vol);
+    }
+  };
+  const playSynthTone = playKiSound;
+
+  // Retrieve skill nodes from portfolioData
+  const skillsData = (typeof portfolioData !== 'undefined' && portfolioData.spiritBombSkills && portfolioData.spiritBombSkills.length)
+    ? portfolioData.spiritBombSkills
+    : [];
+
+  if (!skillsData.length) return;
+
+  if (totalCountEl) totalCountEl.textContent = skillsData.length;
+
+  const N = skillsData.length;
+  let activeSkillId = skillsData[0].id;
+  let activeFilter = 'all';
+
+  // 3D Sphere geometry
+  const sphereNodes = skillsData.map((skill, i) => {
+    // Fibonacci Golden Spiral distribution on sphere surface
+    const phi = Math.acos(-1 + (2 * i + 1) / N);
+    const theta = Math.sqrt(N * Math.PI) * phi;
+    return {
+      skill,
+      origX: Math.cos(theta) * Math.sin(phi),
+      origY: Math.sin(theta) * Math.sin(phi),
+      origZ: Math.cos(phi),
+      el: null,
+      x: 0,
+      y: 0,
+      z: 0,
+      scale: 1,
+      screenX: 0,
+      screenY: 0
+    };
+  });
+
+  // Render DOM nodes into nodesLayer with icon + small name label below
+  nodesLayer.innerHTML = '';
+  sphereNodes.forEach((nodeItem) => {
+    const el = document.createElement('div');
+    el.className = 'spirit-tech-node';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('aria-label', `${nodeItem.skill.name} - ${nodeItem.skill.level}`);
+    el.style.setProperty('--node-color', nodeItem.skill.brandColor || '#38bdf8');
+    el.innerHTML = `
+      <div class="spirit-node-icon-circle">
+        ${nodeItem.skill.svgIcon || `<span style="font-weight:900;font-size:12px;">${nodeItem.skill.name.slice(0, 2)}</span>`}
+      </div>
+      <span class="spirit-node-label">${nodeItem.skill.name}</span>
+    `;
+
+    // Event listeners for node: small details on hover & click
+    el.addEventListener('mouseenter', () => {
+      showTooltip(nodeItem);
+      renderCompactHud(nodeItem.skill);
+      playSynthTone(580, 'sine', 0.03, 0.04);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      hideTooltip();
+      const currentActive = sphereNodes.find(n => n.skill.id === activeSkillId);
+      if (currentActive) renderCompactHud(currentActive.skill);
+    });
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectSkill(nodeItem.skill.id, true);
+    });
+
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectSkill(nodeItem.skill.id, true);
+      }
+    });
+
+    nodeItem.el = el;
+    nodesLayer.appendChild(el);
+  });
+
+  // Rotation & Motion State
+  let rotX = -0.15;
+  let rotY = 0;
+  let velX = 0;
+  let velY = 0;
+  let autoRotate = true;
+  const baseRotSpeed = 0.0035;
+  let isDragging = false;
+  let lastPointerX = 0;
+  let lastPointerY = 0;
+  let targetRotX = null;
+  let targetRotY = null;
+
+  // Canvas Energy Particles & Lightning Flares
+  const particles = [];
+  const PARTICLE_COUNT = 36;
+  for (let p = 0; p < PARTICLE_COUNT; p++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: canvas.height * 0.6 + Math.random() * (canvas.height * 0.4),
+      speedY: 0.8 + Math.random() * 1.6,
+      speedX: (Math.random() - 0.5) * 0.6,
+      size: 1.2 + Math.random() * 2.5,
+      alpha: 0.2 + Math.random() * 0.6
+    });
+  }
+
+  // Procedural Lightning Sparks
+  let lightningArcs = [];
+  let lightningTimer = 0;
+
+  function generateLightning() {
+    lightningArcs = [];
+    const count = 2 + Math.floor(Math.random() * 3);
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const r = 135;
+    for (let k = 0; k < count; k++) {
+      const startAngle = Math.random() * Math.PI * 2;
+      const arcLength = (Math.random() * 0.8 + 0.3) * (Math.random() > 0.5 ? 1 : -1);
+      const steps = 7;
+      const points = [];
+      for (let s = 0; s <= steps; s++) {
+        const frac = s / steps;
+        const currentAngle = startAngle + arcLength * frac;
+        const jitter = (Math.random() - 0.5) * 22;
+        const px = cx + Math.cos(currentAngle) * (r + jitter);
+        const py = cy + Math.sin(currentAngle) * (r + jitter);
+        points.push({ x: px, y: py });
+      }
+      lightningArcs.push({
+        points,
+        alpha: 0.7 + Math.random() * 0.3,
+        width: 1.2 + Math.random() * 1.5
+      });
+    }
+  }
+
+  // Pointer Interaction for 3D Dragging
+  arena.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.spirit-stage-controls') || e.target.closest('.spirit-filter-hud')) return;
+
+    isDragging = true;
+    lastPointerX = e.clientX;
+    lastPointerY = e.clientY;
+    velX = 0;
+    velY = 0;
+    targetRotX = null;
+    targetRotY = null;
+    arena.classList.add('is-dragging');
+    try {
+      arena.setPointerCapture(e.pointerId);
+    } catch(err) {}
+  });
+
+  arena.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - lastPointerX;
+    const dy = e.clientY - lastPointerY;
+    lastPointerX = e.clientX;
+    lastPointerY = e.clientY;
+
+    const dragFactor = 0.0055;
+    rotY += dx * dragFactor;
+    rotX -= dy * dragFactor;
+
+    // Clamp pitch to avoid gimbal flip
+    rotX = Math.max(-Math.PI * 0.42, Math.min(Math.PI * 0.42, rotX));
+
+    velY = dx * dragFactor * 0.75;
+    velX = -dy * dragFactor * 0.75;
+  });
+
+  const endDrag = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    arena.classList.remove('is-dragging');
+    try {
+      if (arena.hasPointerCapture && arena.hasPointerCapture(e.pointerId)) {
+        arena.releasePointerCapture(e.pointerId);
+      }
+    } catch(err) {}
   };
 
-  // Build tabbed interface
-  container.innerHTML = `
-    <div class="skills-tabs-wrapper">
-      <div class="skills-tab-bar" role="tablist">
-        ${portfolioData.skills.map((cat, i) => `
-          <button type="button" class="skills-tab${i === 0 ? ' is-active' : ''}"
-                  role="tab"
-                  aria-selected="${i === 0}"
-                  data-tab-index="${i}"
-                  style="--tab-color: var(--${cat.color});">
-            <i data-lucide="${cat.icon}" style="width: 16px; height: 16px; stroke-width: 2.5;"></i>
-            <span>${cat.category}</span>
-          </button>
-        `).join('')}
-      </div>
-      <div class="skills-tab-panels">
-        ${portfolioData.skills.map((cat, i) => `
-          <div class="skills-tab-panel${i === 0 ? ' is-active' : ''}"
-               role="tabpanel"
-               data-panel-index="${i}">
-            <div class="skills-panel-header">
-              <div class="skills-panel-icon" style="background-color: var(--${cat.color});">
-                <i data-lucide="${cat.icon}" style="width: 20px; height: 20px; stroke-width: 2.5;"></i>
-              </div>
-              <div class="skills-panel-meta">
-                <h3 class="skills-panel-title">${cat.category}</h3>
-                <span class="skills-panel-count">${cat.items.length} skill${cat.items.length !== 1 ? 's' : ''}</span>
-              </div>
-            </div>
-            <div class="skills-panel-chips">
-              ${cat.items.map(skill => `
-                <span class="skill-chip" title="${skill.level}">
-                  <span class="skill-level-dot" style="background-color: ${levelColors[skill.level] || '#94A3B8'};"></span>
-                  <span class="skill-chip-name">${skill.name}</span>
-                  <span class="skill-chip-level">${skill.level}</span>
-                </span>
-              `).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-      <div class="skills-legend">
-        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #10B981;"></span> Expert</span>
-        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #3B82F6;"></span> Advanced</span>
-        <span class="skills-legend-item"><span class="skill-level-dot" style="background-color: #F59E0B;"></span> Proficient</span>
-      </div>
-    </div>
-  `;
+  arena.addEventListener('pointerup', endDrag);
+  arena.addEventListener('pointercancel', endDrag);
 
-  // Tab switching logic
-  const tabs = container.querySelectorAll('.skills-tab');
-  const panels = container.querySelectorAll('.skills-tab-panel');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const idx = tab.dataset.tabIndex;
-      tabs.forEach(t => { t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
-      panels.forEach(p => p.classList.remove('is-active'));
-      tab.classList.add('is-active');
-      tab.setAttribute('aria-selected', 'true');
-      const panel = container.querySelector(`.skills-tab-panel[data-panel-index="${idx}"]`);
-      if (panel) panel.classList.add('is-active');
+  // Control Buttons
+  if (rotateToggleBtn) {
+    rotateToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      autoRotate = !autoRotate;
+      targetRotX = null;
+      targetRotY = null;
+      if (autoRotate) {
+        if (rotateIcon) rotateIcon.setAttribute('data-lucide', 'pause');
+        if (rotateText) rotateText.textContent = 'Orbiting';
+      } else {
+        if (rotateIcon) rotateIcon.setAttribute('data-lucide', 'play');
+        if (rotateText) rotateText.textContent = 'Paused';
+      }
+      initLucideIcons();
+      playSynthTone(520, 'sine', 0.04, 0.05);
     });
-  });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      targetRotX = -0.15;
+      targetRotY = 0;
+      velX = 0;
+      velY = 0;
+      playSynthTone(440, 'triangle', 0.06, 0.06);
+    });
+  }
+
+  // Category Energy Filter HUD Logic
+  if (filterHud) {
+    const filterButtons = filterHud.querySelectorAll('.spirit-filter-btn');
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-cat') || 'all';
+        activeFilter = cat;
+
+        filterButtons.forEach(b => {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+
+        // Update node dimmed classes
+        sphereNodes.forEach((nodeItem) => {
+          if (activeFilter === 'all' || nodeItem.skill.category === activeFilter) {
+            nodeItem.el.classList.remove('is-dimmed');
+          } else {
+            nodeItem.el.classList.add('is-dimmed');
+          }
+        });
+
+        // If currently active skill is dimmed by filter, select first matching skill
+        const currentActive = sphereNodes.find(n => n.skill.id === activeSkillId);
+        if (currentActive && activeFilter !== 'all' && currentActive.skill.category !== activeFilter) {
+          const firstMatching = sphereNodes.find(n => n.skill.category === activeFilter);
+          if (firstMatching) {
+            selectSkill(firstMatching.skill.id, false);
+          }
+        }
+
+        playSynthTone(660, 'sine', 0.05, 0.05);
+      });
+    });
+  }
+
+  // Tooltip Helper (Directly follows node on 3D sphere)
+  function showTooltip(nodeItem) {
+    if (!tooltip) return;
+    const catEl = document.getElementById('spiritTooltipCat');
+    const levelEl = document.getElementById('spiritTooltipLevel');
+    const titleEl = document.getElementById('spiritTooltipTitle');
+    const descEl = document.getElementById('spiritTooltipDesc');
+
+    if (catEl) catEl.textContent = nodeItem.skill.categoryLabel || nodeItem.skill.category;
+    if (levelEl) levelEl.textContent = `${nodeItem.skill.level} • ${nodeItem.skill.powerLevel || (nodeItem.skill.powerPercent + '%')}`;
+    if (titleEl) titleEl.textContent = nodeItem.skill.name;
+    if (descEl) descEl.textContent = nodeItem.skill.description || 'Click to lock & view specs';
+
+    tooltip.style.left = `${nodeItem.screenX}px`;
+    tooltip.style.top = `${nodeItem.screenY - 42}px`;
+    tooltip.style.opacity = '1';
+    tooltip.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideTooltip() {
+    if (!tooltip) return;
+    tooltip.style.opacity = '0';
+    tooltip.setAttribute('aria-hidden', 'true');
+  }
+
+  // Select Skill & Smoothly Bring to Front
+  function selectSkill(skillId, smoothlyRotate = true) {
+    activeSkillId = skillId;
+    const targetNode = sphereNodes.find(n => n.skill.id === skillId);
+    if (!targetNode) return;
+
+    // Update active class on nodes
+    sphereNodes.forEach(n => {
+      if (n.skill.id === skillId) {
+        n.el.classList.add('is-active');
+      } else {
+        n.el.classList.remove('is-active');
+      }
+    });
+
+    if (smoothlyRotate) {
+      // Calculate target rotation to bring this node directly front-facing (z = 1)
+      const wantedRotY = -Math.atan2(targetNode.origX, targetNode.origZ);
+      let diffY = (wantedRotY - rotY) % (Math.PI * 2);
+      if (diffY > Math.PI) diffY -= Math.PI * 2;
+      if (diffY < -Math.PI) diffY += Math.PI * 2;
+      targetRotY = rotY + diffY;
+
+      const wantedRotX = Math.max(-0.4, Math.min(0.4, Math.asin(targetNode.origY)));
+      targetRotX = wantedRotX;
+
+      velX = 0;
+      velY = 0;
+
+      // Play Saiyan Ki lock-on SFX
+      playSynthTone(440, 'triangle', 0.08, 0.08);
+      setTimeout(() => playSynthTone(880, 'sine', 0.12, 0.07), 40);
+    }
+
+    renderCompactHud(targetNode.skill);
+  }
+
+  // Render Compact Tech Scouter HUD Strip (Small details on click or hover)
+  function renderCompactHud(skill) {
+    if (!compactHud || !skill) return;
+
+    compactHud.style.setProperty('--active-accent', skill.brandColor || '#38bdf8');
+
+    const projectChipHtml = (skill.projects && skill.projects.length)
+      ? `
+        <button type="button" class="hud-project-chip" data-project-ref="${skill.projects[0].id}" title="View in ${skill.projects[0].name}">
+          <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
+          <span>${skill.projects[0].name}</span>
+        </button>
+      `
+      : '';
+
+    compactHud.innerHTML = `
+      <div class="hud-icon-badge" style="border-color: ${skill.brandColor || '#38bdf8'}; box-shadow: 0 0 16px ${skill.brandColor || 'rgba(56, 189, 248, 0.4)'};">
+        ${skill.svgIcon || ''}
+      </div>
+      <div class="hud-content">
+        <div class="hud-meta-row">
+          <h4 class="hud-title">${skill.name}</h4>
+          <span class="hud-cat-tag" style="color: ${skill.brandColor || '#38bdf8'}; border-color: ${skill.brandColor || '#38bdf8'};">${skill.categoryLabel || skill.category}</span>
+        </div>
+        <p class="hud-desc">${skill.description}</p>
+      </div>
+      <div class="hud-extra">
+        <div class="hud-power-chip" title="Proficiency Level">
+          <i data-lucide="zap" style="width: 12px; height: 12px; color: ${skill.brandColor || '#38bdf8'};"></i>
+          <span class="hud-power-val" style="color: ${skill.brandColor || '#38bdf8'};">${skill.powerLevel || (skill.powerPercent + '%')}</span>
+        </div>
+        ${projectChipHtml}
+      </div>
+    `;
+
+    // Hook up project navigation clicks
+    compactHud.querySelectorAll('[data-project-ref]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const projId = btn.getAttribute('data-project-ref');
+        navigateToProject(projId);
+      });
+    });
+
+    initLucideIcons();
+  }
+
+  // Smooth Navigation to Featured Projects
+  function navigateToProject(projId) {
+    const projectsSection = document.getElementById('projects');
+    if (!projectsSection) return;
+
+    // Reset filter to 'all' so target project is visible
+    const allFilterBtn = document.querySelector('.filter-btn[data-filter="all"]');
+    if (allFilterBtn && !allFilterBtn.classList.contains('active')) {
+      allFilterBtn.click();
+    }
+
+    projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    setTimeout(() => {
+      // Find matching card or open modal if available
+      const card = document.querySelector(`[data-project-id="${projId}"]`) ||
+                   document.querySelector(`[data-project-id*="${projId.slice(0, 5)}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.transition = 'box-shadow 0.4s ease, transform 0.4s ease';
+        card.style.boxShadow = '0 0 40px #38bdf8, 0 0 80px rgba(56, 189, 248, 0.6)';
+        card.style.transform = 'scale(1.03)';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+          card.style.transform = '';
+        }, 1800);
+      } else if (typeof window.openProjectModal === 'function') {
+        window.openProjectModal(projId);
+      }
+    }, 550);
+  }
+
+  // Expose global selector
+  window.selectSpiritSkill = (skillId) => selectSkill(skillId, true);
+
+  // Initial compact HUD render
+  renderCompactHud(skillsData[0]);
+
+  // Main RAF Animation Loop
+  let lastTime = performance.now();
+
+  function animate(now) {
+    lastTime = now;
+
+    // Auto-rotation / Target lerping / Momentum
+    if (targetRotX !== null && targetRotY !== null) {
+      rotX += (targetRotX - rotX) * 0.085;
+      rotY += (targetRotY - rotY) * 0.085;
+      if (Math.abs(targetRotX - rotX) < 0.001 && Math.abs(targetRotY - rotY) < 0.001) {
+        rotX = targetRotX;
+        rotY = targetRotY;
+        targetRotX = null;
+        targetRotY = null;
+      }
+    } else if (isDragging) {
+      // While dragging, rotation updated directly by pointermove
+    } else {
+      // Momentum velocity damping
+      rotX += velX;
+      rotY += velY;
+      velX *= 0.92;
+      velY *= 0.92;
+      if (Math.abs(velX) < 0.0001) velX = 0;
+      if (Math.abs(velY) < 0.0001) velY = 0;
+
+      // Base auto rotation when not dragging
+      if (autoRotate) {
+        rotY += baseRotSpeed;
+      }
+    }
+
+    // Geometry Calculation
+    const arenaWidth = arena.clientWidth || 580;
+    const centerX = arenaWidth / 2;
+    const centerY = 200; // sphere center aligns above Goku's palms (top: 230px)
+
+    // Responsive radius: adapt smoothly to container width
+    const R = Math.max(125, Math.min(185, arenaWidth * 0.34));
+
+    const cosX = Math.cos(rotX);
+    const sinX = Math.sin(rotX);
+    const cosY = Math.cos(rotY);
+    const sinY = Math.sin(rotY);
+
+    // Update 3D position of each node
+    for (let i = 0; i < N; i++) {
+      const item = sphereNodes[i];
+
+      // Rotate around Y
+      const x1 = item.origX * cosY + item.origZ * sinY;
+      const z1 = -item.origX * sinY + item.origZ * cosY;
+
+      // Rotate around X
+      const y2 = item.origY * cosX - z1 * sinX;
+      const z2 = item.origY * sinX + z1 * cosX;
+
+      const perspective = 650;
+      const scale = perspective / (perspective - z2 * R);
+      const screenX = centerX + x1 * R * scale;
+      const screenY = centerY + y2 * R * scale;
+
+      item.x = x1;
+      item.y = y2;
+      item.z = z2;
+      item.scale = scale;
+      item.screenX = screenX;
+      item.screenY = screenY;
+
+      const el = item.el;
+      if (el) {
+        // Translation with hardware acceleration (centered on 48px circle with label beneath)
+        el.style.transform = `translate3d(${screenX - 34}px, ${screenY - 24}px, 0) scale(${scale * 0.96})`;
+        el.style.zIndex = Math.round((z2 + 1.2) * 100);
+
+        // Backface depth shading (front nodes naturally receive clicks via higher zIndex)
+        if (z2 < -0.35) {
+          const backAlpha = Math.max(0.28, 0.58 + z2 * 0.4);
+          el.style.opacity = backAlpha;
+          el.style.filter = `blur(${Math.min(2, Math.abs(z2) * 1.5)}px)`;
+        } else {
+          el.style.opacity = '1';
+          el.style.filter = 'none';
+        }
+        el.style.pointerEvents = 'auto';
+      }
+    }
+
+    // Canvas Spirit Bomb Core Render
+    renderCanvasCore(now, R);
+
+    requestAnimationFrame(animate);
+  }
+
+  // Canvas Spirit Bomb Core Rendering
+  function renderCanvasCore(now, R) {
+    const width = canvas.width;
+    const height = canvas.height;
+    ctx.clearRect(0, 0, width, height);
+
+    const isRose = document.body.classList.contains('rose-mode');
+    const cx = width / 2;
+    const cy = height / 2;
+    const coreR = Math.max(110, R * 0.72);
+
+    // Color definitions
+    const primaryGlow = isRose ? 'rgba(255, 46, 151, ' : 'rgba(56, 189, 248, ';
+    const secondaryGlow = isRose ? 'rgba(219, 39, 119, ' : 'rgba(14, 165, 233, ';
+    const innerHot = '#ffffff';
+
+    // 1. Radiant Outer Corona
+    const coronaGrad = ctx.createRadialGradient(cx, cy, coreR * 0.2, cx, cy, coreR * 1.55);
+    coronaGrad.addColorStop(0, primaryGlow + '0.45)');
+    coronaGrad.addColorStop(0.5, secondaryGlow + '0.22)');
+    coronaGrad.addColorStop(0.85, primaryGlow + '0.06)');
+    coronaGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = coronaGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, coreR * 1.55, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Swirling Energy Plasma Vortex Rings
+    const ringCount = 3;
+    for (let r = 0; r < ringCount; r++) {
+      const angleOffset = (now * 0.0012 * (r % 2 === 0 ? 1 : -1)) + (r * Math.PI / 1.5);
+      const ringScaleX = 1 + Math.sin(now * 0.002 + r) * 0.08;
+      const ringScaleY = 0.85 + Math.cos(now * 0.002 + r) * 0.08;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angleOffset);
+      ctx.scale(ringScaleX, ringScaleY);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, coreR * (0.88 + r * 0.1), 0, Math.PI * 2);
+      ctx.strokeStyle = primaryGlow + (0.28 - r * 0.06) + ')';
+      ctx.lineWidth = 4 + r * 2;
+      ctx.shadowColor = isRose ? '#ff2e97' : '#38bdf8';
+      ctx.shadowBlur = 18;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 3. Dense Spherical Energy Core
+    const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+    coreGrad.addColorStop(0, innerHot);
+    coreGrad.addColorStop(0.25, primaryGlow + '0.95)');
+    coreGrad.addColorStop(0.65, secondaryGlow + '0.8)');
+    coreGrad.addColorStop(0.92, primaryGlow + '0.4)');
+    coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+
+    ctx.fillStyle = coreGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4. Procedural Surface Lightning Bolts (Genki Dama electricity)
+    lightningTimer++;
+    if (lightningTimer % 7 === 0) {
+      generateLightning();
+    }
+
+    ctx.save();
+    lightningArcs.forEach(arc => {
+      ctx.strokeStyle = '#ffffff';
+      ctx.shadowColor = isRose ? '#ff2e97' : '#38bdf8';
+      ctx.shadowBlur = 14;
+      ctx.lineWidth = arc.width;
+      ctx.globalAlpha = arc.alpha;
+
+      ctx.beginPath();
+      arc.points.forEach((pt, idx) => {
+        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      });
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    // 5. Rising Life Energy Motes (Nature channeling into Spirit Bomb)
+    ctx.save();
+    particles.forEach(p => {
+      p.y -= p.speedY;
+      p.x += p.speedX;
+
+      // Draw particle
+      ctx.fillStyle = innerHot;
+      ctx.shadowColor = isRose ? '#ff2e97' : '#38bdf8';
+      ctx.shadowBlur = 8;
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Reset when particle enters core or goes off top
+      const distFromCenter = Math.hypot(p.x - cx, p.y - cy);
+      if (p.y < cy || distFromCenter < coreR * 0.4) {
+        p.x = cx + (Math.random() - 0.5) * (coreR * 2.2);
+        p.y = height * 0.85 + Math.random() * (height * 0.15);
+        p.alpha = 0.2 + Math.random() * 0.6;
+      }
+    });
+    ctx.restore();
+  }
+
+  // Start RAF loop
+  requestAnimationFrame(animate);
+}
+
+/* --- Render Skills — Goku's 3D Spirit Bomb Wrapper --- */
+function renderSkills() {
+  initSpiritBomb();
 }
 
 
