@@ -248,16 +248,21 @@ function initSpiritBomb() {
   let activeSkillId = skillsData[0].id;
   let activeFilter = 'all';
 
-  // 3D Sphere geometry
+  // 3D Sphere geometry with uniform spherical Fibonacci distribution
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Golden Angle (~2.3999632 rad)
   const sphereNodes = skillsData.map((skill, i) => {
-    // Fibonacci Golden Spiral distribution on sphere surface
-    const phi = Math.acos(-1 + (2 * i + 1) / N);
-    const theta = Math.sqrt(N * Math.PI) * phi;
+    // Distribute uniformly across spherical surface with vertical Y pole
+    const y = 1 - 2 * (i + 0.5) / N; // vertical pole +1 (top) to -1 (bottom)
+    const rAtY = Math.sqrt(Math.max(0, 1 - y * y));
+    const theta = i * goldenAngle;
+    const x = Math.cos(theta) * rAtY;
+    const z = Math.sin(theta) * rAtY;
+
     return {
       skill,
-      origX: Math.cos(theta) * Math.sin(phi),
-      origY: Math.sin(theta) * Math.sin(phi),
-      origZ: Math.cos(phi),
+      origX: x,
+      origY: y,
+      origZ: z,
       el: null,
       x: 0,
       y: 0,
@@ -277,11 +282,24 @@ function initSpiritBomb() {
     el.setAttribute('tabindex', '0');
     el.setAttribute('aria-label', `${nodeItem.skill.name} - ${nodeItem.skill.level}`);
     el.style.setProperty('--node-color', nodeItem.skill.brandColor || '#38bdf8');
+
+    const shortLabelMap = {
+      'CNN Deep Learning': 'CNNs',
+      'RESTful APIs & Microservices': 'REST APIs',
+      'Active Directory & LDAP': 'LDAP / AD',
+      'Linux & Bash Scripting': 'Linux',
+      'Oracle Database': 'Oracle DB',
+      'Git & GitHub': 'Git',
+      'Scikit-Learn': 'Scikit',
+      'Tailwind CSS': 'Tailwind'
+    };
+    const displayLabel = nodeItem.skill.shortName || shortLabelMap[nodeItem.skill.name] || nodeItem.skill.name;
+
     el.innerHTML = `
       <div class="spirit-node-icon-circle">
         ${nodeItem.skill.svgIcon || `<span style="font-weight:900;font-size:12px;">${nodeItem.skill.name.slice(0, 2)}</span>`}
       </div>
-      <span class="spirit-node-label">${nodeItem.skill.name}</span>
+      <span class="spirit-node-label">${displayLabel}</span>
     `;
 
     // Event listeners for node: small details on hover & click
@@ -343,13 +361,14 @@ function initSpiritBomb() {
   // Procedural Lightning Sparks
   let lightningArcs = [];
   let lightningTimer = 0;
+  let currentCoreR = 135;
 
   function generateLightning() {
     lightningArcs = [];
     const count = 2 + Math.floor(Math.random() * 3);
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
-    const r = 135;
+    const r = currentCoreR;
     for (let k = 0; k < count; k++) {
       const startAngle = Math.random() * Math.PI * 2;
       const arcLength = (Math.random() * 0.8 + 0.3) * (Math.random() > 0.5 ? 1 : -1);
@@ -502,7 +521,7 @@ function initSpiritBomb() {
     if (descEl) descEl.textContent = nodeItem.skill.description || 'Click to lock & view specs';
 
     tooltip.style.left = `${nodeItem.screenX}px`;
-    tooltip.style.top = `${nodeItem.screenY - 42}px`;
+    tooltip.style.top = `${nodeItem.screenY - 32}px`;
     tooltip.style.opacity = '1';
     tooltip.setAttribute('aria-hidden', 'false');
   }
@@ -536,7 +555,7 @@ function initSpiritBomb() {
       if (diffY < -Math.PI) diffY += Math.PI * 2;
       targetRotY = rotY + diffY;
 
-      const wantedRotX = Math.max(-0.4, Math.min(0.4, Math.asin(targetNode.origY)));
+      const wantedRotX = Math.max(-0.35, Math.min(0.35, Math.asin(Math.max(-0.85, Math.min(0.85, targetNode.origY)))));
       targetRotX = wantedRotX;
 
       velX = 0;
@@ -670,11 +689,14 @@ function initSpiritBomb() {
 
     // Geometry Calculation
     const arenaWidth = arena.clientWidth || 580;
+    const isMobile = arenaWidth < 640;
     const centerX = arenaWidth / 2;
-    const centerY = 200; // sphere center aligns above Goku's palms (top: 230px)
+    const centerY = isMobile ? 165 : 205; // Center of Spirit Bomb sphere
 
     // Responsive radius: adapt smoothly to container width
-    const R = Math.max(125, Math.min(185, arenaWidth * 0.34));
+    const R = isMobile
+      ? Math.max(120, Math.min(145, arenaWidth * 0.35))
+      : Math.max(160, Math.min(190, arenaWidth * 0.28));
 
     const cosX = Math.cos(rotX);
     const sinX = Math.sin(rotX);
@@ -685,20 +707,22 @@ function initSpiritBomb() {
     for (let i = 0; i < N; i++) {
       const item = sphereNodes[i];
 
-      // Rotate around Y
+      // Rotate around vertical Y axis
       const x1 = item.origX * cosY + item.origZ * sinY;
       const z1 = -item.origX * sinY + item.origZ * cosY;
+      const y1 = item.origY;
 
-      // Rotate around X
-      const y2 = item.origY * cosX - z1 * sinX;
-      const z2 = item.origY * sinX + z1 * cosX;
+      // Rotate around horizontal X axis (subtle pitch)
+      const y2 = y1 * cosX - z1 * sinX;
+      const z2 = y1 * sinX + z1 * cosX;
+      const x2 = x1;
 
-      const perspective = 650;
+      const perspective = 580;
       const scale = perspective / (perspective - z2 * R);
-      const screenX = centerX + x1 * R * scale;
-      const screenY = centerY + y2 * R * scale;
+      const screenX = centerX + x2 * R * scale;
+      const screenY = centerY - y2 * R * scale; // Note: minus because +y is up in 3D
 
-      item.x = x1;
+      item.x = x2;
       item.y = y2;
       item.z = z2;
       item.scale = scale;
@@ -711,14 +735,20 @@ function initSpiritBomb() {
         el.style.transform = `translate3d(${screenX - 34}px, ${screenY - 24}px, 0) scale(${scale * 0.96})`;
         el.style.zIndex = Math.round((z2 + 1.2) * 100);
 
-        // Backface depth shading (front nodes naturally receive clicks via higher zIndex)
-        if (z2 < -0.35) {
-          const backAlpha = Math.max(0.28, 0.58 + z2 * 0.4);
+        // Smart depth-fading: hide labels on nodes in the back to prevent clutter
+        const labelEl = el.querySelector('.spirit-node-label');
+        if (z2 < -0.15) {
+          const backAlpha = Math.max(0.2, 0.52 + z2 * 0.4);
           el.style.opacity = backAlpha;
-          el.style.filter = `blur(${Math.min(2, Math.abs(z2) * 1.5)}px)`;
+          el.style.filter = `blur(${Math.min(1.8, Math.abs(z2) * 1.5)}px)`;
+          if (labelEl) labelEl.style.opacity = '0';
         } else {
           el.style.opacity = '1';
           el.style.filter = 'none';
+          if (labelEl) {
+            const labelAlpha = Math.min(1, Math.max(0, (z2 + 0.15) / 0.3));
+            labelEl.style.opacity = labelAlpha;
+          }
         }
         el.style.pointerEvents = 'auto';
       }
@@ -740,6 +770,7 @@ function initSpiritBomb() {
     const cx = width / 2;
     const cy = height / 2;
     const coreR = Math.max(110, R * 0.72);
+    currentCoreR = coreR;
 
     // Color definitions
     const primaryGlow = isRose ? 'rgba(255, 46, 151, ' : 'rgba(56, 189, 248, ';
