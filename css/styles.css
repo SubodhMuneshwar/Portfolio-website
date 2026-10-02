@@ -14665,3 +14665,684 @@ body.saiyan-mode .ach-scroll-hint kbd {
     gap: 1rem;
   }
 }
+
+/* =============================================================================
+   CAPSULE CORP · SAIYAN SCOUTER TELEMETRY CONSOLE (ABOUT / SUMMARY SECTION)
+   ============================================================================= */
+
+.saiyan-scouter-console {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2.5px solid #0F172A;
+  border-radius: var(--radius-lg, 24px);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  box-shadow: 6px 6px 0px 0px #0F172A;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: visible;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* Super Saiyan Theme mode styling */
+body.saiyan-mode .saiyan-scouter-console {
+  background: rgba(13, 21, 36, 0.96);
+  border: 2.5px solid #F59E0B;
+  box-shadow: 6px 6px 0px 0px #F59E0B, 0 0 28px rgba(245, 158, 11, 0.12);
+}
+
+/* Scouter Reticle Corner Brackets (DBZ Combat Scouter Reticle) */
+.scouter-corner-bracket {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--accent, #FF2E97);
+  pointer-events: none;
+  z-index: 3;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+body.saiyan-mode .scouter-corner-bracket {
+  border-color: #FBBF24;
+}
+
+.scouter-bracket-tl {
+  top: 10px;
+  left: 10px;
+  border-top: 3.5px solid;
+  border-left: 3.5px solid;
+}
+
+.scouter-bracket-tr {
+  top: 10px;
+  right: 10px;
+  border-top: 3.5px solid;
+  border-right: 3.5px solid;
+}
+
+.scouter-bracket-bl {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 3.5px solid;
+  border-left: 3.5px solid;
+}
+
+.scouter-bracket-br {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 3.5px solid;
+  border-right: 3.5px solid;
+}
+
+.saiyan-scouter-console:hover .scouter-corner-bracket {
+  transform: scale(1.18);
+}
+
+/* Scouter Telemetry Top HUD Bar */
+.scouter-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1.5px dashed rgba(15, 23, 42, 0.2);
+}
+
+body.saiyan-mode .scouter-top-bar {
+  border-bottom-color: rgba(245, 158, 11, 0.28);
+}
+
+.scouter-top-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.capsule-corp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #0EA5E9;
+  color: #FFFFFF;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid #0F172A;
+  box-shadow: 2px 2px 0px 0px #0F172A;
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+body.saiyan-mode .capsule-corp-badge {
+  background: #0284C7;
+  border-color: #F59E0B;
+  box-shadow: 2px 2px 0px 0px #F59E0B;
+}
+
+.capsule-logo-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #0284C7;
+  font-size: 0.65rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.scouter-telemetry-chip {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.06);
+  color: #0F172A;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+}
+
+body.saiyan-mode .scouter-telemetry-chip {
+  background: rgba(245, 158, 11, 0.12);
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.scouter-freq-chip {
+  color: #64748B;
+}
+
+body.saiyan-mode .scouter-freq-chip {
+  color: #94A3B8;
+}
+
+.scouter-top-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.scouter-power-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1.5px solid #EF4444;
+  color: #EF4444;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+body.saiyan-mode .scouter-power-badge {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: #F87171;
+  color: #FCA5A5;
+}
+
+.scouter-pulse-beacon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #EF4444;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: scouterBeaconPulse 1.8s infinite;
+}
+
+@keyframes scouterBeaconPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.scouter-sector-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 0.05em;
+}
+
+body.saiyan-mode .scouter-sector-tag {
+  color: #94A3B8;
+}
+
+/* Strategic Header & Bio Narrative */
+.scouter-hero-header {
+  margin-bottom: 2rem;
+}
+
+.scouter-classification-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--accent, #FF2E97);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+body.saiyan-mode .scouter-classification-label {
+  color: #FBBF24;
+}
+
+.scouter-main-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: clamp(1.45rem, 2.5vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--fg, #0F172A);
+  margin-bottom: 1.1rem;
+}
+
+body.saiyan-mode .scouter-main-title {
+  color: #F8FAFC;
+}
+
+.ki-highlight {
+  position: relative;
+  display: inline-block;
+  color: var(--accent, #FF2E97);
+  background: linear-gradient(120deg, rgba(255, 46, 151, 0.12) 0%, rgba(255, 46, 151, 0.04) 100%);
+  padding: 0 0.35rem;
+  border-radius: 4px;
+  border-bottom: 2px solid var(--accent, #FF2E97);
+}
+
+body.saiyan-mode .ki-highlight {
+  color: #FBBF24;
+  background: linear-gradient(120deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.05) 100%);
+  border-bottom-color: #FBBF24;
+}
+
+.scouter-main-narrative {
+  font-family: var(--font-body, sans-serif);
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: var(--muted-fg, #64748B);
+  max-width: 960px;
+}
+
+body.saiyan-mode .scouter-main-narrative {
+  color: #CBD5E1;
+}
+
+.text-contrast {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+body.saiyan-mode .text-contrast {
+  color: #F8FAFC;
+}
+
+.ki-text {
+  color: var(--accent, #FF2E97);
+  font-weight: 700;
+}
+
+body.saiyan-mode .ki-text {
+  color: #FBBF24;
+}
+
+/* 3-Pillar Scouter Combat Matrix Grid */
+.scouter-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.scouter-pillar-card {
+  position: relative;
+  background: rgba(248, 250, 252, 0.85);
+  border: 2px solid rgba(15, 23, 42, 0.15);
+  border-radius: var(--radius-md, 16px);
+  padding: 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 3px 3px 0px 0px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+  cursor: pointer;
+  outline: none;
+}
+
+body.saiyan-mode .scouter-pillar-card {
+  background: rgba(19, 30, 51, 0.8);
+  border: 2px solid rgba(245, 158, 11, 0.25);
+  box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.4);
+}
+
+.scouter-pillar-card:hover,
+.scouter-pillar-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--accent, #FF2E97);
+  box-shadow: 4px 6px 0px 0px #0F172A, 0 0 16px rgba(255, 46, 151, 0.15);
+  background: #FFFFFF;
+}
+
+body.saiyan-mode .scouter-pillar-card:hover,
+body.saiyan-mode .scouter-pillar-card:focus-visible {
+  border-color: #FBBF24;
+  box-shadow: 4px 6px 0px 0px #F59E0B, 0 0 20px rgba(251, 191, 36, 0.22);
+  background: rgba(22, 35, 60, 0.95);
+}
+
+.pillar-corner-reticle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid rgba(15, 23, 42, 0.3);
+  border-right: 2px solid rgba(15, 23, 42, 0.3);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+body.saiyan-mode .pillar-corner-reticle {
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.scouter-pillar-card:hover .pillar-corner-reticle {
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent, #FF2E97);
+}
+
+body.saiyan-mode .scouter-pillar-card:hover .pillar-corner-reticle {
+  border-color: #FBBF24;
+}
+
+.pillar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.9rem;
+}
+
+.pillar-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1.5px solid #0F172A;
+  box-shadow: 2px 2px 0px 0px #0F172A;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.pillar-icon-enterprise {
+  background: #4F46E5;
+}
+
+.pillar-icon-ai {
+  background: #EC4899;
+}
+
+.pillar-icon-systems {
+  background: #0EA5E9;
+}
+
+body.saiyan-mode .pillar-icon-box {
+  border-color: #F59E0B;
+  box-shadow: 2px 2px 0px 0px #F59E0B;
+}
+
+.pillar-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.pillar-sector-id {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--muted-fg, #64748B);
+  letter-spacing: 0.06em;
+}
+
+body.saiyan-mode .pillar-sector-id {
+  color: #94A3B8;
+}
+
+.pillar-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--fg, #0F172A);
+  line-height: 1.25;
+  margin: 0;
+}
+
+body.saiyan-mode .pillar-title {
+  color: #F8FAFC;
+}
+
+.pillar-power-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.85rem;
+}
+
+body.saiyan-mode .pillar-power-stat {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.stat-prefix {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: #0F172A;
+  color: #FDE68A;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+body.saiyan-mode .stat-prefix {
+  background: #F59E0B;
+  color: #0A1410;
+}
+
+.stat-value {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--fg, #0F172A);
+}
+
+body.saiyan-mode .stat-value {
+  color: #FBBF24;
+}
+
+.pillar-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--muted-fg, #64748B);
+  margin-bottom: 1.1rem;
+  flex-grow: 1;
+}
+
+body.saiyan-mode .pillar-desc {
+  color: #94A3B8;
+}
+
+.pillar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;
+}
+
+.pillar-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.04);
+  color: #334155;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.saiyan-mode .pillar-pill {
+  background: rgba(15, 23, 42, 0.5);
+  color: #CBD5E1;
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.scouter-pillar-card:hover .pillar-pill {
+  border-color: rgba(255, 46, 151, 0.3);
+  color: #0F172A;
+}
+
+body.saiyan-mode .scouter-pillar-card:hover .pillar-pill {
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #F8FAFC;
+}
+
+/* Scouter Tactical Command & Quick Intel Bar */
+.scouter-command-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1.5px dashed rgba(15, 23, 42, 0.2);
+}
+
+body.saiyan-mode .scouter-command-bar {
+  border-top-color: rgba(245, 158, 11, 0.28);
+}
+
+.scouter-intel-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.scouter-intel-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.05);
+  color: #1E293B;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1.5px solid rgba(15, 23, 42, 0.12);
+}
+
+body.saiyan-mode .scouter-intel-item {
+  background: rgba(15, 23, 42, 0.6);
+  color: #E2E8F0;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.scouter-intel-item i {
+  color: var(--accent, #FF2E97);
+}
+
+body.saiyan-mode .scouter-intel-item i {
+  color: #FBBF24;
+}
+
+.scouter-command-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.scouter-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Primary Spirit Bomb button */
+.scouter-spirit-bomb-btn {
+  background: #F59E0B;
+  color: #0A1410;
+  border: 2px solid #0F172A;
+  box-shadow: 3px 3px 0px 0px #0F172A;
+  position: relative;
+  overflow: hidden;
+}
+
+.scouter-spirit-bomb-btn:hover {
+  transform: translateY(-2px);
+  background: #FBBF24;
+  box-shadow: 4px 4px 0px 0px #0F172A, 0 0 16px rgba(251, 191, 36, 0.4);
+}
+
+body.saiyan-mode .scouter-spirit-bomb-btn {
+  border-color: #000000;
+  box-shadow: 3px 3px 0px 0px #000000;
+}
+
+body.saiyan-mode .scouter-spirit-bomb-btn:hover {
+  box-shadow: 4px 4px 0px 0px #000000, 0 0 20px rgba(251, 191, 36, 0.6);
+}
+
+/* GitHub, LinkedIn, Contact buttons */
+.scouter-github-btn,
+.scouter-linkedin-btn,
+.scouter-contact-btn {
+  background: #FFFFFF;
+  color: #0F172A;
+  border: 2px solid #0F172A;
+  box-shadow: 2px 2px 0px 0px #0F172A;
+}
+
+body.saiyan-mode .scouter-github-btn,
+body.saiyan-mode .scouter-linkedin-btn,
+body.saiyan-mode .scouter-contact-btn {
+  background: #131E33;
+  color: #F8FAFC;
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 2px 2px 0px 0px #F59E0B;
+}
+
+.scouter-github-btn:hover,
+.scouter-linkedin-btn:hover,
+.scouter-contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px 0px #0F172A;
+  border-color: var(--accent, #FF2E97);
+}
+
+body.saiyan-mode .scouter-github-btn:hover,
+body.saiyan-mode .scouter-linkedin-btn:hover,
+body.saiyan-mode .scouter-contact-btn:hover {
+  border-color: #FBBF24;
+  box-shadow: 3px 3px 0px 0px #FBBF24;
+  background: #1A2844;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 992px) {
+  .scouter-pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+  .saiyan-scouter-console {
+    padding: 2rem 1.5rem 1.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .scouter-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .scouter-command-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .scouter-action-btn {
+    justify-content: center;
+  }
+  .saiyan-scouter-console {
+    padding: 1.5rem 1.1rem 1.25rem 1.1rem;
+  }
+}

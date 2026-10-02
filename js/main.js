@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStartupQuestBriefing();
   initSoundEffects();
   initDraggableTicker();
+  initScouterSummaryConsole();
 });
 
 /* ==========================================================================
@@ -5493,6 +5494,38 @@ function initPhotoRevealLens() {
   });
 }
 
+/* --- Capsule Corp Saiyan Scouter Summary Console Interactivity --- */
+function initScouterSummaryConsole() {
+  const cards = document.querySelectorAll('.scouter-pillar-card');
+  cards.forEach((card, idx) => {
+    card.addEventListener('mouseenter', () => {
+      // Scouter lock-on chirps: rising frequency by sector
+      const baseFreq = 620 + idx * 80;
+      if (typeof playWebAudioTone === 'function') {
+        playWebAudioTone(baseFreq, 'sine', 0.05, 0.04);
+      }
+    });
+  });
 
+  const spiritBombBtn = document.querySelector('.scouter-spirit-bomb-btn');
+  if (spiritBombBtn) {
+    spiritBombBtn.addEventListener('click', () => {
+      // Ki charging surge audio
+      if (typeof playWebAudioTone === 'function') {
+        playWebAudioTone(440, 'triangle', 0.14, 0.08);
+        setTimeout(() => {
+          playWebAudioTone(660, 'sine', 0.22, 0.09);
+        }, 120);
+      }
+    });
+  }
 
-
+  const actionBtns = document.querySelectorAll('.scouter-github-btn, .scouter-linkedin-btn, .scouter-contact-btn');
+  actionBtns.forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      if (typeof playWebAudioTone === 'function') {
+        playWebAudioTone(740, 'sine', 0.04, 0.03);
+      }
+    });
+  });
+}
