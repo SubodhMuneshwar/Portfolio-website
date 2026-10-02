@@ -15,10 +15,46 @@ const portfolioData = {
     linkedin: "https://www.linkedin.com/in/subodh-muneshwar-47209324b/",
     summary: "Software Engineer with hands-on experience in Python, C#, ASP.NET, REST APIs, and AI/ML applications. Experienced in building robust backend systems, image-processing/deep learning pipelines, and database-driven enterprise applications. Passionate about distributed architectures, clean APIs, and scalable AI solutions.",
     stats: [
-      { label: "Engineering CGPI", value: "9.14", icon: "award", color: "tertiary" },
-      { label: "Hackathon Finalist", value: "Top 5 (SIH)", icon: "trophy", color: "secondary" },
-      { label: "Students Mentored", value: "500+", icon: "users", color: "accent" },
-      { label: "Accuracy in ML Models", value: "98%", icon: "target", color: "quaternary" }
+      {
+        category: "Academics",
+        value: "9.14/10",
+        label: "Engineering CGPI",
+        sublabel: "Dean's List · Mumbai Univ",
+        icon: "award",
+        color: "tertiary"
+      },
+      {
+        category: "Hackathons",
+        value: "2x Finalist",
+        label: "Smart India Hackathon",
+        sublabel: "Top 5 in India · MoE & AICTE",
+        icon: "trophy",
+        color: "secondary"
+      },
+      {
+        category: "Leadership",
+        value: "500+",
+        label: "Students Represented",
+        sublabel: "Student Secretary, RMCET",
+        icon: "users",
+        color: "accent"
+      },
+      {
+        category: "Enterprise",
+        value: "Enterprise",
+        label: "SAP & RBAC Architecture",
+        sublabel: "Role Provisioning & LDAP",
+        icon: "shield-check",
+        color: "quaternary"
+      },
+      {
+        category: "Data & AI Scale",
+        value: "10,000+",
+        label: "Retinal Images Processed",
+        sublabel: "DenseNet121 + Ensemble ML",
+        icon: "cpu",
+        color: "tertiary"
+      }
     ]
   },
 

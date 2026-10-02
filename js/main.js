@@ -198,12 +198,16 @@ function initHeroStats() {
   statsContainer.innerHTML = portfolioData.personal.stats.map(stat => `
     <div class="stat-card">
       <div class="stat-icon-wrapper" style="background-color: var(--${stat.color});">
-        <i data-lucide="${stat.icon}" style="width: 22px; height: 22px; stroke-width: 2.5;"></i>
+        <i data-lucide="${stat.icon}" style="width: 22px; height: 22px; stroke-width: 2.2;"></i>
       </div>
+      ${stat.category ? `<div class="stat-category">${stat.category}</div>` : ''}
       <div class="stat-value">${stat.value}</div>
       <div class="stat-label">${stat.label}</div>
+      ${stat.sublabel ? `<div class="stat-sublabel">${stat.sublabel}</div>` : ''}
     </div>
   `).join('');
+
+  initLucideIcons();
 }
 
 /* ==========================================================================
