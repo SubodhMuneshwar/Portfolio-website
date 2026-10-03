@@ -2785,59 +2785,83 @@ body.saiyan-mode .hero-clean-badge:hover {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1.15rem;
+  gap: 1.25rem;
+  align-items: stretch;
 }
 
 .stat-card {
   background-color: var(--card);
-  border: var(--border-width) solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.35rem 0.85rem;
-  box-shadow: var(--shadow-md);
+  border: var(--border-width, 2.5px) solid var(--border);
+  border-radius: var(--radius-lg, 20px);
+  padding: 1.65rem 1.15rem 1.45rem 1.15rem;
+  box-shadow: 4px 4px 0px 0px var(--border);
   text-align: center;
-  transition: var(--transition-bounce);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  min-height: 220px;
+  box-sizing: border-box;
 }
+
+body.saiyan-mode .stat-card {
+  background-color: #0D1524;
+  border-color: #F59E0B;
+  box-shadow: 4px 4px 0px 0px #F59E0B, 0 0 16px rgba(245, 158, 11, 0.12);
+}
+
 .stat-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--secondary), var(--quaternary));
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent, #FF2E97), var(--secondary, #4F46E5), var(--quaternary, #0EA5E9));
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
+body.saiyan-mode .stat-card::before {
+  background: linear-gradient(90deg, #F59E0B, #FBBF24, #10B981);
+}
+
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+  box-shadow: 6px 6px 0px 0px var(--border);
   border-color: var(--accent);
 }
 
+body.saiyan-mode .stat-card:hover {
+  border-color: #FBBF24;
+  box-shadow: 6px 6px 0px 0px #F59E0B, 0 0 24px rgba(251, 191, 36, 0.28);
+}
+
 .stat-icon-wrapper {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: var(--border-width) solid var(--border);
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.6rem;
-  box-shadow: var(--shadow-sm);
+  margin-bottom: 0.75rem;
+  box-shadow: 2px 2px 0px 0px var(--border);
   color: #0A1410;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.08) rotate(-4deg);
 }
 
 body.saiyan-mode .stat-icon-wrapper {
   color: #0A1410 !important;
-  border-color: rgba(0, 0, 0, 0.45) !important;
-  box-shadow: 0 0 16px rgba(251, 191, 36, 0.3) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 2px 2px 0px 0px #000000 !important;
 }
 
 body.saiyan-mode .stat-icon-wrapper i,
@@ -2849,44 +2873,67 @@ body.saiyan-mode .stat-icon-wrapper svg:not(.dragon-ball svg) {
 
 .stat-category {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.3rem;
-  opacity: 0.95;
+  background: rgba(255, 46, 151, 0.08);
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 46, 151, 0.22);
+  margin-bottom: 0.55rem;
+  line-height: 1.2;
+}
+
+body.saiyan-mode .stat-category {
+  color: #FBBF24;
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.3);
 }
 
 .stat-value {
   font-family: var(--font-heading);
-  font-size: 1.65rem;
+  font-size: clamp(1.45rem, 1.8vw, 1.85rem);
   font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 0.35rem;
+  line-height: 1.15;
+  margin-bottom: 0.45rem;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   color: var(--fg);
 }
 
+body.saiyan-mode .stat-value {
+  color: #F8FAFC;
+  text-shadow: 0 0 16px rgba(251, 191, 36, 0.2);
+}
+
 .stat-label {
   font-family: var(--font-heading);
-  font-size: 0.72rem;
+  font-size: 0.88rem;
   font-weight: 800;
   color: var(--fg);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  line-height: 1.3;
-  margin-bottom: 0.25rem;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  margin-bottom: 0.35rem;
+}
+
+body.saiyan-mode .stat-label {
+  color: #E2E8F0;
 }
 
 .stat-sublabel {
   font-family: var(--font-body);
-  font-size: 0.67rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--muted-fg);
-  line-height: 1.35;
+  line-height: 1.45;
   letter-spacing: 0.01em;
+}
+
+body.saiyan-mode .stat-sublabel {
+  color: #94A3B8;
 }
 
 /* --- Marquee / Kamehameha Wave Energy Stream --- */
@@ -6972,8 +7019,12 @@ body.saiyan-mode .footer-float-top:hover {
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .stats-grid .stat-card:nth-child(5) {
+    grid-column: span 2;
   }
 
   .stat-card {
@@ -8024,7 +8075,9 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
 }
 
 .floating-decoy-ball {
-  display: none !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 /* Floating Positioning Helpers & Universal Layout Protection:
@@ -8035,7 +8088,7 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
   position: absolute !important;
   right: -16px;
   top: -12px;
-  z-index: 12;
+  z-index: 30 !important;
   margin: 0 !important;
 }
 
@@ -8045,7 +8098,7 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
   position: absolute !important;
   left: -16px;
   top: -12px;
-  z-index: 12;
+  z-index: 30 !important;
   margin: 0 !important;
 }
 
@@ -8060,6 +8113,15 @@ body:not(.saiyan-mode) { transition: background-color 0.8s cubic-bezier(0.16,1,0
   pointer-events: auto !important;
   margin: 0 !important;
   flex-shrink: 0;
+}
+
+/* Explicitly hide collected dragon balls */
+.dragon-ball.collected,
+.dragon-ball.ball-disappeared {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Ensure Shenron altar balls in the modal cluster stay flexed properly */
@@ -11020,22 +11082,6 @@ section, .container, .hero-section, .stats-section, .ticker-container {
 .stat-card {
   min-width: 0;
   box-sizing: border-box;
-  padding: 1.25rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: clamp(1.5rem, 4vw, 1.953rem);
-  overflow-wrap: anywhere;
-}
-
-.stat-label {
-  font-size: 0.68rem;
-  line-height: 1.3;
 }
 
 @media (max-width: 768px) {
@@ -11043,32 +11089,51 @@ section, .container, .hero-section, .stats-section, .ticker-container {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 0.85rem;
   }
+  .stats-grid .stat-card:nth-child(5) {
+    grid-column: span 2;
+  }
+  .stat-card {
+    padding: 1.35rem 1rem;
+    min-height: auto;
+  }
+  .stat-category {
+    font-size: 0.72rem;
+  }
+  .stat-value {
+    font-size: 1.55rem;
+  }
+  .stat-label {
+    font-size: 0.85rem;
+  }
+  .stat-sublabel {
+    font-size: 0.78rem;
+  }
 }
 
 @media (max-width: 480px) {
   .stats-grid {
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
   .stat-card {
-    padding: 1rem 0.75rem;
+    padding: 1.25rem 0.85rem;
   }
   .stat-icon-wrapper {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 0.5rem;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 0.55rem;
   }
   .stat-category {
-    font-size: 0.58rem;
-    margin-bottom: 0.2rem;
+    font-size: 0.7rem;
+    padding: 0.18rem 0.55rem;
   }
   .stat-value {
     font-size: 1.45rem;
   }
   .stat-label {
-    font-size: 0.62rem;
+    font-size: 0.82rem;
   }
   .stat-sublabel {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -11076,15 +11141,11 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   .stats-grid {
     grid-template-columns: 1fr !important;
   }
-  .stat-card {
-    flex-direction: row;
-    text-align: left;
-    gap: 0.85rem;
-    padding: 0.85rem 1rem;
+  .stats-grid .stat-card:nth-child(5) {
+    grid-column: span 1;
   }
-  .stat-icon-wrapper {
-    margin-bottom: 0;
-    flex-shrink: 0;
+  .stat-card {
+    padding: 1.15rem 0.95rem;
   }
 }
 
@@ -13063,9 +13124,9 @@ body.saiyan-mode .goku-checkbox-label {
   .dragon-radar-widget .radar-count-badge {
     position: static !important;
     transform: none !important;
-    font-size: 0.58rem !important;
+    font-size: 0.72rem !important;
     font-weight: 900 !important;
-    padding: 1px 5px !important;
+    padding: 2px 6px !important;
     border-radius: 999px !important;
     background: #0F172A !important;
     color: #10B981 !important;
@@ -14658,11 +14719,20 @@ body.saiyan-mode .ach-scroll-hint kbd {
 
 
 
-/* Tablet 5-card layout */
+/* Tablet 5-card layout: 3 on top row, 2 centered on bottom row */
 @media (max-width: 1024px) and (min-width: 769px) {
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 1rem;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 1.15rem;
+  }
+  .stats-grid .stat-card:nth-child(1),
+  .stats-grid .stat-card:nth-child(2),
+  .stats-grid .stat-card:nth-child(3) {
+    grid-column: span 2;
+  }
+  .stats-grid .stat-card:nth-child(4),
+  .stats-grid .stat-card:nth-child(5) {
+    grid-column: span 3;
   }
 }
 

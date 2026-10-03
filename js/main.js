@@ -2684,8 +2684,35 @@ function drawSingleBolt(ctx, w, h) {
 }
 
 /* --- 7 Dragon Balls Collector & Realistic Dragon Radar Engine --- */
+const DB_STORAGE_KEY = 'portfolio_collected_dragon_balls_v2';
 const collectedBalls = new Set();
 let dragonBallsInitialized = false;
+
+function loadCollectedDragonBalls() {
+  try {
+    const raw = localStorage.getItem(DB_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        collectedBalls.clear();
+        parsed.forEach(n => {
+          const num = parseInt(n, 10);
+          if (num >= 1 && num <= 7) collectedBalls.add(num);
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to load collected dragon balls:', err);
+  }
+}
+
+function saveCollectedDragonBalls() {
+  try {
+    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(Array.from(collectedBalls)));
+  } catch (err) {
+    console.warn('Failed to persist collected dragon balls:', err);
+  }
+}
 
 const dragonBallLocations = [
   { num: 1, name: "1-Star Dragon Ball", sector: "Skills Matrix", hint: "Hidden in Skills Category", x: 30, y: 35, selector: "#skills" },
@@ -2741,50 +2768,36 @@ function playDragonBallCollectChime() {
 function renderDragonBallSVGs() {
   // Use global DRAGON_BALL_LAYOUTS, createDragonBallStarPolygon, buildDragonBallStars, and window.getBallSVGString
 
-  // Only shuffle and assign positions on first initialization
-  if (!dragonBallsInitialized) {
-    // ── TRUE RANDOM: shuffle which 7 of the 22 slots hold the REAL balls — no fixed pattern ──
-    const pool = Array.from(document.querySelectorAll('.dragon-ball[data-ball], .fake-dragon-ball[data-fake-ball]'));
-    // Fisher-Yates shuffle pool
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    const starPool = [1,2,3,4,5,6,7];
-    for (let i = starPool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [starPool[i], starPool[j]] = [starPool[j], starPool[i]];
-    }
-    pool.forEach((el, idx) => {
-      if (idx < 7) {
-        // This slot becomes a REAL Dragon Ball (glows intensely with golden ki)
-        el.classList.add('dragon-ball', 'real-dragon-ball');
-        el.classList.remove('fake-dragon-ball');
-        el.removeAttribute('data-fake-ball');
-        el.setAttribute('data-ball', String(starPool[idx]));
-        el.dataset.isReal = "true";
-      } else {
-        // Remaining slots become PRANK decoy balls (visibly flat/dull, no glowing aura)
-        el.classList.add('dragon-ball', 'fake-dragon-ball');
-        el.classList.remove('real-dragon-ball');
-        el.removeAttribute('data-ball');
-        el.setAttribute('data-fake-ball', String(1 + Math.floor(Math.random() * 7)));
-        el.dataset.isReal = "false";
-      }
-    });
-    dragonBallsInitialized = true;
-  }
-
   // Render SVG inside real section dragon balls — glowing authentic ki
   document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
-    const ballNum = ball.getAttribute('data-ball');
-    ball.classList.add('real-dragon-ball');
-    ball.classList.remove('fake-dragon-ball');
-    ball.innerHTML = window.getBallSVGString(ballNum, 48);
-    ball.setAttribute('role', 'button');
-    ball.setAttribute('tabindex', '0');
-    ball.setAttribute('aria-label', `${ballNum}-Star Authentic Dragon Ball`);
-    ball.title = `Authentic ${ballNum}-Star Dragon Ball (Glowing Ki Aura)`;
+    const ballAttr = ball.getAttribute('data-ball');
+    const ballNum = parseInt(ballAttr, 10);
+    if (ballNum >= 1 && ballNum <= 7) {
+      ball.classList.add('real-dragon-ball');
+      ball.classList.remove('fake-dragon-ball');
+      ball.innerHTML = window.getBallSVGString(ballAttr, 48);
+      ball.setAttribute('role', 'button');
+      ball.setAttribute('tabindex', '0');
+      ball.setAttribute('aria-label', `${ballAttr}-Star Authentic Dragon Ball`);
+      ball.title = `Authentic ${ballAttr}-Star Dragon Ball (Glowing Ki Aura)`;
+
+      if (collectedBalls.has(ballNum)) {
+        ball.classList.add('collected', 'ball-disappeared');
+        ball.setAttribute('aria-hidden', 'true');
+        ball.setAttribute('tabindex', '-1');
+        ball.style.setProperty('display', 'none', 'important');
+        ball.style.setProperty('visibility', 'hidden', 'important');
+        ball.style.setProperty('pointer-events', 'none', 'important');
+        ball.style.setProperty('opacity', '0', 'important');
+      } else {
+        ball.classList.remove('collected', 'ball-disappeared');
+        ball.setAttribute('aria-hidden', 'false');
+        ball.style.removeProperty('display');
+        ball.style.removeProperty('visibility');
+        ball.style.removeProperty('pointer-events');
+        ball.style.removeProperty('opacity');
+      }
+    }
   });
 
   // Render SVG inside fake decoy dragon balls — flat, dull, prank decoy
@@ -2806,7 +2819,7 @@ function renderDragonBallSVGs() {
     ball.innerHTML = window.getBallSVGString(ballNum, 52);
   });
 
-  // ── Ambient floating: stagger bobbing animations so balls feel organically alive ──
+  // Ambient floating: stagger bobbing animations so balls feel organically alive
   document.querySelectorAll('.floating-decoy-ball').forEach(el => {
     const isReal = el.hasAttribute('data-ball') || el.classList.contains('real-dragon-ball');
     const rot = (Math.random() * 16 - 8).toFixed(1);
@@ -2814,7 +2827,39 @@ function renderDragonBallSVGs() {
     el.style.transform = `rotate(${rot}deg) scale(${sc})`;
     el.style.animationDelay = `${(Math.random() * 2.5).toFixed(2)}s`;
   });
+
+  const radarCount = document.getElementById('ballsFoundCount');
+  if (radarCount) {
+    radarCount.textContent = Math.min(7, collectedBalls.size);
+  }
 }
+
+window.resetDragonBallHunt = function() {
+  collectedBalls.clear();
+  try {
+    localStorage.removeItem(DB_STORAGE_KEY);
+  } catch (e) {}
+
+  document.querySelectorAll('.dragon-ball[data-ball]').forEach(ball => {
+    ball.classList.remove('collected', 'ball-disappeared');
+    ball.style.removeProperty('display');
+    ball.style.removeProperty('visibility');
+    ball.style.removeProperty('opacity');
+    ball.style.removeProperty('pointer-events');
+    ball.setAttribute('aria-hidden', 'false');
+    ball.setAttribute('tabindex', '0');
+  });
+
+  renderDragonBallSVGs();
+  updateRadarMiniBlips();
+  renderRadarHUD();
+
+  const countEl = document.getElementById('ballsFoundCount');
+  if (countEl) countEl.textContent = '0';
+
+  if (typeof playRadarPingSound === 'function') playRadarPingSound();
+  showToast('✨ All 7 Dragon Balls have been re-scattered across the realm! Happy hunting!');
+};
 
 function updateRadarMiniBlips() {
   const miniContainer = document.getElementById('radarMiniBlips');
@@ -3055,6 +3100,7 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
 
   // Mark collected and make it disappear from the page (puff + vanish)
   collectedBalls.add(ballNumber);
+  saveCollectedDragonBalls();
   if (sourceBall) {
     sourceBall.classList.add('collected');
     // Puff animation then hide — blends with site's playful poof
@@ -3132,6 +3178,7 @@ function triggerDragonBallCollection(ballNumber, sourceBall, clickX, clickY) {
       const currentCount = Math.min(7, collectedBalls.size);
       if (radarCount) radarCount.textContent = currentCount;
       updateRadarMiniBlips();
+      renderRadarHUD();
 
       createKiSparks(targetX, targetY);
       showToast(`⭐ Added the ${ballNumber}-Star Dragon Ball to Radar! (${currentCount}/7)`);
@@ -3278,18 +3325,49 @@ window.openDragonRadarFromPrank = function() {
 };
 
 function initDragonBallsCollector() {
+  loadCollectedDragonBalls();
   renderDragonBallSVGs();
   updateRadarMiniBlips();
+  renderRadarHUD();
 
-  const interactiveBalls = document.querySelectorAll('.dragon-ball[data-ball]');
-  const fakeBalls = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
   const radarWidget = document.getElementById('dragonRadarWidget');
+  if (radarWidget && !radarWidget._radarListenerAttached) {
+    radarWidget._radarListenerAttached = true;
+    let radarTouchX = 0;
+    let radarTouchY = 0;
+    let radarTouchTime = 0;
 
-  if (radarWidget) {
+    radarWidget.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        radarTouchX = e.touches[0].clientX;
+        radarTouchY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    radarWidget.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches && e.changedTouches[0];
+      if (touch) {
+        const dx = touch.clientX - radarTouchX;
+        const dy = touch.clientY - radarTouchY;
+        if (Math.hypot(dx, dy) < 16) {
+          radarTouchTime = Date.now();
+          e.preventDefault();
+          e.stopPropagation();
+          openDragonRadarModal();
+        }
+      }
+    });
+
     radarWidget.addEventListener('click', (e) => {
+      if (Date.now() - radarTouchTime < 450) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       e.stopPropagation();
       openDragonRadarModal();
     });
+
     radarWidget.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -3298,15 +3376,18 @@ function initDragonBallsCollector() {
     });
   }
 
-  // Real 7 Dragon Balls Click / Touch / Keyboard Handler — perfect mobile touch
+  // Real 7 Dragon Balls Click / Touch / Keyboard Handler
+  const interactiveBalls = document.querySelectorAll('.dragon-ball[data-ball]');
   interactiveBalls.forEach(ball => {
-    const handleBallCollect = (e) => {
-      e.stopPropagation();
+    if (ball._dragonBallListenerAttached) return;
+    ball._dragonBallListenerAttached = true;
+
+    let touchX = 0;
+    let touchY = 0;
+    let touchTime = 0;
+
+    const processCollect = (clientX, clientY) => {
       const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      
       if (ballNumber >= 1 && ballNumber <= 7) {
         if (!collectedBalls.has(ballNumber)) {
           triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
@@ -3317,58 +3398,108 @@ function initDragonBallsCollector() {
       }
     };
 
-    ball.addEventListener('click', handleBallCollect);
+    ball.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
     ball.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      handleBallCollect(e);
+      const touch = e.changedTouches && e.changedTouches[0];
+      if (touch) {
+        const dx = touch.clientX - touchX;
+        const dy = touch.clientY - touchY;
+        if (Math.hypot(dx, dy) < 16) {
+          touchTime = Date.now();
+          e.preventDefault();
+          e.stopPropagation();
+          processCollect(touch.clientX, touch.clientY);
+        }
+      }
     });
+
+    ball.addEventListener('click', (e) => {
+      if (Date.now() - touchTime < 450) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      e.stopPropagation();
+      processCollect(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+    });
+
     ball.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         const rect = ball.getBoundingClientRect();
-        handleBallCollect({
-          stopPropagation: () => {},
-          clientX: rect.left + rect.width / 2,
-          clientY: rect.top + rect.height / 2
-        });
+        processCollect(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
     });
   });
 
-  // Fake Decoy Dragon Balls Click / Touch / Keyboard Handler (Kid Goku Prank) — mobile perfect
+  // Fake Decoy Dragon Balls Click / Touch / Keyboard Handler (Kid Goku Prank)
+  const fakeBalls = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
   fakeBalls.forEach(fakeBall => {
-    const handleFakeClick = (e) => {
-      e.stopPropagation();
-      const fakeType = fakeBall.getAttribute('data-fake-ball');
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
+    if (fakeBall._fakeBallListenerAttached) return;
+    fakeBall._fakeBallListenerAttached = true;
+
+    let touchX = 0;
+    let touchY = 0;
+    let touchTime = 0;
+
+    const processFakeClick = (clientX, clientY) => {
+      const fakeType = fakeBall.getAttribute('data-fake-ball') || 'decoy';
       triggerKidGokuPrank(fakeType, clientX, clientY);
     };
 
-    fakeBall.addEventListener('click', handleFakeClick);
+    fakeBall.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
     fakeBall.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      handleFakeClick(e);
+      const touch = e.changedTouches && e.changedTouches[0];
+      if (touch) {
+        const dx = touch.clientX - touchX;
+        const dy = touch.clientY - touchY;
+        if (Math.hypot(dx, dy) < 16) {
+          touchTime = Date.now();
+          e.preventDefault();
+          e.stopPropagation();
+          processFakeClick(touch.clientX, touch.clientY);
+        }
+      }
     });
+
+    fakeBall.addEventListener('click', (e) => {
+      if (Date.now() - touchTime < 450) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      e.stopPropagation();
+      processFakeClick(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+    });
+
     fakeBall.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         const rect = fakeBall.getBoundingClientRect();
-        handleFakeClick({
-          stopPropagation: () => {},
-          clientX: rect.left + rect.width / 2,
-          clientY: rect.top + rect.height / 2
-        });
+        processFakeClick(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
     });
   });
 
-  // Perfect mobile: pause ticker on touch for easier collection (moving target)
+  // Mobile ticker pause on touch
   const tickerTrack = document.querySelector('.ticker-track');
   const tickerBalls = document.querySelectorAll('.ticker-container .dragon-ball, .ticker-container .fake-dragon-ball');
   if (tickerTrack && tickerBalls.length) {
     tickerBalls.forEach(b => {
+      if (b._tickerPauseListenerAttached) return;
+      b._tickerPauseListenerAttached = true;
       b.addEventListener('touchstart', () => tickerTrack.classList.add('ticker-paused'), {passive: true});
       b.addEventListener('touchend', () => setTimeout(() => tickerTrack.classList.remove('ticker-paused'), 900), {passive: true});
       b.addEventListener('mousedown', () => tickerTrack.classList.add('ticker-paused'));
@@ -3379,78 +3510,8 @@ function initDragonBallsCollector() {
   }
 }
 
-// Rebind handlers after a scatter reshuffle (removes stale listeners from shuffled pool)
 function rebindDragonBallHandlers() {
-  // Strip old listeners by cloning nodes (dataset/class already correct after renderDragonBallSVGs)
-  document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(el => {
-    if (el.classList.contains('shenron-star-ball')) return; // keep Shenron altar balls untouched
-    const clone = el.cloneNode(true);
-    el.parentNode.replaceChild(clone, el);
-  });
-
-  const freshReal = document.querySelectorAll('.dragon-ball[data-ball]');
-  const freshFake = document.querySelectorAll('.fake-dragon-ball[data-fake-ball]');
-
-  freshReal.forEach(ball => {
-    const handleBallCollect = (e) => {
-      e.stopPropagation();
-      const ballNumber = parseInt(ball.getAttribute('data-ball'), 10);
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      if (ballNumber >= 1 && ballNumber <= 7) {
-        if (!collectedBalls.has(ballNumber)) {
-          triggerDragonBallCollection(ballNumber, ball, clientX, clientY);
-        } else {
-          createKiSparks(clientX, clientY);
-          showToast(`${ballNumber}-Star Dragon Ball is already secured in your Radar! (${collectedBalls.size}/7)`);
-        }
-      }
-    };
-    ball.addEventListener('click', handleBallCollect);
-    ball.addEventListener('touchend', (e) => { e.preventDefault(); handleBallCollect(e); });
-    ball.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const rect = ball.getBoundingClientRect();
-        handleBallCollect({ stopPropagation: () => {}, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
-      }
-    });
-  });
-
-  freshFake.forEach(fakeBall => {
-    const handleFakeClick = (e) => {
-      e.stopPropagation();
-      const fakeType = fakeBall.getAttribute('data-fake-ball');
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      const clientX = touch ? touch.clientX : (e.clientX || window.innerWidth / 2);
-      const clientY = touch ? touch.clientY : (e.clientY || window.innerHeight / 2);
-      triggerKidGokuPrank(fakeType, clientX, clientY);
-    };
-    fakeBall.addEventListener('click', handleFakeClick);
-    fakeBall.addEventListener('touchend', (e) => { e.preventDefault(); handleFakeClick(e); });
-    fakeBall.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const rect = fakeBall.getBoundingClientRect();
-        handleFakeClick({ stopPropagation: () => {}, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
-      }
-    });
-  });
-
-  // Re-attach ticker pause handlers for freshly cloned ticker balls
-  const tickerTrack = document.querySelector('.ticker-track');
-  if (tickerTrack) {
-    const tickerBalls = document.querySelectorAll('.ticker-container .dragon-ball, .ticker-container .fake-dragon-ball');
-    tickerBalls.forEach(b => {
-      b.addEventListener('touchstart', () => tickerTrack.classList.add('ticker-paused'), {passive: true});
-      b.addEventListener('touchend', () => setTimeout(() => tickerTrack.classList.remove('ticker-paused'), 900), {passive: true});
-      b.addEventListener('mousedown', () => tickerTrack.classList.add('ticker-paused'));
-      b.addEventListener('mouseleave', () => tickerTrack.classList.remove('ticker-paused'));
-      b.addEventListener('focus', () => tickerTrack.classList.add('ticker-paused'));
-      b.addEventListener('blur', () => tickerTrack.classList.remove('ticker-paused'));
-    });
-  }
+  initDragonBallsCollector();
 }
 
 /* --- Ki Spark Click Effect --- */
@@ -4170,7 +4231,7 @@ window.scatterDragonBallsAgain = function() {
   if (!isModalActive) {
     closeShenronModal();
     collectedBalls.clear();
-    dragonBallsInitialized = false; // Allow reshuffle on next render
+    saveCollectedDragonBalls();
     document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
       ball.classList.remove('collected', 'ball-disappeared');
       ball.style.removeProperty('display');
@@ -4182,6 +4243,7 @@ window.scatterDragonBallsAgain = function() {
     });
     renderDragonBallSVGs();
     updateRadarMiniBlips();
+    renderRadarHUD();
     try { rebindDragonBallHandlers(); } catch(e) {}
     const radarCount = document.getElementById('ballsFoundCount');
     if (radarCount) radarCount.textContent = '0';
@@ -4316,11 +4378,11 @@ window.scatterDragonBallsAgain = function() {
     // Safety: clear any stray clones after a beat
     setTimeout(() => document.querySelectorAll('.db-scatter-clone').forEach(c => c.remove()), 400);
 
-    // Unlock modal and then reshuffle page balls
+    // Unlock modal and then reset page balls
     if (modal) modal.classList.remove('scattering');
     closeShenronModal();
     collectedBalls.clear();
-    dragonBallsInitialized = false; // Allow reshuffle on next render
+    saveCollectedDragonBalls();
 
     document.querySelectorAll('.dragon-ball, .fake-dragon-ball').forEach(ball => {
       ball.classList.remove('collected', 'ball-disappeared', 'scattered-entrance', 'collected');
@@ -4335,6 +4397,7 @@ window.scatterDragonBallsAgain = function() {
 
     renderDragonBallSVGs();
     updateRadarMiniBlips();
+    renderRadarHUD();
     try { rebindDragonBallHandlers(); } catch(e) {}
 
     const radarCount = document.getElementById('ballsFoundCount');
