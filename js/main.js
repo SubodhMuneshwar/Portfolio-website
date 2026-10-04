@@ -227,6 +227,8 @@ function initSpiritBomb() {
   const rotateIcon = document.getElementById('spiritRotateIcon');
   const rotateText = document.getElementById('spiritRotateText');
   const totalCountEl = document.getElementById('spiritTotalCount');
+  const catalogHeading = document.getElementById('catalogHeading');
+  const catalogChipsGrid = document.getElementById('catalogChipsGrid');
 
   if (!arena || !canvas || !nodesLayer) return;
 
@@ -498,17 +500,80 @@ function initSpiritBomb() {
           }
         });
 
+        // Re-render Quick-Select Category Arsenal for this category
+        renderCategoryCatalog(activeFilter);
+
         // If currently active skill is dimmed by filter, select first matching skill
         const currentActive = sphereNodes.find(n => n.skill.id === activeSkillId);
         if (currentActive && activeFilter !== 'all' && currentActive.skill.category !== activeFilter) {
           const firstMatching = sphereNodes.find(n => n.skill.category === activeFilter);
           if (firstMatching) {
-            selectSkill(firstMatching.skill.id, false);
+            selectSkill(firstMatching.skill.id, true);
           }
         }
 
         playSynthTone(660, 'sine', 0.05, 0.05);
       });
+    });
+  }
+
+  // Quick-Select Category Arsenal Catalog
+  const categoryNames = {
+    'all': 'All Engineering Stack',
+    'languages': 'Core Languages',
+    'backend': 'Backend & Systems',
+    'ai-ml': 'AI, ML & Vision',
+    'frontend': 'Frontend & UI',
+    'database': 'Databases & Cloud',
+    'devops': 'DevOps & Tooling'
+  };
+
+  function renderCategoryCatalog(cat = 'all') {
+    if (!catalogChipsGrid) return;
+    const filtered = (cat === 'all')
+      ? skillsData
+      : skillsData.filter(s => s.category === cat);
+
+    if (catalogHeading) {
+      const title = categoryNames[cat] || 'Arsenal';
+      catalogHeading.textContent = `${title} (${filtered.length})`;
+    }
+
+    catalogChipsGrid.innerHTML = '';
+    filtered.forEach(skill => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = `catalog-skill-chip ${skill.id === activeSkillId ? 'is-active' : ''}`;
+      chip.setAttribute('data-skill-id', skill.id);
+      chip.style.setProperty('--chip-accent', skill.brandColor || '#38bdf8');
+      chip.title = `${skill.name} • ${skill.level}`;
+
+      chip.innerHTML = `
+        <span class="catalog-chip-icon">${skill.svgIcon || ''}</span>
+        <span>${skill.name}</span>
+      `;
+
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        selectSkill(skill.id, true);
+      });
+
+      catalogChipsGrid.appendChild(chip);
+    });
+  }
+
+  function updateCatalogActiveItem(skillId) {
+    if (!catalogChipsGrid) return;
+    const chips = catalogChipsGrid.querySelectorAll('.catalog-skill-chip');
+    chips.forEach(c => {
+      if (c.getAttribute('data-skill-id') === skillId) {
+        c.classList.add('is-active');
+        try {
+          c.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        } catch(e) {}
+      } else {
+        c.classList.remove('is-active');
+      }
     });
   }
 
@@ -552,6 +617,9 @@ function initSpiritBomb() {
       }
     });
 
+    // Update Category Arsenal active chip
+    updateCatalogActiveItem(skillId);
+
     if (smoothlyRotate) {
       // Calculate target rotation to bring this node directly front-facing (z = 1)
       const wantedRotY = -Math.atan2(targetNode.origX, targetNode.origZ);
@@ -574,39 +642,78 @@ function initSpiritBomb() {
     renderCompactHud(targetNode.skill);
   }
 
-  // Render Compact Tech Scouter HUD Strip (Small details on click or hover)
+  // Render Active Skill Scouter Telemetry Dossier Card (Information Part)
   function renderCompactHud(skill) {
     if (!compactHud || !skill) return;
 
     compactHud.style.setProperty('--active-accent', skill.brandColor || '#38bdf8');
 
-    const projectChipHtml = (skill.projects && skill.projects.length)
+    const capabilitiesHtml = (skill.keyCapabilities && skill.keyCapabilities.length)
       ? `
-        <button type="button" class="hud-project-chip" data-project-ref="${skill.projects[0].id}" title="View in ${skill.projects[0].name}">
-          <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
-          <span>${skill.projects[0].name}</span>
-        </button>
+        <div class="dossier-capabilities-section">
+          <span class="dossier-subheading">Key Capabilities</span>
+          <ul class="dossier-caps-list">
+            ${skill.keyCapabilities.map(cap => `
+              <li class="dossier-cap-item">
+                <span class="cap-bullet" style="background: ${skill.brandColor || '#38bdf8'}; color: ${skill.brandColor || '#38bdf8'};"></span>
+                <span>${cap}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `
+      : '';
+
+    const projectsHtml = (skill.projects && skill.projects.length)
+      ? `
+        <div class="dossier-projects-section">
+          <span class="dossier-subheading">Engineered in Production:</span>
+          <div class="dossier-projects-row">
+            ${skill.projects.map(p => `
+              <button type="button" class="hud-project-chip" data-project-ref="${p.id}" title="Jump to ${p.name}">
+                <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
+                <span>${p.name}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `
+      : '';
+
+    const expHtml = skill.experience
+      ? `
+        <div class="dossier-exp-row">
+          <i data-lucide="clock" style="width: 13px; height: 13px; color: ${skill.brandColor || '#38bdf8'};"></i>
+          <span>${skill.experience}</span>
+        </div>
       `
       : '';
 
     compactHud.innerHTML = `
-      <div class="hud-icon-badge" style="border-color: ${skill.brandColor || '#38bdf8'}; box-shadow: 0 0 16px ${skill.brandColor || 'rgba(56, 189, 248, 0.4)'};">
-        ${skill.svgIcon || ''}
-      </div>
-      <div class="hud-content">
-        <div class="hud-meta-row">
-          <h4 class="hud-title">${skill.name}</h4>
-          <span class="hud-cat-tag" style="color: ${skill.brandColor || '#38bdf8'}; border-color: ${skill.brandColor || '#38bdf8'};">${skill.categoryLabel || skill.category}</span>
+      <div class="dossier-header">
+        <div class="dossier-icon-badge" style="border-color: ${skill.brandColor || '#38bdf8'}; box-shadow: 0 0 16px ${skill.brandColor || 'rgba(56, 189, 248, 0.4)'};">
+          ${skill.svgIcon || ''}
         </div>
-        <p class="hud-desc">${skill.description}</p>
-      </div>
-      <div class="hud-extra">
-        <div class="hud-power-chip" title="Proficiency Level">
-          <i data-lucide="zap" style="width: 12px; height: 12px; color: ${skill.brandColor || '#38bdf8'};"></i>
-          <span class="hud-power-val" style="color: ${skill.brandColor || '#38bdf8'};">${skill.powerLevel || (skill.powerPercent + '%')}</span>
+        <div class="dossier-identity">
+          <div class="dossier-meta-top">
+            <span class="dossier-cat-tag" style="color: ${skill.brandColor || '#38bdf8'}; border-color: ${skill.brandColor || '#38bdf8'};">${skill.categoryLabel || skill.category}</span>
+            <span class="dossier-level-badge">${skill.level || 'Proficient'}</span>
+          </div>
+          <h3 class="dossier-skill-name">${skill.name}</h3>
         </div>
-        ${projectChipHtml}
+        <div class="dossier-power-pill" title="Ki Power Rating">
+          <i data-lucide="zap" style="width: 13px; height: 13px; color: ${skill.brandColor || '#38bdf8'};"></i>
+          <span class="dossier-power-val">${skill.powerLevel || (skill.powerPercent + '%')}</span>
+        </div>
       </div>
+
+      ${expHtml}
+
+      <p class="dossier-description">${skill.description}</p>
+
+      ${capabilitiesHtml}
+
+      ${projectsHtml}
     `;
 
     // Hook up project navigation clicks
@@ -656,8 +763,10 @@ function initSpiritBomb() {
   // Expose global selector
   window.selectSpiritSkill = (skillId) => selectSkill(skillId, true);
 
-  // Initial compact HUD render
+  // Initial renders
   renderCompactHud(skillsData[0]);
+  renderCategoryCatalog('all');
+  updateCatalogActiveItem(skillsData[0].id);
 
   // Main RAF Animation Loop
   let lastTime = performance.now();
@@ -693,15 +802,15 @@ function initSpiritBomb() {
     }
 
     // Geometry Calculation
-    const arenaWidth = arena.clientWidth || 580;
+    const arenaWidth = arena.clientWidth || 540;
     const isMobile = arenaWidth < 640;
     const centerX = arenaWidth / 2;
-    const centerY = isMobile ? 165 : 205; // Center of Spirit Bomb sphere
+    const centerY = isMobile ? 165 : 195; // Center of Spirit Bomb sphere aligned with Goku
 
     // Responsive radius: adapt smoothly to container width
     const R = isMobile
-      ? Math.max(120, Math.min(145, arenaWidth * 0.35))
-      : Math.max(160, Math.min(190, arenaWidth * 0.28));
+      ? Math.max(115, Math.min(140, arenaWidth * 0.35))
+      : Math.max(145, Math.min(175, arenaWidth * 0.32));
 
     const cosX = Math.cos(rotX);
     const sinX = Math.sin(rotX);
