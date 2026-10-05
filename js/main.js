@@ -256,6 +256,15 @@ function initSpiritBomb() {
   let activeSkillId = skillsData[0].id;
   let activeFilter = 'all';
 
+  // Spirit Bomb Ki Gathering Animation on Scroll
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let isGathering = false;
+  let gatheringStartTime = null;
+  let gatheringComplete = prefersReducedMotion;
+  let hasTriggeredScrollGather = prefersReducedMotion;
+  const GATHER_STAGGER = 65; // ms between each skill taking flight
+  const GATHER_TRAVEL_DURATION = 680; // ms for individual Ki mote to travel inward & settle
+
   // 3D Sphere geometry with uniform spherical Fibonacci distribution
   const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Golden Angle (~2.3999632 rad)
   const sphereNodes = skillsData.map((skill, i) => {
@@ -277,7 +286,11 @@ function initSpiritBomb() {
       z: 0,
       scale: 1,
       screenX: 0,
-      screenY: 0
+      screenY: 0,
+      curScreenX: 0,
+      curScreenY: 0,
+      arrived: false,
+      gathering: false
     };
   });
 
@@ -290,6 +303,12 @@ function initSpiritBomb() {
     el.setAttribute('tabindex', '0');
     el.setAttribute('aria-label', `${nodeItem.skill.name} - ${nodeItem.skill.level}`);
     el.style.setProperty('--node-color', nodeItem.skill.brandColor || '#38bdf8');
+
+    // Initially hide until gathering sequence starts (unless user prefers reduced motion)
+    if (!prefersReducedMotion) {
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+    }
 
     const shortLabelMap = {
       'CNN Deep Learning': 'CNNs',
@@ -338,6 +357,86 @@ function initSpiritBomb() {
     nodeItem.el = el;
     nodesLayer.appendChild(el);
   });
+
+  // Ki Gathering Animation Orchestration Helpers
+  function startKiGatheringSequence(force = false) {
+    if (prefersReducedMotion) {
+      gatheringComplete = true;
+      sphereNodes.forEach(item => { item.arrived = true; });
+      return;
+    }
+    if (isGathering && !force) return;
+
+    isGathering = true;
+    gatheringComplete = false;
+    gatheringStartTime = performance.now();
+
+    sphereNodes.forEach(item => {
+      item.arrived = false;
+      item.gathering = false;
+      if (item.el) {
+        const circle = item.el.querySelector('.spirit-node-icon-circle');
+        if (circle) circle.classList.remove('ki-arrived-pulse');
+        item.el.style.opacity = '0';
+        item.el.style.pointerEvents = 'none';
+      }
+    });
+
+    const gokuWrapper = document.getElementById('spiritGokuWrapper');
+    if (gokuWrapper) gokuWrapper.classList.add('is-charging');
+    arena.classList.add('is-gathering');
+    arena.classList.remove('is-charged');
+
+    animateDossierPowerLevel();
+    playSynthTone(220, 'sine', 0.28, 0.04);
+  }
+
+  function triggerSpiritBombFullChargePulse() {
+    arena.classList.remove('is-gathering');
+    arena.classList.add('is-charged');
+    const gokuWrapper = document.getElementById('spiritGokuWrapper');
+    if (gokuWrapper) gokuWrapper.classList.remove('is-charging');
+
+    playSynthTone(587.33, 'triangle', 0.45, 0.04);
+
+    setTimeout(() => {
+      arena.classList.remove('is-charged');
+    }, 1200);
+  }
+
+  function animateDossierPowerLevel() {
+    if (!compactHud) return;
+    const gaugeFill = compactHud.querySelector('.dossier-gauge-fill');
+    if (gaugeFill) {
+      gaugeFill.style.transition = 'none';
+      gaugeFill.style.width = '0%';
+      setTimeout(() => {
+        gaugeFill.style.transition = 'width 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+        const curSkill = sphereNodes.find(n => n.skill.id === activeSkillId)?.skill || skillsData[0];
+        gaugeFill.style.width = `${curSkill.powerPercent || 90}%`;
+      }, 350);
+    }
+  }
+
+  // Scroll Observer: Trigger Spirit Bomb energy gathering when user scrolls into view
+  const skillsSection = document.getElementById('skills') || arena.closest('.section');
+  if (skillsSection && !prefersReducedMotion) {
+    const gatherObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasTriggeredScrollGather) {
+          hasTriggeredScrollGather = true;
+          startKiGatheringSequence();
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -40px 0px'
+    });
+    gatherObserver.observe(skillsSection);
+  } else {
+    hasTriggeredScrollGather = true;
+    startKiGatheringSequence();
+  }
 
   // Rotation & Motion State
   let rotX = -0.15;
@@ -474,6 +573,7 @@ function initSpiritBomb() {
       velX = 0;
       velY = 0;
       playSynthTone(440, 'triangle', 0.06, 0.06);
+      startKiGatheringSequence(true);
     });
   }
 
@@ -923,14 +1023,104 @@ function initSpiritBomb() {
     const cosY = Math.cos(rotY);
     const sinY = Math.sin(rotY);
 
-    // Update 3D position of each node
+    // Update 3D position of each node with Ki Gathering entrance physics
+    let allArrived = true;
+
     for (let i = 0; i < N; i++) {
       const item = sphereNodes[i];
+      let distMult = 1.0;
+      let nodeScale = 1.0;
+      let nodeOpacity = 1.0;
+      let spiralAngle = 0;
+      let ySkyOffset = 0;
+
+      if (!gatheringComplete) {
+        if (!hasTriggeredScrollGather || gatheringStartTime === null) {
+          allArrived = false;
+          if (item.el) {
+            item.el.style.opacity = '0';
+            item.el.style.pointerEvents = 'none';
+          }
+          continue;
+        }
+
+        const nodeDelay = i * GATHER_STAGGER;
+        const elapsed = now - (gatheringStartTime + nodeDelay);
+
+        if (elapsed < 0) {
+          allArrived = false;
+          item.gathering = false;
+          if (item.el) {
+            item.el.style.opacity = '0';
+            item.el.style.pointerEvents = 'none';
+          }
+          continue;
+        } else if (elapsed < GATHER_TRAVEL_DURATION) {
+          allArrived = false;
+          item.gathering = true;
+          const t = elapsed / GATHER_TRAVEL_DURATION;
+          // Cubic ease-out with smooth deceleration into orbital position
+          const easeOut = 1 - Math.pow(1 - t, 3);
+
+          // Fly in from outer perimeter towards sphere
+          const startDist = 3.6 + (i % 4) * 0.45;
+          distMult = 1.0 + (1.0 - easeOut) * (startDist - 1.0);
+
+          // Spiral curvature around Y axis
+          spiralAngle = (1.0 - easeOut) * 2.2 * ((i % 2 === 0) ? 1 : -1);
+
+          // Stream in from higher elevation
+          ySkyOffset = (1.0 - easeOut) * 0.45;
+
+          // Scale: starts small like a Ki spark (0.35), reaches 1.25 as it arrives, settles to 1.0
+          if (t < 0.82) {
+            nodeScale = 0.35 + (t / 0.82) * 0.9;
+          } else {
+            const settle = (t - 0.82) / 0.18;
+            nodeScale = 1.25 - settle * 0.25;
+          }
+
+          nodeOpacity = Math.min(1.0, t * 2.8);
+
+          // Impact on sphere surface
+          if (t >= 0.94 && !item.arrived) {
+            item.arrived = true;
+            if (item.el) {
+              const iconCircle = item.el.querySelector('.spirit-node-icon-circle');
+              if (iconCircle) {
+                iconCircle.classList.add('ki-arrived-pulse');
+                setTimeout(() => {
+                  iconCircle.classList.remove('ki-arrived-pulse');
+                }, 450);
+              }
+            }
+            playKiSound(320 + (i / N) * 440, 'sine', 0.04, 0.015);
+          }
+        } else {
+          item.arrived = true;
+          item.gathering = false;
+          distMult = 1.0;
+          nodeScale = 1.0;
+          nodeOpacity = 1.0;
+          spiralAngle = 0;
+          ySkyOffset = 0;
+        }
+      } else {
+        item.arrived = true;
+        item.gathering = false;
+      }
+
+      // Rotate with incoming spiral angle
+      const cosSp = Math.cos(spiralAngle);
+      const sinSp = Math.sin(spiralAngle);
+      const baseOrigX = item.origX * cosSp - item.origZ * sinSp;
+      const baseOrigZ = item.origX * sinSp + item.origZ * cosSp;
+      const baseOrigY = item.origY + ySkyOffset;
 
       // Rotate around vertical Y axis
-      const x1 = item.origX * cosY + item.origZ * sinY;
-      const z1 = -item.origX * sinY + item.origZ * cosY;
-      const y1 = item.origY;
+      const x1 = baseOrigX * cosY + baseOrigZ * sinY;
+      const z1 = -baseOrigX * sinY + baseOrigZ * cosY;
+      const y1 = baseOrigY;
 
       // Rotate around horizontal X axis (subtle pitch)
       const y2 = y1 * cosX - z1 * sinX;
@@ -938,40 +1128,59 @@ function initSpiritBomb() {
       const x2 = x1;
 
       const perspective = 580;
-      const scale = perspective / (perspective - z2 * R);
-      const screenX = centerX + x2 * R * scale;
-      const screenY = centerY - y2 * R * scale; // Note: minus because +y is up in 3D
+      const curR = R * distMult;
+      const projScale = perspective / Math.max(100, perspective - z2 * curR);
+      const screenX = centerX + x2 * curR * projScale;
+      const screenY = centerY - y2 * curR * projScale; // Note: minus because +y is up in 3D
 
       item.x = x2;
       item.y = y2;
       item.z = z2;
-      item.scale = scale;
+      item.scale = projScale;
       item.screenX = screenX;
       item.screenY = screenY;
+      item.curScreenX = screenX;
+      item.curScreenY = screenY;
 
       const el = item.el;
       if (el) {
-        // Translation with hardware acceleration (centered on 48px circle with label beneath)
-        el.style.transform = `translate3d(${screenX - 34}px, ${screenY - 24}px, 0) scale(${scale * 0.96})`;
-        el.style.zIndex = Math.round((z2 + 1.2) * 100);
+        // Translation with hardware acceleration
+        const finalScale = projScale * 0.96 * nodeScale;
+        el.style.transform = `translate3d(${screenX - 34}px, ${screenY - 24}px, 0) scale(${finalScale})`;
+        el.style.zIndex = Math.round((z2 + 2.5) * 100);
 
-        // Smart depth-fading: hide labels on nodes in the back to prevent clutter
         const labelEl = el.querySelector('.spirit-node-label');
-        if (z2 < -0.15) {
-          const backAlpha = Math.max(0.2, 0.52 + z2 * 0.4);
-          el.style.opacity = backAlpha;
-          el.style.filter = `blur(${Math.min(1.8, Math.abs(z2) * 1.5)}px)`;
-          if (labelEl) labelEl.style.opacity = '0';
-        } else {
-          el.style.opacity = '1';
+
+        if (!item.arrived) {
+          el.style.opacity = nodeOpacity;
           el.style.filter = 'none';
-          if (labelEl) {
-            const labelAlpha = Math.min(1, Math.max(0, (z2 + 0.15) / 0.3));
-            labelEl.style.opacity = labelAlpha;
+          if (labelEl) labelEl.style.opacity = '0';
+          el.style.pointerEvents = 'none';
+        } else {
+          // Smart depth-fading: hide labels on nodes in the back to prevent clutter
+          if (z2 < -0.15) {
+            const backAlpha = Math.max(0.2, 0.52 + z2 * 0.4);
+            el.style.opacity = backAlpha;
+            el.style.filter = `blur(${Math.min(1.8, Math.abs(z2) * 1.5)}px)`;
+            if (labelEl) labelEl.style.opacity = '0';
+          } else {
+            el.style.opacity = '1';
+            el.style.filter = 'none';
+            if (labelEl) {
+              const labelAlpha = Math.min(1, Math.max(0, (z2 + 0.15) / 0.3));
+              labelEl.style.opacity = labelAlpha;
+            }
           }
+          el.style.pointerEvents = 'auto';
         }
-        el.style.pointerEvents = 'auto';
       }
+    }
+
+    // Check if entire Ki gathering sequence has completed
+    if (isGathering && allArrived) {
+      isGathering = false;
+      gatheringComplete = true;
+      triggerSpiritBombFullChargePulse();
     }
 
     // Canvas Spirit Bomb Core Render
@@ -989,13 +1198,43 @@ function initSpiritBomb() {
     const isRose = !document.body.classList.contains('saiyan-mode');
     const cx = width / 2;
     const cy = height / 2;
-    const coreR = Math.max(110, R * 0.72);
+
+    // Dynamic Growth: Core grows in size and power as skills gather into it!
+    const maxCoreR = Math.max(110, R * 0.72);
+    let coreR = maxCoreR;
+    if (!gatheringComplete && isGathering && gatheringStartTime !== null) {
+      const arrivedCount = sphereNodes.filter(n => n.arrived).length;
+      const gatherRatio = Math.min(1.0, Math.max(0.18, arrivedCount / N));
+      coreR = maxCoreR * (0.24 + 0.76 * gatherRatio);
+    } else if (!hasTriggeredScrollGather && !gatheringComplete) {
+      coreR = maxCoreR * 0.24;
+    }
     currentCoreR = coreR;
 
     // Color definitions
     const primaryGlow = isRose ? 'rgba(255, 46, 151, ' : 'rgba(56, 189, 248, ';
     const secondaryGlow = isRose ? 'rgba(219, 39, 119, ' : 'rgba(14, 165, 233, ';
     const innerHot = '#ffffff';
+
+    // 0. Inflow Ki Energy Streams from gathering skills into Genki Dama center
+    if (isGathering && !gatheringComplete) {
+      ctx.save();
+      sphereNodes.forEach(item => {
+        if (item.gathering && !item.arrived && item.curScreenX && item.curScreenY) {
+          const brandColor = item.skill.brandColor || (isRose ? '#FF2E97' : '#38BDF8');
+          ctx.strokeStyle = brandColor;
+          ctx.lineWidth = 1.8;
+          ctx.globalAlpha = 0.35;
+          ctx.beginPath();
+          ctx.moveTo(item.curScreenX, item.curScreenY);
+          const midX = (item.curScreenX + cx) / 2 + (Math.sin(now * 0.01 + item.origX) * 10);
+          const midY = (item.curScreenY + cy) / 2 + (Math.cos(now * 0.01 + item.origY) * 10);
+          ctx.quadraticCurveTo(midX, midY, cx, cy);
+          ctx.stroke();
+        }
+      });
+      ctx.restore();
+    }
 
     // 1. Radiant Outer Corona
     const coronaGrad = ctx.createRadialGradient(cx, cy, coreR * 0.2, cx, cy, coreR * 1.55);

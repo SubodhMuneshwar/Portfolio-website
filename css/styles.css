@@ -3518,6 +3518,87 @@ body.saiyan-mode .spirit-tech-node.is-active .spirit-node-label {
   box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
 }
 
+/* ==========================================================================
+   Spirit Bomb Ki Gathering Animation States & Keyframes
+   Triggered dynamically when the user scrolls into the Skills section.
+   ========================================================================== */
+.spirit-node-icon-circle.ki-arrived-pulse {
+  animation: kiNodeArrivedFlash 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes kiNodeArrivedFlash {
+  0% {
+    transform: scale(1.35);
+    box-shadow: 0 0 35px var(--node-color, #FF2E97), 0 0 18px #ffffff, inset 0 0 14px #ffffff !important;
+    border-color: #ffffff !important;
+  }
+  60% {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px var(--node-color, #FF2E97), 0 0 10px rgba(255, 255, 255, 0.8) !important;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+body.saiyan-mode .spirit-node-icon-circle.ki-arrived-pulse {
+  animation: kiNodeArrivedFlashSaiyan 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes kiNodeArrivedFlashSaiyan {
+  0% {
+    transform: scale(1.35);
+    box-shadow: 0 0 35px var(--node-color, #10b981), 0 0 18px #ffffff, inset 0 0 14px #ffffff !important;
+    border-color: #ffffff !important;
+  }
+  60% {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px var(--node-color, #10b981), 0 0 10px rgba(255, 255, 255, 0.8) !important;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Goku Ki Charging Tremor Effect */
+.spirit-goku-wrapper.is-charging .spirit-goku-img {
+  animation: gokuKiTremor 0.16s ease-in-out infinite alternate;
+  filter: drop-shadow(0 -22px 42px rgba(255, 46, 151, 0.75))
+          drop-shadow(0 15px 30px rgba(15, 23, 42, 0.25));
+}
+
+body.saiyan-mode .spirit-goku-wrapper.is-charging .spirit-goku-img {
+  filter: drop-shadow(0 -22px 42px rgba(16, 185, 129, 0.75))
+          drop-shadow(0 15px 35px rgba(0, 0, 0, 0.9));
+}
+
+@keyframes gokuKiTremor {
+  0% { transform: scale(0.99) translateY(0); }
+  100% { transform: scale(1.01) translateY(-2px); }
+}
+
+/* Full Charge Culmination Shockwave */
+.spirit-arena.is-charged .spirit-plasma-aura {
+  animation: spiritFullChargeShockwave 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes spiritFullChargeShockwave {
+  0% {
+    transform: translate(-50%, -50%) scale(0.85);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1.32);
+    opacity: 1;
+    filter: blur(24px);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.85;
+    filter: blur(40px);
+  }
+}
+
 /* Floating Tooltip */
 .spirit-hover-tooltip {
   position: absolute;
