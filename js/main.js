@@ -371,10 +371,14 @@ function initSpiritBomb() {
     gatheringComplete = false;
     gatheringStartTime = performance.now();
 
+    impactRings = [];
+    coreFlare = 1.0;
+
     sphereNodes.forEach(item => {
       item.arrived = false;
       item.gathering = false;
       if (item.el) {
+        item.el.classList.remove('is-ki-inflow');
         const circle = item.el.querySelector('.spirit-node-icon-circle');
         if (circle) circle.classList.remove('ki-arrived-pulse');
         item.el.style.opacity = '0';
@@ -465,10 +469,12 @@ function initSpiritBomb() {
     });
   }
 
-  // Procedural Lightning Sparks
+  // Procedural Lightning Sparks & Ki Vortex Effects
   let lightningArcs = [];
   let lightningTimer = 0;
   let currentCoreR = 135;
+  let impactRings = [];
+  let coreFlare = 1.0;
 
   function generateLightning() {
     lightningArcs = [];
@@ -1051,6 +1057,7 @@ function initSpiritBomb() {
           allArrived = false;
           item.gathering = false;
           if (item.el) {
+            item.el.classList.remove('is-ki-inflow');
             item.el.style.opacity = '0';
             item.el.style.pointerEvents = 'none';
           }
@@ -1058,47 +1065,79 @@ function initSpiritBomb() {
         } else if (elapsed < GATHER_TRAVEL_DURATION) {
           allArrived = false;
           item.gathering = true;
-          const t = elapsed / GATHER_TRAVEL_DURATION;
-          // Cubic ease-out with smooth deceleration into orbital position
-          const easeOut = 1 - Math.pow(1 - t, 3);
-
-          // Fly in from outer perimeter towards sphere
-          const startDist = 3.6 + (i % 4) * 0.45;
-          distMult = 1.0 + (1.0 - easeOut) * (startDist - 1.0);
-
-          // Spiral curvature around Y axis
-          spiralAngle = (1.0 - easeOut) * 2.2 * ((i % 2 === 0) ? 1 : -1);
-
-          // Stream in from higher elevation
-          ySkyOffset = (1.0 - easeOut) * 0.45;
-
-          // Scale: starts small like a Ki spark (0.35), reaches 1.25 as it arrives, settles to 1.0
-          if (t < 0.82) {
-            nodeScale = 0.35 + (t / 0.82) * 0.9;
-          } else {
-            const settle = (t - 0.82) / 0.18;
-            nodeScale = 1.25 - settle * 0.25;
+          if (item.el && !item.el.classList.contains('is-ki-inflow')) {
+            item.el.classList.add('is-ki-inflow');
           }
 
-          nodeOpacity = Math.min(1.0, t * 2.8);
+          const t = elapsed / GATHER_TRAVEL_DURATION;
 
-          // Impact on sphere surface
-          if (t >= 0.94 && !item.arrived) {
+          // Gravitational suction physics: acceleration inward followed by orbital settle
+          // Phase 1 (0 -> 0.85): Accretion acceleration inward toward the Genki Dama
+          // Phase 2 (0.85 -> 1.0): Orbital capture and elastic cushion settling onto sphere
+          let pullProgress;
+          if (t < 0.85) {
+            const p = t / 0.85;
+            pullProgress = Math.pow(p, 2.2) * 0.88;
+          } else {
+            const p = (t - 0.85) / 0.15;
+            pullProgress = 0.88 + (1 - Math.pow(1 - p, 3)) * 0.12;
+          }
+
+          const startDist = 3.8 + (i % 5) * 0.45; // Outer cosmic perimeter
+          distMult = 1.0 + (1.0 - pullProgress) * (startDist - 1.0);
+
+          // Conservation of angular momentum: spiral swirl tightens as radius shrinks
+          const swirlDir = (i % 2 === 0) ? 1 : -1;
+          spiralAngle = Math.pow(1.0 - pullProgress, 1.4) * (2.8 + (i % 4) * 0.35) * swirlDir;
+
+          // Funnel inward vertically: gathering down from celestial sky and up from earth
+          const verticalOrigin = (i % 3 === 0) ? 0.75 : ((i % 3 === 1) ? -0.45 : 0.35);
+          ySkyOffset = (1.0 - pullProgress) * verticalOrigin;
+
+          // Scale: starts as concentrated Ki core (0.28), surges with energy (1.32), settles to 1.0
+          if (t < 0.85) {
+            nodeScale = 0.28 + (t / 0.85) * 1.04;
+          } else {
+            const settleP = (t - 0.85) / 0.15;
+            nodeScale = 1.32 - settleP * 0.32;
+          }
+
+          nodeOpacity = Math.min(1.0, t * 3.2);
+
+          // Impact & Absorption on sphere surface
+          if (t >= 0.92 && !item.arrived) {
             item.arrived = true;
             if (item.el) {
+              item.el.classList.remove('is-ki-inflow');
               const iconCircle = item.el.querySelector('.spirit-node-icon-circle');
               if (iconCircle) {
                 iconCircle.classList.add('ki-arrived-pulse');
                 setTimeout(() => {
                   iconCircle.classList.remove('ki-arrived-pulse');
-                }, 450);
+                }, 500);
               }
             }
+            // Spawn expanding energetic Ki impact ripple on canvas
+            const nodeBrandColor = item.skill.brandColor || (isRose ? '#FF2E97' : '#38BDF8');
+            impactRings.push({
+              x: item.curScreenX || centerX,
+              y: item.curScreenY || centerY,
+              r: 6,
+              maxR: 38,
+              alpha: 0.85,
+              color: nodeBrandColor
+            });
+            // Momentary surge in Spirit Bomb core luminosity
+            coreFlare = Math.min(1.35, coreFlare + 0.035);
+
             playKiSound(320 + (i / N) * 440, 'sine', 0.04, 0.015);
           }
         } else {
           item.arrived = true;
           item.gathering = false;
+          if (item.el) {
+            item.el.classList.remove('is-ki-inflow');
+          }
           distMult = 1.0;
           nodeScale = 1.0;
           nodeOpacity = 1.0;
@@ -1199,13 +1238,16 @@ function initSpiritBomb() {
     const cx = width / 2;
     const cy = height / 2;
 
+    // Smooth core flare back to 1.0
+    coreFlare += (1.0 - coreFlare) * 0.055;
+
     // Dynamic Growth: Core grows in size and power as skills gather into it!
     const maxCoreR = Math.max(110, R * 0.72);
     let coreR = maxCoreR;
     if (!gatheringComplete && isGathering && gatheringStartTime !== null) {
       const arrivedCount = sphereNodes.filter(n => n.arrived).length;
       const gatherRatio = Math.min(1.0, Math.max(0.18, arrivedCount / N));
-      coreR = maxCoreR * (0.24 + 0.76 * gatherRatio);
+      coreR = maxCoreR * (0.24 + 0.76 * gatherRatio) * coreFlare;
     } else if (!hasTriggeredScrollGather && !gatheringComplete) {
       coreR = maxCoreR * 0.24;
     }
@@ -1216,23 +1258,50 @@ function initSpiritBomb() {
     const secondaryGlow = isRose ? 'rgba(219, 39, 119, ' : 'rgba(14, 165, 233, ';
     const innerHot = '#ffffff';
 
-    // 0. Inflow Ki Energy Streams from gathering skills into Genki Dama center
+    // 0. Gravitational Energy Suction Accretion Waves
+    // Concentric cosmic ripples contracting inward toward the Spirit Bomb core (No connecting lines!)
     if (isGathering && !gatheringComplete) {
       ctx.save();
-      sphereNodes.forEach(item => {
-        if (item.gathering && !item.arrived && item.curScreenX && item.curScreenY) {
-          const brandColor = item.skill.brandColor || (isRose ? '#FF2E97' : '#38BDF8');
-          ctx.strokeStyle = brandColor;
-          ctx.lineWidth = 1.8;
-          ctx.globalAlpha = 0.35;
+      const suctionRings = 3;
+      for (let s = 0; s < suctionRings; s++) {
+        const ringPhase = ((now * 0.0009 + s * (1 / suctionRings)) % 1.0);
+        // Radius contracts inward: from (coreR * 2.3) down to (coreR * 0.94)
+        const currentR = (coreR * 0.94) + (1.0 - ringPhase) * (coreR * 1.36);
+        const ringAlpha = Math.sin(ringPhase * Math.PI) * 0.38;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, currentR, 0, Math.PI * 2);
+        ctx.strokeStyle = primaryGlow + ringAlpha + ')';
+        ctx.lineWidth = 1.6 + (1.0 - ringPhase) * 2.2;
+        ctx.shadowColor = isRose ? '#ff2e97' : '#38bdf8';
+        ctx.shadowBlur = 14;
+        ctx.setLineDash([12, 16]);
+        ctx.lineDashOffset = -now * 0.03 * (s % 2 === 0 ? 1 : -1);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    // Energy Absorption Impact Rings (shockwaves created as each skill enters the sphere)
+    if (impactRings.length > 0) {
+      ctx.save();
+      impactRings.forEach(ring => {
+        ring.r += 1.6;
+        ring.alpha *= 0.91;
+        if (ring.alpha > 0.02) {
           ctx.beginPath();
-          ctx.moveTo(item.curScreenX, item.curScreenY);
-          const midX = (item.curScreenX + cx) / 2 + (Math.sin(now * 0.01 + item.origX) * 10);
-          const midY = (item.curScreenY + cy) / 2 + (Math.cos(now * 0.01 + item.origY) * 10);
-          ctx.quadraticCurveTo(midX, midY, cx, cy);
+          ctx.arc(ring.x, ring.y, ring.r, 0, Math.PI * 2);
+          ctx.strokeStyle = ring.color || (isRose ? '#FF2E97' : '#38BDF8');
+          ctx.lineWidth = 2.2;
+          ctx.globalAlpha = ring.alpha;
+          ctx.shadowColor = ring.color || (isRose ? '#FF2E97' : '#38BDF8');
+          ctx.shadowBlur = 14;
           ctx.stroke();
         }
       });
+      impactRings = impactRings.filter(r => r.alpha > 0.02);
       ctx.restore();
     }
 
@@ -1305,11 +1374,41 @@ function initSpiritBomb() {
     });
     ctx.restore();
 
-    // 5. Rising Life Energy Motes (Nature channeling into Spirit Bomb)
+    // 5. Rising Life Energy Motes (Gravitational suction during gathering)
     ctx.save();
     particles.forEach(p => {
-      p.y -= p.speedY;
-      p.x += p.speedX;
+      if (isGathering && !gatheringComplete) {
+        // Gravitational suction physics: pull motes towards the center of Genki Dama
+        const dx = cx - p.x;
+        const dy = cy - p.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const pull = Math.min(5.2, (200 / Math.max(35, dist)) * 2.4);
+        const swirlX = (-dy / dist) * 1.4;
+        const swirlY = (dx / dist) * 1.4;
+
+        p.x += (dx / dist) * pull + swirlX;
+        p.y += (dy / dist) * pull + swirlY;
+
+        // Reset if sucked into core
+        if (dist < coreR * 0.55) {
+          const spawnAngle = Math.random() * Math.PI * 2;
+          const spawnDist = coreR * 2.0 + Math.random() * (coreR * 0.9);
+          p.x = cx + Math.cos(spawnAngle) * spawnDist;
+          p.y = cy + Math.sin(spawnAngle) * spawnDist;
+          p.alpha = 0.2 + Math.random() * 0.6;
+        }
+      } else {
+        p.y -= p.speedY;
+        p.x += p.speedX;
+
+        // Reset when particle enters core or goes off top
+        const distFromCenter = Math.hypot(p.x - cx, p.y - cy);
+        if (p.y < cy || distFromCenter < coreR * 0.4) {
+          p.x = cx + (Math.random() - 0.5) * (coreR * 2.2);
+          p.y = height * 0.85 + Math.random() * (height * 0.15);
+          p.alpha = 0.2 + Math.random() * 0.6;
+        }
+      }
 
       // Draw particle
       ctx.fillStyle = innerHot;
@@ -1319,14 +1418,6 @@ function initSpiritBomb() {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
-
-      // Reset when particle enters core or goes off top
-      const distFromCenter = Math.hypot(p.x - cx, p.y - cy);
-      if (p.y < cy || distFromCenter < coreR * 0.4) {
-        p.x = cx + (Math.random() - 0.5) * (coreR * 2.2);
-        p.y = height * 0.85 + Math.random() * (height * 0.15);
-        p.alpha = 0.2 + Math.random() * 0.6;
-      }
     });
     ctx.restore();
   }

@@ -3522,6 +3522,21 @@ body.saiyan-mode .spirit-tech-node.is-active .spirit-node-label {
    Spirit Bomb Ki Gathering Animation States & Keyframes
    Triggered dynamically when the user scrolls into the Skills section.
    ========================================================================== */
+/* Ki Inflow Node Flight State (Luminous energy orb while being pulled in) */
+.spirit-tech-node.is-ki-inflow .spirit-node-icon-circle {
+  box-shadow: 0 0 32px var(--node-color, #FF2E97),
+              0 0 16px #ffffff,
+              inset 0 0 12px rgba(255, 255, 255, 0.95) !important;
+  border-color: #ffffff !important;
+}
+
+body.saiyan-mode .spirit-tech-node.is-ki-inflow .spirit-node-icon-circle {
+  box-shadow: 0 0 32px var(--node-color, #10b981),
+              0 0 16px #ffffff,
+              inset 0 0 12px rgba(255, 255, 255, 0.95) !important;
+  border-color: #ffffff !important;
+}
+
 .spirit-node-icon-circle.ki-arrived-pulse {
   animation: kiNodeArrivedFlash 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
