@@ -228,6 +228,7 @@ function initSpiritBomb() {
   const rotateText = document.getElementById('spiritRotateText');
   const totalCountEl = document.getElementById('spiritTotalCount');
   const catalogHeading = document.getElementById('catalogHeading');
+  const catalogCountPill = document.getElementById('catalogCountPill');
   const catalogChipsGrid = document.getElementById('catalogChipsGrid');
 
   if (!arena || !canvas || !nodesLayer) return;
@@ -535,8 +536,10 @@ function initSpiritBomb() {
       : skillsData.filter(s => s.category === cat);
 
     if (catalogHeading) {
-      const title = categoryNames[cat] || 'Arsenal';
-      catalogHeading.textContent = `${title} (${filtered.length})`;
+      catalogHeading.textContent = categoryNames[cat] || 'Visual Tech Armory';
+    }
+    if (catalogCountPill) {
+      catalogCountPill.textContent = `${filtered.length} Tools`;
     }
 
     catalogChipsGrid.innerHTML = '';
@@ -550,7 +553,7 @@ function initSpiritBomb() {
 
       chip.innerHTML = `
         <span class="catalog-chip-icon">${skill.svgIcon || ''}</span>
-        <span>${skill.name}</span>
+        <span class="catalog-chip-label">${skill.name}</span>
       `;
 
       chip.addEventListener('click', (e) => {
@@ -642,106 +645,300 @@ function initSpiritBomb() {
     renderCompactHud(targetNode.skill);
   }
 
-  // Concise Micro-Tags mapping for all 26 skills (keeps UI minimal, no walls of text)
-  const skillMicroTags = {
-    python: ['CNN Pipelines', 'OpenCV Vision', 'REST APIs', 'NumPy ETL'],
-    csharp: ['SAP NCo 3.0', 'Active Directory', 'Oracle DB', 'RBAC Security'],
-    aspnet: ['Enterprise APIs', 'T-Code Auth', 'Audit Logging', 'SAP BAPI'],
-    flask: ['AI Inference', 'File Streaming', 'Blueprints', 'CORS APIs'],
-    opencv: ['Face Recognition', 'CLAHE Filters', 'Frame Capture', 'Biometrics'],
-    cnn: ['Retinal Scanning', 'DenseNet121', 'Transfer Learning', '92% Acc'],
-    pytorch: ['Tensor Ops', 'Model Fine-tuning', 'GPU Inference', 'Backprop'],
-    scikit: ['Ensemble Models', 'Feature Scaling', 'GridSearchCV', 'Evaluation'],
-    densenet: ['Dense Blocks', 'Feature Reuse', 'Medical Imaging', 'Pretrained'],
-    mediapipe: ['Face Mesh', 'Landmark Tracking', 'Iris Depth', 'Real-Time'],
-    rest: ['Microservices', 'JSON Endpoints', 'Sub-sec Latency', 'API Gateway'],
-    java: ['OOP Architecture', 'Data Structures', 'Multithreading', 'Backend'],
-    c: ['Memory Control', 'Pointers', 'Data Structures', 'Low-Level'],
-    cpp: ['STL Containers', 'High Performance', 'Algorithms', 'OOP Logic'],
-    sql: ['Complex Joins', 'Query Optimization', 'Indexes', 'Schema Design'],
-    mysql: ['ACID Transactions', 'Relational Schemas', 'Foreign Keys', 'Fast Queries'],
-    oracle: ['Enterprise DB', 'PL/SQL Packages', 'High Concurrency', 'Indexing'],
-    azure: ['Cloud Hosting', 'Blob Storage', 'App Services', 'IAM Security'],
-    aws: ['EC2 Instances', 'S3 Storage', 'Cloud Deployment', 'Security Groups'],
-    docker: ['Containerization', 'Microservices', 'Dockerfiles', 'Reproducibility'],
-    git: ['Version Control', 'Branching Workflows', 'CI/CD Actions', 'Code Review'],
-    htmlcss: ['Semantic HTML5', 'Modern CSS3', 'Responsive Layout', 'Animations'],
-    javascript: ['ES6+ Syntax', 'Async / Await', 'DOM Engines', 'Event Loop'],
-    bootstrap: ['Responsive Grid', 'Utility Classes', 'UI Components', 'Mobile-First'],
-    figma: ['UI/UX Wireframes', 'Design Systems', 'Interactive Prototypes', 'Auto-Layout'],
-    tailwind: ['Utility-First CSS', 'Design Tokens', 'Modern UI', 'Responsive']
+  // Visual Project & Architecture Preview Map (Image-First Scouter Dossier)
+  const skillVisualMap = {
+    python: {
+      image: 'assets/dr.png',
+      title: 'Diabetic Retinopathy Clinical AI',
+      tag: 'Medical AI · 10,000+ Scans Processed',
+      statusBadge: 'CLINICAL AI DEPLOYED',
+      projectId: 'diabetic-retinopathy',
+      metric: '3+ Yrs Exp • 92% Acc CNN'
+    },
+    csharp: {
+      image: 'assets/enterprise_rbac.jpg',
+      title: 'Enterprise SAP ERP & RBAC Console',
+      tag: 'Enterprise Middleware · SAP NCo 3.0',
+      statusBadge: 'ENTERPRISE PRODUCTION',
+      projectId: 'experience',
+      metric: 'Production • RCF Ltd.'
+    },
+    aspnet: {
+      image: 'assets/enterprise_rbac.jpg',
+      title: 'High-Throughput Web API & T-Code Auth',
+      tag: 'Enterprise Architecture · BAPI Pipelines',
+      statusBadge: 'ACTIVE SECURE API',
+      projectId: 'experience',
+      metric: 'Production • RCF Ltd.'
+    },
+    flask: {
+      image: 'assets/face recog.png',
+      title: 'Real-Time Biometric AI Streaming Server',
+      tag: 'Microservices · Low-Latency Endpoints',
+      statusBadge: 'LIVE INFERENCE SERVER',
+      projectId: 'facial-recognition',
+      metric: '2+ Yrs • Microservices'
+    },
+    opencv: {
+      image: 'assets/face recog.png',
+      title: 'Biometric Facial Recognition System',
+      tag: 'Computer Vision · 98% Recognition Acc',
+      statusBadge: 'LIVE SCANNING ENGINE',
+      projectId: 'facial-recognition',
+      metric: '2+ Yrs • 10k+ Images'
+    },
+    cnn: {
+      image: 'assets/dr.png',
+      title: 'Deep Convolutional Retinal Diagnostics',
+      tag: 'DenseNet121 · 5-Stage Disease Detection',
+      statusBadge: 'MODEL VERIFIED 92%',
+      projectId: 'diabetic-retinopathy',
+      metric: 'Research & Production'
+    },
+    numpy: {
+      image: 'assets/dr.png',
+      title: 'High-Performance Vectorized Matrix ETL',
+      tag: 'Tensor Math · Pixel Array Normalization',
+      statusBadge: 'PIPELINE OPTIMIZED',
+      projectId: 'diabetic-retinopathy',
+      metric: '3+ Yrs • Vectorized Math'
+    },
+    pandas: {
+      image: 'assets/face recog.png',
+      title: 'Biometric Log Analytics & CSV Dashboards',
+      tag: 'Data Engineering · Automated Reporting',
+      statusBadge: 'DATA PIPELINE ACTIVE',
+      projectId: 'facial-recognition',
+      metric: '2+ Yrs • ETL & Analytics'
+    },
+    scikitlearn: {
+      image: 'assets/dr.png',
+      title: 'Ensemble Machine Learning Classifiers',
+      tag: 'Stratified K-Fold · ROC-AUC Analytics',
+      statusBadge: 'CROSS-VALIDATED 92%',
+      projectId: 'diabetic-retinopathy',
+      metric: '2+ Yrs • ML Modeling'
+    },
+    javascript: {
+      image: 'assets/fg.png',
+      title: 'Foodies Goodies Interactive Web Platform',
+      tag: 'Modern ES6+ · Asynchronous UX Architecture',
+      statusBadge: 'PRODUCTION WEB APP',
+      projectId: 'foodies-goodies',
+      metric: '3+ Yrs • Modern ES6+'
+    },
+    html5: {
+      image: 'assets/fg.png',
+      title: 'Accessible & Semantic Web Architecture',
+      tag: 'WCAG AA Standards · Responsive Canvas',
+      statusBadge: 'SEMANTIC STANDARDS',
+      projectId: 'foodies-goodies',
+      metric: '4+ Yrs • Clean HTML5'
+    },
+    css3: {
+      image: 'assets/fg.png',
+      title: 'Modern Glassmorphic UI & Cyber Design',
+      tag: 'GPU-Accelerated 3D CSS · Design Tokens',
+      statusBadge: '60 FPS ANIMATIONS',
+      projectId: 'foodies-goodies',
+      metric: '4+ Yrs • Advanced CSS'
+    },
+    tailwind: {
+      image: 'assets/preview.webp',
+      title: 'High-Performance Modern Design System',
+      tag: 'Utility Tokens · Sleek Component Styling',
+      statusBadge: 'RESPONSIVE SYSTEM',
+      projectId: 'foodies-goodies',
+      metric: '2+ Yrs • Utility Design'
+    },
+    bootstrap: {
+      image: 'assets/face recog.png',
+      title: 'Administrative Portals & Biometric Tables',
+      tag: 'Responsive Grid · Modal Validation Forms',
+      statusBadge: 'RESPONSIVE DASHBOARD',
+      projectId: 'facial-recognition',
+      metric: '2+ Yrs • Admin Portals'
+    },
+    mysql: {
+      image: 'assets/face recog.png',
+      title: 'Relational Database & Attendance Store',
+      tag: 'ACID Transactions · Normalized Foreign Keys',
+      statusBadge: 'TRANSACTIONS VERIFIED',
+      projectId: 'facial-recognition',
+      metric: '3+ Yrs • Relational DB'
+    },
+    oracle: {
+      image: 'assets/enterprise_rbac.jpg',
+      title: 'Enterprise Oracle DB & Transaction Auditing',
+      tag: 'PL/SQL Packages · High-Volume Audit Trail',
+      statusBadge: 'ENTERPRISE PRODUCTION',
+      projectId: 'experience',
+      metric: 'Production • RCF Ltd.'
+    },
+    sap: {
+      image: 'assets/enterprise_rbac.jpg',
+      title: 'SAP NCo 3.0 Middleware & RFC Functions',
+      tag: 'Enterprise Integration · BAPI Automation',
+      statusBadge: 'ENTERPRISE SAP ERP',
+      projectId: 'experience',
+      metric: 'Enterprise • RCF Ltd.'
+    },
+    activedirectory: {
+      image: 'assets/enterprise_rbac.jpg',
+      title: 'LDAP Identity & Active Directory Sync',
+      tag: 'Enterprise Security · Corporate SSO Mapping',
+      statusBadge: 'SECURE DIRECTORY SYNC',
+      projectId: 'experience',
+      metric: 'Enterprise Security'
+    },
+    git: {
+      image: 'assets/cloud_devops.jpg',
+      title: 'Git Version Control & CI/CD Pipelines',
+      tag: 'Feature Branching · GitHub Actions Automation',
+      statusBadge: 'CI/CD AUTOMATED',
+      projectId: 'diabetic-retinopathy',
+      metric: '3+ Yrs • GitHub Actions'
+    },
+    docker: {
+      image: 'assets/cloud_devops.jpg',
+      title: 'Containerized Microservices & Runtimes',
+      tag: 'Isolated Environments · Multi-Stage Builds',
+      statusBadge: 'CONTAINER READY',
+      projectId: 'diabetic-retinopathy',
+      metric: '1+ Yr • Microservices'
+    },
+    azure: {
+      image: 'assets/cloud_devops.jpg',
+      title: 'Microsoft Azure Cloud App Services',
+      tag: 'Scalable Hosting · Cloud Identity Federation',
+      statusBadge: 'CLOUD DEPLOYMENT',
+      projectId: 'experience',
+      metric: 'Cloud Architecture'
+    },
+    aws: {
+      image: 'assets/cloud_devops.jpg',
+      title: 'AWS Cloud Compute & S3 Object Storage',
+      tag: 'EC2 Compute · High-Volume S3 Dataset Hosting',
+      statusBadge: 'CLOUD INFRASTRUCTURE',
+      projectId: 'diabetic-retinopathy',
+      metric: 'AWS Cloud EC2 & S3'
+    },
+    linux: {
+      image: 'assets/cloud_devops.jpg',
+      title: 'Debian/Ubuntu Server Daemon & Bash Scripts',
+      tag: 'Systemd Services · SSH · Log Automation',
+      statusBadge: 'PRODUCTION SERVER',
+      projectId: 'diabetic-retinopathy',
+      metric: '3+ Yrs • Linux/Bash'
+    },
+    php: {
+      image: 'assets/fg.png',
+      title: 'Full-Stack Recipe Engine & Database Backend',
+      tag: 'Server-Side Web · Nutritional REST APIs',
+      statusBadge: 'FULL-STACK BACKEND',
+      projectId: 'foodies-goodies',
+      metric: '2 Yrs • Web Platform'
+    },
+    figma: {
+      image: 'assets/fg.png',
+      title: 'Interactive High-Fidelity UI/UX Prototypes',
+      tag: 'Auto-Layout Components · Design Systems',
+      statusBadge: 'DESIGN SYSTEM V2',
+      projectId: 'foodies-goodies',
+      metric: 'UI/UX Wireframing'
+    },
+    canva: {
+      image: 'assets/dr.png',
+      title: 'Medical AI Branding & Presentation Graphics',
+      tag: 'Visual Assets · Technical Slide Decks',
+      statusBadge: 'GRAPHICS & BRANDING',
+      projectId: 'diabetic-retinopathy',
+      metric: 'Graphic Branding'
+    }
   };
 
-  // Render Minimal Scouter Telemetry Dossier Card (Information Part)
+  // Render Image-First Scouter Telemetry Dossier Card (Information Part)
   function renderCompactHud(skill) {
     if (!compactHud || !skill) return;
 
     const brandColor = skill.brandColor || '#38bdf8';
     compactHud.style.setProperty('--active-accent', brandColor);
 
-    const tags = skillMicroTags[skill.id] || (skill.keyCapabilities ? skill.keyCapabilities.slice(0, 3).map(c => c.split(' ').slice(0, 2).join(' ')) : []);
+    const visual = skillVisualMap[skill.id] || {
+      image: 'assets/preview.webp',
+      title: skill.name + ' Architecture',
+      tag: skill.categoryLabel || 'Technical Capability',
+      statusBadge: 'ACTIVE CAPABILITY',
+      projectId: (skill.projects && skill.projects[0]) ? skill.projects[0].id : null,
+      metric: skill.experience || 'Proficient'
+    };
 
-    const projectChipHtml = (skill.projects && skill.projects.length)
+    const targetProjId = visual.projectId || ((skill.projects && skill.projects[0]) ? skill.projects[0].id : null);
+    const targetProjName = (skill.projects && skill.projects[0]) ? skill.projects[0].name : 'View Project';
+
+    const projectChipHtml = targetProjId
       ? `
-        <button type="button" class="hud-project-chip" data-project-ref="${skill.projects[0].id}" title="Jump to ${skill.projects[0].name}">
+        <button type="button" class="hud-project-chip" data-project-ref="${targetProjId}" title="Jump to ${targetProjName}">
           <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
-          <span>${skill.projects[0].name}</span>
+          <span>${targetProjName}</span>
         </button>
       `
       : '';
 
-    const expPill = skill.experience
-      ? `
-        <div class="dossier-exp-pill">
-          <i data-lucide="clock" style="width: 12px; height: 12px; color: ${brandColor};"></i>
-          <span>${skill.experience}</span>
-        </div>
-      `
-      : '';
-
     compactHud.innerHTML = `
-      <div class="dossier-header">
-        <div class="dossier-icon-badge" style="border-color: ${brandColor}; box-shadow: 0 0 16px ${brandColor}55;">
+      <!-- 1. Visual Project & Architecture Preview Frame -->
+      <div class="dossier-visual-preview">
+        <img src="${visual.image}" alt="${visual.title}" class="dossier-preview-img" loading="eager" />
+        <div class="dossier-preview-overlay" aria-hidden="true"></div>
+        <div class="dossier-corner-reticles" aria-hidden="true"></div>
+
+        <!-- Telemetry Status Pill Top-Left -->
+        <div class="dossier-preview-status">
+          <span class="preview-status-dot" style="color: ${brandColor}; background-color: ${brandColor};"></span>
+          <span>${visual.statusBadge}</span>
+        </div>
+
+        <!-- Floating Luminous Brand Tech Emblem Top-Right -->
+        <div class="dossier-floating-emblem" style="--active-accent: ${brandColor};" title="${skill.name}">
           ${skill.svgIcon || ''}
         </div>
-        <div class="dossier-identity">
-          <div class="dossier-meta-top">
-            <span class="dossier-cat-tag" style="color: ${brandColor}; border-color: ${brandColor}55;">${skill.categoryLabel || skill.category}</span>
-            <span class="dossier-level-badge">${skill.level || 'Proficient'}</span>
+
+        <!-- Caption Strip Bottom -->
+        <div class="dossier-preview-caption">
+          <span class="preview-caption-tag">${visual.tag}</span>
+          <h4 class="preview-caption-title">${visual.title}</h4>
+        </div>
+      </div>
+
+      <!-- 2. Minimal Telemetry Row Below -->
+      <div class="dossier-telemetry-body">
+        <div class="dossier-header-row">
+          <div class="dossier-title-group">
+            <h3 class="dossier-skill-name">${skill.name}</h3>
+            <span class="dossier-tier-badge">${skill.level || 'Expert'}</span>
           </div>
-          <h3 class="dossier-skill-name">${skill.name}</h3>
+          <div class="dossier-power-pill" title="Ki Power Rating">
+            <i data-lucide="zap" style="width: 13px; height: 13px; color: ${brandColor};"></i>
+            <span>${skill.powerLevel || (skill.powerPercent + '%')}</span>
+          </div>
         </div>
-        <div class="dossier-power-pill" title="Ki Power Rating">
-          <i data-lucide="zap" style="width: 13px; height: 13px; color: ${brandColor};"></i>
-          <span class="dossier-power-val">${skill.powerLevel || (skill.powerPercent + '%')}</span>
+
+        <!-- Scouter Ki Power Meter Bar -->
+        <div class="dossier-power-gauge" title="${skill.powerPercent || 90}% Mastery">
+          <div class="dossier-gauge-track">
+            <div class="dossier-gauge-fill" style="width: ${skill.powerPercent || 90}%; background: linear-gradient(90deg, ${brandColor}88, ${brandColor});"></div>
+          </div>
+          <span class="dossier-gauge-label">${skill.powerPercent || 90}% Power</span>
         </div>
-      </div>
 
-      <!-- Scouter Ki Power Meter Bar -->
-      <div class="dossier-power-gauge" title="${skill.powerPercent || 90}% Mastery">
-        <div class="dossier-gauge-track">
-          <div class="dossier-gauge-fill" style="width: ${skill.powerPercent || 90}%; background: linear-gradient(90deg, ${brandColor}88, ${brandColor});"></div>
+        <!-- Sleek Footer Telemetry Row -->
+        <div class="dossier-footer-row">
+          <div class="dossier-metric-pill">
+            <i data-lucide="activity" style="width: 12px; height: 12px; color: ${brandColor};"></i>
+            <span>${visual.metric}</span>
+          </div>
+          ${projectChipHtml}
         </div>
-        <span class="dossier-gauge-label">${skill.powerPercent || 90}% Mastery</span>
-      </div>
-
-      <!-- Concise 1-Sentence Summary -->
-      <p class="dossier-description">${skill.description}</p>
-
-      <!-- Minimal Micro Highlights -->
-      <div class="dossier-micro-tags">
-        ${tags.map(tag => `
-          <span class="dossier-tag-pill">
-            <span class="tag-dot" style="background: ${brandColor}; box-shadow: 0 0 6px ${brandColor};"></span>
-            <span>${tag}</span>
-          </span>
-        `).join('')}
-      </div>
-
-      <!-- Sleek Footer Telemetry Row -->
-      <div class="dossier-footer-row">
-        ${expPill}
-        ${projectChipHtml}
       </div>
     `;
 
