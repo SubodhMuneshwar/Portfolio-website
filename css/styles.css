@@ -3640,16 +3640,16 @@ body.rose-mode .spirit-goku-img {
   z-index: 15;
 }
 
-/* Active Skill Scouter Telemetry Dossier Card */
+/* Active Skill Scouter Telemetry Dossier Card — Minimal & High-Tech */
 .spirit-dossier-card {
   position: relative;
-  background: rgba(15, 23, 42, 0.82);
+  background: rgba(15, 23, 42, 0.78);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(56, 189, 248, 0.26);
-  border-radius: 16px;
-  padding: 1.45rem 1.6rem;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 14px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4), 0 0 16px rgba(56, 189, 248, 0.08);
   overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -3666,37 +3666,37 @@ body.rose-mode .spirit-goku-img {
 }
 
 body.saiyan-mode .spirit-dossier-card {
-  background: rgba(10, 20, 16, 0.85);
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.1);
+  background: rgba(10, 20, 16, 0.82);
+  border-color: rgba(16, 185, 129, 0.28);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45), 0 0 16px rgba(16, 185, 129, 0.08);
 }
 
 body.rose-mode .spirit-dossier-card {
-  background: rgba(26, 10, 24, 0.85);
-  border-color: rgba(255, 46, 151, 0.3);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 46, 151, 0.12);
+  background: rgba(26, 10, 24, 0.82);
+  border-color: rgba(255, 46, 151, 0.28);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45), 0 0 16px rgba(255, 46, 151, 0.1);
 }
 
 .spirit-compact-hud {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
   width: 100%;
 }
 
 .dossier-header {
   display: flex;
   align-items: center;
-  gap: 0.95rem;
+  gap: 0.85rem;
 }
 
 .dossier-icon-badge {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   background: rgba(11, 19, 43, 0.92);
   border: 1.5px solid var(--active-accent, #38bdf8);
-  box-shadow: 0 0 18px var(--active-accent, rgba(56, 189, 248, 0.35));
+  box-shadow: 0 0 14px var(--active-accent, rgba(56, 189, 248, 0.35));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3705,8 +3705,8 @@ body.rose-mode .spirit-dossier-card {
 }
 
 .dossier-icon-badge svg {
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   fill: currentColor;
   color: var(--active-accent, #38bdf8);
 }
@@ -3719,38 +3719,38 @@ body.rose-mode .spirit-dossier-card {
 .dossier-meta-top {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.2rem;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
 }
 
 .dossier-cat-tag {
   display: inline-block;
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   font-family: var(--font-mono);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 0.1rem 0.45rem;
+  padding: 0.08rem 0.42rem;
   border-radius: 4px;
   background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  border: 1px solid rgba(56, 189, 248, 0.28);
 }
 
 .dossier-level-badge {
   display: inline-block;
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   font-family: var(--font-mono);
   font-weight: 700;
-  padding: 0.1rem 0.45rem;
+  padding: 0.08rem 0.42rem;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
   color: #cbd5e1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dossier-skill-name {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #ffffff;
   line-height: 1.15;
@@ -3760,113 +3760,122 @@ body.rose-mode .spirit-dossier-card {
 .dossier-power-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  padding: 0.32rem 0.75rem;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
   border-radius: 9999px;
   background: rgba(11, 19, 43, 0.9);
   border: 1px solid var(--active-accent, rgba(56, 189, 248, 0.4));
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
   flex-shrink: 0;
 }
 
 .dossier-power-val {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: var(--active-accent, #38bdf8);
 }
 
-.dossier-exp-row {
+/* Ki Power Gauge Meter Bar */
+.dossier-power-gauge {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: -0.1rem;
+}
+
+.dossier-gauge-track {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dossier-gauge-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.dossier-gauge-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--muted-fg, #94a3b8);
+  white-space: nowrap;
+}
+
+/* Crisp 1-Sentence Description */
+.dossier-description {
+  font-size: 0.84rem;
+  line-height: 1.48;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* Minimal Micro-Tag Pills */
+.dossier-micro-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.dossier-tag-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 0.28rem 0.65rem;
+  gap: 0.35rem;
+  padding: 0.22rem 0.55rem;
   border-radius: 6px;
-  border-left: 2px solid var(--active-accent, #38bdf8);
-  width: fit-content;
-}
-
-.dossier-description {
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: #cbd5e1;
-  margin: 0;
-}
-
-.dossier-capabilities-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.dossier-subheading {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted-fg, #94a3b8);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
 }
 
-.dossier-caps-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.38rem;
-}
-
-.dossier-cap-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  color: #f1f5f9;
-  line-height: 1.38;
-}
-
-.cap-bullet {
-  width: 6px;
-  height: 6px;
+.tag-dot {
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  margin-top: 5px;
+  display: inline-block;
   flex-shrink: 0;
-  box-shadow: 0 0 6px currentColor;
 }
 
-.dossier-projects-section {
+/* Sleek Footer Telemetry Row */
+.dossier-footer-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.5rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.dossier-projects-row {
-  display: flex;
+.dossier-exp-pill {
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #94a3b8;
 }
 
 .hud-project-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.28rem 0.65rem;
+  padding: 0.24rem 0.6rem;
   border-radius: 9999px;
   background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  border: 1px solid rgba(56, 189, 248, 0.28);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3884,70 +3893,63 @@ body.rose-mode .spirit-dossier-card {
   height: 12px;
 }
 
-/* Category Arsenal Quick-Select Grid */
+/* Minimal Category Arsenal Quick-Select Grid */
 .spirit-category-catalog {
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 1rem 1.15rem;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 0.7rem 0.95rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.45rem;
 }
 
 .catalog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.4rem;
 }
 
 .catalog-heading {
-  font-family: var(--font-heading);
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.02em;
-}
-
-.catalog-subtext {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--muted-fg, #94a3b8);
 }
 
 .catalog-chips-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  max-height: 170px;
+  gap: 0.35rem;
+  max-height: 120px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .catalog-chips-grid::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .catalog-chips-grid::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.25);
   border-radius: 4px;
 }
 
 .catalog-skill-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  padding: 0.32rem 0.6rem;
-  border-radius: 8px;
-  background: rgba(11, 19, 43, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.35rem;
+  padding: 0.26rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(11, 19, 43, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   color: #cbd5e1;
   font-family: var(--font-heading);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3965,12 +3967,12 @@ body.rose-mode .spirit-dossier-card {
   background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(14, 165, 233, 0.15));
   border-color: var(--chip-accent, #38bdf8);
   color: #ffffff;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 .catalog-chip-icon {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   display: flex;
   align-items: center;
   justify-content: center;

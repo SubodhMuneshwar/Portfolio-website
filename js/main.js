@@ -519,8 +519,8 @@ function initSpiritBomb() {
 
   // Quick-Select Category Arsenal Catalog
   const categoryNames = {
-    'all': 'All Engineering Stack',
-    'languages': 'Core Languages',
+    'all': 'All Technologies',
+    'languages': 'Languages',
     'backend': 'Backend & Systems',
     'ai-ml': 'AI, ML & Vision',
     'frontend': 'Frontend & UI',
@@ -642,48 +642,58 @@ function initSpiritBomb() {
     renderCompactHud(targetNode.skill);
   }
 
-  // Render Active Skill Scouter Telemetry Dossier Card (Information Part)
+  // Concise Micro-Tags mapping for all 26 skills (keeps UI minimal, no walls of text)
+  const skillMicroTags = {
+    python: ['CNN Pipelines', 'OpenCV Vision', 'REST APIs', 'NumPy ETL'],
+    csharp: ['SAP NCo 3.0', 'Active Directory', 'Oracle DB', 'RBAC Security'],
+    aspnet: ['Enterprise APIs', 'T-Code Auth', 'Audit Logging', 'SAP BAPI'],
+    flask: ['AI Inference', 'File Streaming', 'Blueprints', 'CORS APIs'],
+    opencv: ['Face Recognition', 'CLAHE Filters', 'Frame Capture', 'Biometrics'],
+    cnn: ['Retinal Scanning', 'DenseNet121', 'Transfer Learning', '92% Acc'],
+    pytorch: ['Tensor Ops', 'Model Fine-tuning', 'GPU Inference', 'Backprop'],
+    scikit: ['Ensemble Models', 'Feature Scaling', 'GridSearchCV', 'Evaluation'],
+    densenet: ['Dense Blocks', 'Feature Reuse', 'Medical Imaging', 'Pretrained'],
+    mediapipe: ['Face Mesh', 'Landmark Tracking', 'Iris Depth', 'Real-Time'],
+    rest: ['Microservices', 'JSON Endpoints', 'Sub-sec Latency', 'API Gateway'],
+    java: ['OOP Architecture', 'Data Structures', 'Multithreading', 'Backend'],
+    c: ['Memory Control', 'Pointers', 'Data Structures', 'Low-Level'],
+    cpp: ['STL Containers', 'High Performance', 'Algorithms', 'OOP Logic'],
+    sql: ['Complex Joins', 'Query Optimization', 'Indexes', 'Schema Design'],
+    mysql: ['ACID Transactions', 'Relational Schemas', 'Foreign Keys', 'Fast Queries'],
+    oracle: ['Enterprise DB', 'PL/SQL Packages', 'High Concurrency', 'Indexing'],
+    azure: ['Cloud Hosting', 'Blob Storage', 'App Services', 'IAM Security'],
+    aws: ['EC2 Instances', 'S3 Storage', 'Cloud Deployment', 'Security Groups'],
+    docker: ['Containerization', 'Microservices', 'Dockerfiles', 'Reproducibility'],
+    git: ['Version Control', 'Branching Workflows', 'CI/CD Actions', 'Code Review'],
+    htmlcss: ['Semantic HTML5', 'Modern CSS3', 'Responsive Layout', 'Animations'],
+    javascript: ['ES6+ Syntax', 'Async / Await', 'DOM Engines', 'Event Loop'],
+    bootstrap: ['Responsive Grid', 'Utility Classes', 'UI Components', 'Mobile-First'],
+    figma: ['UI/UX Wireframes', 'Design Systems', 'Interactive Prototypes', 'Auto-Layout'],
+    tailwind: ['Utility-First CSS', 'Design Tokens', 'Modern UI', 'Responsive']
+  };
+
+  // Render Minimal Scouter Telemetry Dossier Card (Information Part)
   function renderCompactHud(skill) {
     if (!compactHud || !skill) return;
 
-    compactHud.style.setProperty('--active-accent', skill.brandColor || '#38bdf8');
+    const brandColor = skill.brandColor || '#38bdf8';
+    compactHud.style.setProperty('--active-accent', brandColor);
 
-    const capabilitiesHtml = (skill.keyCapabilities && skill.keyCapabilities.length)
+    const tags = skillMicroTags[skill.id] || (skill.keyCapabilities ? skill.keyCapabilities.slice(0, 3).map(c => c.split(' ').slice(0, 2).join(' ')) : []);
+
+    const projectChipHtml = (skill.projects && skill.projects.length)
       ? `
-        <div class="dossier-capabilities-section">
-          <span class="dossier-subheading">Key Capabilities</span>
-          <ul class="dossier-caps-list">
-            ${skill.keyCapabilities.map(cap => `
-              <li class="dossier-cap-item">
-                <span class="cap-bullet" style="background: ${skill.brandColor || '#38bdf8'}; color: ${skill.brandColor || '#38bdf8'};"></span>
-                <span>${cap}</span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
+        <button type="button" class="hud-project-chip" data-project-ref="${skill.projects[0].id}" title="Jump to ${skill.projects[0].name}">
+          <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
+          <span>${skill.projects[0].name}</span>
+        </button>
       `
       : '';
 
-    const projectsHtml = (skill.projects && skill.projects.length)
+    const expPill = skill.experience
       ? `
-        <div class="dossier-projects-section">
-          <span class="dossier-subheading">Engineered in Production:</span>
-          <div class="dossier-projects-row">
-            ${skill.projects.map(p => `
-              <button type="button" class="hud-project-chip" data-project-ref="${p.id}" title="Jump to ${p.name}">
-                <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
-                <span>${p.name}</span>
-              </button>
-            `).join('')}
-          </div>
-        </div>
-      `
-      : '';
-
-    const expHtml = skill.experience
-      ? `
-        <div class="dossier-exp-row">
-          <i data-lucide="clock" style="width: 13px; height: 13px; color: ${skill.brandColor || '#38bdf8'};"></i>
+        <div class="dossier-exp-pill">
+          <i data-lucide="clock" style="width: 12px; height: 12px; color: ${brandColor};"></i>
           <span>${skill.experience}</span>
         </div>
       `
@@ -691,29 +701,48 @@ function initSpiritBomb() {
 
     compactHud.innerHTML = `
       <div class="dossier-header">
-        <div class="dossier-icon-badge" style="border-color: ${skill.brandColor || '#38bdf8'}; box-shadow: 0 0 16px ${skill.brandColor || 'rgba(56, 189, 248, 0.4)'};">
+        <div class="dossier-icon-badge" style="border-color: ${brandColor}; box-shadow: 0 0 16px ${brandColor}55;">
           ${skill.svgIcon || ''}
         </div>
         <div class="dossier-identity">
           <div class="dossier-meta-top">
-            <span class="dossier-cat-tag" style="color: ${skill.brandColor || '#38bdf8'}; border-color: ${skill.brandColor || '#38bdf8'};">${skill.categoryLabel || skill.category}</span>
+            <span class="dossier-cat-tag" style="color: ${brandColor}; border-color: ${brandColor}55;">${skill.categoryLabel || skill.category}</span>
             <span class="dossier-level-badge">${skill.level || 'Proficient'}</span>
           </div>
           <h3 class="dossier-skill-name">${skill.name}</h3>
         </div>
         <div class="dossier-power-pill" title="Ki Power Rating">
-          <i data-lucide="zap" style="width: 13px; height: 13px; color: ${skill.brandColor || '#38bdf8'};"></i>
+          <i data-lucide="zap" style="width: 13px; height: 13px; color: ${brandColor};"></i>
           <span class="dossier-power-val">${skill.powerLevel || (skill.powerPercent + '%')}</span>
         </div>
       </div>
 
-      ${expHtml}
+      <!-- Scouter Ki Power Meter Bar -->
+      <div class="dossier-power-gauge" title="${skill.powerPercent || 90}% Mastery">
+        <div class="dossier-gauge-track">
+          <div class="dossier-gauge-fill" style="width: ${skill.powerPercent || 90}%; background: linear-gradient(90deg, ${brandColor}88, ${brandColor});"></div>
+        </div>
+        <span class="dossier-gauge-label">${skill.powerPercent || 90}% Mastery</span>
+      </div>
 
+      <!-- Concise 1-Sentence Summary -->
       <p class="dossier-description">${skill.description}</p>
 
-      ${capabilitiesHtml}
+      <!-- Minimal Micro Highlights -->
+      <div class="dossier-micro-tags">
+        ${tags.map(tag => `
+          <span class="dossier-tag-pill">
+            <span class="tag-dot" style="background: ${brandColor}; box-shadow: 0 0 6px ${brandColor};"></span>
+            <span>${tag}</span>
+          </span>
+        `).join('')}
+      </div>
 
-      ${projectsHtml}
+      <!-- Sleek Footer Telemetry Row -->
+      <div class="dossier-footer-row">
+        ${expPill}
+        ${projectChipHtml}
+      </div>
     `;
 
     // Hook up project navigation clicks
