@@ -986,7 +986,7 @@ function initSpiritBomb() {
     const height = canvas.height;
     ctx.clearRect(0, 0, width, height);
 
-    const isRose = document.body.classList.contains('rose-mode');
+    const isRose = !document.body.classList.contains('saiyan-mode');
     const cx = width / 2;
     const cy = height / 2;
     const coreR = Math.max(110, R * 0.72);
@@ -2519,6 +2519,8 @@ function initSaiyanMode() {
       const applySaiyan = () => {
         document.body.classList.add('saiyan-mode');
         document.documentElement.classList.add('saiyan-mode');
+        document.body.classList.remove('rose-mode');
+        document.documentElement.classList.remove('rose-mode');
         syncSliderUI(true);
         syncMeta(true);
         if(!noPersist) try{localStorage.setItem('portfolio-theme','saiyan');}catch(e){}
@@ -2534,6 +2536,8 @@ function initSaiyanMode() {
       const applyRose = () => {
         document.body.classList.remove('saiyan-mode');
         document.documentElement.classList.remove('saiyan-mode');
+        document.body.classList.add('rose-mode');
+        document.documentElement.classList.add('rose-mode');
         syncSliderUI(false);
         syncMeta(false);
         if(!noPersist) try{localStorage.setItem('portfolio-theme','light');}catch(e){}
@@ -2579,10 +2583,14 @@ function initSaiyanMode() {
   if (shouldBeSaiyan) {
     document.body.classList.add('saiyan-mode');
     document.documentElement.classList.add('saiyan-mode');
+    document.body.classList.remove('rose-mode');
+    document.documentElement.classList.remove('rose-mode');
     setSaiyanState(true, { silent: true, noPersist: true });
   } else {
     document.documentElement.classList.remove('saiyan-mode');
     document.body.classList.remove('saiyan-mode');
+    document.documentElement.classList.add('rose-mode');
+    document.body.classList.add('rose-mode');
     syncSliderUI(false);
     syncMeta(false);
   }
