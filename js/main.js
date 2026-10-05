@@ -477,6 +477,25 @@ function initSpiritBomb() {
     });
   }
 
+  // Multi-Category Intelligence Mapping
+  const categorySkillMap = {
+    'languages': ['python', 'csharp', 'javascript', 'php'],
+    'backend': ['csharp', 'aspnet', 'flask', 'php', 'sap', 'activedirectory'],
+    'ai-ml': ['python', 'opencv', 'cnn', 'numpy', 'pandas', 'scikitlearn'],
+    'frontend': ['html5', 'css3', 'tailwind', 'bootstrap', 'javascript', 'figma', 'canva'],
+    'database': ['mysql', 'oracle', 'azure', 'aws'],
+    'devops': ['git', 'docker', 'linux', 'azure', 'aws']
+  };
+
+  function skillMatchesCategory(skill, cat) {
+    if (!skill) return false;
+    if (cat === 'all') return true;
+    if (categorySkillMap[cat]) {
+      return categorySkillMap[cat].includes(skill.id);
+    }
+    return skill.category === cat;
+  }
+
   // Category Energy Filter HUD Logic
   if (filterHud) {
     const filterButtons = filterHud.querySelectorAll('.spirit-filter-btn');
@@ -494,7 +513,7 @@ function initSpiritBomb() {
 
         // Update node dimmed classes
         sphereNodes.forEach((nodeItem) => {
-          if (activeFilter === 'all' || nodeItem.skill.category === activeFilter) {
+          if (skillMatchesCategory(nodeItem.skill, activeFilter)) {
             nodeItem.el.classList.remove('is-dimmed');
           } else {
             nodeItem.el.classList.add('is-dimmed');
@@ -506,8 +525,8 @@ function initSpiritBomb() {
 
         // If currently active skill is dimmed by filter, select first matching skill
         const currentActive = sphereNodes.find(n => n.skill.id === activeSkillId);
-        if (currentActive && activeFilter !== 'all' && currentActive.skill.category !== activeFilter) {
-          const firstMatching = sphereNodes.find(n => n.skill.category === activeFilter);
+        if (currentActive && activeFilter !== 'all' && !skillMatchesCategory(currentActive.skill, activeFilter)) {
+          const firstMatching = sphereNodes.find(n => skillMatchesCategory(n.skill, activeFilter));
           if (firstMatching) {
             selectSkill(firstMatching.skill.id, true);
           }
@@ -533,14 +552,25 @@ function initSpiritBomb() {
     if (!catalogChipsGrid) return;
     const filtered = (cat === 'all')
       ? skillsData
-      : skillsData.filter(s => s.category === cat);
+      : skillsData.filter(s => skillMatchesCategory(s, cat));
 
     if (catalogHeading) {
-      catalogHeading.textContent = categoryNames[cat] || 'Technical Arsenal';
+      catalogHeading.textContent = categoryNames[cat] || 'Tools & Stack';
     }
     if (catalogCountPill) {
       catalogCountPill.textContent = `${filtered.length} Tools`;
     }
+
+    const chipLabelMap = {
+      'CNN Deep Learning': 'CNNs',
+      'Active Directory & LDAP': 'Active Directory',
+      'Linux & Bash Scripting': 'Linux',
+      'Oracle Database': 'Oracle DB',
+      'Git & GitHub': 'Git',
+      'Microsoft Azure': 'Azure',
+      'Amazon Web Services (AWS)': 'AWS',
+      'SAP ERP & NCo 3.0': 'SAP ERP'
+    };
 
     catalogChipsGrid.innerHTML = '';
     filtered.forEach(skill => {
@@ -551,9 +581,11 @@ function initSpiritBomb() {
       chip.style.setProperty('--chip-accent', skill.brandColor || '#38bdf8');
       chip.title = `${skill.name} • ${skill.level}`;
 
+      const displayLabel = chipLabelMap[skill.name] || skill.name;
+
       chip.innerHTML = `
         <span class="catalog-chip-icon">${skill.svgIcon || ''}</span>
-        <span class="catalog-chip-label">${skill.name}</span>
+        <span class="catalog-chip-label">${displayLabel}</span>
       `;
 
       chip.addEventListener('click', (e) => {
@@ -693,11 +725,12 @@ function initSpiritBomb() {
       `
       : '';
 
-    const expPill = skill.experience
+    const expShort = skill.experience ? skill.experience.split('•')[0].trim() : '';
+    const expPill = expShort
       ? `
         <div class="dossier-metric-pill" title="Experience Level">
           <i data-lucide="clock" style="width: 12px; height: 12px; color: ${brandColor};"></i>
-          <span>${skill.experience}</span>
+          <span>${expShort}</span>
         </div>
       `
       : '';
@@ -728,12 +761,9 @@ function initSpiritBomb() {
         <span class="dossier-gauge-label">${skill.powerPercent || 90}% Power</span>
       </div>
 
-      <!-- Concise 1-Sentence Summary -->
-      <p class="dossier-description">${skill.description}</p>
-
       <!-- Minimal Micro Highlights -->
       <div class="dossier-micro-tags">
-        ${tags.map(tag => `
+        ${tags.slice(0, 4).map(tag => `
           <span class="dossier-tag-pill">
             <span class="tag-dot" style="background: ${brandColor}; box-shadow: 0 0 6px ${brandColor};"></span>
             <span>${tag}</span>
@@ -741,11 +771,13 @@ function initSpiritBomb() {
         `).join('')}
       </div>
 
+      ${(expPill || projectChipHtml) ? `
       <!-- Sleek Footer Telemetry Row -->
       <div class="dossier-footer-row">
         ${expPill}
         ${projectChipHtml}
       </div>
+      ` : ''}
     `;
 
     // Hook up project navigation clicks
