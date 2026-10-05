@@ -3252,10 +3252,11 @@ body.rose-mode .spirit-filter-btn.is-active {
 /* 2-Part Skills Layout: Spirit Bomb (Left) + Information Part (Right) */
 .skills-two-part-stage {
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.25fr);
-  gap: 2.2rem;
+  grid-template-columns: minmax(360px, 1.15fr) minmax(360px, 1fr);
+  gap: 2.5rem;
   align-items: center;
-  max-width: 1320px;
+  justify-items: center;
+  max-width: 1200px;
   margin: 1.2rem auto 0;
   position: relative;
   z-index: 10;
@@ -3635,6 +3636,7 @@ body.rose-mode .spirit-goku-img {
   flex-direction: column;
   gap: 0.85rem;
   width: 100%;
+  max-width: 520px;
   position: relative;
   z-index: 15;
 }
@@ -3879,112 +3881,45 @@ body.rose-mode .spirit-dossier-card {
   height: 11px;
 }
 
-/* Minimal Tools & Stack Pill Cloud — Zero Boxes, Zero Scrollbars */
-.spirit-category-catalog {
-  background: transparent;
-  border: none;
-  padding: 0;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.42rem;
-}
-
-.catalog-header {
+/* Minimal Scouter Tool Stepper Controls */
+.dossier-stepper-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.catalog-heading {
+.dossier-step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.62rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted-fg, #94a3b8);
-}
-
-.catalog-count-pill {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  padding: 0.08rem 0.45rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--muted-fg, #94a3b8);
-}
-
-.catalog-chips-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  max-height: none;
-  overflow: visible;
-  padding: 0;
-}
-
-/* Minimal Horizontal Pill Chip */
-.catalog-skill-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.38rem;
-  padding: 0.28rem 0.65rem;
-  height: 30px;
-  border-radius: 9999px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   user-select: none;
-  flex-shrink: 0;
 }
 
-.catalog-chip-icon {
-  width: 15px;
-  height: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.catalog-chip-icon svg {
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
-  color: var(--chip-accent, #38bdf8);
-}
-
-.catalog-chip-label {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-.catalog-skill-chip:hover {
+.dossier-step-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--active-accent, #38bdf8);
+  color: #ffffff;
   transform: translateY(-1px);
-  background: rgba(30, 41, 59, 0.85);
-  border-color: var(--chip-accent, #38bdf8);
-  box-shadow: 0 0 12px var(--chip-accent, rgba(56, 189, 248, 0.3));
 }
 
-.catalog-skill-chip:hover .catalog-chip-label {
-  color: #ffffff;
-}
-
-.catalog-skill-chip.is-active {
-  background: rgba(56, 189, 248, 0.16);
-  border-color: var(--chip-accent, #38bdf8);
-  box-shadow: 0 0 14px var(--chip-accent, rgba(56, 189, 248, 0.35));
-}
-
-.catalog-skill-chip.is-active .catalog-chip-label {
-  color: #ffffff;
-  font-weight: 700;
+.dossier-step-counter {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--active-accent, #38bdf8);
+  letter-spacing: 0.06em;
 }
 
 /* Tablet & Mobile Responsiveness for 2-Part Stage */

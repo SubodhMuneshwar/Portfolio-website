@@ -735,6 +735,10 @@ function initSpiritBomb() {
       `
       : '';
 
+    const filteredList = skillsData.filter(s => skillMatchesCategory(s, activeFilter));
+    const currentIndex = filteredList.findIndex(s => s.id === skill.id);
+    const posText = currentIndex >= 0 ? `${currentIndex + 1} / ${filteredList.length}` : '';
+
     compactHud.innerHTML = `
       <div class="dossier-header">
         <div class="dossier-icon-badge" style="border-color: ${brandColor}; box-shadow: 0 0 16px ${brandColor}44; color: ${brandColor};">
@@ -778,6 +782,19 @@ function initSpiritBomb() {
         ${projectChipHtml}
       </div>
       ` : ''}
+
+      <!-- Ultra-Minimal Scouter Navigation Stepper -->
+      <div class="dossier-stepper-row">
+        <button type="button" class="dossier-step-btn" id="dossierPrevBtn" aria-label="Previous Tool">
+          <i data-lucide="chevron-left" style="width: 14px; height: 14px;"></i>
+          <span>Prev</span>
+        </button>
+        <span class="dossier-step-counter">${posText}</span>
+        <button type="button" class="dossier-step-btn" id="dossierNextBtn" aria-label="Next Tool">
+          <span>Next</span>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+        </button>
+      </div>
     `;
 
     // Hook up project navigation clicks
@@ -789,7 +806,32 @@ function initSpiritBomb() {
       });
     });
 
+    // Hook up scouter previous / next tool stepper
+    const prevBtn = compactHud.querySelector('#dossierPrevBtn');
+    const nextBtn = compactHud.querySelector('#dossierNextBtn');
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        cycleSkill(-1);
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        cycleSkill(1);
+      });
+    }
+
     initLucideIcons();
+  }
+
+  function cycleSkill(direction = 1) {
+    const list = skillsData.filter(s => skillMatchesCategory(s, activeFilter));
+    if (!list.length) return;
+    const currentIndex = list.findIndex(s => s.id === activeSkillId);
+    let nextIndex = (currentIndex + direction) % list.length;
+    if (nextIndex < 0) nextIndex = list.length - 1;
+    selectSkill(list[nextIndex].id, true);
   }
 
   // Smooth Navigation to Featured Projects
