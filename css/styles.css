@@ -3728,6 +3728,24 @@ body.saiyan-mode .spirit-tooltip-desc {
   transition: filter 0.3s ease;
 }
 
+/* Light Mode (Rosé Theme): Show Goku Black Rosé */
+.spirit-goku-img-dark {
+  display: none !important;
+}
+
+.spirit-goku-img-light {
+  display: block !important;
+}
+
+/* Super Saiyan Dark Mode: Show Super Saiyan Goku */
+body.saiyan-mode .spirit-goku-img-light {
+  display: none !important;
+}
+
+body.saiyan-mode .spirit-goku-img-dark {
+  display: block !important;
+}
+
 body.saiyan-mode .spirit-goku-img {
   filter: drop-shadow(0 -15px 30px rgba(16, 185, 129, 0.5))
           drop-shadow(0 15px 35px rgba(0, 0, 0, 0.85));
