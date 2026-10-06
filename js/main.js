@@ -1905,60 +1905,16 @@ function renderAchievements() {
       : '';
 
     const isLastCard = idx === total - 1;
-    const isSingleCoverCard = isLastCard && images.length === 1;
-
-    const coverOverlayHtml = isSingleCoverCard ? `
-      <!-- Single Photo Pop-and-Cover Overlay (Pops from behind and covers card during runway) -->
-      <div class="ach-cover-card-overlay" 
-           data-ach-idx="${idx}" 
-           role="button" 
-           tabindex="0" 
-           aria-label="Inspect ${firstImg.caption} in High Resolution"
-           style="--cover-accent: ${accentColor};">
-        <div class="ach-cover-inner">
-          <img class="ach-cover-img" src="${firstImg.src}" alt="${firstImg.caption}" loading="lazy" />
-          <div class="ach-cover-glass-aura" aria-hidden="true"></div>
-
-          <!-- Top Spotlight Bar -->
-          <div class="ach-cover-top-bar">
-            <div class="ach-cover-tag-badge" style="background: ${accentColor}25; border-color: ${accentColor}60; color: #ffffff;">
-              <i data-lucide="award" style="width: 14px; height: 14px; color: ${accentColor};"></i>
-              <span>Archival Spotlight • ${ach.badge}</span>
-            </div>
-            <div class="ach-cover-zoom-pill">
-              <i data-lucide="maximize-2" style="width: 14px; height: 14px;"></i>
-              <span>Full HD View</span>
-            </div>
-          </div>
-
-          <!-- Bottom Caption Bar -->
-          <div class="ach-cover-bottom-bar">
-            <div class="ach-cover-meta">
-              <span class="ach-cover-title">${ach.title}</span>
-              <span class="ach-cover-caption-text">
-                <i data-lucide="camera" style="width: 13px; height: 13px; color: ${accentColor};"></i>
-                <span>${firstImg.caption}</span>
-              </span>
-            </div>
-            <div class="ach-cover-stat-chip">
-              <i data-lucide="sparkles" style="width: 12px; height: 12px; color: ${accentColor};"></i>
-              <span>${metricText}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    ` : '';
+    const hasMultiplePhotos = images.length > 1;
 
     return `
       <div class="achievement-stack-card ${isLastCard ? 'ach-last-card' : ''}" style="--card-idx: ${idx}; --total-cards: ${total}; --theme-color: var(--${colorVar}); --card-accent: ${accentColor};" data-stack-idx="${idx}" data-ach-idx="${idx}">
-        ${!isSingleCoverCard ? `
+        ${hasMultiplePhotos ? `
           <!-- Archival Photo Scatter Cluster (Emerges from behind the card and scatters outward) -->
           <div class="ach-scatter-cluster" data-cluster-idx="${idx}" aria-label="Archival photos for ${ach.title}">
             ${scatterPhotosHtml}
           </div>
         ` : ''}
-
-        ${coverOverlayHtml}
 
         <!-- Foreground Achievement Card Surface -->
         <article class="ach-card-surface">
@@ -2066,8 +2022,8 @@ function renderAchievements() {
                   <span>Inspect Archival Records (${images.length})</span>
                 </button>
                 <div class="ach-scroll-interaction-hint">
-                  <i data-lucide="mouse" style="width: 13px; height: 13px; color: ${accentColor};"></i>
-                  <span>${isSingleCoverCard ? 'Scroll down to pop full archival record' : 'Scroll down to scatter photos'}</span>
+                  <i data-lucide="${hasMultiplePhotos ? 'mouse' : 'maximize-2'}" style="width: 13px; height: 13px; color: ${accentColor};"></i>
+                  <span>${hasMultiplePhotos ? 'Scroll down to scatter photos' : 'Click photo or button to inspect record'}</span>
                 </div>
               </div>
             </div>
@@ -2164,22 +2120,7 @@ function initAchievementScatterEngine() {
     });
   });
 
-  // Setup click-to-zoom on cover overlay photos (e.g. TNP card)
-  deck.querySelectorAll('.ach-cover-card-overlay').forEach(coverEl => {
-    coverEl.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const achIdx = parseInt(coverEl.getAttribute('data-ach-idx') || '0', 10);
-      window.openAchGallery(achIdx, 0);
-    });
-    coverEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        coverEl.click();
-      }
-    });
-  });
-
-  if (achScatterEngineInit) return;
+    if (achScatterEngineInit) return;
   achScatterEngineInit = true;
 
   function updateScatter() {
@@ -2192,60 +2133,6 @@ function initAchievementScatterEngine() {
     const stickyTop = parseFloat(computedTopStr) || 96;
 
     achCards.forEach((card, idx) => {
-      // Check if this card has a pop-and-cover overlay (TNP card)
-      const coverOverlay = card.querySelector('.ach-cover-card-overlay');
-      if (coverOverlay) {
-        const deckRect = deck.getBoundingClientRect();
-        const cardHeight = card.getBoundingClientRect().height || 480;
-        const lastRunway = winH * 0.85;
-        const remaining = Math.max(0, deckRect.bottom - (stickyTop + cardHeight));
-        let prog = 0;
-        if (lastRunway > 0) {
-          prog = Math.max(0, Math.min(1, 1 - (remaining / lastRunway)));
-        }
-
-        // Cover Factor choreography:
-        // 0.00 -> 0.05: Behind card (coverFactor = 0)
-        // 0.05 -> 0.28: Pops from behind card and expands to cover card (0 -> 1)
-        // 0.28 -> 0.72: FULL CARD COVER SHOWCASE (held at 1.0)
-        // 0.72 -> 0.94: Sinks back behind card (1 -> 0)
-        // 0.94 -> 1.00: Behind card as next section scrolls in (coverFactor = 0)
-        let coverFactor = 0;
-        if (prog < 0.05) {
-          coverFactor = 0;
-        } else if (prog <= 0.28) {
-          const norm = (prog - 0.05) / (0.28 - 0.05);
-          coverFactor = Math.sin((norm * Math.PI) / 2);
-        } else if (prog <= 0.72) {
-          coverFactor = 1.0;
-        } else if (prog <= 0.94) {
-          const norm = (prog - 0.72) / (0.94 - 0.72);
-          coverFactor = 1.0 - (0.5 - 0.5 * Math.cos(norm * Math.PI));
-        } else {
-          coverFactor = 0;
-        }
-
-        if (coverFactor <= 0.01) {
-          coverOverlay.style.opacity = '0';
-          coverOverlay.style.visibility = 'hidden';
-          coverOverlay.style.pointerEvents = 'none';
-          coverOverlay.style.zIndex = '2'; // Behind card surface (z-index: 5)
-          coverOverlay.style.transform = 'translate3d(0, 24px, 0) scale(0.86) rotate(-1.5deg)';
-        } else {
-          const curScale = 0.86 + (0.14 * coverFactor);
-          const curY = 24 * (1 - coverFactor);
-          const curRot = -1.5 * (1 - coverFactor);
-          const curOpacity = Math.min(1, coverFactor * 2.2);
-
-          coverOverlay.style.opacity = curOpacity.toFixed(3);
-          coverOverlay.style.visibility = 'visible';
-          coverOverlay.style.pointerEvents = coverFactor > 0.4 ? 'auto' : 'none';
-          coverOverlay.style.zIndex = coverFactor > 0.12 ? '45' : '2'; // In front of card surface
-          coverOverlay.style.transform = `translate3d(0, ${curY.toFixed(1)}px, 0) scale(${curScale.toFixed(3)}) rotate(${curRot.toFixed(2)}deg)`;
-        }
-        return; // Don't run scatter cluster for this card
-      }
-
       const cluster = card.querySelector('.ach-scatter-cluster');
       if (!cluster) return;
       const photos = cluster.querySelectorAll('.ach-scatter-photo');
