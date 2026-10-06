@@ -1837,7 +1837,10 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* --- Render Achievements — Vertical Stacking Slider with Photo Scatter --- */
+/* --- Render Achievements — Vertical Stacking Slider with Photo Showcase & Scatter --- */
+let currentModalAchIdx = 0;
+let currentModalPhotoIdx = 0;
+
 function renderAchievements() {
   const deck = document.getElementById('achievementsStackDeck') || document.getElementById('achHorizontalTrack') || document.getElementById('achievementsGrid');
   if (!deck || !portfolioData.achievements) return;
@@ -1852,6 +1855,7 @@ function renderAchievements() {
     const accentColor = ach.accentColor || '#EC4899';
     const metricText = ach.metric || ach.badge;
     const images = ach.images || [];
+    const firstImg = images.length > 0 ? images[0] : { src: '', caption: 'Archival Record' };
 
     const tagsHtml = (ach.tags && ach.tags.length > 0)
       ? ach.tags.map(t => `
@@ -1862,28 +1866,50 @@ function renderAchievements() {
         `).join('')
       : '';
 
-    const photosHtml = images.map((img, pIdx) => `
-      <div class="ach-scatter-photo" data-photo-idx="${pIdx}" data-total-photos="${images.length}" role="button" tabindex="0" aria-label="${img.caption}">
-        <div class="ach-photo-frame">
+    // Archival Scatter Photos (Peripheral Scroll-Linked Exhibition)
+    const scatterPhotosHtml = images.map((img, pIdx) => `
+      <div class="ach-scatter-photo" data-photo-idx="${pIdx}" data-ach-idx="${idx}" data-total-photos="${images.length}" role="button" tabindex="0" aria-label="${img.caption}">
+        <div class="ach-photo-frame" style="--photo-accent: ${accentColor};">
           <img src="${img.src}" alt="${img.caption}" loading="lazy" />
           <div class="ach-photo-zoom-lens">
-            <i data-lucide="maximize-2" style="width: 15px; height: 15px;"></i>
-            <span>Inspect</span>
+            <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+            <span>Zoom</span>
           </div>
+          <div class="ach-scatter-badge">${pIdx + 1}/${images.length}</div>
         </div>
         <div class="ach-photo-caption-pill">
-          <span class="ach-photo-cap-icon">📷</span>
+          <span class="ach-photo-cap-icon" style="color: ${accentColor};">✦</span>
           <span class="ach-photo-cap-text">${img.caption}</span>
         </div>
       </div>
     `).join('');
 
+    // Interactive Thumbnail Strip for Card Face Showcase
+    const thumbStripHtml = images.length > 1
+      ? `
+        <div class="ach-thumb-strip" role="tablist" aria-label="Photo thumbnails for ${ach.title}">
+          ${images.map((img, tIdx) => `
+            <button type="button" 
+                    class="ach-thumb-btn ${tIdx === 0 ? 'is-active' : ''}" 
+                    data-ach-idx="${idx}"
+                    data-thumb-idx="${tIdx}" 
+                    data-src="${img.src}" 
+                    data-caption="${img.caption}" 
+                    title="${img.caption}"
+                    aria-label="View ${img.caption}">
+              <img src="${img.src}" alt="${img.caption}" loading="lazy" />
+            </button>
+          `).join('')}
+        </div>
+      `
+      : '';
+
     const isLastCard = idx === total - 1;
     return `
       <div class="achievement-stack-card ${isLastCard ? 'ach-last-card' : ''}" style="--card-idx: ${idx}; --total-cards: ${total}; --theme-color: var(--${colorVar}); --card-accent: ${accentColor};" data-stack-idx="${idx}" data-ach-idx="${idx}">
-        <!-- Archival Photo Scatter Cluster (Emerges from behind the card and scatters across) -->
+        <!-- Archival Photo Scatter Cluster (Emerges from behind the card and scatters outward) -->
         <div class="ach-scatter-cluster" data-cluster-idx="${idx}" aria-label="Archival photos for ${ach.title}">
-          ${photosHtml}
+          ${scatterPhotosHtml}
         </div>
 
         <!-- Foreground Achievement Card Surface -->
@@ -1895,6 +1921,10 @@ function renderAchievements() {
               <span class="stack-card-badge ach-card-badge" style="background-color: var(--${colorVar});">
                 ${ach.badge}
               </span>
+              <span class="ach-verified-badge" style="color: ${accentColor}; border-color: ${accentColor}44; background: ${accentColor}12;">
+                <i data-lucide="check-circle" style="width: 12px; height: 12px;"></i>
+                <span>Verified Record</span>
+              </span>
             </div>
             <div class="stack-header-right">
               <span class="stack-card-period ach-card-period">
@@ -1904,35 +1934,73 @@ function renderAchievements() {
             </div>
           </div>
 
-          <!-- Card Content Body -->
+          <!-- Card Content Body (Media Showcase Left, Dossier Right) -->
           <div class="stack-card-body ach-card-body">
-            <!-- Left Visual Panel -->
+            <!-- Left Visual Showcase Column -->
             <div class="stack-media-col ach-media-col">
-              <div class="ach-medallion-badge" style="background: linear-gradient(135deg, ${accentColor}24, ${accentColor}08); border-color: ${accentColor}66;">
-                <i data-lucide="${ach.icon || 'award'}" style="width: 32px; height: 32px; color: ${accentColor}; stroke-width: 2.2;"></i>
-              </div>
-              <div class="ach-metric-card-box" style="border-color: ${accentColor}55;">
-                <div class="ach-metric-value-row">
-                  <i data-lucide="sparkles" style="width: 14px; height: 14px; color: ${accentColor};"></i>
-                  <span class="ach-metric-value-text">${metricText}</span>
+              <div class="ach-card-hero-showcase">
+                <!-- Large Featured Archival Photo Frame -->
+                <div class="ach-hero-frame" 
+                     role="button" 
+                     tabindex="0" 
+                     aria-label="Inspect ${firstImg.caption} in High Resolution" 
+                     data-ach-idx="${idx}"
+                     data-active-photo-idx="0"
+                     style="--hero-accent: ${accentColor};">
+                  <img class="ach-hero-img" src="${firstImg.src}" alt="${firstImg.caption}" loading="lazy" />
+                  <div class="ach-hero-zoom-lens">
+                    <i data-lucide="maximize-2" style="width: 18px; height: 18px;"></i>
+                    <span>Inspect Full HD</span>
+                  </div>
+                  <div class="ach-hero-caption-overlay">
+                    <i data-lucide="image" style="width: 12px; height: 12px; color: ${accentColor};"></i>
+                    <span class="ach-hero-cap-text">${firstImg.caption}</span>
+                  </div>
+                  <div class="ach-hero-count-pill" style="border-color: ${accentColor}55;">
+                    <i data-lucide="camera" style="width: 12px; height: 12px;"></i>
+                    <span>${images.length} ${images.length === 1 ? 'Record' : 'Records'}</span>
+                  </div>
                 </div>
-                <span class="ach-metric-org-text">
-                  <i data-lucide="building-2" style="width: 13px; height: 13px;"></i>
-                  <span>${ach.organization}</span>
-                </span>
+
+                <!-- Interactive Thumbnail Strip -->
+                ${thumbStripHtml}
               </div>
-              <div class="ach-photo-counter-badge">
-                <i data-lucide="camera" style="width: 13px; height: 13px;"></i>
-                <span>${images.length} ${images.length === 1 ? 'Record' : 'Records'} Attached</span>
+
+              <!-- Organization & Metric Capsule -->
+              <div class="ach-org-capsule" style="border-color: ${accentColor}44;">
+                <div class="ach-org-icon-badge" style="background: ${accentColor}18; color: ${accentColor}; border: 1.5px solid ${accentColor}55;">
+                  <i data-lucide="${ach.icon || 'award'}" style="width: 18px; height: 18px;"></i>
+                </div>
+                <div class="ach-org-details">
+                  <span class="ach-org-name">${ach.organization}</span>
+                  <span class="ach-metric-highlight" style="color: ${accentColor};">
+                    <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i>
+                    <span>${metricText}</span>
+                  </span>
+                </div>
               </div>
             </div>
 
             <!-- Right Dossier Panel -->
             <div class="stack-dossier-col ach-dossier-col">
-              <h3 class="stack-proj-title ach-title-text">${ach.title}</h3>
+              <div class="ach-title-wrap">
+                <h3 class="stack-proj-title ach-title-text">${ach.title}</h3>
+              </div>
+
+              <!-- Metric Spotlight Strip -->
+              <div class="ach-spotlight-bar" style="background: linear-gradient(135deg, ${accentColor}14, ${accentColor}05); border-color: ${accentColor}40;">
+                <div class="ach-spotlight-icon" style="color: ${accentColor};">
+                  <i data-lucide="trophy" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div class="ach-spotlight-info">
+                  <span class="ach-spotlight-label">Impact Standing</span>
+                  <span class="ach-spotlight-val">${metricText} • ${ach.organization}</span>
+                </div>
+              </div>
+
               <p class="stack-proj-tagline ach-desc-text">${ach.description}</p>
 
-              <!-- Key Honors & Impact Box -->
+              <!-- Key Honors & Domains Box -->
               <div class="stack-deliverables-box ach-honors-box">
                 <div class="stack-deliverables-header">
                   <i data-lucide="award" style="width: 14px; height: 14px; color: ${accentColor};"></i>
@@ -1943,10 +2011,16 @@ function renderAchievements() {
                 </div>
               </div>
 
-              <!-- Scroll & Scatter Interaction Hint -->
-              <div class="ach-scroll-interaction-hint">
-                <i data-lucide="mouse" style="width: 13px; height: 13px; color: ${accentColor};"></i>
-                <span>Scroll to scatter archival photos • Click photo to zoom</span>
+              <!-- Action & Gallery Row -->
+              <div class="ach-card-action-row">
+                <button type="button" class="ach-gallery-trigger-btn" onclick="openAchGallery(${idx}, 0)" style="--btn-accent: ${accentColor};">
+                  <i data-lucide="images" style="width: 15px; height: 15px;"></i>
+                  <span>Inspect Archival Records (${images.length})</span>
+                </button>
+                <div class="ach-scroll-interaction-hint">
+                  <i data-lucide="mouse" style="width: 13px; height: 13px; color: ${accentColor};"></i>
+                  <span>Scroll down to scatter photos</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1956,9 +2030,63 @@ function renderAchievements() {
   }).join('') + '<div class="ach-stack-runway" aria-hidden="true"></div>';
 
   initLucideIcons();
+  initAchievementCardGalleries();
   initAchievementScatterEngine();
   initStackCardScrollAnimation();
   initStackCardReveals();
+}
+
+function initAchievementCardGalleries() {
+  const cards = document.querySelectorAll('.achievement-stack-card');
+  cards.forEach(card => {
+    const achIdx = parseInt(card.getAttribute('data-ach-idx'), 10);
+    const heroFrame = card.querySelector('.ach-hero-frame');
+    const heroImg = card.querySelector('.ach-hero-img');
+    const heroCap = card.querySelector('.ach-hero-cap-text');
+    const thumbs = card.querySelectorAll('.ach-thumb-btn');
+
+    thumbs.forEach(btn => {
+      const onSelect = () => {
+        thumbs.forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const src = btn.getAttribute('data-src');
+        const cap = btn.getAttribute('data-caption');
+        const tIdx = btn.getAttribute('data-thumb-idx');
+        if (heroImg && src) {
+          heroImg.src = src;
+          heroImg.alt = cap || '';
+        }
+        if (heroCap && cap) {
+          heroCap.textContent = cap;
+        }
+        if (heroFrame) {
+          heroFrame.setAttribute('data-active-photo-idx', tIdx);
+        }
+      };
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onSelect();
+      });
+      btn.addEventListener('mouseenter', () => {
+        onSelect();
+      });
+    });
+
+    if (heroFrame) {
+      heroFrame.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const activeIdx = parseInt(heroFrame.getAttribute('data-active-photo-idx') || '0', 10);
+        window.openAchGallery(achIdx, activeIdx);
+      });
+      heroFrame.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          heroFrame.click();
+        }
+      });
+    }
+  });
 }
 
 /* --- Scroll-Linked Photo Scatter Engine --- */
@@ -1976,11 +2104,9 @@ function initAchievementScatterEngine() {
   deck.querySelectorAll('.ach-scatter-photo').forEach(photoEl => {
     photoEl.addEventListener('click', (e) => {
       e.stopPropagation();
-      const img = photoEl.querySelector('img');
-      const captionEl = photoEl.querySelector('.ach-photo-cap-text');
-      if (img && window.openAchPhotoModal) {
-        window.openAchPhotoModal(img.src, captionEl ? captionEl.textContent : img.alt);
-      }
+      const achIdx = parseInt(photoEl.getAttribute('data-ach-idx') || '0', 10);
+      const photoIdx = parseInt(photoEl.getAttribute('data-photo-idx') || '0', 10);
+      window.openAchGallery(achIdx, photoIdx);
     });
     photoEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -2009,25 +2135,32 @@ function initAchievementScatterEngine() {
       const photoCount = photos.length;
       if (!photoCount) return;
 
+      // On narrow tablet / mobile, card face hero gallery is primary; hide peripheral scatter to prevent clutter
+      if (winW <= 980) {
+        photos.forEach(p => {
+          p.style.opacity = '0';
+          p.style.visibility = 'hidden';
+          p.style.pointerEvents = 'none';
+        });
+        return;
+      }
+
       const cardRect = card.getBoundingClientRect();
-      const cardW = cardRect.width || 760;
+      const cardW = cardRect.width || 860;
       const cardHalfW = cardW / 2;
 
-      // Base photo half-width (photo is 230px, half-width is 115px)
-      const photoW = 230;
-      const photoHalfW = 115;
+      // Larger scatter photo: 285px wide (half-width 142.5px)
+      const photoW = 285;
+      const photoHalfW = 142.5;
 
-      // Space between card edge and screen edge
       const sideGutter = Math.max(0, (winW - cardW) / 2);
 
       let scaleMul = 1.0;
-      // Normal target clearance: cardHalfW + photoHalfW + 24px margin
-      let clearX = cardHalfW + photoHalfW + 24;
-      const maxAllowedX = Math.max(cardHalfW + 60, (winW / 2) - photoHalfW - 16);
+      let clearX = cardHalfW + photoHalfW + 28;
+      const maxAllowedX = Math.max(cardHalfW + 50, (winW / 2) - photoHalfW - 16);
 
-      if (winW < 1380) {
-        // If on a compact laptop or tablet screen, scale down photo smoothly so it fits completely in side gutter without clipping
-        scaleMul = Math.min(1.0, Math.max(0.72, (sideGutter - 16) / photoW));
+      if (winW < 1520) {
+        scaleMul = Math.min(1.0, Math.max(0.68, (sideGutter - 16) / photoW));
         clearX = Math.min(clearX, maxAllowedX);
       }
 
@@ -2036,7 +2169,7 @@ function initAchievementScatterEngine() {
       if (idx < total - 1) {
         const nextCard = achCards[idx + 1];
         const nextRect = nextCard.getBoundingClientRect();
-        const cardHeight = cardRect.height || 460;
+        const cardHeight = cardRect.height || 480;
         const initialNextTop = stickyTop + cardHeight + (winH * 0.85);
         const distToNextDock = Math.max(0, nextRect.top - stickyTop);
         const totalRunway = initialNextTop - stickyTop;
@@ -2045,28 +2178,28 @@ function initAchievementScatterEngine() {
         }
       } else {
         const deckRect = deck.getBoundingClientRect();
-        const cardHeight = cardRect.height || 460;
+        const cardHeight = cardRect.height || 480;
         const lastRunway = winH * 0.85;
         const remaining = Math.max(0, deckRect.bottom - (stickyTop + cardHeight));
         prog = Math.max(0, Math.min(1, 1 - (remaining / lastRunway)));
       }
 
       // Scatter Factor calculation:
-      // 0.00 -> 0.05: Behind card (scatter = 0)
-      // 0.05 -> 0.20: Fast, smooth emergence from behind card (scatter = 0 -> 1)
-      // 0.20 -> 0.82: FULL EXHIBITION SHOWCASE (scatter = 1.0) — photos fully visible & held
-      // 0.82 -> 0.94: Smooth retraction back behind card (scatter = 1 -> 0)
-      // 0.94 -> 1.00: Behind card as next card docks (scatter = 0)
+      // 0.00 -> 0.04: Behind card (scatter = 0)
+      // 0.04 -> 0.18: Fast, smooth emergence outward (scatter = 0 -> 1)
+      // 0.18 -> 0.84: FULL EXHIBITION SHOWCASE (scatter = 1.0) — photos fully visible & held
+      // 0.84 -> 0.95: Smooth retraction back behind card (scatter = 1 -> 0)
+      // 0.95 -> 1.00: Behind card as next card docks
       let scatterFactor = 0;
-      if (prog < 0.05) {
+      if (prog < 0.04) {
         scatterFactor = 0;
-      } else if (prog <= 0.20) {
-        const norm = (prog - 0.05) / (0.20 - 0.05);
+      } else if (prog <= 0.18) {
+        const norm = (prog - 0.04) / (0.18 - 0.04);
         scatterFactor = Math.sin((norm * Math.PI) / 2);
-      } else if (prog <= 0.82) {
+      } else if (prog <= 0.84) {
         scatterFactor = 1.0;
-      } else if (prog <= 0.94) {
-        const norm = (prog - 0.82) / (0.94 - 0.82);
+      } else if (prog <= 0.95) {
+        const norm = (prog - 0.84) / (0.95 - 0.84);
         scatterFactor = 1.0 - (0.5 - 0.5 * Math.cos(norm * Math.PI));
       } else {
         scatterFactor = 0;
@@ -2078,19 +2211,19 @@ function initAchievementScatterEngine() {
         let targetRot = 0;
 
         if (photoCount === 4) {
-          if (pIdx === 0) { targetX = -clearX; targetY = -155; targetRot = -7.0; }
-          else if (pIdx === 1) { targetX = clearX; targetY = -155; targetRot = 6.5; }
-          else if (pIdx === 2) { targetX = -clearX; targetY = 155; targetRot = 5.5; }
-          else if (pIdx === 3) { targetX = clearX; targetY = 155; targetRot = -6.5; }
+          if (pIdx === 0) { targetX = -clearX; targetY = -165; targetRot = -6.5; }
+          else if (pIdx === 1) { targetX = clearX; targetY = -165; targetRot = 6.0; }
+          else if (pIdx === 2) { targetX = -clearX; targetY = 165; targetRot = 5.0; }
+          else if (pIdx === 3) { targetX = clearX; targetY = 165; targetRot = -5.5; }
         } else if (photoCount === 3) {
-          if (pIdx === 0) { targetX = -clearX; targetY = 0; targetRot = -6.5; }
-          else if (pIdx === 1) { targetX = clearX; targetY = -140; targetRot = 6.0; }
-          else if (pIdx === 2) { targetX = clearX; targetY = 140; targetRot = -5.5; }
-        } else if (photoCount === 2) {
           if (pIdx === 0) { targetX = -clearX; targetY = 0; targetRot = -6.0; }
-          else if (pIdx === 1) { targetX = clearX; targetY = 0; targetRot = 6.0; }
+          else if (pIdx === 1) { targetX = clearX; targetY = -150; targetRot = 6.0; }
+          else if (pIdx === 2) { targetX = clearX; targetY = 150; targetRot = -5.5; }
+        } else if (photoCount === 2) {
+          if (pIdx === 0) { targetX = -clearX; targetY = 0; targetRot = -5.5; }
+          else if (pIdx === 1) { targetX = clearX; targetY = 0; targetRot = 5.5; }
         } else {
-          targetX = clearX; targetY = 0; targetRot = 5.5;
+          targetX = clearX; targetY = 0; targetRot = 5.0;
         }
 
         const curX = targetX * scatterFactor;
@@ -2109,7 +2242,7 @@ function initAchievementScatterEngine() {
           photo.style.opacity = curOpacity.toFixed(3);
           photo.style.visibility = 'visible';
           photo.style.pointerEvents = scatterFactor > 0.4 ? 'auto' : 'none';
-          photo.style.zIndex = '35'; // Always in front of card surface (z-index: 5)
+          photo.style.zIndex = '35';
           photo.style.transform = `translate3d(${curX.toFixed(1)}px, ${curY.toFixed(1)}px, 0) rotate(${curRot.toFixed(1)}deg) scale(${curScale.toFixed(3)})`;
         }
       });
@@ -2149,16 +2282,17 @@ function initAchievementScatterEngine() {
 }
 
 /* --- Archival Photo Lightbox Modal Handlers --- */
-window.openAchPhotoModal = function(src, caption) {
+window.openAchGallery = function(achIdx, photoIdx = 0) {
+  if (!portfolioData || !portfolioData.achievements) return;
+  const ach = portfolioData.achievements[achIdx];
+  if (!ach || !ach.images || !ach.images.length) return;
+
+  currentModalAchIdx = achIdx;
+  currentModalPhotoIdx = Math.max(0, Math.min(ach.images.length - 1, photoIdx));
+  updateAchModalContent();
+
   const modal = document.getElementById('achPhotoModal');
-  const img = document.getElementById('achPhotoModalImg');
-  const cap = document.getElementById('achPhotoModalCaption');
-  if (!modal || !img) return;
-
-  img.src = src;
-  img.alt = caption || 'Achievement Record';
-  if (cap) cap.textContent = caption || '';
-
+  if (!modal) return;
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   if (window.lenis && typeof window.lenis.stop === 'function') {
@@ -2166,6 +2300,99 @@ window.openAchPhotoModal = function(src, caption) {
   }
   initLucideIcons();
 };
+
+window.openAchPhotoModal = function(src, caption) {
+  let foundAchIdx = -1;
+  let foundPhotoIdx = -1;
+  if (portfolioData && portfolioData.achievements) {
+    for (let a = 0; a < portfolioData.achievements.length; a++) {
+      const imgs = portfolioData.achievements[a].images || [];
+      for (let p = 0; p < imgs.length; p++) {
+        if (imgs[p].src === src) {
+          foundAchIdx = a;
+          foundPhotoIdx = p;
+          break;
+        }
+      }
+      if (foundAchIdx !== -1) break;
+    }
+  }
+
+  if (foundAchIdx !== -1) {
+    window.openAchGallery(foundAchIdx, foundPhotoIdx);
+  } else {
+    const modal = document.getElementById('achPhotoModal');
+    const img = document.getElementById('achPhotoModalImg');
+    const cap = document.getElementById('achPhotoModalCaption');
+    const counter = document.getElementById('achModalCounter');
+    const badgeText = document.getElementById('achModalBadgeText');
+    const prevBtn = document.getElementById('achModalPrevBtn');
+    const nextBtn = document.getElementById('achModalNextBtn');
+
+    if (!modal || !img) return;
+    img.src = src;
+    img.alt = caption || 'Achievement Record';
+    if (cap) cap.textContent = caption || '';
+    if (badgeText) badgeText.textContent = 'Archival Record';
+    if (counter) counter.textContent = '1 / 1';
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (window.lenis && typeof window.lenis.stop === 'function') {
+      window.lenis.stop();
+    }
+    initLucideIcons();
+  }
+};
+
+window.navAchModal = function(direction) {
+  if (!portfolioData || !portfolioData.achievements) return;
+  const ach = portfolioData.achievements[currentModalAchIdx];
+  if (!ach || !ach.images || !ach.images.length) return;
+
+  const total = ach.images.length;
+  currentModalPhotoIdx = (currentModalPhotoIdx + direction + total) % total;
+  updateAchModalContent();
+};
+
+function updateAchModalContent() {
+  if (!portfolioData || !portfolioData.achievements) return;
+  const ach = portfolioData.achievements[currentModalAchIdx];
+  if (!ach || !ach.images) return;
+  const total = ach.images.length;
+  const photo = ach.images[currentModalPhotoIdx];
+  if (!photo) return;
+
+  const img = document.getElementById('achPhotoModalImg');
+  const cap = document.getElementById('achPhotoModalCaption');
+  const counter = document.getElementById('achModalCounter');
+  const badgeText = document.getElementById('achModalBadgeText');
+  const prevBtn = document.getElementById('achModalPrevBtn');
+  const nextBtn = document.getElementById('achModalNextBtn');
+
+  if (img) {
+    img.src = photo.src;
+    img.alt = photo.caption || ach.title;
+  }
+  if (cap) {
+    cap.textContent = photo.caption || ach.title;
+  }
+  if (counter) {
+    counter.textContent = `${currentModalPhotoIdx + 1} / ${total}`;
+  }
+  if (badgeText) {
+    badgeText.textContent = `${ach.badge} • ${ach.period}`;
+  }
+  if (prevBtn) {
+    prevBtn.style.display = total > 1 ? 'flex' : 'none';
+  }
+  if (nextBtn) {
+    nextBtn.style.display = total > 1 ? 'flex' : 'none';
+  }
+  initLucideIcons();
+}
 
 window.closeAchPhotoModal = function() {
   const modal = document.getElementById('achPhotoModal');
@@ -2178,10 +2405,14 @@ window.closeAchPhotoModal = function() {
 };
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const achModal = document.getElementById('achPhotoModal');
-    if (achModal && achModal.classList.contains('active')) {
+  const achModal = document.getElementById('achPhotoModal');
+  if (achModal && achModal.classList.contains('active')) {
+    if (e.key === 'Escape') {
       window.closeAchPhotoModal();
+    } else if (e.key === 'ArrowLeft') {
+      window.navAchModal(-1);
+    } else if (e.key === 'ArrowRight') {
+      window.navAchModal(1);
     }
   }
 });

@@ -694,6 +694,22 @@
           <p class="section-subtitle">
             National hackathon victories, student leadership, technical workshops, and creative honors.
           </p>
+          <div class="ach-header-stats-bar">
+            <span class="ach-stat-badge">
+              <i data-lucide="award" style="width: 13px; height: 13px; color: #10b981;"></i>
+              <span>6 Key Milestones</span>
+            </span>
+            <span class="ach-stat-sep">•</span>
+            <span class="ach-stat-badge">
+              <i data-lucide="camera" style="width: 13px; height: 13px; color: #ec4899;"></i>
+              <span>16 Archival Records &amp; Certificates</span>
+            </span>
+            <span class="ach-stat-sep">•</span>
+            <span class="ach-stat-badge">
+              <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #3b82f6;"></i>
+              <span>National &amp; University Scale</span>
+            </span>
+          </div>
         </div>
 
         <!-- Vertical Stacking Deck with Scroll-Linked Photo Scatter Engine -->
@@ -1340,20 +1356,30 @@
   <!-- =========================================================================
        Achievement Archival Photo Lightbox Modal (Click-to-Zoom)
        ========================================================================= -->
-  <div class="ach-photo-modal-backdrop" id="achPhotoModal" onclick="if(event.target===this) closeAchPhotoModal()" aria-hidden="true">
+  <div class="ach-photo-modal-backdrop" id="achPhotoModal" onclick="if(event.target===this) closeAchPhotoModal()" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="ach-photo-modal-box">
       <button type="button" class="ach-photo-modal-close" onclick="closeAchPhotoModal()" aria-label="Close Archival Photo">
         <i data-lucide="x" style="width: 20px; height: 20px;"></i>
       </button>
+
+      <!-- Carousel Navigation Buttons -->
+      <button type="button" class="ach-modal-nav-btn ach-modal-prev" id="achModalPrevBtn" onclick="navAchModal(-1)" aria-label="Previous Archival Record">
+        <i data-lucide="chevron-left" style="width: 22px; height: 22px;"></i>
+      </button>
+      <button type="button" class="ach-modal-nav-btn ach-modal-next" id="achModalNextBtn" onclick="navAchModal(1)" aria-label="Next Archival Record">
+        <i data-lucide="chevron-right" style="width: 22px; height: 22px;"></i>
+      </button>
+
       <div class="ach-photo-modal-img-wrap">
         <img id="achPhotoModalImg" src="" alt="Achievement Archival Photo" />
       </div>
       <div class="ach-photo-modal-footer">
         <div class="ach-photo-modal-badge">
           <i data-lucide="award" style="width: 14px; height: 14px;"></i>
-          <span>Archival Record</span>
+          <span id="achModalBadgeText">Archival Record</span>
         </div>
         <p class="ach-photo-modal-caption" id="achPhotoModalCaption"></p>
+        <span class="ach-modal-counter" id="achModalCounter">1 / 1</span>
       </div>
     </div>
   </div>
