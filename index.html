@@ -678,81 +678,27 @@
     </section>
 
     <!-- =========================================================================
-         Achievements & Leadership Section
+         Achievements & Leadership Section (Vertical Stacking Slider with Photo Scatter)
          ========================================================================= -->
-    <!-- =========================================================================
-         Achievements & Leadership Section (Awwwards Horizontal Scroll Showcase)
-         ========================================================================= -->
-    <section class="achievements-scroll-section" id="achievements">
-      <div class="ach-sticky-viewport" id="achStickyViewport">
-        <!-- Collectible 5-Star Dragon Ball & Prank Decoy -->
-        <span class="dragon-ball float-right-ball" style="top: 18px; right: 24px; z-index: 45;" data-ball="5" title="Collect the 5-Star Dragon Ball!">★★★★★</span>
-        <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 24px; left: 20px; z-index: 45;" data-fake-ball="100" title="100-Star National Trophy Ball?!"></span>
-
-        <!-- Sticky Header HUD with Title & Interactive Controls -->
-        <div class="ach-showcase-header">
-          <div class="ach-header-left">
-            <div class="section-tag" style="background-color: var(--quaternary); margin-bottom: 0.35rem;">
-              <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
-              <span>Leadership &amp; Honors</span>
-            </div>
-            <div class="ach-title-row">
-              <h2 class="section-title ach-section-heading">Achievements &amp; Leadership</h2>
-              <span class="ach-scroll-badge">
-                <i data-lucide="compass" style="width: 13px; height: 13px;"></i>
-                <span>Horizontal Showcase</span>
-              </span>
-            </div>
-            <p class="section-subtitle ach-section-sub">
-              National hackathon victories, student leadership, technical workshops, and creative honors.
-            </p>
+    <section class="section achievements-section" id="achievements">
+      <div class="container">
+        <div class="section-header" style="position: relative;">
+          <!-- Collectible 5-Star Dragon Ball (Right) & Decoy Ball (Left) -->
+          <span class="dragon-ball float-right-ball" style="top: -12px; right: -16px;" data-ball="5" title="Collect the 5-Star Dragon Ball!">★★★★★</span>
+          <span class="dragon-ball fake-dragon-ball floating-decoy-ball float-left-ball" style="top: 45px; left: -20px;" data-fake-ball="100" title="100-Star National Trophy Ball?!"></span>
+          <div class="section-tag" style="background-color: var(--quaternary);">
+            <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
+            <span>Leadership &amp; Honors</span>
           </div>
-
-          <div class="ach-header-controls">
-            <!-- Counter HUD -->
-            <div class="ach-hud-counter" id="achHudCounter">
-              <span class="ach-counter-active" id="achActiveNum">01</span>
-              <span class="ach-counter-sep">/</span>
-              <span class="ach-counter-total" id="achTotalNum">06</span>
-            </div>
-
-            <!-- Navigation Arrow Buttons -->
-            <div class="ach-nav-buttons">
-              <button type="button" class="ach-nav-btn ach-nav-prev" id="achPrevBtn" aria-label="Previous Achievement" title="Previous Achievement (Left Arrow)">
-                <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
-              </button>
-              <button type="button" class="ach-nav-btn ach-nav-next" id="achNextBtn" aria-label="Next Achievement" title="Next Achievement (Right Arrow)">
-                <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-              </button>
-            </div>
-          </div>
+          <h2 class="section-title">Achievements &amp; Leadership</h2>
+          <p class="section-subtitle">
+            National hackathon victories, student leadership, technical workshops, and creative honors.
+          </p>
         </div>
 
-        <!-- Horizontal Track Viewport Area -->
-        <div class="ach-track-wrapper" id="achTrackWrapper">
-          <div class="ach-horizontal-track achievements-grid" id="achHorizontalTrack">
-            <!-- Dynamic render from data.js -->
-          </div>
-        </div>
-
-        <!-- Bottom Showcase HUD: Progress Bar, Pagination Dots & Hints -->
-        <div class="ach-showcase-footer">
-          <div class="ach-footer-left">
-            <div class="ach-progress-container" id="achProgressTrack" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" title="Slide Progress">
-              <div class="ach-progress-fill" id="achProgressFill"></div>
-            </div>
-          </div>
-
-          <div class="ach-dots-container" id="achDotsContainer">
-            <!-- Dynamically populated dot buttons -->
-          </div>
-
-          <div class="ach-footer-right">
-            <span class="ach-scroll-hint">
-              <i data-lucide="mouse" style="width: 14px; height: 14px;"></i>
-              <span>Scroll down or use <kbd>←</kbd><kbd>→</kbd></span>
-            </span>
-          </div>
+        <!-- Vertical Stacking Deck with Scroll-Linked Photo Scatter Engine -->
+        <div class="achievements-stack-deck" id="achievementsStackDeck">
+          <!-- Dynamically populated by renderAchievements() in js/main.js -->
         </div>
       </div>
     </section>
@@ -1387,6 +1333,27 @@
         <button type="button" class="btn btn-outline btn-sm" onclick="closeKidGokuPrankModal()">
           <span>Got Me!</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Achievement Archival Photo Lightbox Modal (Click-to-Zoom)
+       ========================================================================= -->
+  <div class="ach-photo-modal-backdrop" id="achPhotoModal" onclick="if(event.target===this) closeAchPhotoModal()" aria-hidden="true">
+    <div class="ach-photo-modal-box">
+      <button type="button" class="ach-photo-modal-close" onclick="closeAchPhotoModal()" aria-label="Close Archival Photo">
+        <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+      </button>
+      <div class="ach-photo-modal-img-wrap">
+        <img id="achPhotoModalImg" src="" alt="Achievement Archival Photo" />
+      </div>
+      <div class="ach-photo-modal-footer">
+        <div class="ach-photo-modal-badge">
+          <i data-lucide="award" style="width: 14px; height: 14px;"></i>
+          <span>Archival Record</span>
+        </div>
+        <p class="ach-photo-modal-caption" id="achPhotoModalCaption"></p>
       </div>
     </div>
   </div>

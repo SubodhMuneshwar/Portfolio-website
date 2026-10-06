@@ -936,91 +936,197 @@ const portfolioData = {
   ],
 
   achievements: [
-    {
-      id: "sih-2024",
-      num: "01",
-      title: "Smart India Hackathon 2024 Finalist",
-      organization: "Ministry of Education & AICTE",
-      period: "2024",
-      badge: "National Finalist",
-      metric: "Top 118 Teams Nationally",
-      color: "tertiary",
-      accentColor: "#10B981",
-      icon: "award",
-      description: "Selected among 118 finalist teams nationwide for architecting a biomimicry-based grey water management and circular filtration solution.",
-      tags: ["Biomimicry", "Circular Filtration", "Sustainability", "National Level"]
-    },
-    {
-      id: "sih-2023",
-      num: "02",
-      title: "Smart India Hackathon 2023 – Top 5 in India",
-      organization: "Ministry of Education & AICTE",
-      period: "2023",
-      badge: "Top 5 in India",
-      metric: "Rank 5 of 258 Teams",
-      color: "secondary",
-      accentColor: "#3B82F6",
-      icon: "trophy",
-      description: "Ranked among the Top 5 teams out of 258 competing teams nationwide for designing an innovative technological menstrual waste disposal & sanitation solution.",
-      tags: ["Sanitation Tech", "IoT & Embedded", "National Top 5", "AICTE"]
-    },
-    {
-      id: "web-workshop",
-      num: "03",
-      title: "Workshop Instructor – Full Stack Web Dev",
-      organization: "RMCET Computer Engineering Dept.",
-      period: "March 2024",
-      badge: "Leadership & Teaching",
-      metric: "50+ Engineers Mentored",
-      color: "accent",
-      accentColor: "#EC4899",
-      icon: "presentation",
-      description: "Co-conducted an intensive 5-day hands-on practical workshop for 50+ junior engineering students on modern HTML, CSS, JavaScript, and responsive UI architecture.",
-      tags: ["Web Architecture", "JavaScript", "Instruction", "Mentorship"]
-    },
-    {
-      id: "student-secretary",
-      num: "04",
-      title: "Student Secretary – RMCET",
-      organization: "Rajendra Mane College of Engineering & Tech",
-      period: "Aug 2024 – May 2026",
-      badge: "Elected Representative",
-      metric: "500+ Students Represented",
-      color: "quaternary",
-      accentColor: "#8B5CF6",
-      icon: "users",
-      description: "Officially represented 500+ undergraduate students; steered technical events, hackathons, academic forums, and cultural symposiums.",
-      tags: ["Executive Governance", "Hackathons", "Event Operations", "Advocacy"]
-    },
-    {
-      id: "youth-festival",
-      num: "05",
-      title: "District & University Youth Festival Competitions",
-      organization: "University of Mumbai",
-      period: "2023 - 2025",
-      badge: "Arts & Creativity",
-      metric: "University & District Level",
-      color: "secondary",
-      accentColor: "#06B6D4",
-      icon: "palette",
-      description: "Represented college at university/district levels in poster-making, creative painting, cartooning, and street plays, demonstrating strong visual and storytelling skills.",
-      tags: ["Visual Arts", "Storytelling", "Creative Painting", "Fine Arts"]
-    },
-    {
-      id: "tp-volunteer",
-      num: "06",
-      title: "Training & Placement Cell Volunteer",
-      organization: "RMCET T&P Cell",
-      period: "2023 - Present",
-      badge: "Institutional Service",
-      metric: "Placement Drives Coordinated",
-      color: "cyan-pop",
-      accentColor: "#14B8A6",
-      icon: "briefcase",
-      description: "Assisted college placement coordinators in organizing corporate recruitment drives, technical assessment sessions, and mock interview preparations.",
-      tags: ["Placement Drives", "Corporate Relations", "Mock Interviews", "Operations"]
-    }
-  ],
+  {
+    "id": "sih-2024",
+    "num": "01",
+    "title": "Smart India Hackathon 2024 Finalist",
+    "organization": "Ministry of Education & AICTE",
+    "period": "2024",
+    "badge": "National Finalist",
+    "metric": "Top 118 Teams Nationally",
+    "color": "tertiary",
+    "accentColor": "#10B981",
+    "icon": "award",
+    "description": "Selected among 118 finalist teams nationwide for architecting a biomimicry-based grey water management and circular filtration solution.",
+    "tags": [
+      "Biomimicry",
+      "Circular Filtration",
+      "Sustainability",
+      "National Level"
+    ],
+    "images": [
+      {
+        "src": "assets/SIH24_4.jpg",
+        "caption": "SIH 2024 Finalist Certificate"
+      },
+      {
+        "src": "assets/SIH24_3.jpg",
+        "caption": "Architecture Defense & Jury"
+      },
+      {
+        "src": "assets/SIH24_2.jpg",
+        "caption": "Team Technocrats in Action"
+      },
+      {
+        "src": "assets/SIH24_1.jpg",
+        "caption": "Grand Finale Showcase"
+      }
+    ]
+  },
+  {
+    "id": "sih-2023",
+    "num": "02",
+    "title": "Smart India Hackathon 2023 – Top 5 in India",
+    "organization": "Ministry of Education & AICTE",
+    "period": "2023",
+    "badge": "Top 5 in India",
+    "metric": "Rank 5 of 258 Teams",
+    "color": "secondary",
+    "accentColor": "#3B82F6",
+    "icon": "trophy",
+    "description": "Ranked among the Top 5 teams out of 258 competing teams nationwide for designing an innovative technological menstrual waste disposal & sanitation solution.",
+    "tags": [
+      "Sanitation Tech",
+      "IoT & Embedded",
+      "National Top 5",
+      "AICTE"
+    ],
+    "images": [
+      {
+        "src": "assets/SIH23_4.jpg",
+        "caption": "SIH 2023 Top 5 Certificate"
+      },
+      {
+        "src": "assets/SIH23_3.jpg",
+        "caption": "National Top 5 Honor Ceremony"
+      },
+      {
+        "src": "assets/SIH23_2.jpg",
+        "caption": "Hardware Prototype Defense"
+      },
+      {
+        "src": "assets/SIH23_1.jpg",
+        "caption": "AICTE Ministry Commendation"
+      }
+    ]
+  },
+  {
+    "id": "web-workshop",
+    "num": "03",
+    "title": "Workshop Instructor – Full Stack Web Dev",
+    "organization": "RMCET Computer Engineering Dept.",
+    "period": "March 2024",
+    "badge": "Leadership & Teaching",
+    "metric": "50+ Engineers Mentored",
+    "color": "accent",
+    "accentColor": "#EC4899",
+    "icon": "presentation",
+    "description": "Co-conducted an intensive 5-day hands-on practical workshop for 50+ junior engineering students on modern HTML, CSS, JavaScript, and responsive UI architecture.",
+    "tags": [
+      "Web Architecture",
+      "JavaScript",
+      "Instruction",
+      "Mentorship"
+    ],
+    "images": [
+      {
+        "src": "assets/Workshop_1.jpg",
+        "caption": "Hands-on Practical Coding Lab"
+      },
+      {
+        "src": "assets/workshop_2.jpg",
+        "caption": "Mentoring 50+ Junior Engineers"
+      }
+    ]
+  },
+  {
+    "id": "student-secretary",
+    "num": "04",
+    "title": "Student Secretary – RMCET",
+    "organization": "Rajendra Mane College of Engineering & Tech",
+    "period": "Aug 2024 – May 2026",
+    "badge": "Elected Representative",
+    "metric": "500+ Students Represented",
+    "color": "quaternary",
+    "accentColor": "#8B5CF6",
+    "icon": "users",
+    "description": "Officially represented 500+ undergraduate students; steered technical events, hackathons, academic forums, and cultural symposiums.",
+    "tags": [
+      "Executive Governance",
+      "Hackathons",
+      "Event Operations",
+      "Advocacy"
+    ],
+    "images": [
+      {
+        "src": "assets/Secretary_1.jpg",
+        "caption": "Official Student Council Address"
+      },
+      {
+        "src": "assets/Secretary_2.jpg",
+        "caption": "Leading Campus Symposium"
+      }
+    ]
+  },
+  {
+    "id": "youth-festival",
+    "num": "05",
+    "title": "District & University Youth Festival Competitions",
+    "organization": "University of Mumbai",
+    "period": "2023 - 2025",
+    "badge": "Arts & Creativity",
+    "metric": "University & District Level",
+    "color": "secondary",
+    "accentColor": "#06B6D4",
+    "icon": "palette",
+    "description": "Represented college at university/district levels in poster-making, creative painting, cartooning, and street plays, demonstrating strong visual and storytelling skills.",
+    "tags": [
+      "Visual Arts",
+      "Storytelling",
+      "Creative Painting",
+      "Fine Arts"
+    ],
+    "images": [
+      {
+        "src": "assets/youth_1.jpg",
+        "caption": "Fine Arts Exhibition Presentation"
+      },
+      {
+        "src": "assets/youth_2.jpg",
+        "caption": "Creative Poster Design Entry"
+      },
+      {
+        "src": "assets/youth_3.jpg",
+        "caption": "University Trophy & Recognition"
+      }
+    ]
+  },
+  {
+    "id": "tp-volunteer",
+    "num": "06",
+    "title": "Training & Placement Cell Volunteer",
+    "organization": "RMCET T&P Cell",
+    "period": "2023 - Present",
+    "badge": "Institutional Service",
+    "metric": "Placement Drives Coordinated",
+    "color": "cyan-pop",
+    "accentColor": "#14B8A6",
+    "icon": "briefcase",
+    "description": "Assisted college placement coordinators in organizing corporate recruitment drives, technical assessment sessions, and mock interview preparations.",
+    "tags": [
+      "Placement Drives",
+      "Corporate Relations",
+      "Mock Interviews",
+      "Operations"
+    ],
+    "images": [
+      {
+        "src": "assets/TNP.jpg",
+        "caption": "Training & Placement Operations Team"
+      }
+    ]
+  }
+],
 
   certifications: [
     {

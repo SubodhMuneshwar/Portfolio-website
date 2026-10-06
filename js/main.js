@@ -1837,24 +1837,22 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* --- Render Achievements — Awwwards Horizontal Scroll Gallery --- */
+/* --- Render Achievements — Vertical Stacking Slider with Photo Scatter --- */
 function renderAchievements() {
-  const track = document.getElementById('achHorizontalTrack') || document.getElementById('achievementsGrid');
-  if (!track || !portfolioData.achievements) return;
+  const deck = document.getElementById('achievementsStackDeck') || document.getElementById('achHorizontalTrack') || document.getElementById('achievementsGrid');
+  if (!deck || !portfolioData.achievements) return;
 
   const items = portfolioData.achievements;
   const total = items.length;
 
-  const totalNumEl = document.getElementById('achTotalNum');
-  if (totalNumEl) {
-    totalNumEl.textContent = String(total).padStart(2, '0');
-  }
-
-  track.innerHTML = items.map((ach, idx) => {
+  deck.innerHTML = items.map((ach, idx) => {
     const numStr = ach.num || String(idx + 1).padStart(2, '0');
+    const totalStr = String(total).padStart(2, '0');
     const colorVar = ach.color || 'accent';
     const accentColor = ach.accentColor || '#EC4899';
     const metricText = ach.metric || ach.badge;
+    const images = ach.images || [];
+
     const tagsHtml = (ach.tags && ach.tags.length > 0)
       ? ach.tags.map(t => `
           <span class="ach-tag-chip">
@@ -1864,216 +1862,251 @@ function renderAchievements() {
         `).join('')
       : '';
 
+    const photosHtml = images.map((img, pIdx) => `
+      <div class="ach-scatter-photo" data-photo-idx="${pIdx}" data-total-photos="${images.length}" role="button" tabindex="0" aria-label="${img.caption}">
+        <div class="ach-photo-frame">
+          <img src="${img.src}" alt="${img.caption}" loading="lazy" />
+          <div class="ach-photo-zoom-lens">
+            <i data-lucide="maximize-2" style="width: 15px; height: 15px;"></i>
+            <span>Inspect</span>
+          </div>
+        </div>
+        <div class="ach-photo-caption-pill">
+          <span class="ach-photo-cap-icon">📷</span>
+          <span class="ach-photo-cap-text">${img.caption}</span>
+        </div>
+      </div>
+    `).join('');
+
+    const isLastCard = idx === total - 1;
     return `
-      <article class="ach-card" data-ach-idx="${idx}" style="--card-accent: ${accentColor}; --card-theme-color: var(--${colorVar});">
-        <!-- Top Metadata Row -->
-        <div class="ach-card-top">
-          <div class="ach-card-num-box">
-            <span class="ach-card-num">${numStr}</span>
-          </div>
-          <div class="ach-card-org-pill">
-            <i data-lucide="building-2" style="width: 14px; height: 14px;"></i>
-            <span>${ach.organization}</span>
-          </div>
-          <div class="ach-card-top-right">
-            <span class="ach-card-period">
-              <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
-              <span>${ach.period}</span>
-            </span>
-            <span class="ach-card-badge" style="background-color: var(--${colorVar});">
-              ${ach.badge}
-            </span>
-          </div>
+      <div class="achievement-stack-card ${isLastCard ? 'ach-last-card' : ''}" style="--card-idx: ${idx}; --total-cards: ${total}; --theme-color: var(--${colorVar}); --card-accent: ${accentColor};" data-stack-idx="${idx}" data-ach-idx="${idx}">
+        <!-- Archival Photo Scatter Cluster (Emerges from behind the card and scatters across) -->
+        <div class="ach-scatter-cluster" data-cluster-idx="${idx}" aria-label="Archival photos for ${ach.title}">
+          ${photosHtml}
         </div>
 
-        <!-- Card Hero / Medallion & Metric Banner -->
-        <div class="ach-card-hero">
-          <div class="ach-card-medallion" style="background: linear-gradient(135deg, ${accentColor}24, ${accentColor}08); border-color: ${accentColor}66;">
-            <i data-lucide="${ach.icon || 'award'}" style="width: 28px; height: 28px; color: ${accentColor}; stroke-width: 2.2;"></i>
+        <!-- Foreground Achievement Card Surface -->
+        <article class="ach-card-surface">
+          <!-- Card Header Band -->
+          <div class="stack-card-header ach-stack-header">
+            <div class="stack-header-left">
+              <span class="stack-card-idx ach-card-idx">${numStr} / ${totalStr}</span>
+              <span class="stack-card-badge ach-card-badge" style="background-color: var(--${colorVar});">
+                ${ach.badge}
+              </span>
+            </div>
+            <div class="stack-header-right">
+              <span class="stack-card-period ach-card-period">
+                <i data-lucide="calendar" style="width: 13px; height: 13px;"></i>
+                <span>${ach.period}</span>
+              </span>
+            </div>
           </div>
-          <div class="ach-card-metric-pill" style="border-color: ${accentColor};">
-            <i data-lucide="sparkles" style="width: 14px; height: 14px; color: ${accentColor};"></i>
-            <span>${metricText}</span>
+
+          <!-- Card Content Body -->
+          <div class="stack-card-body ach-card-body">
+            <!-- Left Visual Panel -->
+            <div class="stack-media-col ach-media-col">
+              <div class="ach-medallion-badge" style="background: linear-gradient(135deg, ${accentColor}24, ${accentColor}08); border-color: ${accentColor}66;">
+                <i data-lucide="${ach.icon || 'award'}" style="width: 32px; height: 32px; color: ${accentColor}; stroke-width: 2.2;"></i>
+              </div>
+              <div class="ach-metric-card-box" style="border-color: ${accentColor}55;">
+                <div class="ach-metric-value-row">
+                  <i data-lucide="sparkles" style="width: 14px; height: 14px; color: ${accentColor};"></i>
+                  <span class="ach-metric-value-text">${metricText}</span>
+                </div>
+                <span class="ach-metric-org-text">
+                  <i data-lucide="building-2" style="width: 13px; height: 13px;"></i>
+                  <span>${ach.organization}</span>
+                </span>
+              </div>
+              <div class="ach-photo-counter-badge">
+                <i data-lucide="camera" style="width: 13px; height: 13px;"></i>
+                <span>${images.length} ${images.length === 1 ? 'Record' : 'Records'} Attached</span>
+              </div>
+            </div>
+
+            <!-- Right Dossier Panel -->
+            <div class="stack-dossier-col ach-dossier-col">
+              <h3 class="stack-proj-title ach-title-text">${ach.title}</h3>
+              <p class="stack-proj-tagline ach-desc-text">${ach.description}</p>
+
+              <!-- Key Honors & Impact Box -->
+              <div class="stack-deliverables-box ach-honors-box">
+                <div class="stack-deliverables-header">
+                  <i data-lucide="award" style="width: 14px; height: 14px; color: ${accentColor};"></i>
+                  <span>Key Honors &amp; Domains:</span>
+                </div>
+                <div class="ach-stack-tags">
+                  ${tagsHtml}
+                </div>
+              </div>
+
+              <!-- Scroll & Scatter Interaction Hint -->
+              <div class="ach-scroll-interaction-hint">
+                <i data-lucide="mouse" style="width: 13px; height: 13px; color: ${accentColor};"></i>
+                <span>Scroll to scatter archival photos • Click photo to zoom</span>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <!-- Title & Narrative -->
-        <div class="ach-card-content">
-          <h3 class="ach-card-title">${ach.title}</h3>
-          <p class="ach-card-desc">${ach.description}</p>
-        </div>
-
-        <!-- Tag Chips -->
-        <div class="ach-card-tags">
-          ${tagsHtml}
-        </div>
-      </article>
+        </article>
+      </div>
     `;
-  }).join('');
+  }).join('') + '<div class="ach-stack-runway" aria-hidden="true"></div>';
 
   initLucideIcons();
-  initAchievementsHorizontalScroll();
+  initAchievementScatterEngine();
+  initStackCardScrollAnimation();
+  initStackCardReveals();
 }
 
-/* --- Achievements Horizontal Scroll Engine (Elevated Beyond awrs.me) --- */
-let achHorizontalInit = false;
+/* --- Scroll-Linked Photo Scatter Engine --- */
+let achScatterEngineInit = false;
 
-function initAchievementsHorizontalScroll() {
-  const section = document.getElementById('achievements');
-  const trackWrapper = document.getElementById('achTrackWrapper');
-  const track = document.getElementById('achHorizontalTrack');
-  if (!section || !trackWrapper || !track) return;
+function initAchievementScatterEngine() {
+  const deck = document.getElementById('achievementsStackDeck');
+  if (!deck) return;
 
-  const cards = track.querySelectorAll('.ach-card');
-  const total = cards.length;
+  const achCards = deck.querySelectorAll('.achievement-stack-card');
+  const total = achCards.length;
   if (!total) return;
 
-  const progressFill = document.getElementById('achProgressFill');
-  const progressTrack = document.getElementById('achProgressTrack');
-  const activeNumEl = document.getElementById('achActiveNum');
-  const prevBtn = document.getElementById('achPrevBtn');
-  const nextBtn = document.getElementById('achNextBtn');
-  const dotsContainer = document.getElementById('achDotsContainer');
-
-  let currentFocalIdx = 0;
-  let maxScrollDistance = 0;
-
-  if (prevBtn) prevBtn.disabled = true;
-  if (nextBtn) nextBtn.disabled = (total <= 1);
-
-  // Render clickable pagination dots
-  if (dotsContainer) {
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < total; i++) {
-      const dot = document.createElement('button');
-      dot.type = 'button';
-      dot.className = `ach-dot-btn ${i === 0 ? 'is-active' : ''}`;
-      dot.setAttribute('aria-label', `Go to achievement ${i + 1}`);
-      dot.title = `${portfolioData.achievements[i]?.title || `Achievement ${i + 1}`}`;
-      dot.dataset.idx = i;
-      dot.addEventListener('click', (e) => {
+  // Setup click-to-zoom on all scatter photos
+  deck.querySelectorAll('.ach-scatter-photo').forEach(photoEl => {
+    photoEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const img = photoEl.querySelector('img');
+      const captionEl = photoEl.querySelector('.ach-photo-cap-text');
+      if (img && window.openAchPhotoModal) {
+        window.openAchPhotoModal(img.src, captionEl ? captionEl.textContent : img.alt);
+      }
+    });
+    photoEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        scrollToCard(i);
-      });
-      dotsContainer.appendChild(dot);
-    }
-  }
+        photoEl.click();
+      }
+    });
+  });
 
-  // Calculate section vertical scroll runway based on actual card positions
-  function calculateDimensions() {
-    const prevTransform = track.style.transform;
-    track.style.transform = 'translate3d(0, 0, 0)';
+  if (achScatterEngineInit) return;
+  achScatterEngineInit = true;
 
-    const wrapperWidth = trackWrapper.clientWidth;
-    const lastCard = cards[total - 1];
-    if (lastCard) {
-      const lastCardCenter = lastCard.offsetLeft + lastCard.offsetWidth / 2;
-      maxScrollDistance = Math.max(0, Math.round(lastCardCenter - wrapperWidth / 2));
-    } else {
-      maxScrollDistance = Math.max(0, track.scrollWidth - wrapperWidth);
+  function updateScatter() {
+    const winH = window.innerHeight || 800;
+    const winW = window.innerWidth || 1200;
+
+    // Responsive spread scale factor
+    let spreadScale = 1.0;
+    if (winW < 1380) {
+      spreadScale = Math.min(1.0, Math.max(0.44, (winW - 320) / (1380 - 320)));
     }
 
-    // Dynamic runway: natural 1:1 scroll feel with comfortable pacing
-    const totalSectionHeight = Math.max(window.innerHeight * 2.6, window.innerHeight + maxScrollDistance * 1.05);
-    section.style.height = `${Math.round(totalSectionHeight)}px`;
+    const firstCard = achCards[0];
+    if (!firstCard) return;
+    const computedTopStr = window.getComputedStyle(firstCard).top;
+    const stickyTop = parseFloat(computedTopStr) || 96;
 
-    track.style.transform = prevTransform;
-    updateHorizontalScroll();
-  }
+    achCards.forEach((card, idx) => {
+      const cluster = card.querySelector('.ach-scatter-cluster');
+      if (!cluster) return;
+      const photos = cluster.querySelectorAll('.ach-scatter-photo');
+      const photoCount = photos.length;
+      if (!photoCount) return;
 
-  // Smooth jump to specific card
-  function scrollToCard(targetIdx) {
-    if (targetIdx < 0 || targetIdx >= total) return;
-    const targetCard = cards[targetIdx];
-    if (!targetCard) return;
-
-    const wrapperWidth = trackWrapper.clientWidth;
-    const cardWidth = targetCard.offsetWidth;
-    const cardLeft = targetCard.offsetLeft;
-
-    let desiredTranslateX = cardLeft - (wrapperWidth / 2 - cardWidth / 2);
-    desiredTranslateX = Math.max(0, Math.min(maxScrollDistance, desiredTranslateX));
-
-    const progress = maxScrollDistance > 0 ? (desiredTranslateX / maxScrollDistance) : 0;
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-    const scrollRunway = (parseFloat(section.style.height) || section.offsetHeight) - window.innerHeight;
-    const targetDocY = sectionTop + (progress * scrollRunway);
-
-    if (window.lenis && typeof window.lenis.scrollTo === 'function') {
-      window.lenis.scrollTo(targetDocY, { duration: 0.9, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    } else {
-      window.scrollTo({ top: targetDocY, behavior: 'smooth' });
-    }
-  }
-
-  // Update on scroll frame
-  function updateHorizontalScroll() {
-    const rect = section.getBoundingClientRect();
-    const winH = window.innerHeight;
-    const sectionH = parseFloat(section.style.height) || rect.height;
-    const scrollRunway = sectionH - winH;
-
-    if (scrollRunway <= 0) return;
-
-    const scrolledIntoSection = -rect.top;
-    const rawProgress = scrolledIntoSection / scrollRunway;
-    const progress = Math.max(0, Math.min(1, rawProgress));
-
-    const currentX = progress * maxScrollDistance;
-    track.style.transform = `translate3d(-${currentX.toFixed(2)}px, 0, 0)`;
-
-    // Update Progress bar
-    if (progressFill) {
-      progressFill.style.width = `${(progress * 100).toFixed(2)}%`;
-    }
-    if (progressTrack) {
-      progressTrack.setAttribute('aria-valuenow', Math.round(progress * 100));
-    }
-
-    // Determine focal card closest to viewport center
-    const viewportCenterX = window.innerWidth / 2;
-    let closestIdx = 0;
-    let minDistance = Infinity;
-
-    cards.forEach((card, idx) => {
       const cardRect = card.getBoundingClientRect();
-      const cardCenterX = cardRect.left + cardRect.width / 2;
-      const distance = Math.abs(viewportCenterX - cardCenterX);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIdx = idx;
+
+      // Card scroll progress through its runway
+      let prog = 0;
+      if (idx < total - 1) {
+        const nextCard = achCards[idx + 1];
+        const nextRect = nextCard.getBoundingClientRect();
+        const cardHeight = cardRect.height || 460;
+        const initialNextTop = stickyTop + cardHeight + (winH * 0.85);
+        const distToNextDock = Math.max(0, nextRect.top - stickyTop);
+        const totalRunway = initialNextTop - stickyTop;
+        if (totalRunway > 0) {
+          prog = Math.max(0, Math.min(1, 1 - (distToNextDock / totalRunway)));
+        }
+      } else {
+        const deckRect = deck.getBoundingClientRect();
+        const cardHeight = cardRect.height || 460;
+        const lastRunway = winH * 0.75;
+        const remaining = Math.max(0, deckRect.bottom - (stickyTop + cardHeight));
+        prog = Math.max(0, Math.min(1, 1 - (remaining / lastRunway)));
       }
-    });
 
-    if (closestIdx !== currentFocalIdx) {
-      currentFocalIdx = closestIdx;
-
-      if (activeNumEl) {
-        activeNumEl.textContent = String(currentFocalIdx + 1).padStart(2, '0');
+      // Scatter Factor calculation:
+      // 0.00 -> 0.12: Behind card (scatter = 0)
+      // 0.12 -> 0.42: Emerge and scatter outward (scatter = 0 -> 1)
+      // 0.42 -> 0.68: Fully displayed around card (scatter = 1)
+      // 0.68 -> 0.88: Smoothly retract back behind card (scatter = 1 -> 0)
+      // 0.88 -> 1.00: Completely behind card (scatter = 0)
+      let scatterFactor = 0;
+      if (prog < 0.12) {
+        scatterFactor = 0;
+      } else if (prog <= 0.42) {
+        const norm = (prog - 0.12) / (0.42 - 0.12);
+        scatterFactor = Math.sin((norm * Math.PI) / 2);
+      } else if (prog <= 0.68) {
+        scatterFactor = 1.0;
+      } else if (prog <= 0.88) {
+        const norm = (prog - 0.68) / (0.88 - 0.68);
+        scatterFactor = 1.0 - (0.5 - 0.5 * Math.cos(norm * Math.PI));
+      } else {
+        scatterFactor = 0;
       }
 
-      if (dotsContainer) {
-        const dots = dotsContainer.querySelectorAll('.ach-dot-btn');
-        dots.forEach((dot, dIdx) => {
-          dot.classList.toggle('is-active', dIdx === currentFocalIdx);
-        });
-      }
+      photos.forEach((photo, pIdx) => {
+        let targetX = 0;
+        let targetY = 0;
+        let targetRot = 0;
 
-      if (prevBtn) prevBtn.disabled = (currentFocalIdx === 0);
-      if (nextBtn) nextBtn.disabled = (currentFocalIdx === total - 1);
-    }
+        if (photoCount === 4) {
+          if (pIdx === 0) { targetX = -510; targetY = -165; targetRot = -7.5; }
+          else if (pIdx === 1) { targetX = 545; targetY = -175; targetRot = 6.5; }
+          else if (pIdx === 2) { targetX = -490; targetY = 165; targetRot = 5.5; }
+          else if (pIdx === 3) { targetX = 490; targetY = 170; targetRot = -6.5; }
+        } else if (photoCount === 3) {
+          if (pIdx === 0) { targetX = 545; targetY = -160; targetRot = 7.0; }
+          else if (pIdx === 1) { targetX = -510; targetY = 15; targetRot = -6.5; }
+          else if (pIdx === 2) { targetX = 490; targetY = 165; targetRot = -5.5; }
+        } else if (photoCount === 2) {
+          if (pIdx === 0) { targetX = -510; targetY = 15; targetRot = -6.0; }
+          else if (pIdx === 1) { targetX = 510; targetY = 15; targetRot = 6.0; }
+        } else {
+          targetX = 510; targetY = 15; targetRot = 5.5;
+        }
 
-    cards.forEach((card, idx) => {
-      card.classList.toggle('is-focal', idx === currentFocalIdx);
+        const curX = targetX * spreadScale * scatterFactor;
+        const curY = targetY * spreadScale * scatterFactor;
+        const curRot = targetRot * scatterFactor;
+        const curScale = 0.55 + (0.45 * scatterFactor);
+        const curOpacity = Math.max(0, Math.min(1, scatterFactor * 2.2));
+
+        if (scatterFactor <= 0.01) {
+          photo.style.opacity = '0';
+          photo.style.visibility = 'hidden';
+          photo.style.pointerEvents = 'none';
+          photo.style.zIndex = '1';
+          photo.style.transform = 'translate3d(0, 0, 0) scale(0.4) rotate(0deg)';
+        } else {
+          photo.style.opacity = curOpacity.toFixed(3);
+          photo.style.visibility = 'visible';
+          photo.style.pointerEvents = scatterFactor > 0.55 ? 'auto' : 'none';
+          photo.style.zIndex = '12';
+          photo.style.transform = `translate3d(${curX.toFixed(1)}px, ${curY.toFixed(1)}px, 0) rotate(${curRot.toFixed(1)}deg) scale(${curScale.toFixed(3)})`;
+        }
+      });
     });
   }
 
-  // Hook scroll listeners with RAF
   let ticking = false;
   function onScroll() {
     if (!ticking) {
       requestAnimationFrame(() => {
-        updateHorizontalScroll();
+        updateScatter();
         ticking = false;
       });
       ticking = true;
@@ -2082,94 +2115,62 @@ function initAchievementsHorizontalScroll() {
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', () => {
-    calculateDimensions();
-    onScroll();
+    updateScatter();
   }, { passive: true });
 
-  // Hook Lenis smooth scroll
   if (window.lenis && typeof window.lenis.on === 'function') {
     window.lenis.on('scroll', onScroll);
   } else {
-    const checkLenis = setInterval(() => {
+    const checkLenisAch = setInterval(() => {
       if (window.lenis && typeof window.lenis.on === 'function') {
         window.lenis.on('scroll', onScroll);
-        clearInterval(checkLenis);
+        clearInterval(checkLenisAch);
       }
-    }, 200);
-    setTimeout(() => clearInterval(checkLenis), 3000);
+    }, 150);
+    setTimeout(() => clearInterval(checkLenisAch), 4000);
   }
 
-  // Prev / Next button click handlers
-  if (prevBtn) {
-    prevBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (currentFocalIdx > 0) {
-        scrollToCard(currentFocalIdx - 1);
-      }
-    });
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (currentFocalIdx < total - 1) {
-        scrollToCard(currentFocalIdx + 1);
-      }
-    });
-  }
-
-  // Keyboard navigation when section is in view
-  window.addEventListener('keydown', (e) => {
-    const rect = section.getBoundingClientRect();
-    const inView = rect.top <= 120 && rect.bottom >= window.innerHeight - 120;
-    if (!inView) return;
-
-    if (e.key === 'ArrowRight' && currentFocalIdx < total - 1) {
-      e.preventDefault();
-      scrollToCard(currentFocalIdx + 1);
-    } else if (e.key === 'ArrowLeft' && currentFocalIdx > 0) {
-      e.preventDefault();
-      scrollToCard(currentFocalIdx - 1);
-    }
-  });
-
-  // Pointer / Drag support
-  let isPointerDown = false;
-  let dragStartX = 0;
-  let dragStartScrollY = 0;
-
-  trackWrapper.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('button, a')) return;
-    isPointerDown = true;
-    dragStartX = e.clientX;
-    dragStartScrollY = window.scrollY;
-  });
-
-  window.addEventListener('pointermove', (e) => {
-    if (!isPointerDown) return;
-    const deltaX = e.clientX - dragStartX;
-    if (Math.abs(deltaX) > 6) {
-      const scrollRatio = 1.35;
-      window.scrollTo({ top: dragStartScrollY - (deltaX * scrollRatio), behavior: 'auto' });
-    }
-  });
-
-  window.addEventListener('pointerup', () => { isPointerDown = false; });
-  window.addEventListener('pointercancel', () => { isPointerDown = false; });
-
-  // ResizeObserver for dynamic layout settling (e.g. after video intro reveal or font loading)
-  if (window.ResizeObserver) {
-    const achRo = new ResizeObserver(() => {
-      calculateDimensions();
-    });
-    achRo.observe(trackWrapper);
-    achRo.observe(track);
-  }
-
-  // Initial calculations with timeouts for layout settling
-  calculateDimensions();
-  setTimeout(calculateDimensions, 200);
-  setTimeout(calculateDimensions, 800);
+  setTimeout(updateScatter, 150);
+  setTimeout(updateScatter, 600);
 }
+
+/* --- Archival Photo Lightbox Modal Handlers --- */
+window.openAchPhotoModal = function(src, caption) {
+  const modal = document.getElementById('achPhotoModal');
+  const img = document.getElementById('achPhotoModalImg');
+  const cap = document.getElementById('achPhotoModalCaption');
+  if (!modal || !img) return;
+
+  img.src = src;
+  img.alt = caption || 'Achievement Record';
+  if (cap) cap.textContent = caption || '';
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (window.lenis && typeof window.lenis.stop === 'function') {
+    window.lenis.stop();
+  }
+  initLucideIcons();
+};
+
+window.closeAchPhotoModal = function() {
+  const modal = document.getElementById('achPhotoModal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+  if (window.lenis && typeof window.lenis.start === 'function') {
+    window.lenis.start();
+  }
+};
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const achModal = document.getElementById('achPhotoModal');
+    if (achModal && achModal.classList.contains('active')) {
+      window.closeAchPhotoModal();
+    }
+  }
+});
 
 /* --- Scroll-Linked Card Stacking & Field Reveal Engine --- */
 let stackAnimationInit = false;
@@ -2264,6 +2265,7 @@ function applyStackTransform(cards) {
 
     // Case 2: This card is currently the active docked card
     if (idx === activeDockIdx) {
+      card.classList.add('is-stacked-in-view');
       // If there is an incoming card after this one, smoothly fade out as it approaches
       if (idx < total - 1) {
         const nextRect = cardRects[idx + 1];
@@ -5283,6 +5285,15 @@ function initSmoothScroll() {
       }
     }
   });
+
+  // Continuously recalculate scroll bounds when DOM dimensions update
+  if ('ResizeObserver' in window) {
+    const resizeObs = new ResizeObserver(() => {
+      lenis.resize();
+    });
+    resizeObs.observe(document.body);
+  }
+  window.addEventListener('load', () => lenis.resize());
 
   // Automatically pause/resume Lenis during full-screen modals or cutscenes
   if ('MutationObserver' in window) {
