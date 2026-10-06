@@ -1997,12 +1997,6 @@ function initAchievementScatterEngine() {
     const winH = window.innerHeight || 800;
     const winW = window.innerWidth || 1200;
 
-    // Responsive spread scale factor
-    let spreadScale = 1.0;
-    if (winW < 1380) {
-      spreadScale = Math.min(1.0, Math.max(0.44, (winW - 320) / (1380 - 320)));
-    }
-
     const firstCard = achCards[0];
     if (!firstCard) return;
     const computedTopStr = window.getComputedStyle(firstCard).top;
@@ -2016,6 +2010,26 @@ function initAchievementScatterEngine() {
       if (!photoCount) return;
 
       const cardRect = card.getBoundingClientRect();
+      const cardW = cardRect.width || 760;
+      const cardHalfW = cardW / 2;
+
+      // Base photo half-width (photo is 230px, half-width is 115px)
+      const photoW = 230;
+      const photoHalfW = 115;
+
+      // Space between card edge and screen edge
+      const sideGutter = Math.max(0, (winW - cardW) / 2);
+
+      let scaleMul = 1.0;
+      // Normal target clearance: cardHalfW + photoHalfW + 24px margin
+      let clearX = cardHalfW + photoHalfW + 24;
+      const maxAllowedX = Math.max(cardHalfW + 60, (winW / 2) - photoHalfW - 16);
+
+      if (winW < 1380) {
+        // If on a compact laptop or tablet screen, scale down photo smoothly so it fits completely in side gutter without clipping
+        scaleMul = Math.min(1.0, Math.max(0.72, (sideGutter - 16) / photoW));
+        clearX = Math.min(clearX, maxAllowedX);
+      }
 
       // Card scroll progress through its runway
       let prog = 0;
@@ -2032,27 +2046,27 @@ function initAchievementScatterEngine() {
       } else {
         const deckRect = deck.getBoundingClientRect();
         const cardHeight = cardRect.height || 460;
-        const lastRunway = winH * 0.75;
+        const lastRunway = winH * 0.85;
         const remaining = Math.max(0, deckRect.bottom - (stickyTop + cardHeight));
         prog = Math.max(0, Math.min(1, 1 - (remaining / lastRunway)));
       }
 
       // Scatter Factor calculation:
-      // 0.00 -> 0.12: Behind card (scatter = 0)
-      // 0.12 -> 0.42: Emerge and scatter outward (scatter = 0 -> 1)
-      // 0.42 -> 0.68: Fully displayed around card (scatter = 1)
-      // 0.68 -> 0.88: Smoothly retract back behind card (scatter = 1 -> 0)
-      // 0.88 -> 1.00: Completely behind card (scatter = 0)
+      // 0.00 -> 0.05: Behind card (scatter = 0)
+      // 0.05 -> 0.20: Fast, smooth emergence from behind card (scatter = 0 -> 1)
+      // 0.20 -> 0.82: FULL EXHIBITION SHOWCASE (scatter = 1.0) — photos fully visible & held
+      // 0.82 -> 0.94: Smooth retraction back behind card (scatter = 1 -> 0)
+      // 0.94 -> 1.00: Behind card as next card docks (scatter = 0)
       let scatterFactor = 0;
-      if (prog < 0.12) {
+      if (prog < 0.05) {
         scatterFactor = 0;
-      } else if (prog <= 0.42) {
-        const norm = (prog - 0.12) / (0.42 - 0.12);
+      } else if (prog <= 0.20) {
+        const norm = (prog - 0.05) / (0.20 - 0.05);
         scatterFactor = Math.sin((norm * Math.PI) / 2);
-      } else if (prog <= 0.68) {
+      } else if (prog <= 0.82) {
         scatterFactor = 1.0;
-      } else if (prog <= 0.88) {
-        const norm = (prog - 0.68) / (0.88 - 0.68);
+      } else if (prog <= 0.94) {
+        const norm = (prog - 0.82) / (0.94 - 0.82);
         scatterFactor = 1.0 - (0.5 - 0.5 * Math.cos(norm * Math.PI));
       } else {
         scatterFactor = 0;
@@ -2064,26 +2078,26 @@ function initAchievementScatterEngine() {
         let targetRot = 0;
 
         if (photoCount === 4) {
-          if (pIdx === 0) { targetX = -510; targetY = -165; targetRot = -7.5; }
-          else if (pIdx === 1) { targetX = 545; targetY = -175; targetRot = 6.5; }
-          else if (pIdx === 2) { targetX = -490; targetY = 165; targetRot = 5.5; }
-          else if (pIdx === 3) { targetX = 490; targetY = 170; targetRot = -6.5; }
+          if (pIdx === 0) { targetX = -clearX; targetY = -155; targetRot = -7.0; }
+          else if (pIdx === 1) { targetX = clearX; targetY = -155; targetRot = 6.5; }
+          else if (pIdx === 2) { targetX = -clearX; targetY = 155; targetRot = 5.5; }
+          else if (pIdx === 3) { targetX = clearX; targetY = 155; targetRot = -6.5; }
         } else if (photoCount === 3) {
-          if (pIdx === 0) { targetX = 545; targetY = -160; targetRot = 7.0; }
-          else if (pIdx === 1) { targetX = -510; targetY = 15; targetRot = -6.5; }
-          else if (pIdx === 2) { targetX = 490; targetY = 165; targetRot = -5.5; }
+          if (pIdx === 0) { targetX = -clearX; targetY = 0; targetRot = -6.5; }
+          else if (pIdx === 1) { targetX = clearX; targetY = -140; targetRot = 6.0; }
+          else if (pIdx === 2) { targetX = clearX; targetY = 140; targetRot = -5.5; }
         } else if (photoCount === 2) {
-          if (pIdx === 0) { targetX = -510; targetY = 15; targetRot = -6.0; }
-          else if (pIdx === 1) { targetX = 510; targetY = 15; targetRot = 6.0; }
+          if (pIdx === 0) { targetX = -clearX; targetY = 0; targetRot = -6.0; }
+          else if (pIdx === 1) { targetX = clearX; targetY = 0; targetRot = 6.0; }
         } else {
-          targetX = 510; targetY = 15; targetRot = 5.5;
+          targetX = clearX; targetY = 0; targetRot = 5.5;
         }
 
-        const curX = targetX * spreadScale * scatterFactor;
-        const curY = targetY * spreadScale * scatterFactor;
+        const curX = targetX * scatterFactor;
+        const curY = targetY * scatterFactor;
         const curRot = targetRot * scatterFactor;
-        const curScale = 0.55 + (0.45 * scatterFactor);
-        const curOpacity = Math.max(0, Math.min(1, scatterFactor * 2.2));
+        const curScale = (0.55 + (0.45 * scatterFactor)) * scaleMul;
+        const curOpacity = Math.max(0, Math.min(1, scatterFactor * 2.8));
 
         if (scatterFactor <= 0.01) {
           photo.style.opacity = '0';
@@ -2094,8 +2108,8 @@ function initAchievementScatterEngine() {
         } else {
           photo.style.opacity = curOpacity.toFixed(3);
           photo.style.visibility = 'visible';
-          photo.style.pointerEvents = scatterFactor > 0.55 ? 'auto' : 'none';
-          photo.style.zIndex = '12';
+          photo.style.pointerEvents = scatterFactor > 0.4 ? 'auto' : 'none';
+          photo.style.zIndex = '35'; // Always in front of card surface (z-index: 5)
           photo.style.transform = `translate3d(${curX.toFixed(1)}px, ${curY.toFixed(1)}px, 0) rotate(${curRot.toFixed(1)}deg) scale(${curScale.toFixed(3)})`;
         }
       });
