@@ -661,16 +661,7 @@ function initSpiritBomb() {
       : skillsData.filter(s => skillMatchesCategory(s, cat));
 
     if (catalogHeading) {
-      const headingMap = {
-        'all': 'All Technologies',
-        'languages': 'Programming Languages',
-        'backend': 'Backend & Systems Architecture',
-        'ai-ml': 'AI, ML & Computer Vision',
-        'frontend': 'Frontend & Interface Engineering',
-        'database': 'Databases & Relational Storage',
-        'devops': 'DevOps, Cloud & Systems'
-      };
-      catalogHeading.textContent = headingMap[cat] || (categoryNames[cat] || 'Technical Arsenal');
+      catalogHeading.textContent = categoryNames[cat] || 'Tools & Stack';
     }
     if (catalogCountPill) {
       catalogCountPill.textContent = `${filtered.length} Tools`;
@@ -701,30 +692,15 @@ function initSpiritBomb() {
       chip.innerHTML = `
         <span class="catalog-chip-icon">${skill.svgIcon || ''}</span>
         <span class="catalog-chip-label">${displayLabel}</span>
-        <span class="catalog-chip-level">${skill.level || 'Proficient'}</span>
       `;
 
       chip.addEventListener('click', (e) => {
         e.preventDefault();
         selectSkill(skill.id, true);
-        playSynthTone(580, 'sine', 0.04, 0.04);
-      });
-
-      chip.addEventListener('mouseenter', () => {
-        const matchingNode = sphereNodes.find(n => n.skill.id === skill.id);
-        if (matchingNode) {
-          showTooltip(matchingNode);
-        }
-      });
-
-      chip.addEventListener('mouseleave', () => {
-        hideTooltip();
       });
 
       catalogChipsGrid.appendChild(chip);
     });
-
-    initLucideIcons();
   }
 
   function updateCatalogActiveItem(skillId) {
@@ -837,204 +813,7 @@ function initSpiritBomb() {
     canva: ['Graphic Branding', 'Slide Decks', 'Thumbnails', 'Visual Assets']
   };
 
-  // Visual Project Showcase mapping for all skills (connects skills with real production projects & images)
-  const skillProjectMap = {
-    // AI/ML & Computer Vision
-    'python': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'Deep CNN with 92% diagnostic accuracy across 10,000+ retinal scans',
-      image: 'assets/dr.png',
-      badge: 'Featured AI Project'
-    },
-    'opencv': {
-      id: 'facial-recognition',
-      title: 'Facial Recognition Attendance',
-      tagline: '98% real-time biometric face verification & automated attendance logging',
-      image: 'assets/face recog.png',
-      badge: 'Biometric Computer Vision'
-    },
-    'cnn': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'Convolutional neural network for 5-stage medical classification',
-      image: 'assets/dr.png',
-      badge: 'Deep Learning Architecture'
-    },
-    'numpy': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'Vectorized image tensor math & high-throughput CLAHE preprocessing',
-      image: 'assets/dr.png',
-      badge: 'Numerical ETL Pipeline'
-    },
-    'pandas': {
-      id: 'facial-recognition',
-      title: 'Facial Recognition Attendance',
-      tagline: 'Attendance log aggregation, analytics & Excel export workflows',
-      image: 'assets/face recog.png',
-      badge: 'Data Processing'
-    },
-    'scikitlearn': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'Confusion matrices, ROC-AUC evaluation & diagnostic model tuning',
-      image: 'assets/dr.png',
-      badge: 'Machine Learning'
-    },
-    'matplotlib': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'Training loss curves & clinical accuracy visualization plots',
-      image: 'assets/dr.png',
-      badge: 'Data Visualization'
-    },
-    'flask': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'REST microservice backend for real-time model inference and upload streaming',
-      image: 'assets/dr.png',
-      badge: 'Python REST Microservice'
-    },
-    // Enterprise C# / Backend
-    'csharp': {
-      id: 'experience',
-      title: 'RCF Enterprise RBAC Platform',
-      tagline: 'SAP NCo 3.0 middleware, Oracle DB & Active Directory integration',
-      image: 'assets/enterprise_rbac.jpg',
-      badge: 'Enterprise Architecture'
-    },
-    'aspnet': {
-      id: 'experience',
-      title: 'RCF Enterprise RBAC Platform',
-      tagline: 'Role-based access control, session security & T-Code authorization matrix',
-      image: 'assets/enterprise_rbac.jpg',
-      badge: 'Enterprise Web Platform'
-    },
-    'oracle': {
-      id: 'experience',
-      title: 'RCF Enterprise RBAC Platform',
-      tagline: 'High-throughput enterprise relational storage & immutable audit logging',
-      image: 'assets/enterprise_rbac.jpg',
-      badge: 'Enterprise Database'
-    },
-    'sap': {
-      id: 'experience',
-      title: 'RCF Enterprise RBAC Platform',
-      tagline: 'SAP .NET Connector (NCo 3.0) & custom RFC Function Module orchestration',
-      image: 'assets/enterprise_rbac.jpg',
-      badge: 'ERP Middleware'
-    },
-    'activedirectory': {
-      id: 'experience',
-      title: 'RCF Enterprise RBAC Platform',
-      tagline: 'LDAP-based user identity federation & automated credential validation',
-      image: 'assets/enterprise_rbac.jpg',
-      badge: 'Identity Security'
-    },
-    // Fullstack Web & UI
-    'javascript': {
-      id: 'foodies-goodies',
-      title: 'Foodies Goodies Platform',
-      tagline: 'Interactive recipe discovery, dynamic meal planning & Edamam REST API',
-      image: 'assets/fg.png',
-      badge: 'Interactive Web'
-    },
-    'html5': {
-      id: 'foodies-goodies',
-      title: 'Foodies Goodies Platform',
-      tagline: 'Semantic HTML5 structure, responsive layout & accessible forms',
-      image: 'assets/fg.png',
-      badge: 'Frontend Structure'
-    },
-    'css3': {
-      id: 'foodies-goodies',
-      title: 'Foodies Goodies Platform',
-      tagline: 'Modern responsive styling, CSS Grid, Flexbox & smooth transitions',
-      image: 'assets/fg.png',
-      badge: 'Styling & Layout'
-    },
-    'tailwind': {
-      id: 'foodies-goodies',
-      title: 'Foodies Goodies Platform',
-      tagline: 'Utility-first styling, design system tokens & adaptive layouts',
-      image: 'assets/fg.png',
-      badge: 'Modern CSS Framework'
-    },
-    'bootstrap': {
-      id: 'facial-recognition',
-      title: 'Face Recognition Attendance',
-      tagline: 'Responsive administrative dashboard, interactive modals & tables',
-      image: 'assets/face recog.png',
-      badge: 'UI Component Toolkit'
-    },
-    'mysql': {
-      id: 'facial-recognition',
-      title: 'Face Recognition Attendance',
-      tagline: 'Normalized relational schema with timestamped attendance audit logs',
-      image: 'assets/face recog.png',
-      badge: 'Relational Database'
-    },
-    'php': {
-      id: 'foodies-goodies',
-      title: 'Foodies Goodies Platform',
-      tagline: 'Server-side session management, recipe filtering & MySQL query engine',
-      image: 'assets/fg.png',
-      badge: 'Backend Web'
-    },
-    'figma': {
-      id: 'foodies-goodies',
-      title: 'Foodies Goodies Platform',
-      tagline: 'High-fidelity wireframes, interactive user flows & component libraries',
-      image: 'assets/fg.png',
-      badge: 'UI/UX Design'
-    },
-    'canva': {
-      id: 'diabetic-retinopathy',
-      title: 'Diabetic Retinopathy Detection',
-      tagline: 'Clinical architecture diagrams, presentation pitch decks & visual branding',
-      image: 'assets/dr.png',
-      badge: 'Visual Media'
-    },
-    // DevOps & Cloud
-    'docker': {
-      id: 'diabetic-retinopathy',
-      title: 'Containerized AI Architecture',
-      tagline: 'Isolated Python ML inference containers & multi-stage deployment',
-      image: 'assets/cloud_devops.jpg',
-      badge: 'Containerization'
-    },
-    'azure': {
-      id: 'experience',
-      title: 'RCF Enterprise RBAC Platform',
-      tagline: 'Cloud identity federation, active directory & enterprise security hosting',
-      image: 'assets/enterprise_rbac.jpg',
-      badge: 'Cloud Platform'
-    },
-    'aws': {
-      id: 'diabetic-retinopathy',
-      title: 'Cloud & AI Infrastructure',
-      tagline: 'EC2 Linux host configuration & S3 bucket storage for image datasets',
-      image: 'assets/cloud_devops.jpg',
-      badge: 'Cloud Compute & Storage'
-    },
-    'linux': {
-      id: 'diabetic-retinopathy',
-      title: 'Linux Systems Automation',
-      tagline: 'Ubuntu server environment, shell scripting & systemd daemon management',
-      image: 'assets/cloud_devops.jpg',
-      badge: 'Systems Engineering'
-    },
-    'git': {
-      id: 'diabetic-retinopathy',
-      title: 'Git Version Control',
-      tagline: 'Feature branch workflows, pull requests & team collaborative pipelines',
-      image: 'assets/cloud_devops.jpg',
-      badge: 'Version Control'
-    }
-  };
-
-  // Render Rich Scouter Telemetry Dossier Card with Project Visual Showcase
+  // Render Clean & Simple Scouter Telemetry Dossier Card (No Image)
   function renderCompactHud(skill) {
     if (!compactHud || !skill) return;
 
@@ -1043,31 +822,14 @@ function initSpiritBomb() {
 
     const tags = skillMicroTags[skill.id] || (skill.keyCapabilities ? skill.keyCapabilities.slice(0, 3).map(c => c.split(' ').slice(0, 2).join(' ')) : []);
 
-    const projInfo = skillProjectMap[skill.id] || (skill.projects && skill.projects.length ? {
-      id: skill.projects[0].id,
-      title: skill.projects[0].name,
-      tagline: skill.description || 'Production Engineering Implementation',
-      image: 'assets/cloud_devops.jpg',
-      badge: 'Applied Engineering'
-    } : null);
-
-    const projectShowcaseHtml = projInfo ? `
-      <!-- Visual Project Showcase Banner (Larger & More Visible Image) -->
-      <div class="dossier-project-preview" data-project-ref="${projInfo.id}" title="Click to inspect ${projInfo.title}">
-        <div class="dossier-project-thumb-frame">
-          <img src="${projInfo.image}" alt="${projInfo.title}" class="dossier-project-thumb-img" loading="lazy" />
-          <span class="dossier-project-badge-tag">${projInfo.badge}</span>
-        </div>
-        <div class="dossier-project-info">
-          <div class="dossier-project-kicker-row">
-            <span class="dossier-project-kicker">APPLIED IN PRODUCTION</span>
-            <i data-lucide="arrow-up-right" style="width: 12px; height: 12px; color: ${brandColor};"></i>
-          </div>
-          <h4 class="dossier-project-title">${projInfo.title}</h4>
-          <p class="dossier-project-tagline">${projInfo.tagline}</p>
-        </div>
-      </div>
-    ` : '';
+    const projectChipHtml = (skill.projects && skill.projects.length)
+      ? `
+        <button type="button" class="hud-project-chip" data-project-ref="${skill.projects[0].id}" title="Jump to ${skill.projects[0].name}">
+          <i data-lucide="arrow-up-right" style="width: 12px; height: 12px;"></i>
+          <span>${skill.projects[0].name}</span>
+        </button>
+      `
+      : '';
 
     const expShort = skill.experience ? skill.experience.split('•')[0].trim() : '';
     const expPill = expShort
@@ -1085,7 +847,7 @@ function initSpiritBomb() {
 
     compactHud.innerHTML = `
       <div class="dossier-header">
-        <div class="dossier-icon-badge" style="border-color: ${brandColor}; box-shadow: 0 0 20px ${brandColor}44; color: ${brandColor};">
+        <div class="dossier-icon-badge" style="border-color: ${brandColor}; box-shadow: 0 0 16px ${brandColor}44; color: ${brandColor};">
           ${skill.svgIcon || ''}
         </div>
         <div class="dossier-identity">
@@ -1109,7 +871,7 @@ function initSpiritBomb() {
         <span class="dossier-gauge-label">${skill.powerPercent || 90}% Power</span>
       </div>
 
-      <!-- Capability Highlights -->
+      <!-- Minimal Micro Highlights -->
       <div class="dossier-micro-tags">
         ${tags.slice(0, 4).map(tag => `
           <span class="dossier-tag-pill">
@@ -1119,10 +881,15 @@ function initSpiritBomb() {
         `).join('')}
       </div>
 
-      <!-- Visual Project Showcase Banner -->
-      ${projectShowcaseHtml}
+      ${(expPill || projectChipHtml) ? `
+      <!-- Sleek Footer Telemetry Row -->
+      <div class="dossier-footer-row">
+        ${expPill}
+        ${projectChipHtml}
+      </div>
+      ` : ''}
 
-      <!-- Footer & Stepper Row -->
+      <!-- Ultra-Minimal Scouter Navigation Stepper -->
       <div class="dossier-stepper-row">
         <button type="button" class="dossier-step-btn" id="dossierPrevBtn" aria-label="Previous Tool">
           <i data-lucide="chevron-left" style="width: 14px; height: 14px;"></i>

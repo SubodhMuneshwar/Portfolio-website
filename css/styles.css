@@ -3263,14 +3263,13 @@ body.saiyan-mode .spirit-filter-btn.is-active .spirit-filter-dot {
 }
 
 /* 2-Part Skills Layout: Spirit Bomb (Left) + Information Part (Right) */
-/* 2-Part Skills Layout: Spirit Bomb (Left) + Information Part (Right) */
 .skills-two-part-stage {
   display: grid;
-  grid-template-columns: minmax(360px, 1.05fr) minmax(380px, 1.18fr);
-  gap: 2.8rem;
+  grid-template-columns: minmax(360px, 1.15fr) minmax(360px, 1fr);
+  gap: 2.5rem;
   align-items: center;
   justify-items: center;
-  max-width: 1340px;
+  max-width: 1200px;
   margin: 1.2rem auto 0;
   position: relative;
   z-index: 10;
@@ -3288,8 +3287,8 @@ body.saiyan-mode .spirit-filter-btn.is-active .spirit-filter-dot {
 .spirit-arena {
   position: relative;
   width: 100%;
-  max-width: 580px;
-  height: 640px;
+  max-width: 540px;
+  height: 610px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -3311,21 +3310,21 @@ body.saiyan-mode .spirit-filter-btn.is-active .spirit-filter-dot {
 /* Plasma Aura Behind the 3D Core */
 .spirit-plasma-aura {
   position: absolute;
-  top: 200px;
+  top: 195px;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 480px;
-  height: 480px;
+  width: 440px;
+  height: 440px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 46, 151, 0.28) 0%, rgba(244, 114, 182, 0.14) 38%, rgba(157, 23, 77, 0.04) 60%, transparent 75%);
-  filter: blur(42px);
+  background: radial-gradient(circle, rgba(255, 46, 151, 0.24) 0%, rgba(244, 114, 182, 0.12) 38%, rgba(157, 23, 77, 0.03) 60%, transparent 75%);
+  filter: blur(40px);
   pointer-events: none;
   z-index: 2;
   animation: spiritAuraPulse 3.5s ease-in-out infinite alternate;
 }
 
 body.saiyan-mode .spirit-plasma-aura {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.36) 0%, rgba(5, 150, 105, 0.16) 40%, rgba(4, 120, 87, 0.05) 65%, transparent 75%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.14) 40%, rgba(4, 120, 87, 0.04) 65%, transparent 75%);
 }
 
 @keyframes spiritAuraPulse {
@@ -3336,11 +3335,11 @@ body.saiyan-mode .spirit-plasma-aura {
 /* Canvas Core Layer */
 .spirit-core-canvas {
   position: absolute;
-  top: 200px;
+  top: 195px;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 480px;
-  height: 480px;
+  width: 440px;
+  height: 440px;
   pointer-events: none;
   z-index: 6;
 }
@@ -3362,7 +3361,7 @@ body.saiyan-mode .spirit-plasma-aura {
   position: absolute;
   top: 0;
   left: 0;
-  width: 76px;
+  width: 68px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3374,50 +3373,50 @@ body.saiyan-mode .spirit-plasma-aura {
   user-select: none;
 }
 
-/* Circular Icon Bubble (Enlarged & High-Visibility) */
+/* Circular Icon Bubble */
 .spirit-node-icon-circle {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 2px solid var(--node-color, #FF2E97);
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1),
-              0 0 16px var(--node-color, rgba(255, 46, 151, 0.3)),
+  border: 1.5px solid var(--node-color, #FF2E97);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08),
+              0 0 14px var(--node-color, rgba(255, 46, 151, 0.25)),
               inset 0 1px 0 rgba(255, 255, 255, 1);
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
 .spirit-node-icon-circle svg {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   fill: currentColor;
   color: var(--node-color, #0F172A);
-  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.15));
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.12));
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
 }
 
-/* Tool Label Below Icon — Clean pill with high-contrast text */
+/* Small Tool Label Below Icon — Clean light pill with high contrast text */
 .spirit-node-label {
   display: inline-block;
-  margin-top: 5px;
+  margin-top: 4px;
   font-family: var(--font-heading);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #0F172A;
   text-align: center;
   white-space: nowrap;
   pointer-events: none;
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  padding: 2.5px 8px;
+  padding: 2px 7px;
   border-radius: 9999px;
   border: 1px solid rgba(15, 23, 42, 0.12);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
@@ -3428,10 +3427,10 @@ body.saiyan-mode .spirit-plasma-aura {
 /* Node Hover & Active States */
 .spirit-tech-node:hover .spirit-node-icon-circle {
   border-color: var(--node-color, #FF2E97) !important;
-  box-shadow: 0 0 28px var(--node-color, rgba(255, 46, 151, 0.5)),
-              0 6px 20px rgba(15, 23, 42, 0.14),
+  box-shadow: 0 0 24px var(--node-color, rgba(255, 46, 151, 0.45)),
+              0 6px 18px rgba(15, 23, 42, 0.12),
               inset 0 0 8px rgba(255, 255, 255, 0.9) !important;
-  transform: scale(1.15);
+  transform: scale(1.14);
 }
 
 .spirit-tech-node:hover .spirit-node-icon-circle svg {
@@ -3446,14 +3445,12 @@ body.saiyan-mode .spirit-plasma-aura {
 }
 
 .spirit-tech-node.is-active .spirit-node-icon-circle {
-  width: 58px;
-  height: 58px;
   border-width: 2.5px !important;
   border-color: var(--node-color, #FF2E97) !important;
-  box-shadow: 0 0 36px var(--node-color, rgba(255, 46, 151, 0.65)),
-              0 8px 24px rgba(15, 23, 42, 0.16),
+  box-shadow: 0 0 32px var(--node-color, rgba(255, 46, 151, 0.6)),
+              0 8px 24px rgba(15, 23, 42, 0.14),
               inset 0 0 10px rgba(255, 255, 255, 0.8) !important;
-  transform: scale(1.18);
+  transform: scale(1.16);
 }
 
 .spirit-tech-node.is-active .spirit-node-label {
@@ -3701,14 +3698,13 @@ body.saiyan-mode .spirit-tooltip-desc {
   color: #cbd5e1;
 }
 
-/* Goku Holding Spirit Bomb (Enlarged & Prominently Positioned) */
+/* Goku Holding Spirit Bomb */
 .spirit-goku-wrapper {
   position: absolute;
-  top: 315px;
+  top: 335px;
   left: 50%;
   transform: translateX(-50%);
-  width: 340px;
-  max-width: 90%;
+  width: 220px;
   height: auto;
   pointer-events: none;
   z-index: 5;
@@ -3720,15 +3716,15 @@ body.saiyan-mode .spirit-tooltip-desc {
 
 @keyframes gokuFloat {
   0% { transform: translateX(-50%) translateY(0px); }
-  100% { transform: translateX(-50%) translateY(5px); }
+  100% { transform: translateX(-50%) translateY(4px); }
 }
 
 .spirit-goku-img {
   width: 100%;
   height: auto;
   display: block;
-  filter: drop-shadow(0 -16px 38px rgba(255, 46, 151, 0.55))
-          drop-shadow(0 15px 32px rgba(15, 23, 42, 0.22));
+  filter: drop-shadow(0 -15px 30px rgba(255, 46, 151, 0.45))
+          drop-shadow(0 15px 30px rgba(15, 23, 42, 0.18));
   transition: filter 0.3s ease;
 }
 
@@ -3751,26 +3747,25 @@ body.saiyan-mode .spirit-goku-img-dark {
 }
 
 body.saiyan-mode .spirit-goku-img {
-  filter: drop-shadow(0 -20px 45px rgba(16, 185, 129, 0.7))
-          drop-shadow(0 0 26px rgba(250, 204, 21, 0.35))
-          drop-shadow(0 15px 35px rgba(0, 0, 0, 0.9));
+  filter: drop-shadow(0 -15px 30px rgba(16, 185, 129, 0.5))
+          drop-shadow(0 15px 35px rgba(0, 0, 0, 0.85));
 }
 
 .spirit-goku-glow {
   position: absolute;
-  top: 15px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 280px;
-  height: 120px;
+  width: 190px;
+  height: 95px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255, 46, 151, 0.45) 0%, transparent 75%);
-  filter: blur(28px);
+  background: radial-gradient(ellipse, rgba(255, 46, 151, 0.35) 0%, transparent 75%);
+  filter: blur(25px);
   pointer-events: none;
 }
 
 body.saiyan-mode .spirit-goku-glow {
-  background: radial-gradient(ellipse, rgba(16, 185, 129, 0.5) 0%, rgba(250, 204, 21, 0.25) 45%, transparent 75%);
+  background: radial-gradient(ellipse, rgba(16, 185, 129, 0.4) 0%, transparent 75%);
 }
 
 .spirit-ground-energy {
@@ -3778,22 +3773,22 @@ body.saiyan-mode .spirit-goku-glow {
   bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
-  width: 320px;
-  height: 32px;
+  width: 220px;
+  height: 26px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255, 46, 151, 0.35) 0%, rgba(253, 230, 138, 0.2) 45%, transparent 75%);
-  filter: blur(14px);
+  background: radial-gradient(ellipse, rgba(255, 46, 151, 0.28) 0%, rgba(253, 230, 138, 0.18) 45%, transparent 75%);
+  filter: blur(12px);
   pointer-events: none;
 }
 
 body.saiyan-mode .spirit-ground-energy {
-  background: radial-gradient(ellipse, rgba(16, 185, 129, 0.45) 0%, rgba(251, 191, 36, 0.25) 45%, transparent 75%);
+  background: radial-gradient(ellipse, rgba(16, 185, 129, 0.35) 0%, rgba(251, 191, 36, 0.16) 45%, transparent 75%);
 }
 
 /* Stage Overlay Controls */
 .spirit-stage-controls {
   position: relative;
-  margin: 0.8rem auto 0;
+  margin: 0.6rem auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3809,9 +3804,9 @@ body.saiyan-mode .spirit-ground-energy {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.38rem 0.78rem;
+  padding: 0.35rem 0.72rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1.5px solid rgba(15, 23, 42, 0.12);
@@ -3841,8 +3836,8 @@ body.saiyan-mode .spirit-ground-energy {
   font-size: 0.72rem;
   font-family: var(--font-mono);
   color: #64748B;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 0.38rem 0.78rem;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   border: 1px solid rgba(15, 23, 42, 0.1);
   backdrop-filter: blur(8px);
@@ -3850,7 +3845,7 @@ body.saiyan-mode .spirit-ground-energy {
 }
 
 body.saiyan-mode .spirit-ctrl-btn {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.8);
   border: 1.5px solid rgba(16, 185, 129, 0.3);
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -3864,7 +3859,7 @@ body.saiyan-mode .spirit-ctrl-btn:hover {
 
 body.saiyan-mode .spirit-drag-hint {
   color: var(--muted-fg, #94a3b8);
-  background: rgba(15, 23, 42, 0.7);
+  background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 }
@@ -3875,22 +3870,22 @@ body.saiyan-mode .spirit-drag-hint {
 .skills-info-right {
   display: flex;
   flex-direction: column;
-  gap: 0.95rem;
+  gap: 0.85rem;
   width: 100%;
-  max-width: 580px;
+  max-width: 520px;
   position: relative;
   z-index: 15;
 }
 
-/* Active Skill Scouter Telemetry Card */
+/* Active Skill Scouter Minimal Telemetry Card */
 .spirit-dossier-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1.5px solid rgba(255, 46, 151, 0.25);
-  border-radius: 18px;
-  padding: 1.05rem 1.25rem;
+  border: 1.5px solid rgba(255, 46, 151, 0.22);
+  border-radius: 16px;
+  padding: 0.95rem 1.15rem;
   box-shadow: 0 14px 38px rgba(255, 46, 151, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04);
   overflow: hidden;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
@@ -3902,15 +3897,15 @@ body.saiyan-mode .spirit-drag-hint {
   top: 0;
   left: 0;
   width: 100%;
-  height: 3px;
+  height: 2.5px;
   background: linear-gradient(90deg, transparent, var(--active-accent, #FF2E97), transparent);
   opacity: 0.9;
 }
 
 body.saiyan-mode .spirit-dossier-card {
-  background: rgba(10, 20, 16, 0.88);
-  border-color: rgba(16, 185, 129, 0.28);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(16, 185, 129, 0.1);
+  background: rgba(10, 20, 16, 0.85);
+  border-color: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(16, 185, 129, 0.08);
 }
 
 body.saiyan-mode .spirit-dossier-card::before {
@@ -3920,7 +3915,7 @@ body.saiyan-mode .spirit-dossier-card::before {
 .spirit-compact-hud {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.65rem;
   width: 100%;
 }
 
@@ -3928,18 +3923,17 @@ body.saiyan-mode .spirit-dossier-card::before {
 .dossier-header {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   width: 100%;
 }
 
-/* Large, High-Visibility Dossier Brand Icon Badge */
 .dossier-icon-badge {
-  width: 58px;
-  height: 58px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   background: #FFFFFF;
-  border: 2px solid var(--active-accent, #FF2E97);
-  box-shadow: 0 6px 20px rgba(255, 46, 151, 0.2), 0 1px 3px rgba(15, 23, 42, 0.06);
+  border: 1.5px solid var(--active-accent, #FF2E97);
+  box-shadow: 0 4px 14px rgba(255, 46, 151, 0.16), 0 1px 3px rgba(15, 23, 42, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3948,16 +3942,16 @@ body.saiyan-mode .spirit-dossier-card::before {
 }
 
 .dossier-icon-badge svg {
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
   fill: currentColor;
   color: var(--active-accent, #FF2E97);
 }
 
 body.saiyan-mode .dossier-icon-badge {
-  background: rgba(11, 19, 43, 0.92);
+  background: rgba(11, 19, 43, 0.9);
   border-color: var(--active-accent, #10b981);
-  box-shadow: 0 0 18px var(--active-accent, rgba(16, 185, 129, 0.35));
+  box-shadow: 0 0 14px var(--active-accent, rgba(16, 185, 129, 0.3));
 }
 
 .dossier-identity {
@@ -3980,7 +3974,7 @@ body.saiyan-mode .dossier-icon-badge {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.12rem 0.45rem;
+  padding: 0.1rem 0.42rem;
   border-radius: 4px;
   background: rgba(255, 46, 151, 0.08);
   border: 1px solid var(--active-accent, rgba(255, 46, 151, 0.25));
@@ -3995,9 +3989,9 @@ body.saiyan-mode .dossier-cat-tag {
 
 .dossier-level-badge {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  padding: 0.12rem 0.45rem;
+  padding: 0.1rem 0.4rem;
   border-radius: 4px;
   background: rgba(15, 23, 42, 0.05);
   color: #475569;
@@ -4012,7 +4006,7 @@ body.saiyan-mode .dossier-level-badge {
 
 .dossier-skill-name {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #0F172A;
   margin: 0;
@@ -4028,12 +4022,12 @@ body.saiyan-mode .dossier-skill-name {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.25rem 0.6rem;
+  padding: 0.22rem 0.55rem;
   border-radius: 9999px;
   background: #FFFFFF;
   border: 1.5px solid var(--active-accent, rgba(255, 46, 151, 0.35));
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 800;
   color: var(--active-accent, #FF2E97);
   box-shadow: 0 2px 10px rgba(255, 46, 151, 0.14);
@@ -4044,7 +4038,7 @@ body.saiyan-mode .dossier-power-pill {
   background: rgba(11, 19, 43, 0.9);
   border-color: var(--active-accent, rgba(16, 185, 129, 0.4));
   color: var(--active-accent, #10b981);
-  box-shadow: 0 0 12px var(--active-accent, rgba(16, 185, 129, 0.25));
+  box-shadow: 0 0 10px var(--active-accent, rgba(16, 185, 129, 0.2));
 }
 
 .dossier-power-gauge {
@@ -4088,7 +4082,7 @@ body.saiyan-mode .dossier-gauge-label {
 .dossier-micro-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.32rem;
 }
 
 .dossier-tag-pill {
@@ -4120,137 +4114,70 @@ body.saiyan-mode .dossier-tag-pill {
   display: inline-block;
 }
 
-/* ==========================================================================
-   Visual Project Showcase Banner in Dossier (Large & Highly Visible Images)
-   ========================================================================== */
-.dossier-project-preview {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.55rem 0.75rem;
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.03);
-  border: 1.5px solid rgba(15, 23, 42, 0.08);
-  cursor: pointer;
-  transition: all 0.22s ease;
-  margin-top: 0.2rem;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
-}
-
-body.saiyan-mode .dossier-project-preview {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.dossier-project-preview:hover {
-  border-color: var(--active-accent, #FF2E97);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px var(--active-accent, rgba(255, 46, 151, 0.15));
-}
-
-body.saiyan-mode .dossier-project-preview:hover {
-  border-color: var(--active-accent, #10b981);
-  box-shadow: 0 4px 16px var(--active-accent, rgba(16, 185, 129, 0.2));
-}
-
-.dossier-project-thumb-frame {
-  width: 120px;
-  height: 74px;
-  flex-shrink: 0;
-  border-radius: 9px;
-  overflow: hidden;
-  position: relative;
-  background: #000000;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-}
-
-body.saiyan-mode .dossier-project-thumb-frame {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.dossier-project-thumb-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-  display: block;
-}
-
-.dossier-project-preview:hover .dossier-project-thumb-img {
-  transform: scale(1.08);
-}
-
-.dossier-project-badge-tag {
-  position: absolute;
-  bottom: 4px;
-  left: 4px;
-  font-size: 0.55rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  background: rgba(15, 23, 42, 0.85);
-  color: #ffffff;
-  padding: 1px 5px;
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
-  letter-spacing: 0.02em;
-}
-
-.dossier-project-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-  flex: 1;
-}
-
-.dossier-project-kicker-row {
+.dossier-footer-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
-.dossier-project-kicker {
+body.saiyan-mode .dossier-footer-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.dossier-metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--active-accent, #FF2E97);
-  text-transform: uppercase;
+  font-size: 0.68rem;
+  color: #475569;
 }
 
-body.saiyan-mode .dossier-project-kicker {
-  color: var(--active-accent, #10b981);
+body.saiyan-mode .dossier-metric-pill {
+  color: #cbd5e1;
 }
 
-.dossier-project-title {
-  font-family: var(--font-heading);
-  font-size: 0.88rem;
+.hud-project-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0.24rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(255, 46, 151, 0.08);
+  border: 1px solid rgba(255, 46, 151, 0.28);
+  color: #FF2E97;
+  font-size: 0.68rem;
   font-weight: 700;
-  color: #0F172A;
-  margin: 0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-body.saiyan-mode .dossier-project-title {
+.hud-project-chip:hover {
+  background: #FF2E97;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(255, 46, 151, 0.3);
+  transform: translateY(-1px);
+}
+
+body.saiyan-mode .hud-project-chip {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.32);
   color: #ffffff;
 }
 
-.dossier-project-tagline {
-  font-size: 0.7rem;
-  color: #64748B;
-  margin: 0;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+body.saiyan-mode .hud-project-chip:hover {
+  background: #10b981;
+  color: #090D16;
 }
 
-body.saiyan-mode .dossier-project-tagline {
-  color: #94a3b8;
+.hud-project-chip i {
+  width: 11px;
+  height: 11px;
 }
 
 /* Minimal Scouter Tool Stepper Controls */
@@ -4316,182 +4243,6 @@ body.saiyan-mode .dossier-step-counter {
   color: var(--active-accent, #10b981);
 }
 
-/* ==========================================================================
-   Interactive Technical Arsenal Catalog Grid
-   ========================================================================== */
-.spirit-category-catalog {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(15, 23, 42, 0.1);
-  border-radius: 16px;
-  padding: 0.9rem 1.15rem;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-body.saiyan-mode .spirit-category-catalog {
-  background: rgba(10, 20, 16, 0.85);
-  border-color: rgba(16, 185, 129, 0.22);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-}
-
-.catalog-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.catalog-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.catalog-heading {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #0F172A;
-}
-
-body.saiyan-mode .catalog-heading {
-  color: #f1f5f9;
-}
-
-.catalog-count-pill {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 0.12rem 0.5rem;
-  border-radius: 9999px;
-  background: rgba(15, 23, 42, 0.06);
-  color: #475569;
-}
-
-body.saiyan-mode .catalog-count-pill {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-}
-
-.catalog-chips-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.42rem;
-  max-height: 230px;
-  overflow-y: auto;
-  padding-right: 2px;
-}
-
-/* Custom Slim Scrollbar */
-.catalog-chips-grid::-webkit-scrollbar {
-  width: 4px;
-}
-.catalog-chips-grid::-webkit-scrollbar-track {
-  background: transparent;
-}
-.catalog-chips-grid::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.15);
-  border-radius: 4px;
-}
-body.saiyan-mode .catalog-chips-grid::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.25);
-}
-
-/* Individual Interactive Skill Chip */
-.catalog-skill-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.32rem 0.7rem;
-  border-radius: 9999px;
-  background: #FFFFFF;
-  border: 1.5px solid rgba(15, 23, 42, 0.12);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
-}
-
-body.saiyan-mode .catalog-skill-chip {
-  background: rgba(11, 19, 43, 0.85);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.catalog-chip-icon {
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.catalog-chip-icon svg {
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
-  color: var(--chip-accent, #38bdf8);
-}
-
-.catalog-chip-label {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #1e293b;
-  white-space: nowrap;
-}
-
-body.saiyan-mode .catalog-chip-label {
-  color: #e2e8f0;
-}
-
-.catalog-chip-level {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 700;
-  color: #64748B;
-  background: rgba(15, 23, 42, 0.05);
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-
-body.saiyan-mode .catalog-chip-level {
-  color: #94a3b8;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.catalog-skill-chip:hover {
-  transform: translateY(-2px);
-  border-color: var(--chip-accent, #38bdf8);
-  box-shadow: 0 4px 14px var(--chip-accent, rgba(56, 189, 248, 0.3));
-}
-
-.catalog-skill-chip.is-active {
-  background: var(--chip-accent, #38bdf8) !important;
-  border-color: var(--chip-accent, #38bdf8) !important;
-  box-shadow: 0 0 18px var(--chip-accent, rgba(56, 189, 248, 0.45));
-}
-
-.catalog-skill-chip.is-active .catalog-chip-label {
-  color: #ffffff !important;
-  font-weight: 700;
-}
-
-.catalog-skill-chip.is-active .catalog-chip-icon svg {
-  color: #ffffff !important;
-}
-
-.catalog-skill-chip.is-active .catalog-chip-level {
-  background: rgba(255, 255, 255, 0.25) !important;
-  color: #ffffff !important;
-}
-
 /* Tablet & Mobile Responsiveness for 2-Part Stage */
 @media (max-width: 1024px) {
   .skills-two-part-stage {
@@ -4510,51 +4261,46 @@ body.saiyan-mode .catalog-chip-level {
   }
 
   .spirit-arena {
-    height: 600px;
-  }
-
-  .spirit-goku-wrapper {
-    top: 295px;
-    width: 290px;
+    height: 580px;
   }
 }
 
 @media (max-width: 640px) {
   .spirit-arena {
-    height: 520px;
+    height: 510px;
     max-width: 100%;
   }
 
   .spirit-plasma-aura {
-    top: 170px;
-    width: 330px;
-    height: 330px;
-  }
-
-  .spirit-core-canvas {
-    top: 170px;
+    top: 165px;
     width: 320px;
     height: 320px;
   }
 
+  .spirit-core-canvas {
+    top: 165px;
+    width: 310px;
+    height: 310px;
+  }
+
   .spirit-goku-wrapper {
-    top: 260px;
-    width: 240px;
+    top: 285px;
+    width: 180px;
   }
 
   .spirit-node-icon-circle {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 
   .spirit-node-icon-circle svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 
   .spirit-node-label {
     font-size: 0.58rem;
-    padding: 1.5px 6px;
+    padding: 1px 6px;
   }
 
   .spirit-stage-controls {
@@ -4568,17 +4314,6 @@ body.saiyan-mode .catalog-chip-level {
 
   .dossier-power-pill {
     margin-left: auto;
-  }
-
-  .dossier-project-preview {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.6rem;
-  }
-
-  .dossier-project-thumb-frame {
-    width: 100%;
-    height: 110px;
   }
 }
 
