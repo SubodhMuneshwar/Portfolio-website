@@ -14303,6 +14303,7 @@ body.saiyan-mode .ach-card-idx {
   font-size: 0.74rem;
   font-weight: 700;
   border: 1px solid;
+  white-space: nowrap;
 }
 
 .ach-card-period {
@@ -15264,49 +15265,126 @@ body.saiyan-mode .ach-photo-modal-footer {
   /* Achievements Stack Deck — Mobile Adjustments */
   .achievement-stack-card {
     top: var(--stack-dock-offset, 76px);
-    margin-bottom: 50vh;
+    margin-bottom: 35vh;
     border-radius: 18px;
     max-width: 100%;
   }
+  .ach-verified-badge {
+    display: none !important;
+  }
   .ach-card-body {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
-    padding: 1.25rem 1.15rem;
+    gap: 1.15rem;
+    padding: 1.15rem 1rem;
   }
   .ach-media-col {
     padding: 0;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
   .ach-hero-frame {
-    height: 200px;
+    height: 190px;
     border-radius: 14px;
   }
+  .ach-thumb-strip {
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+    -webkit-overflow-scrolling: touch;
+  }
   .ach-thumb-btn {
-    width: 52px;
-    height: 38px;
+    width: 48px;
+    height: 35px;
+    border-radius: 6px;
+  }
+  .ach-org-capsule {
+    padding: 0.5rem 0.75rem;
+    gap: 0.6rem;
+    border-radius: 10px;
+  }
+  .ach-org-icon-badge {
+    width: 34px;
+    height: 34px;
+  }
+  .ach-org-name {
+    font-size: 0.78rem;
+  }
+  .ach-metric-highlight {
+    font-size: 0.72rem;
   }
   .ach-title-text {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
+  }
+  .ach-spotlight-bar {
+    padding: 0.45rem 0.75rem;
+    gap: 0.5rem;
+    border-radius: 8px;
+  }
+  .ach-spotlight-label {
+    font-size: 0.64rem;
+  }
+  .ach-spotlight-val {
+    font-size: 0.82rem;
   }
   .ach-desc-text {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     line-height: 1.45;
+  }
+  .ach-honors-box {
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+  }
+  .ach-stack-tags {
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
+  .ach-tag-chip {
+    font-size: 0.7rem;
+    padding: 0.18rem 0.5rem;
   }
   .ach-card-action-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
   .ach-gallery-trigger-btn {
     width: 100%;
     justify-content: center;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8rem;
   }
   .ach-scroll-interaction-hint {
     justify-content: center;
+    font-size: 0.74rem;
   }
   .ach-scatter-cluster {
     display: none !important;
   }
+
+  /* Photo Modal Mobile */
+  .ach-photo-modal-box {
+    max-width: 95vw;
+    border-radius: 16px;
+  }
+  .ach-photo-modal-img-wrap {
+    max-height: 60vh;
+  }
+  .ach-photo-modal-img-wrap img {
+    max-height: 60vh;
+  }
+  .ach-photo-modal-footer {
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+  .ach-photo-modal-caption {
+    font-size: 0.82rem;
+  }
+  .ach-modal-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .ach-modal-prev { left: 8px; }
+  .ach-modal-next { right: 8px; }
 
   .project-filters {
     gap: 0.4rem;
@@ -15345,6 +15423,19 @@ body.saiyan-mode .ach-photo-modal-footer {
     font-size: 0.78rem;
   }
 
+  .ach-hero-frame {
+    height: 165px;
+  }
+  .ach-title-text {
+    font-size: 1.15rem;
+  }
+  .ach-desc-text {
+    font-size: 0.8rem;
+  }
+  .ach-card-body {
+    padding: 1rem 0.85rem;
+    gap: 0.95rem;
+  }
   .ach-stack-title {
     font-size: 1.1rem;
   }
