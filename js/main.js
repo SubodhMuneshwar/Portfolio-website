@@ -1496,57 +1496,117 @@ function renderExperience() {
 
         <!-- Executive Summary Callout -->
         <div class="exp-summary-callout">
+          <div class="exp-summary-quote-icon">
+            <i data-lucide="quote" style="width: 16px; height: 16px;"></i>
+          </div>
           <p class="exp-description">${exp.description}</p>
         </div>
 
-        <!-- Minimal Impact Capability Bento Strip -->
-        ${exp.impactMetrics && exp.impactMetrics.length ? `
-          <div class="exp-impact-grid">
-            ${exp.impactMetrics.map(m => `
-              <div class="exp-impact-card">
-                <div class="exp-impact-icon-wrap">
-                  <i data-lucide="${m.icon || 'check-circle'}" style="width: 15px; height: 15px;"></i>
+        <!-- Content Grid: Technical Specs & Deliverables (Left) + On-Site Photo Spotlight (Right) -->
+        <div class="exp-content-grid">
+          <div class="exp-details-col">
+            <!-- Minimal Impact Capability Bento Strip -->
+            ${exp.impactMetrics && exp.impactMetrics.length ? `
+              <div class="exp-impact-grid">
+                ${exp.impactMetrics.map(m => `
+                  <div class="exp-impact-card">
+                    <div class="exp-impact-icon-wrap">
+                      <i data-lucide="${m.icon || 'check-circle'}" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="exp-impact-text">
+                      <span class="exp-impact-title">${m.title}</span>
+                      <span class="exp-impact-desc">${m.desc}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Deliverables & Highlights with Sleek Micro Markers -->
+            <div class="exp-deliverables-wrap">
+              <h4 class="exp-deliverables-heading">
+                <i data-lucide="check-circle-2" style="width: 15px; height: 15px;"></i>
+                Key Contributions & System Deliverables
+              </h4>
+              <ul class="exp-bullet-list">
+                ${exp.highlights.map(hl => {
+                  const text = typeof hl === 'object' ? (hl.description || hl.title) : hl;
+                  return `
+                    <li class="exp-bullet-item">
+                      <span class="exp-bullet-marker">
+                        <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                      </span>
+                      <span class="exp-bullet-text">${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
+                    </li>
+                  `;
+                }).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <!-- On-Site Corporate Verification Spotlight -->
+          ${exp.photo ? `
+            <div class="exp-media-col">
+              <div class="exp-spotlight-card">
+                <div class="exp-spotlight-header">
+                  <span class="exp-spotlight-badge">
+                    <span class="exp-spotlight-beacon"></span>
+                    <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+                    ${exp.photoBadge || 'On-Site Verification'}
+                  </span>
+                  <span class="exp-spotlight-tag">
+                    <i data-lucide="building-2" style="width: 11px; height: 11px;"></i>
+                    Govt. PSU
+                  </span>
                 </div>
-                <div class="exp-impact-text">
-                  <span class="exp-impact-title">${m.title}</span>
-                  <span class="exp-impact-desc">${m.desc}</span>
+
+                <div class="exp-spotlight-frame" onclick="window.openAchPhotoModal('${exp.photo}', '${(exp.photoCaption || '').replace(/'/g, "\\'")}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openAchPhotoModal('${exp.photo}','${(exp.photoCaption || '').replace(/'/g, "\\'")}');}" role="button" tabindex="0" title="Click to view full HD on-site photo" aria-label="View verified on-site photograph at RCF corporate headquarters">
+                  <img src="${exp.photo}" alt="${exp.photoCaption || exp.company}" class="exp-spotlight-img" loading="lazy" />
+                  <div class="exp-spotlight-overlay">
+                    <span class="exp-spotlight-zoom-btn">
+                      <i data-lucide="maximize-2" style="width: 14px; height: 14px;"></i>
+                      Inspect Full HD
+                    </span>
+                  </div>
+                  <div class="exp-spotlight-corner-pill">
+                    <i data-lucide="camera" style="width: 11px; height: 11px;"></i>
+                    <span>Headquarters Photo</span>
+                  </div>
+                </div>
+
+                <div class="exp-spotlight-info">
+                  <div class="exp-spotlight-title">
+                    <i data-lucide="building" style="width: 13px; height: 13px;"></i>
+                    <span>${exp.photoTitle || exp.company}</span>
+                  </div>
+                  <div class="exp-spotlight-sub">
+                    <i data-lucide="map-pin" style="width: 11px; height: 11px;"></i>
+                    <span>${exp.photoSubtitle || exp.location}</span>
+                  </div>
                 </div>
               </div>
-            `).join('')}
-          </div>
-        ` : ''}
-
-        <!-- Deliverables & Highlights with Sleek Micro Markers -->
-        <div class="exp-deliverables-wrap">
-          <h4 class="exp-deliverables-heading">
-            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
-            Key Contributions & System Deliverables
-          </h4>
-          <ul class="exp-bullet-list">
-            ${exp.highlights.map(hl => {
-              const text = typeof hl === 'object' ? (hl.description || hl.title) : hl;
-              return `
-                <li class="exp-bullet-item">
-                  <span class="exp-bullet-marker">
-                    <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
-                  </span>
-                  <span class="exp-bullet-text">${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
-                </li>
-              `;
-            }).join('')}
-          </ul>
+            </div>
+          ` : ''}
         </div>
 
         <!-- Modern Minimalist Tech Stack -->
         <div class="exp-footer-bar">
-          <span class="exp-tech-label">Core Technologies:</span>
-          <div class="exp-tech-tags">
-            ${exp.techStack.map(tech => `
-              <span class="exp-tag">
-                <span class="exp-tag-dot"></span>
-                ${tech}
-              </span>
-            `).join('')}
+          <div class="exp-footer-left">
+            <span class="exp-tech-label">Core Technologies:</span>
+            <div class="exp-tech-tags">
+              ${exp.techStack.map(tech => `
+                <span class="exp-tag">
+                  <span class="exp-tag-dot"></span>
+                  ${tech}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+          <div class="exp-footer-verify">
+            <span class="exp-verify-pill">
+              <i data-lucide="badge-check" style="width: 13px; height: 13px;"></i>
+              Verified Enterprise Record
+            </span>
           </div>
         </div>
       </div>
