@@ -874,10 +874,7 @@ const portfolioData = {
       ],
       techStack: ["C#", "ASP.NET", "Oracle DB", "SAP NCo", "SAP BAPIs", "Active Directory (LDAP)", "Enterprise RBAC"],
       photo: "assets/rcf.jpg",
-      photoBadge: "On-Site Corporate Verification",
-      photoTitle: "Rashtriya Chemicals & Fertilizers Ltd.",
-      photoSubtitle: "Navratna PSU • Mumbai Headquarters",
-      photoCaption: "Subodh Muneshwar on-site at Rashtriya Chemicals & Fertilizers Limited (RCF) Corporate Headquarters • Mumbai, India"
+      photoCaption: "On-site at RCF Corporate Headquarters • Mumbai, India"
     }
   ],
 
