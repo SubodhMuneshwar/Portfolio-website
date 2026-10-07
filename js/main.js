@@ -1455,7 +1455,7 @@ function renderExperience() {
           <div class="exp-company-block">
             <div class="exp-company-avatar">
               ${exp.logo ? `
-                <img src="${exp.logo}" alt="${exp.company} Logo" class="exp-company-logo" width="38" height="38" loading="lazy" />
+                <img src="${exp.logo}" alt="${exp.company} Logo" class="exp-company-logo" width="38" height="38" />
               ` : `
                 <span>${exp.logoText || 'EXP'}</span>
               `}
@@ -1466,19 +1466,24 @@ function renderExperience() {
                 <span class="exp-type-badge">${exp.type || 'Internship'}</span>
               </div>
               <div class="exp-company-line">
-                <span class="exp-company-name">${exp.company}</span>
-                <span class="exp-meta-separator">•</span>
-                <span class="exp-location-tag">
-                  <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
-                  ${exp.location}
+                <span class="exp-company-name">
+                  <span class="exp-company-full">${exp.company}</span>
+                  <span class="exp-company-short">${exp.shortCompany || exp.company}</span>
                 </span>
-                ${exp.mode ? `
+                <div class="exp-meta-group">
                   <span class="exp-meta-separator">•</span>
-                  <span class="exp-mode-tag">
-                    <i data-lucide="building" style="width: 12px; height: 12px;"></i>
-                    ${exp.mode}
+                  <span class="exp-location-tag">
+                    <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
+                    <span>${exp.location}</span>
                   </span>
-                ` : ''}
+                  ${exp.mode ? `
+                    <span class="exp-meta-separator">•</span>
+                    <span class="exp-mode-tag">
+                      <i data-lucide="building" style="width: 12px; height: 12px;"></i>
+                      <span>${exp.mode}</span>
+                    </span>
+                  ` : ''}
+                </div>
               </div>
             </div>
           </div>
@@ -1500,12 +1505,16 @@ function renderExperience() {
             <p class="exp-description">${exp.description}</p>
 
             <ul class="exp-bullet-list">
-              ${exp.highlights.map(hl => {
-                const text = typeof hl === 'object' ? (hl.description || hl.title) : hl;
+              ${(exp.highlights || []).map((hl, i) => {
+                const fullText = typeof hl === 'object' ? (hl.description || hl.title) : hl;
+                const shortText = (exp.shortHighlights && exp.shortHighlights[i]) ? exp.shortHighlights[i] : fullText;
                 return `
                   <li class="exp-bullet-item">
                     <span class="exp-bullet-dot"></span>
-                    <span class="exp-bullet-text">${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
+                    <span class="exp-bullet-text">
+                      <span class="exp-text-full">${fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
+                      <span class="exp-text-short">${shortText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</span>
+                    </span>
                   </li>
                 `;
               }).join('')}
@@ -1527,10 +1536,11 @@ function renderExperience() {
                    tabindex="0"
                    aria-label="View on-site workplace photo"
                    title="Click to view full photo">
-                <img src="${exp.photo}" alt="${exp.photoCaption || exp.company}" class="exp-photo-img" loading="lazy" />
+                <img src="${exp.photo}" alt="${exp.photoCaption || exp.company}" class="exp-photo-img" decoding="async" />
                 <div class="exp-photo-badge">
                   <span class="exp-badge-dot"></span>
-                  <span>On-site • Mumbai ↗</span>
+                  <span class="exp-badge-text-desktop">On-site • Mumbai ↗</span>
+                  <span class="exp-badge-text-mobile">RCF HQ ↗</span>
                 </div>
               </div>
             </div>
@@ -2324,7 +2334,7 @@ window.openAchPhotoModal = function(src, caption) {
     img.src = src;
     img.alt = caption || 'Achievement Record';
     if (cap) cap.textContent = caption || '';
-    if (badgeText) badgeText.textContent = 'Archival Record';
+    if (badgeText) badgeText.textContent = (src && src.includes('rcf')) ? 'Workplace Verification' : 'Archival Record';
     if (counter) counter.textContent = '1 / 1';
     if (prevBtn) prevBtn.style.display = 'none';
     if (nextBtn) nextBtn.style.display = 'none';

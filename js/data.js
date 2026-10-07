@@ -867,6 +867,11 @@ const portfolioData = {
         "Implemented **LDAP-based Active Directory authentication** and automated role provisioning utilizing custom **SAP BAPIs** and **Function Modules**.",
         "Delivered granular role administration, **T-Code assignment**, tamper-evident **audit logging**, real-time authorization synchronization, and secure **session management**."
       ],
+      shortHighlights: [
+        "Engineered SAP-integrated RBAC platform using **C#**, **ASP.NET** & **Oracle DB** via **SAP NCo**.",
+        "Implemented **Active Directory (LDAP)** authentication & automated provisioning via **SAP BAPIs**.",
+        "Delivered **T-Code controls**, tamper-evident **audit logging**, and secure session management."
+      ],
       impactMetrics: [
         { icon: "shield-check", title: "Enterprise Security", desc: "Granular RBAC & T-Code authorization matrix" },
         { icon: "layers", title: "ERP Integration", desc: "SAP NCo & Active Directory LDAP synchronization" },
