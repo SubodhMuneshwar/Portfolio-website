@@ -2478,21 +2478,6 @@ function applyStackTransform(cards) {
   const total = cards.length;
   if (!total) return;
 
-  // On mobile viewports (<= 768px), project cards flow naturally in normal vertical layout
-  // so no content is trapped, hidden, or obscured below viewport
-  const isProj = cards[0] && cards[0].classList.contains('project-stack-card');
-  if (isProj && window.innerWidth <= 768) {
-    cards.forEach(c => {
-      c.style.opacity = '1';
-      c.style.transform = 'none';
-      c.style.filter = 'none';
-      c.style.visibility = 'visible';
-      c.style.pointerEvents = 'auto';
-      c.classList.add('is-stacked-in-view');
-    });
-    return;
-  }
-
   // Resolved sticky top in pixels (e.g. 96px desktop, 86px tablet, 72px mobile, 66px small)
   const computedTopStr = window.getComputedStyle(cards[0]).top;
   const stickyTop = parseFloat(computedTopStr) || 96;
