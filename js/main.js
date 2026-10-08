@@ -1763,39 +1763,39 @@ window.openProjectModal = function(projectId) {
       </div>`;
 
   modalContent.innerHTML = `
-    <div style="margin-bottom: 1.5rem;">
+    <div class="project-modal-header" style="margin-bottom: 1.25rem;">
       <span class="project-badge badge-${proj.badgeColor}" style="background-color: var(--${proj.badgeColor}); margin-bottom: 0.75rem; display: inline-block;">
         ${proj.badge}
       </span>
-      <h2 style="font-size: 1.75rem; font-weight: 900; margin-bottom: 0.5rem;">${proj.title}</h2>
-      <p style="color: var(--muted-fg); font-weight: 600;">${proj.tagline}</p>
+      <h2 class="project-modal-title" style="font-size: clamp(1.35rem, 4.5vw, 1.85rem); font-weight: 900; line-height: 1.25; margin-bottom: 0.5rem;">${proj.title}</h2>
+      <p class="project-modal-tagline" style="color: var(--muted-fg); font-weight: 600; font-size: clamp(0.88rem, 2.8vw, 1rem); line-height: 1.45;">${proj.tagline}</p>
     </div>
 
     ${mediaHtml}
 
-    <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Key Architecture & Deliverables:</h4>
-    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+    <h4 style="font-size: clamp(1rem, 3.5vw, 1.15rem); margin-bottom: 0.75rem;">Key Architecture & Deliverables:</h4>
+    <ul class="project-modal-bullets" style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.5rem; padding: 0;">
       ${proj.bullets.map(b => `
-        <li style="display: flex; gap: 0.65rem; font-size: 0.95rem; line-height: 1.5;">
-          <span style="color: var(--accent); font-weight: 900;">➔</span>
+        <li style="display: flex; gap: 0.65rem; font-size: clamp(0.85rem, 2.8vw, 0.95rem); line-height: 1.5;">
+          <span style="color: var(--accent); font-weight: 900; flex-shrink: 0;">➔</span>
           <span>${b}</span>
         </li>
       `).join('')}
     </ul>
 
-    <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Technologies Used:</h4>
-    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;">
+    <h4 style="font-size: clamp(1rem, 3.5vw, 1.15rem); margin-bottom: 0.75rem;">Technologies Used:</h4>
+    <div class="project-modal-tech" style="display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.75rem;">
       ${proj.techStack.map(t => `<span class="tech-pill">${t}</span>`).join('')}
     </div>
 
-    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-      <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+    <div class="project-modal-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+      <a href="${proj.github}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1 1 200px; justify-content: center;">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
         </svg>
         <span>Explore GitHub Repository</span>
       </a>
-      <button type="button" class="btn btn-outline" onclick="closeProjectModal()">
+      <button type="button" class="btn btn-outline" onclick="closeProjectModal()" style="flex: 1 1 120px; justify-content: center;">
         <span>Close Window</span>
       </button>
     </div>
@@ -2477,6 +2477,21 @@ function updateCardsStackDepth() {
 function applyStackTransform(cards) {
   const total = cards.length;
   if (!total) return;
+
+  // On mobile viewports (<= 768px), project cards flow naturally in normal vertical layout
+  // so no content is trapped, hidden, or obscured below viewport
+  const isProj = cards[0] && cards[0].classList.contains('project-stack-card');
+  if (isProj && window.innerWidth <= 768) {
+    cards.forEach(c => {
+      c.style.opacity = '1';
+      c.style.transform = 'none';
+      c.style.filter = 'none';
+      c.style.visibility = 'visible';
+      c.style.pointerEvents = 'auto';
+      c.classList.add('is-stacked-in-view');
+    });
+    return;
+  }
 
   // Resolved sticky top in pixels (e.g. 96px desktop, 86px tablet, 72px mobile, 66px small)
   const computedTopStr = window.getComputedStyle(cards[0]).top;
