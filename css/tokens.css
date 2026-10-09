@@ -421,11 +421,12 @@ body.saiyan-mode .achievement-card::before {
   }
 }
 
-/* Profile Photo Card — Super Saiyan Golden Aura (Steady, Refined) */
+/* Profile Photo Card — Super Saiyan Golden Aura (Steady, No Float) */
 body.saiyan-mode .hero-photo-frame {
-  border-color: rgba(245, 158, 11, 0.45);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border-color: #FBBF24 !important;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), 0 0 55px rgba(245, 158, 11, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
   animation: none !important;
+  transform: none !important;
 }
 
 body.saiyan-mode .hero-ambient-aura {

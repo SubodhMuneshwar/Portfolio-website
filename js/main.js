@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initDbzJokePlaceholders();
   initHeroRotatingWord();
   initPhotoRevealLens();
-  initHeroProfileCardInteractive();
   initScrollProgress();
   initHeroParallax();
   initCardSpotlight();
@@ -6366,81 +6365,6 @@ function initPhotoRevealLens() {
   frame.addEventListener('mouseleave', () => {
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   });
-}
-
-/* ── Capsule Corp Scouter Profile Card 3D Tilt & Power Flare Interactivity ── */
-function initHeroProfileCardInteractive() {
-  const card = document.getElementById('heroHudCard') || document.querySelector('.hero-hud-frame');
-  const scouterBtn = document.getElementById('heroScouterReadout');
-  const powerNum = document.getElementById('heroPowerNum');
-  if (!card) return;
-
-  // 1. Interactive Scouter Combat Power Analysis
-  if (scouterBtn && powerNum) {
-    let isScanning = false;
-    scouterBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (isScanning) return;
-      isScanning = true;
-
-      // Scouter chirps
-      if (typeof playWebAudioTone === 'function') {
-        playWebAudioTone(680, 'sine', 0.05, 0.05);
-        setTimeout(() => playWebAudioTone(880, 'triangle', 0.08, 0.06), 70);
-        setTimeout(() => playWebAudioTone(1140, 'square', 0.12, 0.07), 150);
-      }
-
-      // Energy surge visual pulse
-      card.style.transition = 'box-shadow 0.2s ease, transform 0.2s ease';
-      card.classList.add('scouter-power-surging');
-
-      const readings = ['8,420', '9,150', '9,890', 'OVER 9000!', 'MAX: 99,999+', '9,001+'];
-      let step = 0;
-      const interval = setInterval(() => {
-        if (step < readings.length) {
-          powerNum.textContent = readings[step];
-          step++;
-        } else {
-          clearInterval(interval);
-          isScanning = false;
-          card.classList.remove('scouter-power-surging');
-          card.style.transition = '';
-        }
-      }, 120);
-    });
-  }
-
-  // 2. Subtle 3D Perspective Tilt on Desktop
-  if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    let tiltRaf = null;
-    let targetRotX = 0, targetRotY = 0;
-
-    function applyTilt() {
-      tiltRaf = null;
-      card.style.transform = `perspective(1200px) rotateX(${targetRotX.toFixed(2)}deg) rotateY(${targetRotY.toFixed(2)}deg) translateZ(4px)`;
-    }
-
-    card.addEventListener('mousemove', (e) => {
-      const r = card.getBoundingClientRect();
-      const centerX = r.left + r.width / 2;
-      const centerY = r.top + r.height / 2;
-      const mouseX = e.clientX - centerX;
-      const mouseY = e.clientY - centerY;
-
-      // Subtle tilt: max ~4 degrees
-      targetRotX = -(mouseY / (r.height / 2)) * 4.2;
-      targetRotY = (mouseX / (r.width / 2)) * 4.2;
-
-      if (tiltRaf === null) tiltRaf = requestAnimationFrame(applyTilt);
-    });
-
-    card.addEventListener('mouseleave', () => {
-      if (tiltRaf) { cancelAnimationFrame(tiltRaf); tiltRaf = null; }
-      card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
-      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-      setTimeout(() => { card.style.transition = ''; }, 450);
-    });
-  }
 }
 
 /* --- Capsule Corp Saiyan Scouter Summary Console Interactivity --- */
