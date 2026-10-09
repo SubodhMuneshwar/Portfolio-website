@@ -15963,6 +15963,58 @@ body.saiyan-mode .scouter-mini-card:focus-visible {
   box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.4), 0 0 16px -4px rgba(245, 158, 11, 0.15);
 }
 
+.mini-card-media {
+  position: relative;
+  width: 100%;
+  height: 112px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.65rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.saiyan-mode .mini-card-media {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.mini-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.scouter-mini-card:hover .mini-card-img {
+  transform: scale(1.05);
+}
+
+.mini-card-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+body.saiyan-mode .mini-card-badge {
+  background: rgba(10, 16, 14, 0.85);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+}
+
 .mini-card-head {
   display: flex;
   align-items: center;
