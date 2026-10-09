@@ -221,50 +221,97 @@
           </div>
 
           <div class="hero-visual" style="position: relative;">
-            <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: -16px; right: 12px;" data-fake-ball="spiral" title="Secret Cosmic Dragon Ball?! Click me!"></span>
+            <span class="dragon-ball fake-dragon-ball floating-decoy-ball" style="top: 130px; right: -24px;" data-fake-ball="spiral" title="Secret Cosmic Dragon Ball?! Click me!"></span>
             <div class="hero-visual-wrapper">
-              <!-- High-Tech / ROSE & SAIYAN HUD Card Frame -->
+              <!-- Ambient Halo Ki Aura Behind Profile Terminal -->
+              <div class="hero-hud-ambient-glow" aria-hidden="true"></div>
 
-              <!-- High-Tech / ROSE & SAIYAN HUD Card Frame -->
-              <div class="hero-hud-frame">
-                <span class="hud-corner hud-top-left"></span>
-                <span class="hud-corner hud-top-right"></span>
-                <span class="hud-corner hud-bottom-left"></span>
-                <span class="hud-corner hud-bottom-right"></span>
-                <span class="rose-divine-tag" aria-hidden="true">✦ ROSE</span>
-                <span class="saiyan-divine-tag" aria-hidden="true">⚡ SAIYAN</span>
+              <!-- High-Tech Capsule Corp / Saiyan HUD Cyber Terminal Frame -->
+              <div class="hero-hud-frame" id="heroHudCard">
+                <!-- Precision Optical Reticles / HUD Brackets -->
+                <span class="hud-corner hud-top-left" aria-hidden="true"><span class="hud-reticle-cross"></span></span>
+                <span class="hud-corner hud-top-right" aria-hidden="true"><span class="hud-reticle-cross"></span></span>
+                <span class="hud-corner hud-bottom-left" aria-hidden="true"><span class="hud-reticle-cross"></span></span>
+                <span class="hud-corner hud-bottom-right" aria-hidden="true"><span class="hud-reticle-cross"></span></span>
 
                 <!-- Top Telemetry Decal Bar -->
                 <div class="hero-card-header-bar">
-                  <div class="hero-card-mode-tag">
-                    <span class="hero-mode-dot"></span>
-                    <span class="hero-mode-text-light">CAPSULE CORP · DEV-01</span>
-                    <span class="hero-mode-text-dark">⚡ SAIYAN MODE · OVER 9000</span>
+                  <div class="hero-card-brand">
+                    <span class="hero-cc-mark" title="Capsule Corporation">CC</span>
+                    <div class="hero-card-identity">
+                      <span class="hero-card-sys-id">CAPSULE CORP // 01</span>
+                      <span class="hero-card-status-beacon" title="System Online">
+                        <span class="hero-mode-dot"></span>
+                        <span class="hero-status-txt">ONLINE</span>
+                      </span>
+                    </div>
                   </div>
-                  <div class="hero-card-scouter-readout">PWR: 9.14</div>
+
+                  <div class="hero-card-telemetry">
+                    <!-- Unified Interactive Scouter Combat Readout -->
+                    <button type="button" class="hero-card-scouter-readout" id="heroScouterReadout" title="Scouter Combat Power • Click to scan energy signature" aria-label="Scouter Power Level">
+                      <span class="scouter-mode-icon saiyan-pwr-icon" aria-hidden="true">⚡</span>
+                      <span class="scouter-mode-icon rose-pwr-icon" aria-hidden="true">✦</span>
+                      <span class="scouter-tag-lbl">PWR</span>
+                      <span class="scouter-pwr-num" id="heroPowerNum">9,001+</span>
+                      <span class="scouter-signal-bars" aria-hidden="true">
+                        <span class="scouter-bar b1"></span>
+                        <span class="scouter-bar b2"></span>
+                        <span class="scouter-bar b3"></span>
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
-                <!-- Sleek Portrait Frame — premium refined with cursor reveal -->
+                <!-- Sleek Portrait Frame — Holographic biometric scan with cursor reveal -->
                 <div class="hero-photo-frame" id="heroPhotoFrame">
+                  <!-- Ambient Ki Backlight behind portrait silhouette -->
+                  <div class="hero-portrait-ki-backlight" aria-hidden="true"></div>
+
                   <img src="assets/subodh.jpg" alt="Subodh Uttam Muneshwar" class="hero-photo-img" fetchpriority="high" width="340" height="340" />
+
+                  <!-- High-Tech Holographic Elements -->
+                  <div class="hero-photo-scan-beam" aria-hidden="true"></div>
                   <div class="hero-photo-shimmer"></div>
                   <div class="hero-photo-vignette" aria-hidden="true"></div>
-                  <!-- Face-aligned transitioning reveal -->
+
+                  <!-- Face-aligned transitioning reveal (Light: Rose2, Dark: Goku) -->
                   <div class="hero-photo-reveal" aria-hidden="true">
                     <div class="hero-reveal-layer hero-reveal-rose"></div>
                     <div class="hero-reveal-layer hero-reveal-goku"></div>
                   </div>
-                </div>
-              </div>
 
-              <!-- Professional Location Badge -->
-              <div class="hero-clean-badge">
-                <i data-lucide="map-pin" style="width: 14px; height: 14px; opacity: 0.7;"></i>
-                <span class="hero-clean-badge-text">
-                  <strong class="badge-text-light">Mumbai, India</strong>
-                  <strong class="badge-text-dark">Mumbai, India</strong>
-                  <span>· Software Engineer</span>
-                </span>
+                  <!-- Precision Biometric Corner Brackets inside Photo -->
+                  <div class="hero-photo-hud-markers" aria-hidden="true">
+                    <span class="photo-marker photo-marker-tl"></span>
+                    <span class="photo-marker photo-marker-tr"></span>
+                    <span class="photo-marker photo-marker-bl"></span>
+                    <span class="photo-marker photo-marker-br"></span>
+                    <div class="photo-hud-tagline">
+                      <span class="photo-hud-dot"></span>
+                      <span>TARGET: SUBODH M.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Integrated Biometric Telemetry Dock (Bottom) -->
+                <div class="hero-clean-badge" id="heroCleanBadge">
+                  <div class="hero-badge-chips">
+                    <div class="hero-badge-chip hero-badge-loc">
+                      <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
+                      <span>Mumbai, India</span>
+                    </div>
+                    <span class="hero-badge-chip-dot">·</span>
+                    <div class="hero-badge-chip hero-badge-role">
+                      <i data-lucide="code-2" style="width: 12px; height: 12px;"></i>
+                      <span>Software Engineer</span>
+                    </div>
+                  </div>
+                  <div class="hero-badge-availability">
+                    <span class="status-pulse-dot"></span>
+                    <span>Available for SDE &amp; AI Roles</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
