@@ -15851,6 +15851,12 @@ body.saiyan-mode .scouter-header-status {
   color: #94A3B8;
 }
 
+.scouter-pwr-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .scouter-status-val {
   font-weight: 700;
   color: #BE185D;
@@ -15928,13 +15934,16 @@ body.saiyan-mode .scouter-pitch-text .text-contrast {
 
 .scouter-mini-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  border-radius: 14px;
-  padding: 1.15rem 1.1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 1.4rem 1.35rem 1.25rem 1.35rem;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.55rem;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.22s ease,
               box-shadow 0.22s ease,
@@ -15944,8 +15953,9 @@ body.saiyan-mode .scouter-pitch-text .text-contrast {
 }
 
 body.saiyan-mode .scouter-mini-card {
-  background: rgba(255, 255, 255, 0.025);
-  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(18, 28, 25, 0.45);
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
 }
 
 .scouter-mini-card:hover,
@@ -15953,81 +15963,31 @@ body.saiyan-mode .scouter-mini-card {
   transform: translateY(-2px);
   border-color: rgba(255, 46, 151, 0.3);
   background: #FFFFFF;
-  box-shadow: 0 8px 20px -4px rgba(255, 46, 151, 0.08);
+  box-shadow: 0 10px 24px -4px rgba(255, 46, 151, 0.1);
 }
 
 body.saiyan-mode .scouter-mini-card:hover,
 body.saiyan-mode .scouter-mini-card:focus-visible {
-  border-color: rgba(245, 158, 11, 0.35);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.4), 0 0 16px -4px rgba(245, 158, 11, 0.15);
-}
-
-.mini-card-media {
-  position: relative;
-  width: 100%;
-  height: 112px;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 0.65rem;
-  background: rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-body.saiyan-mode .mini-card-media {
-  background: rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.mini-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
-}
-
-.scouter-mini-card:hover .mini-card-img {
-  transform: scale(1.05);
-}
-
-.mini-card-badge {
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-body.saiyan-mode .mini-card-badge {
-  background: rgba(10, 16, 14, 0.85);
-  border-color: rgba(245, 158, 11, 0.35);
-  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(24, 38, 33, 0.7);
+  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45), 0 0 16px -4px rgba(245, 158, 11, 0.15);
 }
 
 .mini-card-head {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
 .mini-card-icon {
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   transition: transform 0.22s ease;
 }
 
 .scouter-mini-card:hover .mini-card-icon {
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
 .mini-card-icon.icon-shield {
@@ -16056,11 +16016,11 @@ body.saiyan-mode .mini-card-icon.icon-cpu {
 
 .mini-card-title {
   font-family: var(--font-heading, sans-serif);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: var(--fg, #0F172A);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.35;
   letter-spacing: -0.01em;
 }
 
@@ -16069,29 +16029,35 @@ body.saiyan-mode .mini-card-title {
 }
 
 .mini-card-desc {
-  font-size: 0.82rem;
-  line-height: 1.52;
+  font-size: 0.88rem;
+  line-height: 1.62;
   color: #64748B;
-  margin: 0;
+  margin: 0.35rem 0 0.8rem 0;
   flex-grow: 1;
 }
 
 body.saiyan-mode .mini-card-desc {
-  color: #94A3B8;
+  color: #CBD5E1;
 }
 
 .mini-card-stat {
   font-family: var(--font-mono, monospace);
-  font-size: 0.71rem;
-  color: #94A3B8;
-  letter-spacing: 0.02em;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  background: rgba(255, 46, 151, 0.06);
+  color: #BE185D;
+  border: 1px solid rgba(255, 46, 151, 0.18);
+  width: fit-content;
   margin-top: auto;
-  padding-top: 0.35rem;
+  letter-spacing: 0.02em;
 }
 
 body.saiyan-mode .mini-card-stat {
+  background: rgba(245, 158, 11, 0.08);
   color: #FBBF24;
-  opacity: 0.9;
+  border-color: rgba(245, 158, 11, 0.25);
 }
 
 /* Minimal Telemetry Metrics Ribbon */
@@ -16170,7 +16136,8 @@ body.saiyan-mode .telemetry-chip-item .chip-icon {
   }
   .scouter-header-status {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 0.65rem;
   }
   .scouter-telemetry-ribbon {
     grid-template-columns: 1fr;

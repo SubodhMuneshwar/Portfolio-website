@@ -119,7 +119,7 @@ The portfolio is structured for direct static hosting with zero server configura
 **Subodh Uttam Muneshwar**  
 Software Engineer & Backend / AI-ML Developer  
 - **Education**: Bachelor of Engineering in Computer Engineering (CGPI: 9.14)
-- **Achievements**: Smart India Hackathon Top 5 Finalist; Mentored 500+ students in algorithms and programming.
+- **Achievements**: Smart India Hackathon Top 5 Finalist; Represented 500+ students in university tech initiatives.
 - **Core Competencies**: Python, C#/.NET, Flask, REST APIs, OpenCV, Deep Learning (CNNs), MySQL, Oracle, SAP NCo Integration, RBAC/LDAP Authentication.
 - **Portfolio Repository**: [SubodhMuneshwar/Portfolio-website](https://github.com/SubodhMuneshwar/Portfolio-website)
 
