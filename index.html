@@ -349,87 +349,96 @@
             </p>
           </div>
 
-          <!-- High-Impact Bento Pillars Grid -->
-          <div class="scouter-bento-grid">
-            <!-- Bento Card 1: Machine Cognition & Vision -->
-            <div class="scouter-bento-card" tabindex="0">
-              <div class="bento-card-header">
-                <div class="bento-icon-badge badge-vision">
-                  <i data-lucide="brain"></i>
+          <!-- High-Impact Bento Pillars Grid / Mobile Snap Carousel -->
+          <div class="scouter-bento-carousel-wrap">
+            <div class="scouter-bento-grid" id="scouterBentoGrid" role="region" aria-label="Core Engineering Pillars Carousel">
+              <!-- Bento Card 1: Machine Cognition & Vision -->
+              <div class="scouter-bento-card" tabindex="0" data-card-idx="0">
+                <div class="bento-card-header">
+                  <div class="bento-icon-badge badge-vision">
+                    <i data-lucide="brain"></i>
+                  </div>
+                  <span class="bento-kicker">APPLIED VISION &amp; AI</span>
                 </div>
-                <span class="bento-kicker">APPLIED VISION &amp; AI</span>
-              </div>
-              <div class="bento-metric-highlight">
-                <span class="metric-number">98<span class="metric-unit">%</span></span>
-                <div class="metric-meta">
-                  <span class="metric-label">Clinical Accuracy</span>
-                  <span class="metric-sub">10,000+ Retinal Scans</span>
+                <div class="bento-metric-highlight">
+                  <span class="metric-number">98<span class="metric-unit">%</span></span>
+                  <div class="metric-meta">
+                    <span class="metric-label">Clinical Accuracy</span>
+                    <span class="metric-sub">10,000+ Retinal Scans</span>
+                  </div>
+                </div>
+                <h3 class="bento-card-title">Machine Cognition &amp; Vision</h3>
+                <p class="bento-card-desc">
+                  Engineered deep learning ensemble pipelines (DenseNet121 + CLAHE) grading diabetic retinopathy lesions with hospital-grade diagnostic precision.
+                </p>
+                <div class="bento-tech-tags">
+                  <span class="tech-tag">DenseNet121</span>
+                  <span class="tech-tag">PyTorch</span>
+                  <span class="tech-tag">OpenCV</span>
+                  <span class="tech-tag">CLAHE</span>
                 </div>
               </div>
-              <h3 class="bento-card-title">Machine Cognition &amp; Vision</h3>
-              <p class="bento-card-desc">
-                Engineered deep learning ensemble pipelines (DenseNet121 + CLAHE) grading diabetic retinopathy lesions with automated preprocessing and hospital-grade diagnostic precision.
-              </p>
-              <div class="bento-tech-tags">
-                <span class="tech-tag">DenseNet121</span>
-                <span class="tech-tag">PyTorch</span>
-                <span class="tech-tag">OpenCV</span>
-                <span class="tech-tag">CLAHE</span>
+
+              <!-- Bento Card 2: Enterprise Architecture -->
+              <div class="scouter-bento-card" tabindex="0" data-card-idx="1">
+                <div class="bento-card-header">
+                  <div class="bento-icon-badge badge-enterprise">
+                    <i data-lucide="shield-check"></i>
+                  </div>
+                  <span class="bento-kicker">ENTERPRISE CORE</span>
+                </div>
+                <div class="bento-metric-highlight">
+                  <span class="metric-number metric-text-sm">RBAC<span class="metric-unit">/AD</span></span>
+                  <div class="metric-meta">
+                    <span class="metric-label">Enterprise Access Control</span>
+                    <span class="metric-sub">RCF Production Plant</span>
+                  </div>
+                </div>
+                <h3 class="bento-card-title">Enterprise Architecture</h3>
+                <p class="bento-card-desc">
+                  Integrated SAP NCo 3.0 middleware, segregated T-Code execution permissions, and automated Active Directory LDAP sync at Rashtriya Chemicals &amp; Fertilizers.
+                </p>
+                <div class="bento-tech-tags">
+                  <span class="tech-tag">SAP NCo 3.0</span>
+                  <span class="tech-tag">Active Directory</span>
+                  <span class="tech-tag">Python</span>
+                  <span class="tech-tag">C# .NET</span>
+                </div>
+              </div>
+
+              <!-- Bento Card 3: Distributed Systems & APIs -->
+              <div class="scouter-bento-card" tabindex="0" data-card-idx="2">
+                <div class="bento-card-header">
+                  <div class="bento-icon-badge badge-systems">
+                    <i data-lucide="cpu"></i>
+                  </div>
+                  <span class="bento-kicker">HIGH CONCURRENCY</span>
+                </div>
+                <div class="bento-metric-highlight">
+                  <span class="metric-number">60<span class="metric-unit">%</span></span>
+                  <div class="metric-meta">
+                    <span class="metric-label">Latency Reduction</span>
+                    <span class="metric-sub">Query &amp; Service Tuning</span>
+                  </div>
+                </div>
+                <h3 class="bento-card-title">Distributed Systems &amp; APIs</h3>
+                <p class="bento-card-desc">
+                  Architected asynchronous REST microservices and database connection pooling to sustain high-throughput load with fault-tolerant containerized deployments.
+                </p>
+                <div class="bento-tech-tags">
+                  <span class="tech-tag">FastAPI</span>
+                  <span class="tech-tag">ASP.NET Core</span>
+                  <span class="tech-tag">Docker</span>
+                  <span class="tech-tag">PostgreSQL</span>
+                </div>
               </div>
             </div>
 
-            <!-- Bento Card 2: Enterprise Architecture -->
-            <div class="scouter-bento-card" tabindex="0">
-              <div class="bento-card-header">
-                <div class="bento-icon-badge badge-enterprise">
-                  <i data-lucide="shield-check"></i>
-                </div>
-                <span class="bento-kicker">ENTERPRISE CORE</span>
-              </div>
-              <div class="bento-metric-highlight">
-                <span class="metric-number metric-text-sm">RBAC<span class="metric-unit">/AD</span></span>
-                <div class="metric-meta">
-                  <span class="metric-label">Enterprise Access Control</span>
-                  <span class="metric-sub">RCF Production Plant</span>
-                </div>
-              </div>
-              <h3 class="bento-card-title">Enterprise Architecture</h3>
-              <p class="bento-card-desc">
-                Integrated SAP NCo 3.0 middleware, segregated T-Code execution permissions, and automated Active Directory LDAP directory synchronization at Rashtriya Chemicals &amp; Fertilizers.
-              </p>
-              <div class="bento-tech-tags">
-                <span class="tech-tag">SAP NCo 3.0</span>
-                <span class="tech-tag">Active Directory</span>
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">C# .NET</span>
-              </div>
-            </div>
-
-            <!-- Bento Card 3: Distributed Systems & APIs -->
-            <div class="scouter-bento-card" tabindex="0">
-              <div class="bento-card-header">
-                <div class="bento-icon-badge badge-systems">
-                  <i data-lucide="cpu"></i>
-                </div>
-                <span class="bento-kicker">HIGH CONCURRENCY</span>
-              </div>
-              <div class="bento-metric-highlight">
-                <span class="metric-number">60<span class="metric-unit">%</span></span>
-                <div class="metric-meta">
-                  <span class="metric-label">Latency Reduction</span>
-                  <span class="metric-sub">Query &amp; Service Tuning</span>
-                </div>
-              </div>
-              <h3 class="bento-card-title">Distributed Systems &amp; APIs</h3>
-              <p class="bento-card-desc">
-                Architected asynchronous REST microservices and database connection pooling to sustain high-throughput load with fault-tolerant containerized deployments.
-              </p>
-              <div class="bento-tech-tags">
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">ASP.NET Core</span>
-                <span class="tech-tag">Docker</span>
-                <span class="tech-tag">PostgreSQL</span>
-              </div>
+            <!-- Mobile Snap Carousel Indicator Dots -->
+            <div class="scouter-carousel-dots" aria-label="Carousel navigation">
+              <button type="button" class="carousel-dot active" data-slide="0" aria-label="Slide 1: Machine Cognition"></button>
+              <button type="button" class="carousel-dot" data-slide="1" aria-label="Slide 2: Enterprise Architecture"></button>
+              <button type="button" class="carousel-dot" data-slide="2" aria-label="Slide 3: Distributed Systems"></button>
             </div>
           </div>
 

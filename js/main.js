@@ -6369,7 +6369,7 @@ function initPhotoRevealLens() {
 
 /* --- Capsule Corp Saiyan Scouter Summary Console Interactivity --- */
 function initScouterSummaryConsole() {
-  const cards = document.querySelectorAll('.scouter-pillar-card');
+  const cards = document.querySelectorAll('.scouter-bento-card');
   cards.forEach((card, idx) => {
     card.addEventListener('mouseenter', () => {
       // Scouter lock-on chirps: rising frequency by sector
@@ -6380,25 +6380,34 @@ function initScouterSummaryConsole() {
     });
   });
 
-  const spiritBombBtn = document.querySelector('.scouter-spirit-bomb-btn');
-  if (spiritBombBtn) {
-    spiritBombBtn.addEventListener('click', () => {
-      // Ki charging surge audio
-      if (typeof playWebAudioTone === 'function') {
-        playWebAudioTone(440, 'triangle', 0.14, 0.08);
-        setTimeout(() => {
-          playWebAudioTone(660, 'sine', 0.22, 0.09);
-        }, 120);
-      }
+  // Mobile Snap Carousel Dots synchronization
+  const grid = document.getElementById('scouterBentoGrid');
+  const dots = document.querySelectorAll('.scouter-carousel-dots .carousel-dot');
+  if (grid && dots.length) {
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.getAttribute('data-slide'), 10);
+        const cardList = grid.querySelectorAll('.scouter-bento-card');
+        if (cardList[idx]) {
+          cardList[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+          if (typeof playWebAudioTone === 'function') {
+            playWebAudioTone(520 + idx * 70, 'sine', 0.04, 0.03);
+          }
+        }
+      });
     });
-  }
 
-  const actionBtns = document.querySelectorAll('.scouter-github-btn, .scouter-linkedin-btn, .scouter-contact-btn');
-  actionBtns.forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-      if (typeof playWebAudioTone === 'function') {
-        playWebAudioTone(740, 'sine', 0.04, 0.03);
-      }
-    });
-  });
+    let scrollTimer = null;
+    grid.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const scrollLeft = grid.scrollLeft;
+        const cardWidth = grid.querySelector('.scouter-bento-card')?.offsetWidth || 1;
+        const activeIdx = Math.min(dots.length - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === activeIdx);
+        });
+      }, 40);
+    }, { passive: true });
+  }
 }
