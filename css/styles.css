@@ -15907,12 +15907,16 @@ body.saiyan-mode .scouter-pulse-beacon {
 }
 
 /* Strategic Pitch Narrative */
+.scouter-lead-block {
+  margin-bottom: 1.4rem;
+}
+
 .scouter-pitch-text {
   font-family: var(--font-body, sans-serif);
-  font-size: 1.02rem;
-  line-height: 1.72;
-  color: #475569;
-  margin-bottom: 1.35rem;
+  font-size: 1.04rem;
+  line-height: 1.76;
+  color: #334155;
+  margin: 0;
   letter-spacing: -0.01em;
 }
 
@@ -15920,205 +15924,430 @@ body.saiyan-mode .scouter-pitch-text {
   color: #CBD5E1;
 }
 
-body.saiyan-mode .scouter-pitch-text .text-contrast {
-  color: #FFFFFF;
+.scouter-pitch-text .text-contrast {
+  color: #0F172A;
+  font-weight: 700;
 }
 
-/* 3 Minimal Pillars Grid */
-.scouter-mini-grid {
+body.saiyan-mode .scouter-pitch-text .text-contrast {
+  color: #F8FAFC;
+}
+
+/* =============================================================================
+   High-Impact Bento Metric Grid
+   ============================================================================= */
+.scouter-bento-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.35rem;
+  gap: 1.15rem;
+  margin-bottom: 1.45rem;
 }
 
-.scouter-mini-card {
+.scouter-bento-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.78);
   border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 16px;
-  padding: 1.4rem 1.35rem 1.25rem 1.35rem;
+  border-radius: 18px;
+  padding: 1.45rem 1.35rem 1.3rem 1.35rem;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.22s ease,
-              box-shadow 0.22s ease,
-              background-color 0.22s ease;
+  gap: 0.65rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04),
+              inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.24s ease,
+              box-shadow 0.24s ease,
+              background-color 0.24s ease;
   outline: none;
-  cursor: pointer;
+  cursor: default;
+  overflow: hidden;
 }
 
-body.saiyan-mode .scouter-mini-card {
-  background: rgba(18, 28, 25, 0.45);
-  border-color: rgba(255, 255, 255, 0.07);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+body.saiyan-mode .scouter-bento-card {
+  background: rgba(18, 28, 25, 0.55);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.scouter-mini-card:hover,
-.scouter-mini-card:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(255, 46, 151, 0.3);
+.scouter-bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 46, 151, 0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+body.saiyan-mode .scouter-bento-card::before {
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.6), transparent);
+}
+
+.scouter-bento-card:hover::before,
+.scouter-bento-card:focus-visible::before {
+  opacity: 1;
+}
+
+.scouter-bento-card:hover,
+.scouter-bento-card:focus-visible {
+  transform: translateY(-3px);
   background: #FFFFFF;
-  box-shadow: 0 10px 24px -4px rgba(255, 46, 151, 0.1);
+  border-color: rgba(255, 46, 151, 0.35);
+  box-shadow: 0 12px 28px -6px rgba(255, 46, 151, 0.12),
+              0 0 20px -4px rgba(255, 46, 151, 0.08);
 }
 
-body.saiyan-mode .scouter-mini-card:hover,
-body.saiyan-mode .scouter-mini-card:focus-visible {
-  border-color: rgba(245, 158, 11, 0.4);
-  background: rgba(24, 38, 33, 0.7);
-  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45), 0 0 16px -4px rgba(245, 158, 11, 0.15);
+body.saiyan-mode .scouter-bento-card:hover,
+body.saiyan-mode .scouter-bento-card:focus-visible {
+  background: rgba(24, 38, 33, 0.82);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.55),
+              0 0 20px -4px rgba(245, 158, 11, 0.18);
 }
 
-.mini-card-head {
+/* Bento Header: Icon badge & Kicker */
+.bento-card-header {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
-.mini-card-icon {
-  width: 20px;
-  height: 20px;
+.bento-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   flex-shrink: 0;
   transition: transform 0.22s ease;
 }
 
-.scouter-mini-card:hover .mini-card-icon {
-  transform: scale(1.12);
+.scouter-bento-card:hover .bento-icon-badge {
+  transform: scale(1.08);
 }
 
-.mini-card-icon.icon-shield {
-  color: #4F46E5;
+.bento-icon-badge svg {
+  width: 18px;
+  height: 18px;
 }
 
-body.saiyan-mode .mini-card-icon.icon-shield {
-  color: #A5B4FC;
-}
-
-.mini-card-icon.icon-brain {
+.badge-vision {
+  background: rgba(219, 39, 119, 0.1);
   color: #DB2777;
+  border: 1px solid rgba(219, 39, 119, 0.22);
 }
 
-body.saiyan-mode .mini-card-icon.icon-brain {
+body.saiyan-mode .badge-vision {
+  background: rgba(244, 114, 182, 0.14);
   color: #F472B6;
+  border-color: rgba(244, 114, 182, 0.3);
 }
 
-.mini-card-icon.icon-cpu {
+.badge-enterprise {
+  background: rgba(79, 70, 229, 0.1);
+  color: #4F46E5;
+  border: 1px solid rgba(79, 70, 229, 0.22);
+}
+
+body.saiyan-mode .badge-enterprise {
+  background: rgba(165, 180, 252, 0.14);
+  color: #A5B4FC;
+  border-color: rgba(165, 180, 252, 0.3);
+}
+
+.badge-systems {
+  background: rgba(2, 132, 199, 0.1);
   color: #0284C7;
+  border: 1px solid rgba(2, 132, 199, 0.22);
 }
 
-body.saiyan-mode .mini-card-icon.icon-cpu {
+body.saiyan-mode .badge-systems {
+  background: rgba(56, 189, 248, 0.14);
   color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.3);
 }
 
-.mini-card-title {
-  font-family: var(--font-heading, sans-serif);
-  font-size: 0.98rem;
+.bento-kicker {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.64rem;
   font-weight: 700;
-  color: var(--fg, #0F172A);
-  margin: 0;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-}
-
-body.saiyan-mode .mini-card-title {
-  color: #F8FAFC;
-}
-
-.mini-card-desc {
-  font-size: 0.88rem;
-  line-height: 1.62;
+  letter-spacing: 0.08em;
   color: #64748B;
-  margin: 0.35rem 0 0.8rem 0;
-  flex-grow: 1;
+  text-transform: uppercase;
 }
 
-body.saiyan-mode .mini-card-desc {
-  color: #CBD5E1;
-}
-
-.mini-card-stat {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.74rem;
-  font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 9999px;
-  background: rgba(255, 46, 151, 0.06);
-  color: #BE185D;
-  border: 1px solid rgba(255, 46, 151, 0.18);
-  width: fit-content;
-  margin-top: auto;
-  letter-spacing: 0.02em;
-}
-
-body.saiyan-mode .mini-card-stat {
-  background: rgba(245, 158, 11, 0.08);
-  color: #FBBF24;
-  border-color: rgba(245, 158, 11, 0.25);
-}
-
-/* Minimal Telemetry Metrics Ribbon */
-.scouter-telemetry-ribbon {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  padding-top: 0.95rem;
-  border-top: 1px solid rgba(15, 23, 42, 0.06);
-}
-
-body.saiyan-mode .scouter-telemetry-ribbon {
-  border-top-color: rgba(255, 255, 255, 0.07);
-}
-
-.telemetry-chip-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.73rem;
-  color: #64748B;
-}
-
-body.saiyan-mode .telemetry-chip-item {
+body.saiyan-mode .bento-kicker {
   color: #94A3B8;
 }
 
-.telemetry-chip-item strong {
-  color: #1E293B;
-  font-weight: 700;
+/* Bento Big Metric Highlight Block */
+.bento-metric-highlight {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.035);
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
-body.saiyan-mode .telemetry-chip-item strong {
+body.saiyan-mode .bento-metric-highlight {
+  background: rgba(0, 0, 0, 0.28);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.metric-number {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #0F172A;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.metric-number.metric-text-sm {
+  font-size: 1.48rem;
+  letter-spacing: -0.02em;
+}
+
+body.saiyan-mode .metric-number {
   color: #F8FAFC;
 }
 
-.telemetry-chip-item .chip-icon {
+.metric-unit {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #E11D48;
+}
+
+body.saiyan-mode .metric-unit {
+  color: #FBBF24;
+}
+
+.metric-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.metric-label {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+body.saiyan-mode .metric-label {
+  color: #E2E8F0;
+}
+
+.metric-sub {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: #64748B;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+body.saiyan-mode .metric-sub {
+  color: #94A3B8;
+}
+
+/* Bento Card Title & Description */
+.bento-card-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0.1rem 0 0 0;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+body.saiyan-mode .bento-card-title {
+  color: #F8FAFC;
+}
+
+.bento-card-desc {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: #475569;
+  margin: 0;
+  flex-grow: 1;
+}
+
+body.saiyan-mode .bento-card-desc {
+  color: #CBD5E1;
+}
+
+/* Bento Tech Tags Strip */
+.bento-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.45rem;
+}
+
+.tech-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.04);
+  color: #475569;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+
+body.saiyan-mode .tech-tag {
+  background: rgba(255, 255, 255, 0.04);
+  color: #94A3B8;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.scouter-bento-card:hover .tech-tag {
+  border-color: rgba(255, 46, 151, 0.25);
+  color: #BE185D;
+}
+
+body.saiyan-mode .scouter-bento-card:hover .tech-tag {
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #FBBF24;
+}
+
+/* =============================================================================
+   High-Impact Telemetry Metrics Ribbon (4 Prominent Bento Stat Tiles)
+   ============================================================================= */
+.scouter-metrics-bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+body.saiyan-mode .scouter-metrics-bento {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.metric-bento-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+body.saiyan-mode .metric-bento-tile {
+  background: rgba(10, 18, 15, 0.45);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.metric-bento-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 46, 151, 0.3);
+  background: #FFFFFF;
+}
+
+body.saiyan-mode .metric-bento-tile:hover {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(20, 32, 28, 0.65);
+}
+
+.tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(225, 29, 72, 0.08);
   color: #E11D48;
   flex-shrink: 0;
 }
 
-body.saiyan-mode .telemetry-chip-item .chip-icon {
+body.saiyan-mode .tile-icon {
+  background: rgba(245, 158, 11, 0.12);
   color: #FBBF24;
 }
 
+.tile-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.tile-stat {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+body.saiyan-mode .tile-stat {
+  color: #F8FAFC;
+}
+
+.tile-unit {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #BE185D;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+body.saiyan-mode .tile-unit {
+  color: #FBBF24;
+}
+
+.tile-label {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.72rem;
+  color: #64748B;
+  line-height: 1.3;
+  white-space: normal;
+}
+
+body.saiyan-mode .tile-label {
+  color: #94A3B8;
+}
+
 /* Responsive Media Queries */
-@media (max-width: 860px) {
-  .scouter-mini-grid {
+@media (max-width: 900px) {
+  .scouter-bento-grid {
     grid-template-columns: 1fr;
-    gap: 0.85rem;
+    gap: 1rem;
   }
-  .scouter-telemetry-ribbon {
-    display: grid;
+  .scouter-metrics-bento {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-  }
-  .saiyan-scouter-console {
-    padding: 1.5rem 1.4rem 1.3rem 1.4rem;
+    gap: 0.75rem;
   }
 }
 
@@ -16139,15 +16368,18 @@ body.saiyan-mode .telemetry-chip-item .chip-icon {
     justify-content: flex-start;
     gap: 0.65rem;
   }
-  .scouter-telemetry-ribbon {
-    grid-template-columns: 1fr;
-    gap: 0.45rem;
-  }
   .saiyan-scouter-console {
-    padding: 1.3rem 1.1rem 1.15rem 1.1rem;
+    padding: 1.35rem 1.15rem 1.2rem 1.15rem;
     border-radius: 18px;
   }
   .scouter-pitch-text {
-    font-size: 0.95rem;
+    font-size: 0.96rem;
+  }
+  .metric-number {
+    font-size: 1.6rem;
+  }
+  .scouter-metrics-bento {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
   }
 }
