@@ -883,29 +883,42 @@ body.saiyan-mode .dragon-radar-widget {
   }
 }
 
-/* Global Click Particle Animations */
+/* Global Click Particle & Ki Shockwave Animations */
 .global-click-particle {
   position: fixed;
   pointer-events: none;
-  z-index: 10000;
+  z-index: 99999999;
   border-radius: 50%;
-  animation: particle-pop-fade 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: particle-pop-fade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .click-shockwave-ring {
   position: fixed;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999999;
   border-radius: 50%;
+  width: 52px;
+  height: 52px;
   border: 2.5px solid var(--accent);
+  box-shadow: 0 0 16px currentColor, inset 0 0 8px currentColor;
   transform: translate(-50%, -50%) scale(0.2);
-  animation: ring-expand-fade 0.45s ease-out forwards;
+  animation: ring-expand-fade 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+body.saiyan-mode .click-shockwave-ring {
+  border-color: #FBBF24;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.85), inset 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
 @keyframes particle-pop-fade {
   0% {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
   }
   100% {
     transform: translate(calc(-50% + var(--dx, 20px)), calc(-50% + var(--dy, -20px))) scale(0);
@@ -916,11 +929,14 @@ body.saiyan-mode .dragon-radar-widget {
 @keyframes ring-expand-fade {
   0% {
     transform: translate(-50%, -50%) scale(0.2);
-    opacity: 0.9;
-    border-width: 3px;
+    opacity: 1;
+    border-width: 3.5px;
+  }
+  50% {
+    opacity: 0.85;
   }
   100% {
-    transform: translate(-50%, -50%) scale(2.8);
+    transform: translate(-50%, -50%) scale(2.6);
     opacity: 0;
     border-width: 1px;
   }

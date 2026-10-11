@@ -4628,36 +4628,86 @@ function initNimbusDrag() {
   nimbus.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
-/* --- Global Click Animation Engine (Shockwave Ripple Rings) --- */
+/* --- Global Click Animation Engine (Shockwave Ripple Rings & Ki Sparks) --- */
 function initGlobalClickAnimation() {
-  // On mobile/touch devices, skip continuous shockwave DOM creation to eliminate touch/scroll lag
-  if (window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches) return;
   let lastAnimTime = 0;
 
   function spawnClickAnimation(x, y) {
     const now = Date.now();
-    if (now - lastAnimTime < 80) return;
+    if (now - lastAnimTime < 50) return; // 50ms smooth throttle
     lastAnimTime = now;
 
     const isSaiyan = document.body.classList.contains('saiyan-mode');
+    const color = isSaiyan ? '#FBBF24' : '#BE185D';
+    const sparkColors = isSaiyan 
+      ? ['#FDE047', '#FBBF24', '#F59E0B', '#38BDF8', '#60A5FA'] 
+      : ['#FF2E97', '#BE185D', '#E11D48', '#C084FC', '#F472B6'];
 
-    // Spawning shockwave expanding ring
+    // 1. Spawning glowing Ki shockwave expanding ring
     const ring = document.createElement('div');
     ring.className = 'click-shockwave-ring';
     ring.style.left = `${x}px`;
     ring.style.top = `${y}px`;
-    ring.style.borderColor = isSaiyan ? '#FBBF24' : '#8B5CF6';
-    ring.style.width = isSaiyan ? '50px' : '40px';
-    ring.style.height = isSaiyan ? '50px' : '40px';
+    ring.style.borderColor = color;
+    ring.style.color = color;
     document.body.appendChild(ring);
+    setTimeout(() => ring.remove(), 480);
 
-    setTimeout(() => ring.remove(), 450);
+    // 2. Spawning radiating energetic Ki sparks
+    const particleCount = 5;
+    for (let i = 0; i < particleCount; i++) {
+      const p = document.createElement('div');
+      p.className = 'global-click-particle';
+      p.style.left = `${x}px`;
+      p.style.top = `${y}px`;
+      
+      const size = Math.floor(Math.random() * 3) + 4; // 4px to 6px
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+      p.style.background = sparkColors[i % sparkColors.length];
+      p.style.boxShadow = `0 0 8px ${p.style.background}`;
+
+      const angle = (Math.PI * 2 * i / particleCount) + (Math.random() * 0.4 - 0.2);
+      const dist = Math.floor(Math.random() * 18) + 24; // 24px to 42px
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+
+      p.style.setProperty('--dx', `${dx.toFixed(1)}px`);
+      p.style.setProperty('--dy', `${dy.toFixed(1)}px`);
+
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 520);
+    }
   }
 
-  document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal')) return;
-    spawnClickAnimation(e.clientX, e.clientY);
-  }, { passive: true });
+  function handleInteraction(e) {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('#shenronModal'))) return;
+
+    let x = e.clientX;
+    let y = e.clientY;
+
+    // Handle keyboard clicks (Enter / Space on buttons) where coordinates are 0,0
+    if ((x === 0 && y === 0) || x === undefined) {
+      if (e.target && typeof e.target.getBoundingClientRect === 'function') {
+        const rect = e.target.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.top + rect.height / 2;
+      }
+    }
+
+    if (x !== undefined && y !== undefined && (x > 0 || y > 0)) {
+      spawnClickAnimation(x, y);
+    }
+  }
+
+  // Use capture phase so stopPropagation() on buttons/cards never blocks the click animation!
+  window.addEventListener('pointerdown', handleInteraction, { capture: true, passive: true });
+  window.addEventListener('click', (e) => {
+    // Fallback for keyboard activation where pointerdown doesn't fire
+    if (e.pointerType === '' || e.clientX === 0) {
+      handleInteraction(e);
+    }
+  }, { capture: true, passive: true });
 }
 
 /* ==========================================================================
