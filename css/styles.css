@@ -950,19 +950,23 @@ body.saiyan-mode .sticker-card.card-mint:hover {
 
 @media (min-width: 1025px) {
   .navbar {
-    display: grid;
-    grid-template-columns: minmax(180px, 1fr) auto minmax(280px, 1fr);
+    display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
   }
   .brand-logo {
-    justify-self: start;
+    flex-shrink: 0;
   }
   .nav-center-island {
-    justify-self: center;
-    margin: 0 !important;
+    margin: 0 auto !important;
+    flex-shrink: 0;
   }
   .nav-actions {
-    justify-self: end;
+    flex-shrink: 0 !important;
+    min-width: max-content !important;
+    margin-left: auto;
   }
 }
 
@@ -1053,6 +1057,8 @@ body.saiyan-mode .brand-logo:hover .brand-badge-box.brand-db-orb {
   text-transform: uppercase;
   line-height: 1;
   margin-top: 2px;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
   transition: color 0.2s ease;
 }
 
@@ -1097,55 +1103,6 @@ body.saiyan-mode .brand-logo:hover .brand-sub {
   transition: all 0.3s ease;
 }
 
-@media (max-width: 1320px) and (min-width: 1025px) {
-  .nav-center-island {
-    padding: 0.22rem 0.32rem !important;
-  }
-  .nav-menu {
-    gap: 0.12rem !important;
-  }
-  .nav-link {
-    padding: 0.28rem 0.5rem !important;
-    font-size: 0.77rem !important;
-    gap: 0.26rem !important;
-  }
-  .nav-link i:not(.mobile-nav-arrow),
-  .nav-link .nav-link-icon,
-  .nav-link svg:not(.mobile-nav-arrow),
-  .nav-link .lucide:not(.mobile-nav-arrow) {
-    width: 13.5px !important;
-    height: 13.5px !important;
-    min-width: 13.5px !important;
-    min-height: 13.5px !important;
-  }
-  .nav-ctrl-btn {
-    padding: 0.35rem 0.65rem !important;
-    font-size: 0.76rem !important;
-  }
-  .nav-btn-connect {
-    padding: 0.35rem 0.75rem !important;
-    font-size: 0.76rem !important;
-  }
-}
-
-@media (max-width: 1160px) and (min-width: 1025px) {
-  /* On compact landscape / laptop screens, hide icons so text has generous breathing room and never overlaps */
-  .nav-link i:not(.mobile-nav-arrow),
-  .nav-link .nav-link-icon,
-  .nav-link svg:not(.mobile-nav-arrow),
-  .nav-link .lucide:not(.mobile-nav-arrow) {
-    display: none !important;
-  }
-  .nav-link {
-    padding: 0.28rem 0.46rem !important;
-    font-size: 0.76rem !important;
-    gap: 0 !important;
-  }
-  .nav-menu {
-    gap: 0.1rem !important;
-  }
-}
-
 body.saiyan-mode .nav-center-island {
   background: rgba(9, 18, 14, 0.78) !important;
   border: 1.5px solid rgba(245, 158, 11, 0.6) !important;
@@ -1180,9 +1137,19 @@ body.saiyan-mode .nav-center-island {
   margin: 0;
   transition: color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   text-decoration: none;
-  white-space: nowrap;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
   box-sizing: border-box;
   flex-shrink: 0;
+}
+
+.nav-link span {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  display: inline-block;
+  line-height: 1;
 }
 
 .nav-link i:not(.mobile-nav-arrow),
@@ -1326,13 +1293,76 @@ body.saiyan-mode .nav-link.active .lucide:not(.mobile-nav-arrow) {
   transform: none !important;
 }
 
+@media (max-width: 1320px) and (min-width: 1025px) {
+  .nav-center-island {
+    padding: 0.22rem 0.32rem !important;
+  }
+  .nav-menu {
+    gap: 0.12rem !important;
+  }
+  .nav-link {
+    padding: 0.28rem 0.48rem !important;
+    font-size: 0.77rem !important;
+    gap: 0.24rem !important;
+    white-space: nowrap !important;
+  }
+  .nav-link i:not(.mobile-nav-arrow),
+  .nav-link .nav-link-icon,
+  .nav-link svg:not(.mobile-nav-arrow),
+  .nav-link .lucide:not(.mobile-nav-arrow) {
+    width: 13px !important;
+    height: 13px !important;
+    min-width: 13px !important;
+    min-height: 13px !important;
+  }
+  .nav-ctrl-btn {
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.76rem !important;
+    white-space: nowrap !important;
+  }
+  .nav-btn-connect {
+    padding: 0 0.82rem !important;
+    font-size: 0.76rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 1220px) and (min-width: 1025px) {
+  /* On compact landscape / laptop screens, hide icons so text has generous breathing room and never overlaps */
+  .nav-link i:not(.mobile-nav-arrow),
+  .nav-link .nav-link-icon,
+  .nav-link svg:not(.mobile-nav-arrow),
+  .nav-link .lucide:not(.mobile-nav-arrow) {
+    display: none !important;
+  }
+  .nav-link {
+    padding: 0.28rem 0.44rem !important;
+    font-size: 0.76rem !important;
+    gap: 0 !important;
+    white-space: nowrap !important;
+  }
+  .nav-menu {
+    gap: 0.1rem !important;
+  }
+  .theme-slider-toggle {
+    width: 134px !important;
+    min-width: 134px !important;
+  }
+  .theme-slider-btn {
+    font-size: 0.78rem !important;
+    padding: 0 0.35rem !important;
+  }
+}
+
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 0.55rem;
   margin: 0;
   padding: 0;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
+  min-width: max-content !important;
 }
 
 .nav-ctrl-btn {
@@ -1384,7 +1414,9 @@ body.saiyan-mode .nav-link.active .lucide:not(.mobile-nav-arrow) {
               border-color 0.2s ease,
               color 0.2s ease,
               box-shadow 0.2s ease;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  min-width: max-content;
   margin: 0;
   outline: none;
   user-select: none;
@@ -1600,6 +1632,7 @@ body.saiyan-mode .sfx-toggle-btn.sfx-just-toggled::after {
   align-items: center;
   height: 38px;
   width: 142px;
+  min-width: 142px;
   border-radius: var(--radius-full);
   background: rgba(241, 245, 249, 0.95);
   border: 2px solid var(--border);
@@ -1610,6 +1643,7 @@ body.saiyan-mode .sfx-toggle-btn.sfx-just-toggled::after {
   touch-action: pan-y;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
+  flex-shrink: 0 !important;
 }
 
 .theme-slider-toggle:hover {
@@ -1679,11 +1713,22 @@ body.saiyan-mode .theme-slider-bg-glider,
   font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  white-space: nowrap;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
   cursor: pointer;
   padding: 0 0.5rem;
   color: var(--muted-fg);
   transition: color 0.25s ease, transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.slider-btn-text {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  display: inline-block;
+  line-height: 1;
 }
 
 /* Light / Rosé Mode active label */
@@ -1740,6 +1785,12 @@ body.saiyan-mode .nav-btn-saiyan {
   font-size: 0.8rem !important;
   font-weight: 800 !important;
   line-height: 1 !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  flex-shrink: 0 !important;
+  min-width: max-content !important;
   border-radius: var(--radius-full) !important;
   border: 2px solid var(--border) !important;
   box-shadow: 2px 2px 0px var(--border) !important;
@@ -1751,8 +1802,19 @@ body.saiyan-mode .nav-btn-saiyan {
   transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
 }
 
+.nav-btn-connect span {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
 .nav-btn-connect i,
 .nav-btn-connect svg {
+  flex-shrink: 0 !important;
+  width: 13px !important;
+  height: 13px !important;
   transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -12835,6 +12897,15 @@ section, .container, .hero-section, .stats-section, .ticker-container {
   white-space: normal;
   text-align: center;
   line-height: 1.3;
+}
+
+/* Guard: Navigation actions & Connect button must never wrap */
+.site-header .btn,
+.nav-btn-connect,
+.nav-btn-connect span {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
 }
 
 .btn-sm {
