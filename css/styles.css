@@ -16410,12 +16410,13 @@ body.saiyan-mode .tile-label {
   color: #94A3B8;
 }
 
-/* Bento Carousel Wrapper & Dots (Desktop default) */
+/* Bento Carousel Wrapper & Nav Controls (Desktop default) */
 .scouter-bento-carousel-wrap {
   position: relative;
   width: 100%;
 }
 
+.scouter-carousel-nav,
 .scouter-carousel-dots {
   display: none; /* Hidden on desktop */
 }
@@ -16441,6 +16442,8 @@ body.saiyan-mode .tile-label {
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-y pinch-zoom;
+    overscroll-behavior-x: contain;
     gap: 0.95rem;
     margin-bottom: 0.4rem;
     padding-bottom: 0.4rem;
@@ -16449,7 +16452,17 @@ body.saiyan-mode .tile-label {
     padding-right: 2px;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    cursor: grab;
   }
+
+  .scouter-bento-grid.is-dragging {
+    cursor: grabbing !important;
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
   .scouter-bento-grid::-webkit-scrollbar {
     display: none;
   }
@@ -16462,6 +16475,13 @@ body.saiyan-mode .tile-label {
     padding: 1.25rem 1.2rem 1.15rem 1.2rem;
     border-radius: 16px;
     gap: 0.55rem;
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.22s ease,
+                box-shadow 0.22s ease,
+                background-color 0.22s ease;
   }
 
   /* Un-clipped, clean, fully readable description on mobile */
@@ -16471,6 +16491,61 @@ body.saiyan-mode .tile-label {
     overflow: visible !important;
     font-size: 0.86rem;
     line-height: 1.58;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Carousel Navigation Bar (Arrows + Dots) */
+  .scouter-carousel-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.45rem 0 0.95rem 0;
+  }
+
+  .scouter-carousel-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.06);
+    border: 1.5px solid rgba(15, 23, 42, 0.15);
+    color: var(--fg);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0;
+    touch-action: manipulation;
+  }
+
+  .scouter-carousel-arrow:hover:not(:disabled) {
+    background: rgba(190, 24, 93, 0.14);
+    border-color: #BE185D;
+    color: #BE185D;
+    transform: scale(1.08);
+  }
+
+  body.saiyan-mode .scouter-carousel-arrow {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(245, 158, 11, 0.35);
+    color: #FEF08A;
+  }
+
+  body.saiyan-mode .scouter-carousel-arrow:hover:not(:disabled) {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: #FBBF24;
+    color: #FBBF24;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    transform: scale(1.08);
+  }
+
+  .scouter-carousel-arrow:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none !important;
   }
 
   /* Carousel Indicators */
@@ -16479,7 +16554,7 @@ body.saiyan-mode .tile-label {
     justify-content: center;
     align-items: center;
     gap: 0.45rem;
-    margin: 0.35rem 0 0.9rem 0;
+    margin: 0;
   }
 
   .carousel-dot {

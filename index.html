@@ -434,11 +434,19 @@
               </div>
             </div>
 
-            <!-- Mobile Snap Carousel Indicator Dots -->
-            <div class="scouter-carousel-dots" aria-label="Carousel navigation">
-              <button type="button" class="carousel-dot active" data-slide="0" aria-label="Slide 1: Machine Cognition"></button>
-              <button type="button" class="carousel-dot" data-slide="1" aria-label="Slide 2: Enterprise Architecture"></button>
-              <button type="button" class="carousel-dot" data-slide="2" aria-label="Slide 3: Distributed Systems"></button>
+            <!-- Mobile Snap Carousel Navigation Controls -->
+            <div class="scouter-carousel-nav" aria-label="Capsule Corp Dossier Carousel Navigation">
+              <button type="button" class="scouter-carousel-arrow scouter-carousel-prev" id="scouterCarouselPrev" aria-label="Previous capability card" title="Previous card">
+                <i data-lucide="chevron-left" style="width: 14px; height: 14px;"></i>
+              </button>
+              <div class="scouter-carousel-dots" role="tablist" aria-label="Card pagination">
+                <button type="button" class="carousel-dot active" data-slide="0" role="tab" aria-label="Slide 1: Machine Cognition" aria-selected="true"></button>
+                <button type="button" class="carousel-dot" data-slide="1" role="tab" aria-label="Slide 2: Enterprise Architecture" aria-selected="false"></button>
+                <button type="button" class="carousel-dot" data-slide="2" role="tab" aria-label="Slide 3: Distributed Systems" aria-selected="false"></button>
+              </div>
+              <button type="button" class="scouter-carousel-arrow scouter-carousel-next" id="scouterCarouselNext" aria-label="Next capability card" title="Next card">
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+              </button>
             </div>
           </div>
 

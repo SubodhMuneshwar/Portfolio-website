@@ -6417,7 +6417,7 @@ function initPhotoRevealLens() {
   });
 }
 
-/* --- Capsule Corp Saiyan Scouter Summary Console Interactivity --- */
+/* --- Capsule Corp Saiyan Scouter Summary Console Interactivity & Touch/Drag Swipe Engine --- */
 function initScouterSummaryConsole() {
   const cards = document.querySelectorAll('.scouter-bento-card');
   cards.forEach((card, idx) => {
@@ -6430,34 +6430,217 @@ function initScouterSummaryConsole() {
     });
   });
 
-  // Mobile Snap Carousel Dots synchronization
   const grid = document.getElementById('scouterBentoGrid');
   const dots = document.querySelectorAll('.scouter-carousel-dots .carousel-dot');
-  if (grid && dots.length) {
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        const idx = parseInt(dot.getAttribute('data-slide'), 10);
-        const cardList = grid.querySelectorAll('.scouter-bento-card');
-        if (cardList[idx]) {
-          cardList[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-          if (typeof playWebAudioTone === 'function') {
-            playWebAudioTone(520 + idx * 70, 'sine', 0.04, 0.03);
-          }
-        }
-      });
+  const prevBtn = document.getElementById('scouterCarouselPrev');
+  const nextBtn = document.getElementById('scouterCarouselNext');
+
+  if (!grid) return;
+
+  const cardList = Array.from(grid.querySelectorAll('.scouter-bento-card'));
+  if (!cardList.length) return;
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    try { window.lucide.createIcons(); } catch (_) {}
+  }
+
+  let activeIdx = 0;
+  let isPointerDown = false;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let startScrollLeft = 0;
+  let startTime = 0;
+  let hasMoved = false;
+
+  function getStep() {
+    if (cardList.length > 1) {
+      const step = cardList[1].offsetLeft - cardList[0].offsetLeft;
+      if (step > 0) return step;
+    }
+    return (cardList[0].offsetWidth || 280) + 15;
+  }
+
+  function getTargetScroll(idx) {
+    const card = cardList[idx];
+    if (!card) return 0;
+    // Align cleanly with left padding/snap point
+    return card.offsetLeft - grid.offsetLeft - 2;
+  }
+
+  function goToSlide(idx, playSound = true) {
+    const clampedIdx = Math.max(0, Math.min(cardList.length - 1, idx));
+    activeIdx = clampedIdx;
+    const targetLeft = getTargetScroll(clampedIdx);
+
+    grid.style.scrollBehavior = 'smooth';
+    grid.scrollTo({
+      left: Math.max(0, targetLeft),
+      behavior: 'smooth'
     });
 
-    let scrollTimer = null;
-    grid.addEventListener('scroll', () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const scrollLeft = grid.scrollLeft;
-        const cardWidth = grid.querySelector('.scouter-bento-card')?.offsetWidth || 1;
-        const activeIdx = Math.min(dots.length - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
-        dots.forEach((d, i) => {
-          d.classList.toggle('active', i === activeIdx);
-        });
-      }, 40);
-    }, { passive: true });
+    updateUI();
+
+    if (playSound && typeof playWebAudioTone === 'function') {
+      playWebAudioTone(520 + clampedIdx * 70, 'sine', 0.04, 0.03);
+    }
   }
+
+  function updateUI() {
+    dots.forEach((d, i) => {
+      const isActive = i === activeIdx;
+      d.classList.toggle('active', isActive);
+      d.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    if (prevBtn) prevBtn.disabled = activeIdx === 0;
+    if (nextBtn) nextBtn.disabled = activeIdx === cardList.length - 1;
+  }
+
+  // Dots click handler
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      const idx = parseInt(dot.getAttribute('data-slide'), 10);
+      if (!isNaN(idx)) goToSlide(idx);
+    });
+  });
+
+  // Prev / Next Arrows click handlers
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      goToSlide(activeIdx - 1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      goToSlide(activeIdx + 1);
+    });
+  }
+
+  // Clicking an inactive / peeking card slides it to center
+  cardList.forEach((card, idx) => {
+    card.addEventListener('click', (e) => {
+      if (hasMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (window.innerWidth <= 860 && idx !== activeIdx) {
+        goToSlide(idx);
+      }
+    });
+  });
+
+  // Scroll synchronization to keep dots and arrows updated
+  let scrollDebounce = null;
+  grid.addEventListener('scroll', () => {
+    if (isDragging) return;
+    clearTimeout(scrollDebounce);
+    scrollDebounce = setTimeout(() => {
+      const scrollLeft = grid.scrollLeft;
+      const step = getStep() || 1;
+      const currentIdx = Math.max(0, Math.min(cardList.length - 1, Math.round(scrollLeft / step)));
+      if (currentIdx !== activeIdx) {
+        activeIdx = currentIdx;
+        updateUI();
+      }
+    }, 40);
+  }, { passive: true });
+
+  // Pointer Drag & Swipe Engine (Mobile touch, Desktop mouse drag, DevTools responsive emulation)
+  grid.addEventListener('pointerdown', (e) => {
+    if (window.innerWidth > 860) return; // Only active in carousel mode
+    if (e.target.closest('a, button, input')) return;
+
+    isPointerDown = true;
+    isDragging = false;
+    hasMoved = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    startScrollLeft = grid.scrollLeft;
+    startTime = Date.now();
+
+    try {
+      grid.setPointerCapture(e.pointerId);
+    } catch (_) {}
+  });
+
+  grid.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+
+    const diffX = e.clientX - startX;
+    const diffY = e.clientY - startY;
+
+    if (!isDragging) {
+      if (Math.abs(diffX) > 6 && Math.abs(diffX) > Math.abs(diffY)) {
+        isDragging = true;
+        hasMoved = true;
+        grid.classList.add('is-dragging');
+        grid.style.scrollSnapType = 'none';
+        grid.style.scrollBehavior = 'auto';
+      } else if (Math.abs(diffY) > 10) {
+        // User is scrolling vertically, release horizontal drag
+        isPointerDown = false;
+        return;
+      }
+    }
+
+    if (isDragging) {
+      grid.scrollLeft = startScrollLeft - diffX;
+    }
+  });
+
+  function handlePointerEnd(e) {
+    if (!isPointerDown && !isDragging) return;
+
+    const diffX = e.clientX - startX;
+    const dt = Math.max(1, Date.now() - startTime);
+    const velocity = diffX / dt;
+
+    isPointerDown = false;
+
+    if (isDragging) {
+      isDragging = false;
+      grid.classList.remove('is-dragging');
+      grid.style.scrollSnapType = '';
+      grid.style.scrollBehavior = '';
+
+      // Determine target slide by swipe distance and velocity
+      let targetIdx = activeIdx;
+      if (diffX < -35 || velocity < -0.3) {
+        targetIdx = activeIdx + 1;
+      } else if (diffX > 35 || velocity > 0.3) {
+        targetIdx = activeIdx - 1;
+      } else {
+        const step = getStep() || 1;
+        targetIdx = Math.round(grid.scrollLeft / step);
+      }
+
+      goToSlide(targetIdx);
+
+      // Prevent accidental clicks after dragging
+      setTimeout(() => {
+        hasMoved = false;
+      }, 60);
+    } else {
+      hasMoved = false;
+    }
+
+    try {
+      if (grid.hasPointerCapture && grid.hasPointerCapture(e.pointerId)) {
+        grid.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
+  }
+
+  grid.addEventListener('pointerup', handlePointerEnd);
+  grid.addEventListener('pointercancel', handlePointerEnd);
+
+  // Initialize UI button states
+  updateUI();
 }
+
