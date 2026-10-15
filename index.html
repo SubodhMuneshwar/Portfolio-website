@@ -138,6 +138,12 @@
           <!-- Hidden fallback hook for any external scripts -->
           <button type="button" id="saiyanModeBtn" style="display:none;" aria-hidden="true"></button>
 
+          <!-- Command Palette Trigger Button (Ctrl + K / ⌘K) -->
+          <button type="button" class="nav-cmd-btn" id="navCmdBtn" onclick="openCommandPalette()" aria-label="Open Command Palette (Ctrl+K)" title="Command Palette (Ctrl + K or ⌘K)">
+            <i data-lucide="command" class="cmd-nav-icon" style="width: 14px; height: 14px;"></i>
+            <span class="cmd-kbd-badge">⌘K</span>
+          </button>
+
           <!-- Connect Call-To-Action Button -->
           <a href="#contact" class="btn btn-primary btn-sm nav-btn-connect" title="Get in touch with Subodh">
             <span>Connect</span>
@@ -197,6 +203,10 @@
                 <i data-lucide="download" style="width: 15px; height: 15px;"></i>
                 <span>Resume</span>
               </a>
+              <button type="button" class="btn btn-secondary copy-email-btn" onclick="copyContactEmail()" title="Click to copy email address">
+                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                <span>Copy Email</span>
+              </button>
               <a href="https://github.com/SubodhMuneshwar" target="_blank" rel="noopener noreferrer" class="btn btn-outline" title="GitHub Profile">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -349,8 +359,21 @@
             </p>
           </div>
 
+          <!-- Dossier View Switcher: Architectural Pillars vs Live API Playground -->
+          <div class="dossier-view-toggle-bar">
+            <button type="button" class="dossier-tab-btn active" id="dossierTabPillars" onclick="switchDossierView('pillars')">
+              <i data-lucide="layout-grid" style="width: 14px; height: 14px;"></i>
+              <span>Architectural Pillars</span>
+            </button>
+            <button type="button" class="dossier-tab-btn" id="dossierTabApi" onclick="switchDossierView('api')">
+              <i data-lucide="terminal" style="width: 14px; height: 14px;"></i>
+              <span>Live REST API Shell</span>
+              <span class="dossier-tab-badge">LIVE</span>
+            </button>
+          </div>
+
           <!-- High-Impact Bento Pillars Grid / Mobile Snap Carousel -->
-          <div class="scouter-bento-carousel-wrap">
+          <div class="scouter-bento-carousel-wrap" id="scouterPillarsWrap">
             <div class="scouter-bento-grid" id="scouterBentoGrid" role="region" aria-label="Core Engineering Pillars Carousel">
               <!-- Bento Card 1: Machine Cognition & Vision -->
               <div class="scouter-bento-card" tabindex="0" data-card-idx="0">
@@ -448,6 +471,28 @@
                 <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
               </button>
             </div>
+          </div>
+
+          <!-- Live REST API Interactive Shell (Simulated Capsule Corp Gateway) -->
+          <div class="scouter-api-console" id="scouterApiConsole" style="display: none;">
+            <div class="api-console-top-bar">
+              <div class="api-console-endpoints">
+                <button type="button" class="api-endpoint-btn active" onclick="runScouterApi('profile', this)">GET /api/v1/profile</button>
+                <button type="button" class="api-endpoint-btn" onclick="runScouterApi('stats', this)">GET /api/v1/telemetry/stats</button>
+                <button type="button" class="api-endpoint-btn" onclick="runScouterApi('vision', this)">POST /api/v1/infer/retina-vision</button>
+                <button type="button" class="api-endpoint-btn" onclick="runScouterApi('rbac', this)">GET /api/v1/infra/rbac</button>
+              </div>
+              <button type="button" class="api-copy-btn" id="apiCopyBtn" onclick="copyApiResponse()" title="Copy JSON payload">
+                <i data-lucide="copy" style="width: 13px; height: 13px;"></i>
+                <span>Copy JSON</span>
+              </button>
+            </div>
+            <div class="api-console-meta">
+              <span class="api-status-badge status-200">HTTP 200 OK</span>
+              <span class="api-meta-latency" id="apiLatency">Latency: 14ms</span>
+              <span class="api-meta-type">application/json</span>
+            </div>
+            <pre class="api-console-output" id="apiConsoleOutput"><code><!-- Injected via JavaScript --></code></pre>
           </div>
 
           <!-- High-Impact Telemetry Metrics Ribbon (4 Bento Stat Tiles) -->
@@ -1358,6 +1403,41 @@
         </div>
         <p class="ach-photo-modal-caption" id="achPhotoModalCaption"></p>
         <span class="ach-modal-counter" id="achModalCounter">1 / 1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Cybernetic Command Palette Modal (Ctrl + K / ⌘K)
+       ========================================================================= -->
+  <div class="cmd-palette-backdrop" id="cmdPaletteModal" onclick="if(event.target===this) closeCommandPalette()" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Command Palette">
+    <div class="cmd-palette-box">
+      <!-- Search Input Header -->
+      <div class="cmd-search-header">
+        <i data-lucide="search" class="cmd-search-icon" style="width: 18px; height: 18px;"></i>
+        <input type="text" id="cmdPaletteInput" class="cmd-search-input" placeholder="Type a command or jump to section..." autocomplete="off" spellcheck="false" />
+        <span class="cmd-esc-badge" onclick="closeCommandPalette()">ESC</span>
+      </div>
+
+      <!-- Quick Action Commands List -->
+      <div class="cmd-results-list" id="cmdResultsList" role="listbox">
+        <!-- Populated via JavaScript with dynamic search filtering -->
+      </div>
+
+      <!-- Command Palette Footer Navigation Hints -->
+      <div class="cmd-palette-footer">
+        <div class="cmd-footer-hint">
+          <span class="cmd-kbd">↑</span><span class="cmd-kbd">↓</span><span>Navigate</span>
+        </div>
+        <div class="cmd-footer-hint">
+          <span class="cmd-kbd">↵</span><span>Select</span>
+        </div>
+        <div class="cmd-footer-hint">
+          <span class="cmd-kbd">ESC</span><span>Close</span>
+        </div>
+        <div class="cmd-footer-brand">
+          <span>CAPSULE CORP OS</span>
+        </div>
       </div>
     </div>
   </div>
