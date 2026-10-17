@@ -6913,48 +6913,49 @@ body.saiyan-mode .toast-notice * {
     display: none !important;
   }
 
-  /* Hide bulky desktop-only elements on mobile navbar */
+  /* Compact, Intuitive Rosé ⟷ Saiyan Theme Slider on mobile navbar */
   .nav-actions .theme-slider-toggle,
-  .theme-slider-toggle,
-  .nav-actions .nav-btn-connect,
-  .nav-btn-connect {
-    display: none !important;
-  }
-
-  /* Mobile Quick Theme Switcher Button */
-  .mobile-theme-btn {
+  .theme-slider-toggle {
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #FFFFFF;
-    border: 1.5px solid var(--border);
-    box-shadow: 2px 2px 0px var(--border);
-    color: var(--accent);
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    flex-shrink: 0;
+    height: 32px !important;
+    width: 108px !important;
+    min-width: 108px !important;
+    border-radius: 9999px !important;
+    border: 1.5px solid var(--border) !important;
+    box-shadow: 1.5px 1.5px 0px var(--border) !important;
   }
 
-  .mobile-theme-btn:hover,
-  .mobile-theme-btn:active {
-    transform: scale(1.06);
-    background: #FFF0F5;
+  body.saiyan-mode .nav-actions .theme-slider-toggle,
+  body.saiyan-mode .theme-slider-toggle {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3), 1.5px 1.5px 0px #000000 !important;
   }
 
-  body.saiyan-mode .mobile-theme-btn {
-    background: rgba(14, 28, 22, 0.95);
-    border-color: #F59E0B;
-    color: #FEF08A;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+  .theme-slider-track {
+    padding: 2px !important;
   }
 
-  body.saiyan-mode .mobile-theme-btn:hover,
-  body.saiyan-mode .mobile-theme-btn:active {
-    background: #FBBF24;
-    color: #0A1410;
+  .theme-slider-bg-glider {
+    top: 2px !important;
+    left: 2px !important;
+    width: calc(50% - 2px) !important;
+    height: calc(100% - 4px) !important;
+    border-radius: 9999px !important;
+    border-width: 1px !important;
+  }
+
+  .theme-slider-btn {
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    padding: 0 0.35rem !important;
+    letter-spacing: 0.01em !important;
+  }
+
+  /* Hide bulky connect button & desktop sfx from top bar on mobile (handled inside drawer) */
+  .nav-actions .nav-btn-connect,
+  .nav-btn-connect,
+  .nav-actions .sfx-toggle-btn,
+  .mobile-theme-btn {
+    display: none !important;
   }
 
   /* Mobile Command Palette Button: compact 38px circle */
@@ -7204,66 +7205,97 @@ body.saiyan-mode .toast-notice * {
     background: rgba(245, 158, 11, 0.18);
   }
 
-  .drawer-header-status {
-    display: flex;
+  /* Header SFX Chip */
+  .drawer-sfx-chip {
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--muted-fg);
-    font-weight: 600;
-  }
-
-  .drawer-beacon {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #10B981;
-    box-shadow: 0 0 8px #10B981;
-  }
-
-  .drawer-actions-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-  }
-
-  .drawer-pill-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0.55rem 0.75rem;
-    border-radius: 10px;
-    font-family: var(--font-heading);
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    background: rgba(15, 23, 42, 0.04);
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.05);
     border: 1.5px solid rgba(15, 23, 42, 0.12);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
     color: var(--fg);
+    cursor: pointer;
     transition: all 0.2s ease;
   }
 
-  .drawer-pill-toggle:hover,
-  .drawer-pill-toggle:active {
+  .drawer-sfx-chip:hover,
+  .drawer-sfx-chip:active {
     background: rgba(225, 29, 72, 0.12);
     border-color: var(--accent);
     color: var(--accent);
-    transform: translateY(-1px);
   }
 
-  body.saiyan-mode .drawer-pill-toggle {
-    background: rgba(255, 255, 255, 0.06);
+  body.saiyan-mode .drawer-sfx-chip {
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(245, 158, 11, 0.3);
-    color: #FFFFFF;
+    color: #FEF08A;
   }
 
-  body.saiyan-mode .drawer-pill-toggle:hover,
-  body.saiyan-mode .drawer-pill-toggle:active {
-    background: rgba(245, 158, 11, 0.2);
-    border-color: #FBBF24;
-    color: #FEF08A;
+  /* Simplified & Crystal-Clear Mobile Theme Segmented Control */
+  .drawer-theme-segmented {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.04);
+    padding: 4px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    border: 1.5px solid rgba(15, 23, 42, 0.1);
+  }
+
+  body.saiyan-mode .drawer-theme-segmented {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+
+  .drawer-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 42px;
+    border-radius: 9px;
+    border: 1.5px solid transparent;
+    background: transparent;
+    font-family: var(--font-heading);
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--muted-fg);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .drawer-theme-btn.active.opt-rose {
+    background: linear-gradient(135deg, #FF2E97 0%, #E0116B 100%);
+    color: #FFFFFF !important;
+    font-weight: 800;
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 3px 12px rgba(225, 29, 72, 0.38);
+  }
+
+  .drawer-theme-btn.active.opt-saiyan {
+    background: linear-gradient(135deg, #FDE047 0%, #F59E0B 100%);
+    color: #0A1410 !important;
+    font-weight: 900;
+    border-color: #FEF08A;
+    box-shadow: 0 3px 14px rgba(245, 158, 11, 0.45);
+  }
+
+  .drawer-theme-btn:not(.active):hover,
+  .drawer-theme-btn:not(.active):active {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--fg);
+  }
+
+  body.saiyan-mode .drawer-theme-btn:not(.active):hover,
+  body.saiyan-mode .drawer-theme-btn:not(.active):active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
   }
 
   /* High-Contrast Modern Mobile Nav Link Cards */

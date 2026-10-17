@@ -116,20 +116,20 @@
             <li class="mobile-drawer-only mobile-drawer-header">
               <div class="drawer-header-brand">
                 <span class="drawer-header-pill">CAPSULE CORP OS · LEVEL 9</span>
-                <span class="drawer-header-status">
-                  <span class="drawer-beacon" aria-hidden="true"></span>
-                  <span>MUMBAI, IN</span>
-                </span>
-              </div>
-              <div class="drawer-actions-row">
-                <button type="button" class="drawer-pill-toggle" onclick="toggleThemeQuick()" aria-label="Toggle Theme">
-                  <i data-lucide="sparkles" class="theme-icon-rose" style="width: 14px; height: 14px;"></i>
-                  <i data-lucide="zap" class="theme-icon-saiyan" style="width: 14px; height: 14px; display: none;"></i>
-                  <span id="drawerThemeText">Switch Theme</span>
+                <button type="button" class="drawer-sfx-chip" onclick="window.toggleSoundEffects()" aria-label="Toggle Sound Effects" title="Toggle Sound Effects">
+                  <i data-lucide="volume-2" class="sfx-drawer-icon" style="width: 13px; height: 13px;"></i>
+                  <span id="drawerSfxText">SFX: ON</span>
                 </button>
-                <button type="button" class="drawer-pill-toggle" onclick="window.toggleSoundEffects()" aria-label="Toggle Sound Effects">
-                  <i data-lucide="volume-2" class="sfx-drawer-icon" style="width: 14px; height: 14px;"></i>
-                  <span id="drawerSfxText">Audio: ON</span>
+              </div>
+              <!-- Simplified & Intuitive Dual Theme Segmented Control -->
+              <div class="drawer-theme-segmented" role="radiogroup" aria-label="Theme Mode Selection">
+                <button type="button" class="drawer-theme-btn opt-rose active" id="drawerOptRose" onclick="setSaiyanState(false)">
+                  <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i>
+                  <span>Rosé Mode</span>
+                </button>
+                <button type="button" class="drawer-theme-btn opt-saiyan" id="drawerOptSaiyan" onclick="setSaiyanState(true)">
+                  <i data-lucide="zap" style="width: 15px; height: 15px;"></i>
+                  <span>Super Saiyan</span>
                 </button>
               </div>
             </li>

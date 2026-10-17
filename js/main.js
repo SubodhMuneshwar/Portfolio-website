@@ -3015,16 +3015,11 @@ function initSaiyanMode() {
     if (optSaiyan) optSaiyan.classList.toggle('active', isSaiyan);
     if (saiyanBtn) saiyanBtn.setAttribute('aria-pressed', isSaiyan ? 'true' : 'false');
 
-    const drawerThemeText = document.getElementById('drawerThemeText');
-    if (drawerThemeText) {
-      drawerThemeText.textContent = isSaiyan ? 'Theme: Saiyan' : 'Theme: Rosé';
-    }
-
-    const mobileThemeBtn = document.getElementById('mobileThemeBtn');
-    if (mobileThemeBtn) {
-      mobileThemeBtn.setAttribute('aria-label', isSaiyan ? 'Switch to Rosé Mode' : 'Switch to Super Saiyan Mode');
-      mobileThemeBtn.title = isSaiyan ? 'Super Saiyan active (tap to switch)' : 'Rosé Mode active (tap to switch)';
-    }
+    // Sync simplified drawer theme segmented buttons
+    const drawerOptRose = document.getElementById('drawerOptRose');
+    const drawerOptSaiyan = document.getElementById('drawerOptSaiyan');
+    if (drawerOptRose) drawerOptRose.classList.toggle('active', !isSaiyan);
+    if (drawerOptSaiyan) drawerOptSaiyan.classList.toggle('active', isSaiyan);
   }
 
   function playSaiyanTransformationCutscene(onTransition) {
