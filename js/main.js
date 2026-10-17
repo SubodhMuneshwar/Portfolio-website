@@ -136,7 +136,18 @@ function updateSfxUI() {
   gokuSfxIcons.forEach(i => {
     i.setAttribute('data-lucide', isSfxEnabledState ? 'volume-2' : 'volume-x');
   });
-  if (window.lucide && gokuSfxIcons.length) {
+
+  // Also update drawer SFX controls
+  const drawerSfxText = document.getElementById('drawerSfxText');
+  if (drawerSfxText) {
+    drawerSfxText.textContent = isSfxEnabledState ? 'SFX: ON' : 'SFX: OFF';
+  }
+  const drawerSfxIcons = document.querySelectorAll('.drawer-pill-toggle .drawer-pill-icon');
+  drawerSfxIcons.forEach(i => {
+    i.setAttribute('data-lucide', isSfxEnabledState ? 'volume-2' : 'volume-x');
+  });
+
+  if (window.lucide && (gokuSfxIcons.length || drawerSfxIcons.length)) {
     try { window.lucide.createIcons(); } catch(e){}
   }
 }
@@ -2883,13 +2894,17 @@ function initMobileMenu() {
       setDrawerState(!isOpen);
     });
 
-    // Auto-close menu when any nav link is clicked
-    const navLinks = navMenu.querySelectorAll('.nav-link');
+    // Auto-close menu when any nav link or drawer action is clicked
+    const navLinks = navMenu.querySelectorAll('.nav-link, .drawer-cta-primary, .drawer-cta-secondary');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
         setDrawerState(false);
       });
     });
+
+    window.closeMobileMenu = function() {
+      setDrawerState(false);
+    };
 
     // Close when clicking outside
     document.addEventListener('click', (e) => {
@@ -2999,6 +3014,17 @@ function initSaiyanMode() {
     if (optRose) optRose.classList.toggle('active', !isSaiyan);
     if (optSaiyan) optSaiyan.classList.toggle('active', isSaiyan);
     if (saiyanBtn) saiyanBtn.setAttribute('aria-pressed', isSaiyan ? 'true' : 'false');
+
+    const drawerThemeText = document.getElementById('drawerThemeText');
+    if (drawerThemeText) {
+      drawerThemeText.textContent = isSaiyan ? 'Theme: Saiyan' : 'Theme: Rosé';
+    }
+
+    const mobileThemeBtn = document.getElementById('mobileThemeBtn');
+    if (mobileThemeBtn) {
+      mobileThemeBtn.setAttribute('aria-label', isSaiyan ? 'Switch to Rosé Mode' : 'Switch to Super Saiyan Mode');
+      mobileThemeBtn.title = isSaiyan ? 'Super Saiyan active (tap to switch)' : 'Rosé Mode active (tap to switch)';
+    }
   }
 
   function playSaiyanTransformationCutscene(onTransition) {
@@ -3338,7 +3364,11 @@ function initSaiyanMode() {
     });
   }
 
-  window.setSaiyanState=setSaiyanState;
+  window.setSaiyanState = setSaiyanState;
+  window.toggleThemeQuick = function() {
+    const isCurrentlySaiyan = document.body.classList.contains('saiyan-mode');
+    setSaiyanState(!isCurrentlySaiyan);
+  };
 }
 
 /* --- Planet Namek Destruction / Staggered Transformation Engine --- */

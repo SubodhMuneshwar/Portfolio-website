@@ -109,21 +109,120 @@
         </a>
 
         <!-- Center Floating Navigation Capsule / Mobile Drawer Menu -->
+        <!-- Center Floating Navigation Capsule / Mobile Drawer Menu -->
         <div class="nav-center-island">
           <ul class="nav-menu" id="navMenu">
-            <li><a href="#about" class="nav-link"><i data-lucide="user" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>About</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
-            <li><a href="#skills" class="nav-link"><i data-lucide="cpu" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>Skills</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
-            <li><a href="#experience" class="nav-link"><i data-lucide="briefcase" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>Experience</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
-            <li><a href="#projects" class="nav-link"><i data-lucide="code-2" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>Projects</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
-            <li><a href="#achievements" class="nav-link"><i data-lucide="trophy" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>Honors</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
-            <li><a href="#education" class="nav-link"><i data-lucide="graduation-cap" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>Education</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
-            <li><a href="#contact" class="nav-link"><i data-lucide="mail" class="nav-link-icon" style="width: 16px; height: 16px;"></i><span>Contact</span><i data-lucide="chevron-right" class="mobile-nav-arrow"></i></a></li>
+            <!-- Mobile Drawer Exclusive Header Strip -->
+            <li class="mobile-drawer-only mobile-drawer-header">
+              <div class="drawer-header-brand">
+                <span class="drawer-header-pill">CAPSULE CORP OS · LEVEL 9</span>
+                <span class="drawer-header-status">
+                  <span class="drawer-beacon" aria-hidden="true"></span>
+                  <span>MUMBAI, IN</span>
+                </span>
+              </div>
+              <div class="drawer-actions-row">
+                <button type="button" class="drawer-pill-toggle" onclick="toggleThemeQuick()" aria-label="Toggle Theme">
+                  <i data-lucide="sparkles" class="theme-icon-rose" style="width: 14px; height: 14px;"></i>
+                  <i data-lucide="zap" class="theme-icon-saiyan" style="width: 14px; height: 14px; display: none;"></i>
+                  <span id="drawerThemeText">Switch Theme</span>
+                </button>
+                <button type="button" class="drawer-pill-toggle" onclick="window.toggleSoundEffects()" aria-label="Toggle Sound Effects">
+                  <i data-lucide="volume-2" class="sfx-drawer-icon" style="width: 14px; height: 14px;"></i>
+                  <span id="drawerSfxText">Audio: ON</span>
+                </button>
+              </div>
+            </li>
+
+            <!-- Section Navigation Items -->
+            <li>
+              <a href="#about" class="nav-link">
+                <i data-lucide="user" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">About</span>
+                  <span class="mobile-nav-desc">Executive Dossier &amp; Architecture</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#skills" class="nav-link">
+                <i data-lucide="cpu" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">Skills</span>
+                  <span class="mobile-nav-desc">Tech Matrix &amp; 3D Spirit Bomb</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#experience" class="nav-link">
+                <i data-lucide="briefcase" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">Experience</span>
+                  <span class="mobile-nav-desc">Software Engineer at RCF</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#projects" class="nav-link">
+                <i data-lucide="code-2" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">Projects</span>
+                  <span class="mobile-nav-desc">Machine Vision &amp; Backend Builds</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#achievements" class="nav-link">
+                <i data-lucide="trophy" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">Honors</span>
+                  <span class="mobile-nav-desc">2x National Hackathon Finalist</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#education" class="nav-link">
+                <i data-lucide="graduation-cap" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">Education</span>
+                  <span class="mobile-nav-desc">B.E. IT · 9.14 CGPI (Dean's List)</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#contact" class="nav-link">
+                <i data-lucide="mail" class="nav-link-icon" style="width: 15px; height: 15px;"></i>
+                <div class="nav-link-text-group">
+                  <span class="nav-link-label">Contact</span>
+                  <span class="mobile-nav-desc">Direct Message &amp; Recruiter Channels</span>
+                </div>
+                <i data-lucide="chevron-right" class="mobile-nav-arrow"></i>
+              </a>
+            </li>
+
+            <!-- Mobile Drawer Exclusive Footer Action CTAs -->
+            <li class="mobile-drawer-only mobile-drawer-footer">
+              <a href="#contact" class="drawer-cta-primary" onclick="window.closeMobileMenu && window.closeMobileMenu()">
+                <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+                <span>Connect with Subodh</span>
+              </a>
+              <a href="assets/Subodh_Muneshwar_ATS_Resume.pdf" download="Subodh_Muneshwar_ATS_Resume.pdf" class="drawer-cta-secondary">
+                <i data-lucide="download" style="width: 15px; height: 15px;"></i>
+                <span>Download ATS Resume</span>
+              </a>
+            </li>
           </ul>
         </div>
 
         <!-- Right Quick Action Controls -->
         <div class="nav-actions">
-          <!-- Interactive Sliding Theme Switch (Rosé ⟷ Saiyan) -->
+          <!-- Interactive Sliding Theme Switch (Rosé ⟷ Saiyan) - Desktop Only -->
           <div class="theme-slider-toggle" id="themeSliderToggle" role="switch" aria-checked="false" aria-label="Toggle between Rosé Mode and Super Saiyan Mode" tabindex="0" title="Slide to switch between Rosé and Saiyan Mode">
             <div class="theme-slider-track">
               <div class="theme-slider-bg-glider" aria-hidden="true"></div>
@@ -138,19 +237,25 @@
           <!-- Hidden fallback hook for any external scripts -->
           <button type="button" id="saiyanModeBtn" style="display:none;" aria-hidden="true"></button>
 
+          <!-- Mobile Quick Theme Switcher Button (Compact on Mobile / Tablet screens) -->
+          <button type="button" class="mobile-theme-btn" id="mobileThemeBtn" aria-label="Toggle Theme (Rosé / Saiyan)" title="Toggle Theme" onclick="toggleThemeQuick()">
+            <i data-lucide="sparkles" class="theme-icon-rose" style="width: 17px; height: 17px;"></i>
+            <i data-lucide="zap" class="theme-icon-saiyan" style="width: 17px; height: 17px; display: none;"></i>
+          </button>
+
           <!-- Command Palette Trigger Button (Ctrl + K / ⌘K) -->
           <button type="button" class="nav-cmd-btn" id="navCmdBtn" onclick="openCommandPalette()" aria-label="Open Command Palette (Ctrl+K)" title="Command Palette (Ctrl + K or ⌘K)">
             <i data-lucide="command" class="cmd-nav-icon" style="width: 14px; height: 14px;"></i>
             <span class="cmd-kbd-badge">⌘K</span>
           </button>
 
-          <!-- Connect Call-To-Action Button -->
+          <!-- Connect Call-To-Action Button (Desktop) -->
           <a href="#contact" class="btn btn-primary btn-sm nav-btn-connect" title="Get in touch with Subodh">
             <span>Connect</span>
             <i data-lucide="send" style="width: 13px; height: 13px;"></i>
           </a>
 
-          <!-- Sound Effects (SFX) On/Off Switch Button (Right Corner Utility) -->
+          <!-- Sound Effects (SFX) On/Off Switch Button -->
           <button type="button" class="sfx-toggle-btn sfx-active" id="sfxToggleBtn" role="switch" aria-checked="true" aria-label="Toggle Sound Effects" title="Sound Effects: ON (Click or press 'M' to Mute)" onclick="window.toggleSoundEffects()">
             <span class="sfx-icon-box">
               <i data-lucide="volume-2" class="sfx-icon sfx-icon-on"></i>
@@ -166,8 +271,8 @@
           </button>
 
           <!-- Mobile Drawer Menu Toggle Button -->
-          <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
-            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+          <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" title="Open navigation menu">
+            <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
           </button>
         </div>
       </nav>
