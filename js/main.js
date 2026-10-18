@@ -4733,51 +4733,51 @@ function initGlobalClickAnimation() {
     // Play subtle anime Ki blast sound if audio is enabled
     try { playKiBlastClickSfx(); } catch(e) {}
 
-    // Minimal Ki Blast container positioned at click/tap coordinate
+    // Balanced Ki Blast container positioned at click/tap coordinate
     const burst = document.createElement('div');
     burst.className = 'ki-blast-burst';
     burst.style.left = `${x}px`;
     burst.style.top = `${y}px`;
 
-    // 1. Minimal white-hot central Ki core
+    // 1. Luminous white-hot central Ki core (18px)
     const core = document.createElement('div');
     core.className = 'ki-blast-core';
     burst.appendChild(core);
 
-    // 2. High-velocity crisp micro Ki shockwave ring
+    // 2. High-velocity Ki shockwave ring (28px)
     const ring = document.createElement('div');
     ring.className = 'ki-blast-ring';
     burst.appendChild(ring);
 
-    // 3. 4 sharp micro starburst ray needles
-    const rayCount = 4;
+    // 3. 5 sharp directional Ki starburst ray spikes
+    const rayCount = 5;
     const baseAngle = Math.random() * Math.PI;
     for (let r = 0; r < rayCount; r++) {
       const ray = document.createElement('div');
       ray.className = 'ki-blast-ray';
-      const angle = (Math.PI * 2 * r / rayCount) + (Math.random() * 0.2 - 0.1) + baseAngle;
-      const rayDist = Math.floor(Math.random() * 5) + 12; // 12px to 17px
+      const angle = (Math.PI * 2 * r / rayCount) + (Math.random() * 0.25 - 0.12) + baseAngle;
+      const rayDist = Math.floor(Math.random() * 8) + 18; // 18px to 26px
       ray.style.setProperty('--angle', `${(angle * 180 / Math.PI).toFixed(1)}deg`);
       ray.style.setProperty('--ray-dist', `-${rayDist}px`);
       burst.appendChild(ray);
     }
 
-    // 4. 4 subtle micro Ki sparks
+    // 4. 6 radiating energetic Ki sparks
     const sparkColors = isSaiyan 
-      ? ['#FFFFFF', '#FDE047', '#FBBF24', '#38BDF8'] 
-      : ['#FFFFFF', '#FF2E97', '#F472B6', '#C084FC'];
+      ? ['#FFFFFF', '#FDE047', '#FBBF24', '#F59E0B', '#38BDF8'] 
+      : ['#FFFFFF', '#FF2E97', '#BE185D', '#F472B6', '#C084FC'];
 
-    const particleCount = 4;
+    const particleCount = 6;
     for (let i = 0; i < particleCount; i++) {
       const p = document.createElement('div');
       p.className = 'ki-blast-spark';
       
-      const size = Math.floor(Math.random() * 2) + 2.5; // 2.5px to 3.5px
+      const size = Math.floor(Math.random() * 2) + 3; // 3px to 4.5px
       const color = sparkColors[i % sparkColors.length];
       p.style.width = `${size}px`;
       p.style.height = `${size}px`;
       p.style.background = color;
-      p.style.boxShadow = `0 0 6px ${color}`;
+      p.style.boxShadow = `0 0 8px ${color}`;
 
       if (i % 2 === 1) {
         p.style.borderRadius = '1px';
@@ -4785,7 +4785,7 @@ function initGlobalClickAnimation() {
       }
 
       const angle = (Math.PI * 2 * i / particleCount) + (Math.random() * 0.4 - 0.2);
-      const dist = Math.floor(Math.random() * 6) + 12; // 12px to 18px
+      const dist = Math.floor(Math.random() * 10) + 18; // 18px to 28px
       const dx = Math.cos(angle) * dist;
       const dy = Math.sin(angle) * dist;
 
@@ -4798,7 +4798,7 @@ function initGlobalClickAnimation() {
     document.body.appendChild(burst);
     setTimeout(() => {
       burst.remove();
-    }, 320);
+    }, 380);
   }
 
   function handleInteraction(e) {
