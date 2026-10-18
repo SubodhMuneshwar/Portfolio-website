@@ -534,7 +534,12 @@ body.saiyan-mode :focus-visible {
   /* Preserve interactive click feedback & playful Easter eggs across devices */
   .global-click-particle,
   .click-shockwave-ring,
-  .ki-spark {
+  .ki-spark,
+  .ki-blast-core,
+  .ki-blast-ring,
+  .ki-blast-ring-outer,
+  .ki-blast-ray,
+  .ki-blast-spark {
     animation-duration: 0.55s !important;
     animation-iteration-count: 1 !important;
   }

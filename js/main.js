@@ -4695,55 +4695,116 @@ function initNimbusDrag() {
 }
 
 /* --- Global Click Animation Engine (Shockwave Ripple Rings & Ki Sparks) --- */
+/* --- Global Click & Tap Animation Engine (Dragon Ball Ki Blast FX) --- */
 function initGlobalClickAnimation() {
   let lastAnimTime = 0;
 
+  function playKiBlastClickSfx() {
+    if (typeof isSoundEffectsEnabled === 'function' && !isSoundEffectsEnabled()) return;
+    try {
+      const ctx = typeof getAudioContext === 'function' ? getAudioContext() : null;
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      // Crisp, subtle anime Ki blast discharge chirp: 1350Hz -> 280Hz in 60ms
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1350, now);
+      osc.frequency.exponentialRampToValueAtTime(280, now + 0.06);
+      
+      gain.gain.setValueAtTime(0.035, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    } catch(e) {}
+  }
+
   function spawnClickAnimation(x, y) {
     const now = Date.now();
-    if (now - lastAnimTime < 50) return; // 50ms smooth throttle
+    if (now - lastAnimTime < 40) return; // 40ms smooth throttle
     lastAnimTime = now;
 
     const isSaiyan = document.body.classList.contains('saiyan-mode');
-    const color = isSaiyan ? '#FBBF24' : '#BE185D';
-    const sparkColors = isSaiyan 
-      ? ['#FDE047', '#FBBF24', '#F59E0B', '#38BDF8', '#60A5FA'] 
-      : ['#FF2E97', '#BE185D', '#E11D48', '#C084FC', '#F472B6'];
+    
+    // Play subtle anime Ki blast sound if audio is enabled
+    try { playKiBlastClickSfx(); } catch(e) {}
 
-    // 1. Spawning glowing Ki shockwave expanding ring
+    // Unified Ki Blast container positioned at click/tap coordinate
+    const burst = document.createElement('div');
+    burst.className = 'ki-blast-burst';
+    burst.style.left = `${x}px`;
+    burst.style.top = `${y}px`;
+
+    // 1. Hyper-intense white-hot central Ki core
+    const core = document.createElement('div');
+    core.className = 'ki-blast-core';
+    burst.appendChild(core);
+
+    // 2. High-velocity primary Ki shockwave ring
     const ring = document.createElement('div');
-    ring.className = 'click-shockwave-ring';
-    ring.style.left = `${x}px`;
-    ring.style.top = `${y}px`;
-    ring.style.borderColor = color;
-    ring.style.color = color;
-    document.body.appendChild(ring);
-    setTimeout(() => ring.remove(), 480);
+    ring.className = 'ki-blast-ring';
+    burst.appendChild(ring);
 
-    // 2. Spawning radiating energetic Ki sparks
-    const particleCount = 5;
+    // 3. Secondary outer aura expansion wave
+    const ringOuter = document.createElement('div');
+    ringOuter.className = 'ki-blast-ring-outer';
+    burst.appendChild(ringOuter);
+
+    // 4. Directional Ki starburst ray spikes (sharp anime energy needles)
+    const rayCount = 6;
+    const baseAngle = Math.random() * Math.PI;
+    for (let r = 0; r < rayCount; r++) {
+      const ray = document.createElement('div');
+      ray.className = 'ki-blast-ray';
+      const angle = (Math.PI * 2 * r / rayCount) + (Math.random() * 0.3 - 0.15) + baseAngle;
+      const rayDist = Math.floor(Math.random() * 14) + 24; // 24px to 38px
+      ray.style.setProperty('--angle', `${(angle * 180 / Math.PI).toFixed(1)}deg`);
+      ray.style.setProperty('--ray-dist', `-${rayDist}px`);
+      burst.appendChild(ray);
+    }
+
+    // 5. Radiating energetic Ki sparks / plasma embers
+    const sparkColors = isSaiyan 
+      ? ['#FFFFFF', '#FDE047', '#FBBF24', '#F59E0B', '#38BDF8', '#7DD3FC'] 
+      : ['#FFFFFF', '#FF2E97', '#BE185D', '#E11D48', '#F472B6', '#C084FC'];
+
+    const particleCount = 8;
     for (let i = 0; i < particleCount; i++) {
       const p = document.createElement('div');
-      p.className = 'global-click-particle';
-      p.style.left = `${x}px`;
-      p.style.top = `${y}px`;
+      p.className = 'ki-blast-spark';
       
-      const size = Math.floor(Math.random() * 3) + 4; // 4px to 6px
+      const size = Math.floor(Math.random() * 4) + 3; // 3px to 6px
+      const color = sparkColors[i % sparkColors.length];
       p.style.width = `${size}px`;
       p.style.height = `${size}px`;
-      p.style.background = sparkColors[i % sparkColors.length];
-      p.style.boxShadow = `0 0 8px ${p.style.background}`;
+      p.style.background = color;
+      p.style.boxShadow = `0 0 8px ${color}, 0 0 12px ${color}`;
 
-      const angle = (Math.PI * 2 * i / particleCount) + (Math.random() * 0.4 - 0.2);
-      const dist = Math.floor(Math.random() * 18) + 24; // 24px to 42px
+      // Alternate diamond/square spark vs circular spark for anime plasma texture
+      if (i % 2 === 1) {
+        p.style.borderRadius = '1.5px';
+        p.style.setProperty('--rot', `${Math.floor(Math.random() * 45)}deg`);
+      }
+
+      const angle = (Math.PI * 2 * i / particleCount) + (Math.random() * 0.5 - 0.25);
+      const dist = Math.floor(Math.random() * 24) + 28; // 28px to 52px
       const dx = Math.cos(angle) * dist;
       const dy = Math.sin(angle) * dist;
 
       p.style.setProperty('--dx', `${dx.toFixed(1)}px`);
       p.style.setProperty('--dy', `${dy.toFixed(1)}px`);
 
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 520);
+      burst.appendChild(p);
     }
+
+    document.body.appendChild(burst);
+    setTimeout(() => {
+      burst.remove();
+    }, 500);
   }
 
   function handleInteraction(e) {
