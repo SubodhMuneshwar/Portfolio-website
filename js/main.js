@@ -4708,24 +4708,24 @@ function initGlobalClickAnimation() {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
-      // Crisp, subtle anime Ki blast discharge chirp: 1350Hz -> 280Hz in 60ms
+      // Delicate, crisp micro Ki chirp: 1400Hz -> 340Hz in 45ms
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(1350, now);
-      osc.frequency.exponentialRampToValueAtTime(280, now + 0.06);
+      osc.frequency.setValueAtTime(1400, now);
+      osc.frequency.exponentialRampToValueAtTime(340, now + 0.045);
       
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      gain.gain.setValueAtTime(0.02, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.06);
+      osc.stop(now + 0.045);
     } catch(e) {}
   }
 
   function spawnClickAnimation(x, y) {
     const now = Date.now();
-    if (now - lastAnimTime < 40) return; // 40ms smooth throttle
+    if (now - lastAnimTime < 35) return; // 35ms smooth throttle
     lastAnimTime = now;
 
     const isSaiyan = document.body.classList.contains('saiyan-mode');
@@ -4733,65 +4733,59 @@ function initGlobalClickAnimation() {
     // Play subtle anime Ki blast sound if audio is enabled
     try { playKiBlastClickSfx(); } catch(e) {}
 
-    // Unified Ki Blast container positioned at click/tap coordinate
+    // Minimal Ki Blast container positioned at click/tap coordinate
     const burst = document.createElement('div');
     burst.className = 'ki-blast-burst';
     burst.style.left = `${x}px`;
     burst.style.top = `${y}px`;
 
-    // 1. Hyper-intense white-hot central Ki core
+    // 1. Minimal white-hot central Ki core
     const core = document.createElement('div');
     core.className = 'ki-blast-core';
     burst.appendChild(core);
 
-    // 2. High-velocity primary Ki shockwave ring
+    // 2. High-velocity crisp micro Ki shockwave ring
     const ring = document.createElement('div');
     ring.className = 'ki-blast-ring';
     burst.appendChild(ring);
 
-    // 3. Secondary outer aura expansion wave
-    const ringOuter = document.createElement('div');
-    ringOuter.className = 'ki-blast-ring-outer';
-    burst.appendChild(ringOuter);
-
-    // 4. Directional Ki starburst ray spikes (sharp anime energy needles)
-    const rayCount = 6;
+    // 3. 4 sharp micro starburst ray needles
+    const rayCount = 4;
     const baseAngle = Math.random() * Math.PI;
     for (let r = 0; r < rayCount; r++) {
       const ray = document.createElement('div');
       ray.className = 'ki-blast-ray';
-      const angle = (Math.PI * 2 * r / rayCount) + (Math.random() * 0.3 - 0.15) + baseAngle;
-      const rayDist = Math.floor(Math.random() * 14) + 24; // 24px to 38px
+      const angle = (Math.PI * 2 * r / rayCount) + (Math.random() * 0.2 - 0.1) + baseAngle;
+      const rayDist = Math.floor(Math.random() * 5) + 12; // 12px to 17px
       ray.style.setProperty('--angle', `${(angle * 180 / Math.PI).toFixed(1)}deg`);
       ray.style.setProperty('--ray-dist', `-${rayDist}px`);
       burst.appendChild(ray);
     }
 
-    // 5. Radiating energetic Ki sparks / plasma embers
+    // 4. 4 subtle micro Ki sparks
     const sparkColors = isSaiyan 
-      ? ['#FFFFFF', '#FDE047', '#FBBF24', '#F59E0B', '#38BDF8', '#7DD3FC'] 
-      : ['#FFFFFF', '#FF2E97', '#BE185D', '#E11D48', '#F472B6', '#C084FC'];
+      ? ['#FFFFFF', '#FDE047', '#FBBF24', '#38BDF8'] 
+      : ['#FFFFFF', '#FF2E97', '#F472B6', '#C084FC'];
 
-    const particleCount = 8;
+    const particleCount = 4;
     for (let i = 0; i < particleCount; i++) {
       const p = document.createElement('div');
       p.className = 'ki-blast-spark';
       
-      const size = Math.floor(Math.random() * 4) + 3; // 3px to 6px
+      const size = Math.floor(Math.random() * 2) + 2.5; // 2.5px to 3.5px
       const color = sparkColors[i % sparkColors.length];
       p.style.width = `${size}px`;
       p.style.height = `${size}px`;
       p.style.background = color;
-      p.style.boxShadow = `0 0 8px ${color}, 0 0 12px ${color}`;
+      p.style.boxShadow = `0 0 6px ${color}`;
 
-      // Alternate diamond/square spark vs circular spark for anime plasma texture
       if (i % 2 === 1) {
-        p.style.borderRadius = '1.5px';
+        p.style.borderRadius = '1px';
         p.style.setProperty('--rot', `${Math.floor(Math.random() * 45)}deg`);
       }
 
-      const angle = (Math.PI * 2 * i / particleCount) + (Math.random() * 0.5 - 0.25);
-      const dist = Math.floor(Math.random() * 24) + 28; // 28px to 52px
+      const angle = (Math.PI * 2 * i / particleCount) + (Math.random() * 0.4 - 0.2);
+      const dist = Math.floor(Math.random() * 6) + 12; // 12px to 18px
       const dx = Math.cos(angle) * dist;
       const dy = Math.sin(angle) * dist;
 
@@ -4804,7 +4798,7 @@ function initGlobalClickAnimation() {
     document.body.appendChild(burst);
     setTimeout(() => {
       burst.remove();
-    }, 500);
+    }, 320);
   }
 
   function handleInteraction(e) {

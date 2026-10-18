@@ -537,7 +537,6 @@ body.saiyan-mode :focus-visible {
   .ki-spark,
   .ki-blast-core,
   .ki-blast-ring,
-  .ki-blast-ring-outer,
   .ki-blast-ray,
   .ki-blast-spark {
     animation-duration: 0.55s !important;
